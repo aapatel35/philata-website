@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="container">
+        <div class="maple-icon">&#127809;</div>
+        <h1>Welcome to <span style="color: var(--philata-red);">Philata</span></h1>
+        <p class="lead text-muted mb-4">Your Canadian Immigration Content Hub</p>
+        <a href="/dashboard" class="btn btn-danger btn-lg px-5">
+            <i class="bi bi-grid me-2"></i>View Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row g-4" id="stats-row">
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-number text-warning" id="stat-pending">-</div>
+                <div class="text-muted">Pending Review</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-number text-success" id="stat-approved">-</div>
+                <div class="text-muted">Approved</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-number text-info" id="stat-posted">-</div>
+                <div class="text-muted">Posted</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card">
+                <div class="stat-number text-light" id="stat-total">-</div>
+                <div class="text-muted">Total Content</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="mb-4"><i class="bi bi-lightning me-2"></i>Content Tracks</h3>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center p-4">
+                <div class="badge-breaking d-inline-block px-3 py-2 rounded mb-3">BREAKING</div>
+                <h5>Breaking News</h5>
+                <p class="text-muted small">Real-time immigration alerts and announcements</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center p-4">
+                <div class="badge-regular d-inline-block px-3 py-2 rounded mb-3">REGULAR</div>
+                <h5>Regular News</h5>
+                <p class="text-muted small">Daily immigration updates and policy changes</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center p-4">
+                <div class="badge-educational d-inline-block px-3 py-2 rounded mb-3">EDUCATIONAL</div>
+                <h5>Educational</h5>
+                <p class="text-muted small">365-day calendar of immigration tips</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center p-4">
+                <div class="badge-forms d-inline-block px-3 py-2 rounded mb-3">FORMS</div>
+                <h5>Forms Guide</h5>
+                <p class="text-muted small">Official forms and visa requirements</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    fetch('/api/stats')
+        .then(r => r.json())
+        .then(stats => {
+            document.getElementById('stat-pending').textContent = stats.pending || 0;
+            document.getElementById('stat-approved').textContent = stats.approved || 0;
+            document.getElementById('stat-posted').textContent = stats.posted || 0;
+            document.getElementById('stat-total').textContent = stats.total || 0;
+        })
+        .catch(e => console.error('Failed to load stats:', e));
+</script>
+{% endblock %}
