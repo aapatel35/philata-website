@@ -1,0 +1,1080 @@
+{% extends "base.html" %}
+
+{% block title %}CRS Score Calculator{% endblock %}
+
+{% block extra_css %}
+<style>
+    .calc-hero {
+        padding: 6rem 0 3rem;
+        position: relative;
+    }
+
+    .calc-hero-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+    }
+
+    .calc-hero-subtitle {
+        font-size: 1.15rem;
+        color: var(--philata-text-muted);
+        max-width: 600px;
+    }
+
+    /* Calculator Container */
+    .calculator-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    /* Section Cards */
+    .calc-section {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 20px;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+
+    .calc-section-header {
+        background: rgba(255,255,255,0.03);
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--philata-border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .calc-section-header:hover {
+        background: rgba(255,255,255,0.05);
+    }
+
+    .calc-section-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: white;
+    }
+
+    .calc-section-title i {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+    }
+
+    .section-points {
+        background: var(--philata-red);
+        color: white;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .calc-section-body {
+        padding: 1.5rem;
+    }
+
+    /* Form Fields */
+    .calc-field {
+        margin-bottom: 1.5rem;
+    }
+
+    .calc-field:last-child {
+        margin-bottom: 0;
+    }
+
+    .calc-label {
+        display: block;
+        font-weight: 500;
+        color: var(--philata-text);
+        margin-bottom: 0.5rem;
+    }
+
+    .calc-sublabel {
+        font-size: 0.85rem;
+        color: var(--philata-text-muted);
+        margin-bottom: 0.5rem;
+    }
+
+    .calc-select, .calc-input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--philata-border);
+        border-radius: 12px;
+        color: white;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .calc-select:focus, .calc-input:focus {
+        outline: none;
+        border-color: var(--philata-red);
+        box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.15);
+    }
+
+    .calc-select option {
+        background: #1a1a1a;
+        color: white;
+    }
+
+    /* Radio/Checkbox Groups */
+    .calc-radio-group {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .calc-radio {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+
+    .calc-radio input {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--philata-red);
+    }
+
+    /* Score Display */
+    .score-display {
+        position: sticky;
+        top: 80px;
+        background: linear-gradient(135deg, var(--philata-card), rgba(227, 24, 55, 0.1));
+        border: 1px solid var(--philata-border);
+        border-radius: 24px;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .score-label {
+        font-size: 0.9rem;
+        color: var(--philata-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 0.5rem;
+    }
+
+    .score-value {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 5rem;
+        font-weight: 800;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1;
+    }
+
+    .score-max {
+        color: var(--philata-text-muted);
+        font-size: 1.25rem;
+        margin-top: 0.5rem;
+    }
+
+    .score-breakdown {
+        margin-top: 2rem;
+        text-align: left;
+    }
+
+    .breakdown-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--philata-border);
+        font-size: 0.9rem;
+    }
+
+    .breakdown-item:last-child {
+        border-bottom: none;
+    }
+
+    .breakdown-label {
+        color: var(--philata-text-muted);
+    }
+
+    .breakdown-value {
+        color: white;
+        font-weight: 600;
+    }
+
+    /* Status Badge */
+    .score-status {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+    .score-status.excellent {
+        background: rgba(16, 185, 129, 0.15);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        color: #10B981;
+    }
+
+    .score-status.good {
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        color: #F59E0B;
+    }
+
+    .score-status.needs-improvement {
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #EF4444;
+    }
+
+    .score-status i {
+        margin-right: 8px;
+    }
+
+    /* Grid */
+    .calc-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .calc-grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .calc-grid, .calc-grid-3 {
+            grid-template-columns: 1fr;
+        }
+
+        .score-value {
+            font-size: 3.5rem;
+        }
+
+        .calc-hero-title {
+            font-size: 2rem;
+        }
+    }
+
+    /* Info tooltip */
+    .info-tip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+        color: var(--philata-text-muted);
+        font-size: 0.7rem;
+        cursor: help;
+        margin-left: 6px;
+    }
+
+    /* Reset Button */
+    .btn-reset {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--philata-border);
+        color: var(--philata-text-muted);
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-reset:hover {
+        background: rgba(255,255,255,0.1);
+        color: white;
+    }
+
+    /* Language Section */
+    .language-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.75rem;
+    }
+
+    .language-ability {
+        text-align: center;
+    }
+
+    .language-ability label {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--philata-text-muted);
+        margin-bottom: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .language-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    /* Disclaimer */
+    .calc-disclaimer {
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-top: 2rem;
+        font-size: 0.9rem;
+        color: var(--philata-text);
+    }
+
+    .calc-disclaimer i {
+        color: #F59E0B;
+        margin-right: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="calc-hero">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="calc-hero-title">
+                    <span class="gradient-text">CRS Score</span> Calculator
+                </h1>
+                <p class="calc-hero-subtitle mx-auto">
+                    Calculate your Comprehensive Ranking System (CRS) score for Express Entry.
+                    Get an estimate of your points and find out how to improve your score.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section pt-0">
+    <div class="container">
+        <div class="row">
+            <!-- Calculator Form -->
+            <div class="col-lg-8">
+                <div class="calculator-container">
+
+                    <!-- Marital Status -->
+                    <div class="calc-section">
+                        <div class="calc-section-header" onclick="toggleSection(this)">
+                            <div class="calc-section-title">
+                                <i class="bi bi-person-heart" style="background: linear-gradient(135deg, #E31837, #FF6B6B); color: white;"></i>
+                                Marital Status
+                            </div>
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+                        <div class="calc-section-body">
+                            <div class="calc-field">
+                                <label class="calc-label">Are you married or in a common-law relationship?</label>
+                                <div class="calc-radio-group">
+                                    <label class="calc-radio">
+                                        <input type="radio" name="maritalStatus" value="single" checked onchange="updateScore()">
+                                        <span>Single / Widowed / Divorced / Separated</span>
+                                    </label>
+                                    <label class="calc-radio">
+                                        <input type="radio" name="maritalStatus" value="married" onchange="updateScore()">
+                                        <span>Married / Common-law</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="calc-field" id="spouseComingField" style="display: none;">
+                                <label class="calc-label">Will your spouse/partner come with you to Canada?</label>
+                                <div class="calc-radio-group">
+                                    <label class="calc-radio">
+                                        <input type="radio" name="spouseComing" value="yes" checked onchange="updateScore()">
+                                        <span>Yes</span>
+                                    </label>
+                                    <label class="calc-radio">
+                                        <input type="radio" name="spouseComing" value="no" onchange="updateScore()">
+                                        <span>No (spouse is Canadian citizen/PR)</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Age -->
+                    <div class="calc-section">
+                        <div class="calc-section-header" onclick="toggleSection(this)">
+                            <div class="calc-section-title">
+                                <i class="bi bi-calendar-event" style="background: linear-gradient(135deg, #6366F1, #8B5CF6); color: white;"></i>
+                                Age
+                            </div>
+                            <span class="section-points" id="agePoints">0 pts</span>
+                        </div>
+                        <div class="calc-section-body">
+                            <div class="calc-field">
+                                <label class="calc-label">How old are you?</label>
+                                <p class="calc-sublabel">Age on the date you submit your Express Entry profile</p>
+                                <select class="calc-select" id="age" onchange="updateScore()">
+                                    <option value="">Select your age</option>
+                                    <option value="17">17 or younger</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                                    <option value="21">21</option>
+                                    <option value="22">22</option>
+                                    <option value="23">23</option>
+                                    <option value="24">24</option>
+                                    <option value="25">25</option>
+                                    <option value="26">26</option>
+                                    <option value="27">27</option>
+                                    <option value="28">28</option>
+                                    <option value="29">29</option>
+                                    <option value="30">30</option>
+                                    <option value="31">31</option>
+                                    <option value="32">32</option>
+                                    <option value="33">33</option>
+                                    <option value="34">34</option>
+                                    <option value="35">35</option>
+                                    <option value="36">36</option>
+                                    <option value="37">37</option>
+                                    <option value="38">38</option>
+                                    <option value="39">39</option>
+                                    <option value="40">40</option>
+                                    <option value="41">41</option>
+                                    <option value="42">42</option>
+                                    <option value="43">43</option>
+                                    <option value="44">44</option>
+                                    <option value="45">45 or older</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Education -->
+                    <div class="calc-section">
+                        <div class="calc-section-header" onclick="toggleSection(this)">
+                            <div class="calc-section-title">
+                                <i class="bi bi-mortarboard" style="background: linear-gradient(135deg, #10B981, #34D399); color: white;"></i>
+                                Education
+                            </div>
+                            <span class="section-points" id="educationPoints">0 pts</span>
+                        </div>
+                        <div class="calc-section-body">
+                            <div class="calc-field">
+                                <label class="calc-label">What is your highest level of education?</label>
+                                <select class="calc-select" id="education" onchange="updateScore()">
+                                    <option value="">Select education level</option>
+                                    <option value="none">Less than secondary (high school)</option>
+                                    <option value="secondary">Secondary diploma (high school)</option>
+                                    <option value="oneyear">One-year program (post-secondary)</option>
+                                    <option value="twoyear">Two-year program (post-secondary)</option>
+                                    <option value="bachelors">Bachelor's degree (3+ years)</option>
+                                    <option value="twodegrees">Two or more degrees (one 3+ years)</option>
+                                    <option value="masters">Master's degree</option>
+                                    <option value="doctorate">Doctoral degree (PhD)</option>
+                                </select>
+                            </div>
+                            <div class="calc-field">
+                                <label class="calc-label">Do you have Canadian education credentials?</label>
+                                <select class="calc-select" id="canadianEducation" onchange="updateScore()">
+                                    <option value="none">No Canadian education</option>
+                                    <option value="oneyear">1 or 2-year Canadian credential</option>
+                                    <option value="threeyear">3+ year Canadian credential or Master's/PhD</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- First Official Language -->
+                    <div class="calc-section">
+                        <div class="calc-section-header" onclick="toggleSection(this)">
+                            <div class="calc-section-title">
+                                <i class="bi bi-translate" style="background: linear-gradient(135deg, #F59E0B, #FBBF24); color: white;"></i>
+                                First Official Language (English or French)
+                            </div>
+                            <span class="section-points" id="language1Points">0 pts</span>
+                        </div>
+                        <div class="calc-section-body">
+                            <p class="calc-sublabel mb-3">Enter your CLB/NCLC level for each ability (4-10+)</p>
+                            <div class="language-grid">
+                                <div class="language-ability">
+                                    <label>Speaking</label>
+                                    <select class="calc-select" id="lang1Speaking" onchange="updateScore()">
+                                        <option value="0">Select</option>
+                                        <option value="4">CLB 4</option>
+                                        <option value="5">CLB 5</option>
+                                        <option value="6">CLB 6</option>
+                                        <option value="7">CLB 7</option>
+                                        <option value="8">CLB 8</option>
+                                        <option value="9">CLB 9</option>
+                                        <option value="10">CLB 10+</option>
+                                    </select>
+                                </div>
+                                <div class="language-ability">
+                                    <label>Listening</label>
+                                    <select class="calc-select" id="lang1Listening" onchange="updateScore()">
+                                        <option value="0">Select</option>
+                                        <option value="4">CLB 4</option>
+                                        <option value="5">CLB 5</option>
+                                        <option value="6">CLB 6</option>
+                                        <option value="7">CLB 7</option>
+                                        <option value="8">CLB 8</option>
+                                        <option value="9">CLB 9</option>
+                                        <option value="10">CLB 10+</option>
+                                    </select>
+                                </div>
+                                <div class="language-ability">
+                                    <label>Reading</label>
+                                    <select class="calc-select" id="lang1Reading" onchange="updateScore()">
+                                        <option value="0">Select</option>
+                                        <option value="4">CLB 4</option>
+                                        <option value="5">CLB 5</option>
+                                        <option value="6">CLB 6</option>
+                                        <option value="7">CLB 7</option>
+                                        <option value="8">CLB 8</option>
+                                        <option value="9">CLB 9</option>
+                                        <option value="10">CLB 10+</option>
+                                    </select>
+                                </div>
+                                <div class="language-ability">
+                                    <label>Writing</label>
+                                    <select class="calc-select" id="lang1Writing" onchange="updateScore()">
+                                        <option value="0">Select</option>
+                                        <option value="4">CLB 4</option>
+                                        <option value="5">CLB 5</option>
+                                        <option value="6">CLB 6</option>
+                                        <option value="7">CLB 7</option>
+                                        <option value="8">CLB 8</option>
+                                        <option value="9">CLB 9</option>
+                                        <option value="10">CLB 10+</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Second Official Language -->
+                    <div class="calc-section">
+                        <div class="calc-section-header" onclick="toggleSection(this)">
+                            <div class="calc-section-title">
+                                <i class="bi bi-chat-square-text" style="background: linear-gradient(135deg, #8B5CF6, #A78BFA); color: white;"></i>
+                                Second Official Language (Optional)
+                            </div>
+                            <span class="section-points" id="language2Points">0 pts</span>
+                        </div>
+                        <div class="calc-section-body">
+                            <p class="calc-sublabel mb-3">If English is your first language, enter French scores here (and vice versa)</p>
+                            <div class="language-grid">
+                                <div class="language-ability">
+                                    <label>Speaking</label>
+                                    <select class="calc-select" id="lang2Speaking" onchange="updateScore()">
+                                        <option value="0">None/N/A</option>
+                                        <option value="5">CLB 5</option>
+                                        <option value="6">CLB 6</option>
+                                        <option value="7">CLB 7</option>
+                                        <option value="8">CLB 8</option>
+                                        <option value="9">CLB 9+</option>
+                                    </select>
+                                </div>
+                                <div class="language-ability">
+                                    <label>Listening</label>
+                                    <select class="calc-select" id="lang2Listening" onchange="updateScore()">
+                                        <option value="0">None/N/A</option>
+                                        <option value="5">CLB 5</option>
+                                        <option value="6">CLB 6</option>
+                                        <option value="7">CLB 7</option>
+                                        <option value="8">CLB 8</option>
+                                        <option value="9">CLB 9+</option>
+                                    </select>
+                                </div>
+                                <div class="language-ability">
+                                    <label>Reading</label>
+                                    <select class="calc-select" id="lang2Reading" onchange="updateScore()">
+                                        <option value="0">None/N/A</option>
+                                        <option value="5">CLB 5</option>
+                                        <option value="6">CLB 6</option>
+                                        <option value="7">CLB 7</option>
+                                        <option value="8">CLB 8</option>
+                                        <option value="9">CLB 9+</option>
+                                    </select>
+                                </div>
+                                <div class="language-ability">
+                                    <label>Writing</label>
+                                    <select class="calc-select" id="lang2Writing" onchange="updateScore()">
+                                        <option value="0">None/N/A</option>
+                                        <option value="5">CLB 5</option>
+                                        <option value="6">CLB 6</option>
+                                        <option value="7">CLB 7</option>
+                                        <option value="8">CLB 8</option>
+                                        <option value="9">CLB 9+</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Work Experience -->
+                    <div class="calc-section">
+                        <div class="calc-section-header" onclick="toggleSection(this)">
+                            <div class="calc-section-title">
+                                <i class="bi bi-briefcase" style="background: linear-gradient(135deg, #0EA5E9, #38BDF8); color: white;"></i>
+                                Work Experience
+                            </div>
+                            <span class="section-points" id="workPoints">0 pts</span>
+                        </div>
+                        <div class="calc-section-body">
+                            <div class="calc-grid">
+                                <div class="calc-field">
+                                    <label class="calc-label">Canadian Work Experience</label>
+                                    <p class="calc-sublabel">Skilled work (NOC TEER 0, 1, 2, or 3)</p>
+                                    <select class="calc-select" id="canadianWorkExp" onchange="updateScore()">
+                                        <option value="0">None or less than 1 year</option>
+                                        <option value="1">1 year</option>
+                                        <option value="2">2 years</option>
+                                        <option value="3">3 years</option>
+                                        <option value="4">4 years</option>
+                                        <option value="5">5 years or more</option>
+                                    </select>
+                                </div>
+                                <div class="calc-field">
+                                    <label class="calc-label">Foreign Work Experience</label>
+                                    <p class="calc-sublabel">Skilled work outside Canada</p>
+                                    <select class="calc-select" id="foreignWorkExp" onchange="updateScore()">
+                                        <option value="0">None or less than 1 year</option>
+                                        <option value="1">1 year</option>
+                                        <option value="2">2 years</option>
+                                        <option value="3">3 years or more</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Factors -->
+                    <div class="calc-section">
+                        <div class="calc-section-header" onclick="toggleSection(this)">
+                            <div class="calc-section-title">
+                                <i class="bi bi-plus-circle" style="background: linear-gradient(135deg, #EC4899, #F472B6); color: white;"></i>
+                                Additional Factors
+                            </div>
+                            <span class="section-points" id="additionalPoints">0 pts</span>
+                        </div>
+                        <div class="calc-section-body">
+                            <div class="calc-field">
+                                <label class="calc-label">Do you have a Provincial Nomination?</label>
+                                <div class="calc-radio-group">
+                                    <label class="calc-radio">
+                                        <input type="radio" name="pnp" value="no" checked onchange="updateScore()">
+                                        <span>No</span>
+                                    </label>
+                                    <label class="calc-radio">
+                                        <input type="radio" name="pnp" value="yes" onchange="updateScore()">
+                                        <span>Yes (+600 points)</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="calc-field">
+                                <label class="calc-label">Do you have a sibling who is a Canadian citizen or PR?</label>
+                                <div class="calc-radio-group">
+                                    <label class="calc-radio">
+                                        <input type="radio" name="sibling" value="no" checked onchange="updateScore()">
+                                        <span>No</span>
+                                    </label>
+                                    <label class="calc-radio">
+                                        <input type="radio" name="sibling" value="yes" onchange="updateScore()">
+                                        <span>Yes (+15 points)</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="calc-field">
+                                <label class="calc-label">French Language Ability</label>
+                                <p class="calc-sublabel">French proficiency bonus (NCLC 7+ required)</p>
+                                <select class="calc-select" id="frenchBonus" onchange="updateScore()">
+                                    <option value="0">No French or below NCLC 7</option>
+                                    <option value="25">NCLC 7+ in all abilities with English CLB 4 or lower (+25 pts)</option>
+                                    <option value="50">NCLC 7+ in all abilities with English CLB 5+ (+50 pts)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Spouse Factors (conditional) -->
+                    <div class="calc-section" id="spouseSection" style="display: none;">
+                        <div class="calc-section-header" onclick="toggleSection(this)">
+                            <div class="calc-section-title">
+                                <i class="bi bi-people" style="background: linear-gradient(135deg, #14B8A6, #2DD4BF); color: white;"></i>
+                                Spouse/Partner Factors
+                            </div>
+                            <span class="section-points" id="spousePoints">0 pts</span>
+                        </div>
+                        <div class="calc-section-body">
+                            <div class="calc-field">
+                                <label class="calc-label">Spouse's Education Level</label>
+                                <select class="calc-select" id="spouseEducation" onchange="updateScore()">
+                                    <option value="none">Less than secondary</option>
+                                    <option value="secondary">Secondary diploma</option>
+                                    <option value="oneyear">One-year program</option>
+                                    <option value="twoyear">Two-year program</option>
+                                    <option value="bachelors">Bachelor's degree</option>
+                                    <option value="twodegrees">Two or more degrees</option>
+                                    <option value="masters">Master's degree</option>
+                                    <option value="doctorate">Doctoral degree</option>
+                                </select>
+                            </div>
+                            <div class="calc-field">
+                                <label class="calc-label">Spouse's First Language (CLB)</label>
+                                <div class="language-grid">
+                                    <div class="language-ability">
+                                        <label>Speaking</label>
+                                        <select class="calc-select" id="spouseLang1Speaking" onchange="updateScore()">
+                                            <option value="0">N/A</option>
+                                            <option value="4">CLB 4</option>
+                                            <option value="5">CLB 5</option>
+                                            <option value="6">CLB 6</option>
+                                            <option value="7">CLB 7</option>
+                                            <option value="8">CLB 8</option>
+                                            <option value="9">CLB 9+</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Listening</label>
+                                        <select class="calc-select" id="spouseLang1Listening" onchange="updateScore()">
+                                            <option value="0">N/A</option>
+                                            <option value="4">CLB 4</option>
+                                            <option value="5">CLB 5</option>
+                                            <option value="6">CLB 6</option>
+                                            <option value="7">CLB 7</option>
+                                            <option value="8">CLB 8</option>
+                                            <option value="9">CLB 9+</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Reading</label>
+                                        <select class="calc-select" id="spouseLang1Reading" onchange="updateScore()">
+                                            <option value="0">N/A</option>
+                                            <option value="4">CLB 4</option>
+                                            <option value="5">CLB 5</option>
+                                            <option value="6">CLB 6</option>
+                                            <option value="7">CLB 7</option>
+                                            <option value="8">CLB 8</option>
+                                            <option value="9">CLB 9+</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Writing</label>
+                                        <select class="calc-select" id="spouseLang1Writing" onchange="updateScore()">
+                                            <option value="0">N/A</option>
+                                            <option value="4">CLB 4</option>
+                                            <option value="5">CLB 5</option>
+                                            <option value="6">CLB 6</option>
+                                            <option value="7">CLB 7</option>
+                                            <option value="8">CLB 8</option>
+                                            <option value="9">CLB 9+</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="calc-field">
+                                <label class="calc-label">Spouse's Canadian Work Experience</label>
+                                <select class="calc-select" id="spouseCanadianWorkExp" onchange="updateScore()">
+                                    <option value="0">None</option>
+                                    <option value="1">1 year</option>
+                                    <option value="2">2 years</option>
+                                    <option value="3">3 years</option>
+                                    <option value="4">4 years</option>
+                                    <option value="5">5+ years</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button class="btn-reset" onclick="resetCalculator()">
+                            <i class="bi bi-arrow-counterclockwise me-2"></i>Reset Calculator
+                        </button>
+                    </div>
+
+                    <div class="calc-disclaimer">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <strong>Disclaimer:</strong> This calculator provides an estimate only. Your actual CRS score may vary based on additional factors. Always verify with the official IRCC Express Entry system.
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Score Display Sidebar -->
+            <div class="col-lg-4">
+                <div class="score-display">
+                    <div class="score-label">Your Estimated CRS Score</div>
+                    <div class="score-value" id="totalScore">0</div>
+                    <div class="score-max">out of 1,200</div>
+
+                    <div class="score-breakdown">
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Core/Human Capital</span>
+                            <span class="breakdown-value" id="corePoints">0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Spouse Factors</span>
+                            <span class="breakdown-value" id="spouseTotalPoints">0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Skill Transferability</span>
+                            <span class="breakdown-value" id="skillPoints">0</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="breakdown-label">Additional Points</span>
+                            <span class="breakdown-value" id="additionalTotalPoints">0</span>
+                        </div>
+                    </div>
+
+                    <div class="score-status" id="scoreStatus">
+                        <i class="bi bi-info-circle"></i>
+                        <span id="scoreStatusText">Complete the form to see your score</span>
+                    </div>
+
+                    <a href="/guides/express-entry/express-entry-overview" class="btn btn-primary w-100 mt-4">
+                        <i class="bi bi-book me-2"></i>Express Entry Guide
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// CRS Points Tables
+const agePointsSingle = {
+    17: 0, 18: 99, 19: 105, 20: 110, 21: 110, 22: 110, 23: 110, 24: 110, 25: 110, 26: 110, 27: 110, 28: 110, 29: 110,
+    30: 105, 31: 99, 32: 94, 33: 88, 34: 83, 35: 77, 36: 72, 37: 66, 38: 61, 39: 55, 40: 50, 41: 39, 42: 28, 43: 17, 44: 6, 45: 0
+};
+
+const agePointsMarried = {
+    17: 0, 18: 90, 19: 95, 20: 100, 21: 100, 22: 100, 23: 100, 24: 100, 25: 100, 26: 100, 27: 100, 28: 100, 29: 100,
+    30: 95, 31: 90, 32: 85, 33: 80, 34: 75, 35: 70, 36: 65, 37: 60, 38: 55, 39: 50, 40: 45, 41: 35, 42: 25, 43: 15, 44: 5, 45: 0
+};
+
+const educationPointsSingle = {
+    none: 0, secondary: 30, oneyear: 90, twoyear: 98, bachelors: 120, twodegrees: 128, masters: 135, doctorate: 150
+};
+
+const educationPointsMarried = {
+    none: 0, secondary: 28, oneyear: 84, twoyear: 91, bachelors: 112, twodegrees: 119, masters: 126, doctorate: 140
+};
+
+const languagePointsSingle = {
+    4: 6, 5: 6, 6: 9, 7: 17, 8: 23, 9: 31, 10: 34
+};
+
+const languagePointsMarried = {
+    4: 6, 5: 6, 6: 8, 7: 16, 8: 22, 9: 29, 10: 32
+};
+
+const secondLanguagePoints = {
+    0: 0, 5: 1, 6: 1, 7: 3, 8: 3, 9: 6
+};
+
+const canadianWorkPointsSingle = {
+    0: 0, 1: 40, 2: 53, 3: 64, 4: 72, 5: 80
+};
+
+const canadianWorkPointsMarried = {
+    0: 0, 1: 35, 2: 46, 3: 56, 4: 63, 5: 70
+};
+
+const canadianEducationPoints = {
+    none: 0, oneyear: 15, threeyear: 30
+};
+
+// Spouse points
+const spouseEducationPoints = {
+    none: 0, secondary: 2, oneyear: 6, twoyear: 7, bachelors: 8, twodegrees: 9, masters: 10, doctorate: 10
+};
+
+const spouseLanguagePoints = {
+    0: 0, 4: 0, 5: 1, 6: 1, 7: 3, 8: 3, 9: 5
+};
+
+const spouseCanadianWorkPoints = {
+    0: 0, 1: 5, 2: 7, 3: 8, 4: 9, 5: 10
+};
+
+function toggleSection(header) {
+    const body = header.nextElementSibling;
+    const icon = header.querySelector('.bi-chevron-down, .bi-chevron-up');
+    if (body.style.display === 'none') {
+        body.style.display = 'block';
+        if (icon) icon.className = 'bi bi-chevron-up';
+    } else {
+        body.style.display = 'block';
+    }
+}
+
+function updateScore() {
+    const maritalStatus = document.querySelector('input[name="maritalStatus"]:checked').value;
+    const spouseComing = document.querySelector('input[name="spouseComing"]:checked')?.value === 'yes';
+    const isMarriedWithSpouse = maritalStatus === 'married' && spouseComing;
+
+    // Show/hide spouse sections
+    document.getElementById('spouseComingField').style.display = maritalStatus === 'married' ? 'block' : 'none';
+    document.getElementById('spouseSection').style.display = isMarriedWithSpouse ? 'block' : 'none';
+
+    // Age points
+    const age = parseInt(document.getElementById('age').value) || 0;
+    const agePoints = isMarriedWithSpouse ? (agePointsMarried[age] || 0) : (agePointsSingle[age] || 0);
+    document.getElementById('agePoints').textContent = agePoints + ' pts';
+
+    // Education points
+    const education = document.getElementById('education').value;
+    const educationPoints = isMarriedWithSpouse ? (educationPointsMarried[education] || 0) : (educationPointsSingle[education] || 0);
+    document.getElementById('educationPoints').textContent = educationPoints + ' pts';
+
+    // First language points
+    const lang1Speaking = parseInt(document.getElementById('lang1Speaking').value) || 0;
+    const lang1Listening = parseInt(document.getElementById('lang1Listening').value) || 0;
+    const lang1Reading = parseInt(document.getElementById('lang1Reading').value) || 0;
+    const lang1Writing = parseInt(document.getElementById('lang1Writing').value) || 0;
+
+    const langTable = isMarriedWithSpouse ? languagePointsMarried : languagePointsSingle;
+    const lang1Points = (langTable[lang1Speaking] || 0) + (langTable[lang1Listening] || 0) + (langTable[lang1Reading] || 0) + (langTable[lang1Writing] || 0);
+    document.getElementById('language1Points').textContent = lang1Points + ' pts';
+
+    // Second language points
+    const lang2Speaking = parseInt(document.getElementById('lang2Speaking').value) || 0;
+    const lang2Listening = parseInt(document.getElementById('lang2Listening').value) || 0;
+    const lang2Reading = parseInt(document.getElementById('lang2Reading').value) || 0;
+    const lang2Writing = parseInt(document.getElementById('lang2Writing').value) || 0;
+
+    let lang2Points = 0;
+    if (lang2Speaking >= 5 && lang2Listening >= 5 && lang2Reading >= 5 && lang2Writing >= 5) {
+        lang2Points = (secondLanguagePoints[lang2Speaking] || 0) + (secondLanguagePoints[lang2Listening] || 0) + (secondLanguagePoints[lang2Reading] || 0) + (secondLanguagePoints[lang2Writing] || 0);
+        lang2Points = Math.min(lang2Points, 24); // Max 24 points
+    }
+    document.getElementById('language2Points').textContent = lang2Points + ' pts';
+
+    // Work experience points
+    const canadianWork = parseInt(document.getElementById('canadianWorkExp').value) || 0;
+    const foreignWork = parseInt(document.getElementById('foreignWorkExp').value) || 0;
+    const canadianWorkPoints = isMarriedWithSpouse ? (canadianWorkPointsMarried[canadianWork] || 0) : (canadianWorkPointsSingle[canadianWork] || 0);
+
+    // Foreign work only counts for skill transferability, not direct points in core
+    const workPoints = canadianWorkPoints;
+    document.getElementById('workPoints').textContent = workPoints + ' pts';
+
+    // Core/Human Capital Total
+    const corePoints = agePoints + educationPoints + lang1Points + lang2Points + workPoints;
+    document.getElementById('corePoints').textContent = corePoints;
+
+    // Spouse points
+    let spousePoints = 0;
+    if (isMarriedWithSpouse) {
+        const spouseEducation = document.getElementById('spouseEducation').value;
+        spousePoints += spouseEducationPoints[spouseEducation] || 0;
+
+        const spouseLang1Speaking = parseInt(document.getElementById('spouseLang1Speaking').value) || 0;
+        const spouseLang1Listening = parseInt(document.getElementById('spouseLang1Listening').value) || 0;
+        const spouseLang1Reading = parseInt(document.getElementById('spouseLang1Reading').value) || 0;
+        const spouseLang1Writing = parseInt(document.getElementById('spouseLang1Writing').value) || 0;
+
+        spousePoints += (spouseLanguagePoints[spouseLang1Speaking] || 0) + (spouseLanguagePoints[spouseLang1Listening] || 0) + (spouseLanguagePoints[spouseLang1Reading] || 0) + (spouseLanguagePoints[spouseLang1Writing] || 0);
+        spousePoints = Math.min(spousePoints, 20); // Max 20 for language
+
+        const spouseCanWork = parseInt(document.getElementById('spouseCanadianWorkExp').value) || 0;
+        spousePoints += spouseCanadianWorkPoints[spouseCanWork] || 0;
+    }
+    document.getElementById('spousePoints').textContent = spousePoints + ' pts';
+    document.getElementById('spouseTotalPoints').textContent = spousePoints;
+
+    // Skill Transferability (simplified calculation)
+    let skillPoints = 0;
+    // Education + Language
+    if (education && education !== 'none' && lang1Speaking >= 7) {
+        if (education === 'doctorate' || education === 'masters') {
+            skillPoints += lang1Speaking >= 9 ? 50 : 25;
+        } else if (education === 'bachelors' || education === 'twodegrees') {
+            skillPoints += lang1Speaking >= 9 ? 50 : 25;
+        } else if (education === 'twoyear' || education === 'oneyear') {
+            skillPoints += lang1Speaking >= 9 ? 25 : 13;
+        }
+    }
+    // Education + Canadian Work
+    if (education && education !== 'none' && canadianWork >= 1) {
+        if (education === 'doctorate' || education === 'masters') {
+            skillPoints += canadianWork >= 2 ? 50 : 25;
+        } else if (education === 'bachelors' || education === 'twodegrees') {
+            skillPoints += canadianWork >= 2 ? 50 : 25;
+        }
+    }
+    // Foreign Work + Language
+    if (foreignWork >= 1 && lang1Speaking >= 7) {
+        skillPoints += foreignWork >= 3 && lang1Speaking >= 9 ? 50 : 25;
+    }
+    // Foreign Work + Canadian Work
+    if (foreignWork >= 1 && canadianWork >= 1) {
+        skillPoints += foreignWork >= 3 && canadianWork >= 2 ? 50 : 25;
+    }
+    skillPoints = Math.min(skillPoints, 100); // Max 100
+    document.getElementById('skillPoints').textContent = skillPoints;
+
+    // Additional points
+    const hasPNP = document.querySelector('input[name="pnp"]:checked').value === 'yes';
+    const hasSibling = document.querySelector('input[name="sibling"]:checked').value === 'yes';
+    const frenchBonus = parseInt(document.getElementById('frenchBonus').value) || 0;
+    const canadianEdu = document.getElementById('canadianEducation').value;
+
+    let additionalPoints = 0;
+    if (hasPNP) additionalPoints += 600;
+    if (hasSibling) additionalPoints += 15;
+    additionalPoints += frenchBonus;
+    additionalPoints += canadianEducationPoints[canadianEdu] || 0;
+
+    document.getElementById('additionalPoints').textContent = additionalPoints + ' pts';
+    document.getElementById('additionalTotalPoints').textContent = additionalPoints;
+
+    // Total Score
+    const totalScore = corePoints + spousePoints + skillPoints + additionalPoints;
+    document.getElementById('totalScore').textContent = totalScore;
+
+    // Update status
+    const statusEl = document.getElementById('scoreStatus');
+    const statusText = document.getElementById('scoreStatusText');
+
+    if (totalScore === 0) {
+        statusEl.className = 'score-status';
+        statusText.innerHTML = '<i class="bi bi-info-circle me-2"></i>Complete the form to see your score';
+    } else if (totalScore >= 470 || hasPNP) {
+        statusEl.className = 'score-status excellent';
+        statusText.innerHTML = '<i class="bi bi-check-circle me-2"></i>Excellent! High chance of ITA';
+    } else if (totalScore >= 400) {
+        statusEl.className = 'score-status good';
+        statusText.innerHTML = '<i class="bi bi-lightning me-2"></i>Good score - consider PNP for boost';
+    } else {
+        statusEl.className = 'score-status needs-improvement';
+        statusText.innerHTML = '<i class="bi bi-arrow-up-circle me-2"></i>Score can be improved';
+    }
+}
+
+function resetCalculator() {
+    // Reset all form fields
+    document.querySelectorAll('.calc-select').forEach(select => select.selectedIndex = 0);
+    document.querySelectorAll('input[type="radio"]').forEach((radio, index) => {
+        radio.checked = radio.value === 'single' || radio.value === 'no' || radio.value === 'yes' && radio.name === 'spouseComing';
+    });
+
+    // Reset to defaults
+    document.querySelector('input[name="maritalStatus"][value="single"]').checked = true;
+    document.querySelector('input[name="pnp"][value="no"]').checked = true;
+    document.querySelector('input[name="sibling"][value="no"]').checked = true;
+
+    updateScore();
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', updateScore);
+</script>
+{% endblock %}

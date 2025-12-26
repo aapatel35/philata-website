@@ -146,6 +146,12 @@ def disclaimer():
     return render_template('disclaimer.html')
 
 
+@app.route('/tools/crs-calculator')
+def crs_calculator():
+    """CRS Score Calculator"""
+    return render_template('crs_calculator.html')
+
+
 @app.route('/dashboard')
 def dashboard():
     """Content dashboard"""

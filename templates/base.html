@@ -514,6 +514,9 @@
                         <a class="nav-link {% if '/dashboard' in request.path %}active{% endif %}" href="/dashboard">News</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {% if '/tools/crs-calculator' in request.path %}active{% endif %}" href="/tools/crs-calculator">CRS Calculator</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {% if request.path == '/about' %}active{% endif %}" href="/about">About</a>
                     </li>
                     <li class="nav-item">
@@ -564,11 +567,10 @@
                     <a href="/guides/credentials">WES/ECA</a>
                 </div>
                 <div class="col-lg-2 col-md-6 footer-links">
-                    <h6>Company</h6>
+                    <h6>Tools</h6>
+                    <a href="/tools/crs-calculator">CRS Calculator</a>
                     <a href="/about">About Us</a>
                     <a href="/contact">Contact</a>
-                    <a href="#">Write for Us</a>
-                    <a href="#">Advertise</a>
                 </div>
                 <div class="col-lg-2 col-md-6 footer-links">
                     <h6>Legal</h6>
