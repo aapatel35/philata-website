@@ -2,137 +2,588 @@
 
 {% block title %}{{ content.title }}{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Instagram Mockup */
+    .instagram-mockup {
+        background: #000;
+        border-radius: 12px;
+        max-width: 400px;
+        margin: 0 auto;
+        overflow: hidden;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .ig-header {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        background: #000;
+    }
+
+    .ig-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .ig-username {
+        margin-left: 10px;
+        font-weight: 600;
+        color: #fff;
+        font-size: 14px;
+    }
+
+    .ig-image {
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
+        background: #262626;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ig-actions {
+        display: flex;
+        padding: 12px;
+        gap: 16px;
+    }
+
+    .ig-actions i {
+        font-size: 24px;
+        color: #fff;
+    }
+
+    .ig-caption {
+        padding: 0 12px 12px;
+        color: #fff;
+        font-size: 14px;
+        line-height: 1.4;
+        white-space: pre-wrap;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .ig-caption strong {
+        font-weight: 600;
+    }
+
+    /* Facebook Mockup */
+    .facebook-mockup {
+        background: #242526;
+        border-radius: 8px;
+        max-width: 500px;
+        margin: 0 auto;
+        overflow: hidden;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .fb-header {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+    }
+
+    .fb-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #d52b1e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+
+    .fb-info {
+        margin-left: 10px;
+    }
+
+    .fb-name {
+        font-weight: 600;
+        color: #e4e6eb;
+        font-size: 15px;
+    }
+
+    .fb-time {
+        color: #b0b3b8;
+        font-size: 13px;
+    }
+
+    .fb-content {
+        padding: 0 12px 12px;
+        color: #e4e6eb;
+        font-size: 15px;
+        line-height: 1.4;
+        white-space: pre-wrap;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .fb-image {
+        width: 100%;
+        aspect-ratio: 1.91/1;
+        object-fit: cover;
+        background: #3a3b3c;
+    }
+
+    .fb-actions {
+        display: flex;
+        justify-content: space-around;
+        padding: 8px;
+        border-top: 1px solid #3a3b3c;
+        color: #b0b3b8;
+    }
+
+    /* LinkedIn Mockup */
+    .linkedin-mockup {
+        background: #1b1f23;
+        border-radius: 8px;
+        max-width: 500px;
+        margin: 0 auto;
+        overflow: hidden;
+        border: 1px solid #38434f;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .li-header {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+    }
+
+    .li-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #0a66c2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+
+    .li-info {
+        margin-left: 10px;
+    }
+
+    .li-name {
+        font-weight: 600;
+        color: #fff;
+        font-size: 14px;
+    }
+
+    .li-desc {
+        color: rgba(255,255,255,0.6);
+        font-size: 12px;
+    }
+
+    .li-content {
+        padding: 0 12px 12px;
+        color: #fff;
+        font-size: 14px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .li-image {
+        width: 100%;
+        aspect-ratio: 1.91/1;
+        object-fit: cover;
+        background: #38434f;
+    }
+
+    /* Twitter/X Mockup */
+    .twitter-mockup {
+        background: #000;
+        border-radius: 16px;
+        max-width: 500px;
+        margin: 0 auto;
+        overflow: hidden;
+        border: 1px solid #2f3336;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .tw-header {
+        display: flex;
+        align-items: flex-start;
+        padding: 12px;
+    }
+
+    .tw-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #d52b1e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        flex-shrink: 0;
+    }
+
+    .tw-body {
+        margin-left: 10px;
+        flex: 1;
+    }
+
+    .tw-names {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .tw-name {
+        font-weight: 700;
+        color: #e7e9ea;
+        font-size: 15px;
+    }
+
+    .tw-handle {
+        color: #71767b;
+        font-size: 15px;
+    }
+
+    .tw-content {
+        color: #e7e9ea;
+        font-size: 15px;
+        line-height: 1.4;
+        white-space: pre-wrap;
+        margin-top: 4px;
+        max-height: 150px;
+        overflow-y: auto;
+    }
+
+    .tw-image {
+        margin-top: 12px;
+        border-radius: 16px;
+        width: 100%;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+        background: #2f3336;
+    }
+
+    /* Platform tabs */
+    .platform-tabs {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    .platform-tab {
+        padding: 10px 20px;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    .platform-tab.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743); color: white; }
+    .platform-tab.facebook { background: #1877f2; color: white; }
+    .platform-tab.linkedin { background: #0a66c2; color: white; }
+    .platform-tab.twitter { background: #000; color: white; border: 1px solid #536471; }
+
+    .platform-tab:not(.active) {
+        opacity: 0.5;
+    }
+
+    .platform-tab.active {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+
+    .mockup-container {
+        display: none;
+    }
+
+    .mockup-container.active {
+        display: block;
+    }
+
+    /* Copy button */
+    .copy-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(255,255,255,0.2);
+        border: none;
+        border-radius: 8px;
+        padding: 8px 12px;
+        color: white;
+        cursor: pointer;
+    }
+
+    .copy-btn:hover {
+        background: rgba(255,255,255,0.3);
+    }
+
+    .mockup-wrapper {
+        position: relative;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container py-4">
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-            <li class="breadcrumb-item active">{{ content.title[:30] }}...</li>
+            <li class="breadcrumb-item"><a href="/dashboard">Content Log</a></li>
+            <li class="breadcrumb-item active">Preview</li>
         </ol>
     </nav>
 
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div>
+                    <div class="d-flex gap-2 mb-2">
+                        <span class="badge badge-{{ content.track }} fs-6 px-3 py-2">{{ content.track|upper }}</span>
+                        {% if content.content_type %}
+                        <span class="badge bg-secondary fs-6 px-3 py-2">{{ content.content_type|upper }}</span>
+                        {% endif %}
+                    </div>
+                    <h2 class="text-white mb-2">{{ content.title }}</h2>
+                    <p class="text-muted mb-0">
+                        <i class="bi bi-clock me-2"></i>{{ content.created_at[:16] if content.created_at else 'Unknown' }}
+                        {% if content.source %}
+                        <span class="ms-3"><i class="bi bi-newspaper me-2"></i>{{ content.source }}</span>
+                        {% endif %}
+                    </p>
+                </div>
+                <a href="/dashboard" class="btn btn-outline-light">
+                    <i class="bi bi-arrow-left me-2"></i>Back to Log
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Platform Preview Tabs -->
+    <div class="platform-tabs">
+        <button class="platform-tab instagram active" onclick="showPlatform('instagram')">
+            <i class="bi bi-instagram me-2"></i>Instagram
+        </button>
+        <button class="platform-tab facebook" onclick="showPlatform('facebook')">
+            <i class="bi bi-facebook me-2"></i>Facebook
+        </button>
+        <button class="platform-tab linkedin" onclick="showPlatform('linkedin')">
+            <i class="bi bi-linkedin me-2"></i>LinkedIn
+        </button>
+        <button class="platform-tab twitter" onclick="showPlatform('twitter')">
+            <i class="bi bi-twitter-x me-2"></i>X / Twitter
+        </button>
+    </div>
+
     <div class="row">
-        <div class="col-lg-6">
-            {% if content.image_url %}
-            <img src="{{ content.image_url }}" class="img-fluid rounded mb-4" alt="{{ content.title }}">
-            {% else %}
-            <div class="bg-secondary rounded d-flex align-items-center justify-content-center mb-4" style="height: 400px;">
-                <i class="bi bi-image" style="font-size: 5rem; opacity: 0.3;"></i>
+        <div class="col-lg-6 mb-4">
+            <!-- Instagram Mockup -->
+            <div class="mockup-container active" id="mockup-instagram">
+                <h5 class="text-white mb-3"><i class="bi bi-instagram me-2"></i>Instagram Preview</h5>
+                <div class="mockup-wrapper">
+                    <button class="copy-btn" onclick="copyCaption('instagram')">
+                        <i class="bi bi-clipboard me-1"></i>Copy Caption
+                    </button>
+                    <div class="instagram-mockup">
+                        <div class="ig-header">
+                            <div class="ig-avatar">P</div>
+                            <span class="ig-username">philata.ca</span>
+                        </div>
+                        {% if content.image_url %}
+                        <img src="{{ content.image_url }}" class="ig-image" alt="{{ content.title }}">
+                        {% else %}
+                        <div class="ig-image">
+                            <i class="bi bi-image" style="font-size: 4rem; color: #666;"></i>
+                        </div>
+                        {% endif %}
+                        <div class="ig-actions">
+                            <i class="bi bi-heart"></i>
+                            <i class="bi bi-chat"></i>
+                            <i class="bi bi-send"></i>
+                            <i class="bi bi-bookmark ms-auto"></i>
+                        </div>
+                        <div class="ig-caption" id="caption-instagram">
+                            <strong>philata.ca</strong> {{ content.captions.instagram if content.captions else 'No caption available' }}
+                        </div>
+                    </div>
+                </div>
             </div>
-            {% endif %}
 
-            <div class="d-flex gap-2 mb-4">
-                <span class="badge badge-{{ content.track }} fs-6 px-3 py-2">{{ content.track|upper }}</span>
-                <span class="badge bg-{{ 'warning' if content.status == 'pending' else 'success' if content.status == 'approved' else 'danger' if content.status == 'rejected' else 'info' }} fs-6 px-3 py-2">
-                    {{ content.status|upper }}
-                </span>
-                {% if content.content_type %}
-                <span class="badge bg-secondary fs-6 px-3 py-2">{{ content.content_type|upper }}</span>
-                {% endif %}
+            <!-- Facebook Mockup -->
+            <div class="mockup-container" id="mockup-facebook">
+                <h5 class="text-white mb-3"><i class="bi bi-facebook me-2"></i>Facebook Preview</h5>
+                <div class="mockup-wrapper">
+                    <button class="copy-btn" onclick="copyCaption('facebook')">
+                        <i class="bi bi-clipboard me-1"></i>Copy Caption
+                    </button>
+                    <div class="facebook-mockup">
+                        <div class="fb-header">
+                            <div class="fb-avatar">P</div>
+                            <div class="fb-info">
+                                <div class="fb-name">Philata - Canadian Immigration</div>
+                                <div class="fb-time">Just now · <i class="bi bi-globe2"></i></div>
+                            </div>
+                        </div>
+                        <div class="fb-content" id="caption-facebook">{{ content.captions.facebook if content.captions else 'No caption available' }}</div>
+                        {% if content.image_url %}
+                        <img src="{{ content.image_url }}" class="fb-image" alt="{{ content.title }}">
+                        {% else %}
+                        <div class="fb-image d-flex align-items-center justify-content-center">
+                            <i class="bi bi-image" style="font-size: 4rem; color: #666;"></i>
+                        </div>
+                        {% endif %}
+                        <div class="fb-actions">
+                            <span><i class="bi bi-hand-thumbs-up me-1"></i>Like</span>
+                            <span><i class="bi bi-chat me-1"></i>Comment</span>
+                            <span><i class="bi bi-share me-1"></i>Share</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            {% if content.status == 'pending' %}
-            <div class="d-flex gap-3 mb-4">
-                <button class="btn btn-approve btn-lg flex-fill" onclick="approveContent('{{ content.id }}')">
-                    <i class="bi bi-check-lg me-2"></i>Approve
-                </button>
-                <button class="btn btn-reject btn-lg flex-fill" onclick="rejectContent('{{ content.id }}')">
-                    <i class="bi bi-x-lg me-2"></i>Reject
-                </button>
+            <!-- LinkedIn Mockup -->
+            <div class="mockup-container" id="mockup-linkedin">
+                <h5 class="text-white mb-3"><i class="bi bi-linkedin me-2"></i>LinkedIn Preview</h5>
+                <div class="mockup-wrapper">
+                    <button class="copy-btn" onclick="copyCaption('linkedin')">
+                        <i class="bi bi-clipboard me-1"></i>Copy Caption
+                    </button>
+                    <div class="linkedin-mockup">
+                        <div class="li-header">
+                            <div class="li-avatar">P</div>
+                            <div class="li-info">
+                                <div class="li-name">Philata Immigration</div>
+                                <div class="li-desc">Canadian Immigration Updates · 1m</div>
+                            </div>
+                        </div>
+                        <div class="li-content" id="caption-linkedin">{{ content.captions.linkedin if content.captions else 'No caption available' }}</div>
+                        {% if content.image_url %}
+                        <img src="{{ content.image_url }}" class="li-image" alt="{{ content.title }}">
+                        {% else %}
+                        <div class="li-image d-flex align-items-center justify-content-center">
+                            <i class="bi bi-image" style="font-size: 4rem; color: #666;"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-            {% elif content.status == 'approved' %}
-            <button class="btn btn-info btn-lg w-100 mb-4" onclick="markPosted('{{ content.id }}')">
-                <i class="bi bi-send me-2"></i>Mark as Posted
-            </button>
-            {% endif %}
+
+            <!-- Twitter Mockup -->
+            <div class="mockup-container" id="mockup-twitter">
+                <h5 class="text-white mb-3"><i class="bi bi-twitter-x me-2"></i>X / Twitter Preview</h5>
+                <div class="mockup-wrapper">
+                    <button class="copy-btn" onclick="copyCaption('twitter')">
+                        <i class="bi bi-clipboard me-1"></i>Copy Caption
+                    </button>
+                    <div class="twitter-mockup">
+                        <div class="tw-header">
+                            <div class="tw-avatar">P</div>
+                            <div class="tw-body">
+                                <div class="tw-names">
+                                    <span class="tw-name">Philata</span>
+                                    <span class="tw-handle">@philata_ca · 1m</span>
+                                </div>
+                                <div class="tw-content" id="caption-twitter">{{ content.captions.twitter if content.captions else 'No caption available' }}</div>
+                                {% if content.image_url %}
+                                <img src="{{ content.image_url }}" class="tw-image" alt="{{ content.title }}">
+                                {% else %}
+                                <div class="tw-image d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-image" style="font-size: 3rem; color: #666;"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="col-lg-6">
-            <h2 class="mb-3 text-white">{{ content.title }}</h2>
-
-            <div class="mb-4">
-                <p class="text-muted mb-1"><i class="bi bi-clock me-2"></i>Created: {{ content.created_at }}</p>
-                {% if content.source %}
-                <p class="text-muted mb-1"><i class="bi bi-newspaper me-2"></i>Source: {{ content.source }}</p>
-                {% endif %}
-                {% if content.source_url %}
-                <p class="text-muted mb-1">
-                    <i class="bi bi-link me-2"></i>
-                    <a href="{{ content.source_url }}" target="_blank" class="text-info">{{ content.source_url[:50] }}...</a>
-                </p>
-                {% endif %}
-                {% if content.official_source_url %}
-                <p class="text-success mb-1">
-                    <i class="bi bi-patch-check me-2"></i>
-                    <a href="{{ content.official_source_url }}" target="_blank" class="text-success">Official Source</a>
-                </p>
-                {% endif %}
-            </div>
-
+            <!-- Content Details -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <i class="bi bi-instagram me-2"></i>Instagram Caption
-                    <button class="btn btn-sm btn-outline-light float-end" onclick="copyCaption('instagram')">
-                        <i class="bi bi-clipboard"></i>
-                    </button>
+                    <i class="bi bi-info-circle me-2"></i>Content Details
                 </div>
                 <div class="card-body">
-                    <div class="caption-box" id="caption-instagram">{{ content.captions.instagram if content.captions else 'No caption' }}</div>
-                </div>
-            </div>
-
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header py-2">
-                            <i class="bi bi-facebook me-1"></i>Facebook
-                            <button class="btn btn-sm btn-link float-end p-0" onclick="copyCaption('facebook')">
-                                <i class="bi bi-clipboard"></i>
-                            </button>
-                        </div>
-                        <div class="card-body p-2">
-                            <div class="caption-box small" id="caption-facebook" style="max-height: 100px;">{{ content.captions.facebook if content.captions else '-' }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header py-2">
-                            <i class="bi bi-linkedin me-1"></i>LinkedIn
-                            <button class="btn btn-sm btn-link float-end p-0" onclick="copyCaption('linkedin')">
-                                <i class="bi bi-clipboard"></i>
-                            </button>
-                        </div>
-                        <div class="card-body p-2">
-                            <div class="caption-box small" id="caption-linkedin" style="max-height: 100px;">{{ content.captions.linkedin if content.captions else '-' }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-header py-2">
-                            <i class="bi bi-twitter-x me-1"></i>Twitter
-                            <button class="btn btn-sm btn-link float-end p-0" onclick="copyCaption('twitter')">
-                                <i class="bi bi-clipboard"></i>
-                            </button>
-                        </div>
-                        <div class="card-body p-2">
-                            <div class="caption-box small" id="caption-twitter" style="max-height: 100px;">{{ content.captions.twitter if content.captions else '-' }}</div>
-                        </div>
-                    </div>
+                    <table class="table table-dark table-borderless mb-0">
+                        <tr>
+                            <td class="text-muted" style="width: 120px;">Track</td>
+                            <td><span class="badge badge-{{ content.track }}">{{ content.track|upper }}</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Category</td>
+                            <td>{{ content.category or '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Source</td>
+                            <td>{{ content.source or '-' }}</td>
+                        </tr>
+                        {% if content.source_url %}
+                        <tr>
+                            <td class="text-muted">Source URL</td>
+                            <td><a href="{{ content.source_url }}" target="_blank" class="text-info">{{ content.source_url[:40] }}...</a></td>
+                        </tr>
+                        {% endif %}
+                        {% if content.official_source_url %}
+                        <tr>
+                            <td class="text-muted">Official</td>
+                            <td><a href="{{ content.official_source_url }}" target="_blank" class="text-success"><i class="bi bi-patch-check me-1"></i>IRCC Link</a></td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <td class="text-muted">Created</td>
+                            <td>{{ content.created_at or '-' }}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
             {% if content.full_article %}
-            <div class="card mt-4">
+            <div class="card mb-4">
                 <div class="card-header">
                     <i class="bi bi-file-text me-2"></i>Full Article
                 </div>
                 <div class="card-body">
-                    <div style="max-height: 300px; overflow-y: auto;">{{ content.full_article }}</div>
+                    <div class="caption-box" style="max-height: 300px;">{{ content.full_article }}</div>
                 </div>
             </div>
             {% endif %}
+
+            <!-- Quick Copy All -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="bi bi-clipboard me-2"></i>Quick Copy
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-light" onclick="copyCaption('instagram')">
+                            <i class="bi bi-instagram me-2"></i>Copy Instagram Caption
+                        </button>
+                        <button class="btn btn-outline-light" onclick="copyCaption('facebook')">
+                            <i class="bi bi-facebook me-2"></i>Copy Facebook Caption
+                        </button>
+                        <button class="btn btn-outline-light" onclick="copyCaption('linkedin')">
+                            <i class="bi bi-linkedin me-2"></i>Copy LinkedIn Caption
+                        </button>
+                        <button class="btn btn-outline-light" onclick="copyCaption('twitter')">
+                            <i class="bi bi-twitter-x me-2"></i>Copy Twitter Caption
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -140,40 +591,36 @@
 
 {% block extra_js %}
 <script>
+    function showPlatform(platform) {
+        // Hide all mockups
+        document.querySelectorAll('.mockup-container').forEach(m => m.classList.remove('active'));
+        document.querySelectorAll('.platform-tab').forEach(t => t.classList.remove('active'));
+
+        // Show selected
+        document.getElementById('mockup-' + platform).classList.add('active');
+        document.querySelector('.platform-tab.' + platform).classList.add('active');
+    }
+
     function copyCaption(platform) {
-        const text = document.getElementById(`caption-${platform}`).innerText;
-        navigator.clipboard.writeText(text).then(() => {
-            alert(`${platform} caption copied!`);
-        });
-    }
+        const el = document.getElementById('caption-' + platform);
+        let text = el.innerText;
 
-    function approveContent(id) {
-        fetch(`/api/results/${id}/approve`, { method: 'POST' })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success) location.reload();
-                else alert('Failed: ' + data.error);
-            });
-    }
-
-    function rejectContent(id) {
-        if (confirm('Reject this content?')) {
-            fetch(`/api/results/${id}/reject`, { method: 'POST' })
-                .then(r => r.json())
-                .then(data => {
-                    if (data.success) location.href = '/dashboard';
-                    else alert('Failed: ' + data.error);
-                });
+        // Remove the username prefix for Instagram
+        if (platform === 'instagram') {
+            text = text.replace(/^philata\.ca\s*/, '');
         }
-    }
 
-    function markPosted(id) {
-        fetch(`/api/results/${id}/posted`, { method: 'POST' })
-            .then(r => r.json())
-            .then(data => {
-                if (data.success) location.reload();
-                else alert('Failed: ' + data.error);
-            });
+        navigator.clipboard.writeText(text).then(() => {
+            // Show feedback
+            const btn = event.target.closest('button');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="bi bi-check me-1"></i>Copied!';
+            btn.classList.add('btn-success');
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.classList.remove('btn-success');
+            }, 2000);
+        });
     }
 </script>
 {% endblock %}

@@ -6,10 +6,10 @@
 <div class="hero">
     <div class="container">
         <div class="maple-icon">&#127809;</div>
-        <h1>Welcome to <span style="color: var(--philata-red);">Philata</span></h1>
-        <p class="lead text-muted mb-4">Your Canadian Immigration Content Hub</p>
+        <h1 class="text-white">Welcome to <span style="color: var(--philata-red);">Philata</span></h1>
+        <p class="lead mb-4" style="color: #b0b0b0;">Canadian Immigration Content Preview Hub</p>
         <a href="/dashboard" class="btn btn-danger btn-lg px-5">
-            <i class="bi bi-grid me-2"></i>View Dashboard
+            <i class="bi bi-journal-text me-2"></i>View Content Log
         </a>
     </div>
 </div>
@@ -18,60 +18,95 @@
     <div class="row g-4" id="stats-row">
         <div class="col-md-3">
             <div class="stat-card">
-                <div class="stat-number text-warning" id="stat-pending">-</div>
-                <div class="text-muted">Pending Review</div>
+                <div class="stat-number text-danger" id="stat-breaking">-</div>
+                <div style="color: #b0b0b0;">Breaking News</div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="stat-card">
-                <div class="stat-number text-success" id="stat-approved">-</div>
-                <div class="text-muted">Approved</div>
+                <div class="stat-number text-primary" id="stat-regular">-</div>
+                <div style="color: #b0b0b0;">Regular News</div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="stat-card">
-                <div class="stat-number text-info" id="stat-posted">-</div>
-                <div class="text-muted">Posted</div>
+                <div class="stat-number text-success" id="stat-educational">-</div>
+                <div style="color: #b0b0b0;">Educational</div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="stat-card">
-                <div class="stat-number text-light" id="stat-total">-</div>
-                <div class="text-muted">Total Content</div>
+                <div class="stat-number text-info" id="stat-forms">-</div>
+                <div style="color: #b0b0b0;">Forms Guides</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12 text-center mb-4">
+            <h3 class="text-white"><i class="bi bi-phone me-2"></i>Preview Before Posting</h3>
+            <p style="color: #888;">See exactly how your content will look on each platform</p>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center p-4">
+                <i class="bi bi-instagram" style="font-size: 3rem; color: #e4405f;"></i>
+                <h5 class="text-white mt-3">Instagram</h5>
+                <p class="small" style="color: #b0b0b0;">Square post preview with caption</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center p-4">
+                <i class="bi bi-facebook" style="font-size: 3rem; color: #1877f2;"></i>
+                <h5 class="text-white mt-3">Facebook</h5>
+                <p class="small" style="color: #b0b0b0;">Feed post with reactions</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center p-4">
+                <i class="bi bi-linkedin" style="font-size: 3rem; color: #0a66c2;"></i>
+                <h5 class="text-white mt-3">LinkedIn</h5>
+                <p class="small" style="color: #b0b0b0;">Professional post format</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center p-4">
+                <i class="bi bi-twitter-x" style="font-size: 3rem; color: #fff;"></i>
+                <h5 class="text-white mt-3">X / Twitter</h5>
+                <p class="small" style="color: #b0b0b0;">Tweet with media</p>
             </div>
         </div>
     </div>
 
     <div class="row mt-5">
         <div class="col-12">
-            <h3 class="mb-4"><i class="bi bi-lightning me-2"></i>Content Tracks</h3>
+            <h3 class="text-white mb-4"><i class="bi bi-lightning me-2"></i>Content Tracks</h3>
         </div>
         <div class="col-md-3">
             <div class="card text-center p-4">
                 <div class="badge-breaking d-inline-block px-3 py-2 rounded mb-3 text-white">BREAKING</div>
                 <h5 class="text-white">Breaking News</h5>
-                <p class="small" style="color: #b0b0b0;">Real-time immigration alerts and announcements</p>
+                <p class="small" style="color: #b0b0b0;">Real-time immigration alerts</p>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card text-center p-4">
                 <div class="badge-regular d-inline-block px-3 py-2 rounded mb-3 text-white">REGULAR</div>
                 <h5 class="text-white">Regular News</h5>
-                <p class="small" style="color: #b0b0b0;">Daily immigration updates and policy changes</p>
+                <p class="small" style="color: #b0b0b0;">Daily immigration updates</p>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card text-center p-4">
                 <div class="badge-educational d-inline-block px-3 py-2 rounded mb-3 text-white">EDUCATIONAL</div>
                 <h5 class="text-white">Educational</h5>
-                <p class="small" style="color: #b0b0b0;">365-day calendar of immigration tips</p>
+                <p class="small" style="color: #b0b0b0;">365-day tips calendar</p>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card text-center p-4">
                 <div class="badge-forms d-inline-block px-3 py-2 rounded mb-3 text-white">FORMS</div>
                 <h5 class="text-white">Forms Guide</h5>
-                <p class="small" style="color: #b0b0b0;">Official forms and visa requirements</p>
+                <p class="small" style="color: #b0b0b0;">Official forms & requirements</p>
             </div>
         </div>
     </div>
@@ -83,10 +118,10 @@
     fetch('/api/stats')
         .then(r => r.json())
         .then(stats => {
-            document.getElementById('stat-pending').textContent = stats.pending || 0;
-            document.getElementById('stat-approved').textContent = stats.approved || 0;
-            document.getElementById('stat-posted').textContent = stats.posted || 0;
-            document.getElementById('stat-total').textContent = stats.total || 0;
+            document.getElementById('stat-breaking').textContent = stats.by_track?.breaking || 0;
+            document.getElementById('stat-regular').textContent = stats.by_track?.regular || 0;
+            document.getElementById('stat-educational').textContent = stats.by_track?.educational || 0;
+            document.getElementById('stat-forms').textContent = stats.by_track?.forms || 0;
         })
         .catch(e => console.error('Failed to load stats:', e));
 </script>
