@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block title %}Cookie Policy{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/legal.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="legal-header">
+    <div class="container">
+        <div class="legal-breadcrumb">
+            <a href="/">Home</a>
+            <span>/</span>
+            <span>Cookie Policy</span>
+        </div>
+        <h1 class="legal-title">Cookie Policy</h1>
+        <div class="legal-meta">
+            <div class="meta-item">
+                <i class="bi bi-calendar3"></i>
+                <span>Last Updated: January 1, 2025</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<article class="container">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+
+            <div class="legal-summary">
+                <div class="summary-icon">&#127850;</div>
+                <div class="summary-content">
+                    <h3>What Are Cookies?</h3>
+                    <p>Cookies are small text files stored on your device when you visit our website. They help us provide a better experience, remember your preferences, and understand how you use our site. You can control cookies through your browser settings.</p>
+                </div>
+            </div>
+
+            <div class="legal-body">
+
+                <section id="what-are-cookies" class="legal-section">
+                    <h2>1. What Are Cookies?</h2>
+                    <p>Cookies are small data files that are placed on your computer or mobile device when you visit a website. Cookies are widely used by website owners to make their websites work, or to work more efficiently, as well as to provide reporting information.</p>
+                    <p>Cookies set by the website owner (in this case, Philata) are called "first-party cookies." Cookies set by parties other than the website owner are called "third-party cookies."</p>
+                </section>
+
+                <section id="cookies-we-use" class="legal-section">
+                    <h2>2. Cookies We Use</h2>
+
+                    <h3>2.1 Essential Cookies (Always Active)</h3>
+                    <p>These cookies are necessary for the website to function and cannot be switched off.</p>
+
+                    <table class="legal-table">
+                        <thead>
+                            <tr>
+                                <th>Cookie Name</th>
+                                <th>Purpose</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>session</code></td>
+                                <td>Maintains user session across pages</td>
+                                <td>Session</td>
+                            </tr>
+                            <tr>
+                                <td><code>cookie_consent</code></td>
+                                <td>Stores your cookie preferences</td>
+                                <td>1 year</td>
+                            </tr>
+                            <tr>
+                                <td><code>csrf_token</code></td>
+                                <td>Security token to prevent CSRF attacks</td>
+                                <td>Session</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>2.2 Performance Cookies (Optional)</h3>
+                    <p>These cookies allow us to count visits and traffic sources so we can measure and improve the performance of our site.</p>
+
+                    <table class="legal-table">
+                        <thead>
+                            <tr>
+                                <th>Cookie Name</th>
+                                <th>Purpose</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>_ga</code></td>
+                                <td>Google Analytics: Distinguishes users</td>
+                                <td>2 years</td>
+                            </tr>
+                            <tr>
+                                <td><code>_gid</code></td>
+                                <td>Google Analytics: Distinguishes users</td>
+                                <td>24 hours</td>
+                            </tr>
+                            <tr>
+                                <td><code>_gat</code></td>
+                                <td>Google Analytics: Throttle request rate</td>
+                                <td>1 minute</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>2.3 Functionality Cookies (Optional)</h3>
+                    <p>These cookies enable the website to provide enhanced functionality and personalization.</p>
+
+                    <table class="legal-table">
+                        <thead>
+                            <tr>
+                                <th>Cookie Name</th>
+                                <th>Purpose</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>lang</code></td>
+                                <td>Remembers language preference</td>
+                                <td>1 year</td>
+                            </tr>
+                            <tr>
+                                <td><code>region</code></td>
+                                <td>Remembers country/region selection</td>
+                                <td>1 year</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>2.4 Marketing Cookies (Optional)</h3>
+                    <p>These cookies track your online activity to help deliver more relevant content.</p>
+
+                    <table class="legal-table">
+                        <thead>
+                            <tr>
+                                <th>Cookie Name</th>
+                                <th>Purpose</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>_fbp</code></td>
+                                <td>Facebook Pixel: Track conversions</td>
+                                <td>90 days</td>
+                            </tr>
+                            <tr>
+                                <td><code>_gcl_au</code></td>
+                                <td>Google Ads: Track conversions</td>
+                                <td>90 days</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="manage-cookies" class="legal-section">
+                    <h2>3. How to Manage Cookies</h2>
+
+                    <h3>3.1 Browser Settings</h3>
+                    <p>Most web browsers allow you to control cookies through their settings:</p>
+                    <ul class="legal-list">
+                        <li><strong>Chrome:</strong> Settings > Privacy and security > Cookies</li>
+                        <li><strong>Firefox:</strong> Settings > Privacy & Security > Cookies</li>
+                        <li><strong>Safari:</strong> Preferences > Privacy > Cookies</li>
+                        <li><strong>Edge:</strong> Settings > Cookies and site permissions</li>
+                    </ul>
+
+                    <div class="legal-warning">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <div>
+                            <strong>Important:</strong>
+                            <p>Blocking all cookies will have a negative impact upon the usability of many websites. If you block cookies, you will not be able to use all the features on our website.</p>
+                        </div>
+                    </div>
+
+                    <h3>3.2 Opt-Out Links</h3>
+                    <p>You can opt out of specific third-party cookies:</p>
+                    <ul class="legal-list">
+                        <li><strong>Google Analytics:</strong> <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-out Add-on</a></li>
+                        <li><strong>Facebook:</strong> <a href="https://www.facebook.com/help/568137493302217" target="_blank" rel="noopener">Facebook Ad Preferences</a></li>
+                        <li><strong>Google Ads:</strong> <a href="https://adssettings.google.com/" target="_blank" rel="noopener">Google Ads Settings</a></li>
+                    </ul>
+                </section>
+
+                <section id="changes" class="legal-section">
+                    <h2>4. Changes to This Cookie Policy</h2>
+                    <p>We may update this Cookie Policy from time to time to reflect changes in the cookies we use or for other operational, legal, or regulatory reasons. Please revisit this Cookie Policy regularly.</p>
+                </section>
+
+                <section id="contact" class="legal-section">
+                    <h2>5. Contact Us</h2>
+                    <p>If you have any questions about our use of cookies:</p>
+
+                    <div class="contact-card">
+                        <div class="contact-item">
+                            <i class="bi bi-envelope-fill"></i>
+                            <div>
+                                <strong>Email</strong>
+                                <p><a href="mailto:privacy@philata.ca">privacy@philata.ca</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <div class="legal-doc-footer">
+                <p>Last updated: January 1, 2025</p>
+                <div class="footer-actions">
+                    <a href="/privacy-policy" class="btn btn-outline-light">Privacy Policy</a>
+                    <a href="/terms" class="btn btn-outline-light">Terms & Conditions</a>
+                    <a href="/" class="btn btn-primary">Return Home</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</article>
+{% endblock %}

@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block title %}Disclaimer{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/legal.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="legal-header">
+    <div class="container">
+        <div class="legal-breadcrumb">
+            <a href="/">Home</a>
+            <span>/</span>
+            <span>Disclaimer</span>
+        </div>
+        <h1 class="legal-title">Disclaimer</h1>
+        <div class="legal-meta">
+            <div class="meta-item">
+                <i class="bi bi-calendar3"></i>
+                <span>Last Updated: January 1, 2025</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<article class="container">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+
+            <div class="legal-warning" style="margin-bottom: 3rem;">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <div>
+                    <h3 style="margin: 0 0 1rem 0; color: var(--philata-red);">Important Legal Disclaimer</h3>
+                    <p><strong>READ CAREFULLY:</strong> The information provided on philata.ca is for general informational purposes only. It does not constitute legal advice, immigration advice, or a guarantee of any specific outcome. Always verify information with official government sources and consult with licensed professionals for your specific situation.</p>
+                </div>
+            </div>
+
+            <div class="legal-body">
+
+                <section id="no-guarantee" class="legal-section">
+                    <h2>1. No Guarantee of Results</h2>
+
+                    <p><strong>Philata Immigration Services Inc. makes NO guarantee, warranty, or representation regarding:</strong></p>
+
+                    <ul class="legal-list">
+                        <li>Approval of any immigration application</li>
+                        <li>Processing times for applications</li>
+                        <li>Issuance of visas, permits, or permanent residence</li>
+                        <li>Express Entry draw scores or invitation timelines</li>
+                        <li>Provincial Nominee Program selections</li>
+                        <li>Changes to immigration policies or programs</li>
+                        <li>Any specific outcome related to your immigration case</li>
+                    </ul>
+
+                    <div class="legal-highlight">
+                        <strong>Final Authority:</strong>
+                        <p>All immigration decisions are made solely by Immigration, Refugees and Citizenship Canada (IRCC), provincial immigration authorities, or other government bodies. Philata has no control over these decisions.</p>
+                    </div>
+                </section>
+
+                <section id="information-accuracy" class="legal-section">
+                    <h2>2. Information Accuracy</h2>
+
+                    <p>While we strive to provide accurate, current, and reliable information:</p>
+
+                    <ul class="legal-list">
+                        <li><strong>Immigration laws change frequently</strong> - Information that was accurate at the time of publication may become outdated</li>
+                        <li><strong>Content is general in nature</strong> - It may not apply to your specific circumstances</li>
+                        <li><strong>Errors may occur</strong> - Despite our best efforts, information may contain inaccuracies or omissions</li>
+                        <li><strong>Not a substitute for official sources</strong> - Always verify information with canada.ca and official government websites</li>
+                    </ul>
+
+                    <div class="legal-warning">
+                        <i class="bi bi-shield-fill-exclamation"></i>
+                        <div>
+                            <strong>Official Sources:</strong>
+                            <p>For the most current and accurate immigration information, always consult:</p>
+                            <ul>
+                                <li><strong>Immigration, Refugees and Citizenship Canada (IRCC):</strong> <a href="https://www.canada.ca/en/immigration-refugees-citizenship.html" target="_blank" rel="noopener">canada.ca/ircc</a></li>
+                                <li><strong>Provincial Immigration Programs:</strong> Visit individual provincial government websites</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="not-legal-advice" class="legal-section">
+                    <h2>3. Not Legal Advice</h2>
+
+                    <p><strong>The content on this website does NOT constitute legal advice.</strong></p>
+
+                    <p>Philata Immigration Services and its Regulated Canadian Immigration Consultants (RCICs) are NOT lawyers and do not provide legal services. Our services are limited to immigration consulting as regulated by the College of Immigration and Citizenship Consultants (CICC).</p>
+
+                    <p><strong>When to Seek Legal Counsel:</strong></p>
+                    <ul class="legal-list">
+                        <li>If you have criminal inadmissibility issues</li>
+                        <li>If you require representation in Federal Court</li>
+                        <li>If you are involved in immigration litigation</li>
+                        <li>If you have complex legal questions beyond immigration consulting scope</li>
+                    </ul>
+                </section>
+
+                <section id="third-party" class="legal-section">
+                    <h2>4. Third-Party Links and Content</h2>
+
+                    <p>Our website may contain links to third-party websites. <strong>Philata is not responsible for:</strong></p>
+                    <ul class="legal-list">
+                        <li>The content, accuracy, or availability of third-party websites</li>
+                        <li>Privacy practices of third-party sites</li>
+                        <li>Products or services offered by third parties</li>
+                        <li>Any harm resulting from your interaction with third-party sites</li>
+                    </ul>
+                    <p>Links are provided for convenience only and do not constitute an endorsement.</p>
+                </section>
+
+                <section id="testimonials" class="legal-section">
+                    <h2>5. Testimonials and Success Stories</h2>
+
+                    <p>Testimonials and success stories featured on our website represent the experiences of individual clients. They:</p>
+
+                    <ul class="legal-list">
+                        <li><strong>Do not guarantee similar results</strong> - Every immigration case is unique</li>
+                        <li><strong>Reflect specific circumstances</strong> - Results depend on individual qualifications, timing, and government decisions</li>
+                        <li><strong>Were accurate at time of publication</strong> - Immigration programs and requirements change</li>
+                        <li><strong>Are not promises or guarantees</strong> - Past success does not predict future outcomes</li>
+                    </ul>
+                </section>
+
+                <section id="limitation" class="legal-section">
+                    <h2>6. Limitation of Liability</h2>
+
+                    <p><strong>TO THE MAXIMUM EXTENT PERMITTED BY LAW:</strong></p>
+
+                    <div class="legal-warning">
+                        <i class="bi bi-shield-fill-exclamation"></i>
+                        <div>
+                            <p><strong>Philata Immigration Services Inc., its directors, employees, consultants, and affiliates shall NOT be liable for:</strong></p>
+                            <ul>
+                                <li>Any decisions you make based on information found on this website</li>
+                                <li>Delays or denials of immigration applications</li>
+                                <li>Losses resulting from reliance on website content</li>
+                                <li>Consequences of outdated or inaccurate information</li>
+                                <li>Technical issues, website downtime, or data loss</li>
+                                <li>Any indirect, incidental, special, consequential, or punitive damages</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <p>Your use of this website and our services is at your own risk.</p>
+                </section>
+
+                <section id="acceptance" class="legal-section">
+                    <h2>7. Acceptance of Disclaimer</h2>
+
+                    <p>By using philata.ca, you acknowledge that you have read, understood, and agree to this Disclaimer.</p>
+
+                    <p>If you do not agree with any part of this Disclaimer, please do not use our website or services.</p>
+                </section>
+
+                <section id="contact" class="legal-section">
+                    <h2>8. Questions</h2>
+                    <p>If you have questions about this Disclaimer:</p>
+
+                    <div class="contact-card">
+                        <div class="contact-item">
+                            <i class="bi bi-envelope-fill"></i>
+                            <div>
+                                <strong>Email</strong>
+                                <p><a href="mailto:legal@philata.ca">legal@philata.ca</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <div class="legal-doc-footer">
+                <p><strong>This Disclaimer is part of our Terms and Conditions and should be read together with our Privacy Policy.</strong></p>
+                <div class="footer-actions">
+                    <a href="/terms" class="btn btn-outline-light">Terms & Conditions</a>
+                    <a href="/privacy-policy" class="btn btn-outline-light">Privacy Policy</a>
+                    <a href="/" class="btn btn-primary">Return Home</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</article>
+{% endblock %}

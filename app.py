@@ -78,6 +78,40 @@ def contact():
     return render_template('contact.html')
 
 
+# =============================================================================
+# LEGAL PAGES
+# =============================================================================
+
+@app.route('/terms')
+def terms():
+    """Terms & Conditions page"""
+    return render_template('terms.html')
+
+
+@app.route('/privacy-policy')
+def privacy_policy():
+    """Privacy Policy page"""
+    return render_template('privacy.html')
+
+
+@app.route('/cookie-policy')
+def cookie_policy():
+    """Cookie Policy page"""
+    return render_template('cookies.html')
+
+
+@app.route('/refund-policy')
+def refund_policy():
+    """Refund Policy page"""
+    return render_template('refund.html')
+
+
+@app.route('/disclaimer')
+def disclaimer():
+    """Disclaimer page"""
+    return render_template('disclaimer.html')
+
+
 @app.route('/dashboard')
 def dashboard():
     """Content dashboard"""

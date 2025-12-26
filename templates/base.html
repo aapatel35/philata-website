@@ -496,7 +496,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top" id="mainNav">
         <div class="container">
             <a class="navbar-brand" href="/">
-                <div class="logo-icon">🍁</div>
+                <img src="{{ url_for('static', filename='images/philata-logo.png') }}" alt="Philata" class="logo-icon" style="width: 40px; height: 40px; object-fit: contain;">
                 <span>Philata</span>
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -533,7 +533,7 @@
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-logo">
-                        <div class="logo-icon" style="width: 36px; height: 36px; font-size: 1.1rem; background: var(--gradient-primary); border-radius: 10px; display: flex; align-items: center; justify-content: center;">🍁</div>
+                        <img src="{{ url_for('static', filename='images/philata-logo.png') }}" alt="Philata" style="width: 36px; height: 36px; object-fit: contain;">
                         <span>Philata</span>
                     </div>
                     <p class="text-muted mb-4" style="max-width: 300px;">
@@ -569,9 +569,11 @@
                 </div>
                 <div class="col-lg-2 col-md-6 footer-links">
                     <h6>Legal</h6>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Disclaimer</a>
+                    <a href="/privacy-policy">Privacy Policy</a>
+                    <a href="/terms">Terms of Service</a>
+                    <a href="/disclaimer">Disclaimer</a>
+                    <a href="/cookie-policy">Cookie Policy</a>
+                    <a href="/refund-policy">Refund Policy</a>
                 </div>
             </div>
             <div class="footer-bottom">

@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}Refund Policy{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/legal.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="legal-header">
+    <div class="container">
+        <div class="legal-breadcrumb">
+            <a href="/">Home</a>
+            <span>/</span>
+            <span>Refund Policy</span>
+        </div>
+        <h1 class="legal-title">Refund & Cancellation Policy</h1>
+        <div class="legal-meta">
+            <div class="meta-item">
+                <i class="bi bi-calendar3"></i>
+                <span>Last Updated: January 1, 2025</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<article class="container">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+
+            <div class="legal-summary">
+                <div class="summary-icon">&#128176;</div>
+                <div class="summary-content">
+                    <h3>Fair Refund Policy</h3>
+                    <p>We want you to be satisfied with our services. If you're not happy, you may be eligible for a refund depending on the work completed. Refunds are issued for unused services only. Government fees are non-refundable.</p>
+                </div>
+            </div>
+
+            <div class="legal-body">
+
+                <section id="overview" class="legal-section">
+                    <h2>1. Overview</h2>
+                    <p>This Refund and Cancellation Policy outlines the terms under which Philata Immigration Services Inc. will provide refunds for services purchased.</p>
+                    <p>This Policy applies to all services offered by Philata, including immigration consultations, application preparation, document review, and profile assessments.</p>
+                    <div class="legal-highlight">
+                        <strong>Important:</strong>
+                        <p>This Policy should be read in conjunction with your Retainer Agreement, which may contain additional specific terms regarding refunds for your particular service.</p>
+                    </div>
+                </section>
+
+                <section id="eligibility" class="legal-section">
+                    <h2>2. Refund Eligibility</h2>
+
+                    <h3>2.1 Services Eligible for Refund</h3>
+                    <p>You may be eligible for a full or partial refund if:</p>
+                    <ul class="legal-list">
+                        <li>You cancel services <strong>before</strong> we begin work on your case</li>
+                        <li>We are unable to provide the services as described in your Retainer Agreement</li>
+                        <li>Significant delays occur due to our error or negligence</li>
+                    </ul>
+
+                    <h3>2.2 Services NOT Eligible for Refund</h3>
+                    <p>No refund will be provided for:</p>
+                    <ul class="legal-list">
+                        <li>Work already completed</li>
+                        <li>Government processing fees paid on your behalf</li>
+                        <li>Third-party fees (language tests, medical exams, police certificates, courier fees)</li>
+                        <li>Application refusals or rejections by IRCC or provincial authorities</li>
+                        <li>Changes in immigration policy beyond our control</li>
+                        <li>Your decision to withdraw after we've started work</li>
+                        <li>Failure to provide required documents or information on time</li>
+                    </ul>
+
+                    <div class="legal-warning">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <div>
+                            <strong>No Guarantee of Approval:</strong>
+                            <p>We cannot guarantee that your immigration application will be approved. Refunds are NOT provided if your application is refused by immigration authorities. The final decision on all applications rests with IRCC or the relevant provincial body.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="refund-schedule" class="legal-section">
+                    <h2>3. Refund Schedule</h2>
+
+                    <p>Refund amounts are calculated based on the stage of work completed:</p>
+
+                    <table class="legal-table">
+                        <thead>
+                            <tr>
+                                <th>Stage of Service</th>
+                                <th>Work Completed</th>
+                                <th>Refund Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Before Work Begins</td>
+                                <td>Retainer paid, no work started</td>
+                                <td>100% minus $299 admin fee</td>
+                            </tr>
+                            <tr>
+                                <td>Initial Assessment</td>
+                                <td>Profile reviewed, eligibility assessed</td>
+                                <td>80% of remaining balance</td>
+                            </tr>
+                            <tr>
+                                <td>Document Preparation</td>
+                                <td>Forms filled, documents collected</td>
+                                <td>50% of remaining balance</td>
+                            </tr>
+                            <tr>
+                                <td>Application Submitted</td>
+                                <td>Application filed with IRCC/province</td>
+                                <td>No refund</td>
+                            </tr>
+                            <tr>
+                                <td>Post-Submission Support</td>
+                                <td>Application submitted, ongoing monitoring</td>
+                                <td>No refund</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="process" class="legal-section">
+                    <h2>4. Refund Request Process</h2>
+
+                    <h3>4.1 How to Request a Refund</h3>
+                    <p>To request a refund:</p>
+                    <ol class="legal-list">
+                        <li><strong>Submit a written request</strong> via email to <a href="mailto:refunds@philata.ca">refunds@philata.ca</a></li>
+                        <li><strong>Include:</strong> Your full name, Client ID or case number, Service purchased, Reason for refund request</li>
+                        <li><strong>Allow 14 business days</strong> for us to review your request</li>
+                    </ol>
+
+                    <h3>4.2 Refund Method</h3>
+                    <p>Refunds will be issued to the original payment method:</p>
+                    <ul class="legal-list">
+                        <li><strong>Credit Card:</strong> 5-10 business days</li>
+                        <li><strong>Bank Transfer:</strong> 3-5 business days</li>
+                        <li><strong>PayPal:</strong> 3-5 business days</li>
+                    </ul>
+                </section>
+
+                <section id="government-fees" class="legal-section">
+                    <h2>5. Government and Third-Party Fees</h2>
+
+                    <div class="legal-warning">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <div>
+                            <strong>Non-Refundable Fees:</strong>
+                            <p>The following fees are NEVER refundable under any circumstances:</p>
+                            <ul>
+                                <li>IRCC processing fees</li>
+                                <li>Provincial nominee program fees</li>
+                                <li>Biometric fees</li>
+                                <li>Language test fees (IELTS, CELPIP, TEF)</li>
+                                <li>Educational Credential Assessment (ECA) fees</li>
+                                <li>Medical examination fees</li>
+                                <li>Police certificate fees</li>
+                                <li>Translation service fees</li>
+                            </ul>
+                            <p><strong>These fees are paid directly to government agencies or third-party service providers and cannot be refunded by Philata.</strong></p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="contact" class="legal-section">
+                    <h2>6. Contact Us</h2>
+                    <p>For refund requests or questions about this policy:</p>
+
+                    <div class="contact-card">
+                        <div class="contact-item">
+                            <i class="bi bi-envelope-fill"></i>
+                            <div>
+                                <strong>Refund Requests</strong>
+                                <p><a href="mailto:refunds@philata.ca">refunds@philata.ca</a></p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="bi bi-clock-fill"></i>
+                            <div>
+                                <strong>Business Hours</strong>
+                                <p>Monday-Friday: 9:00 AM - 6:00 PM EST</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <div class="legal-doc-footer">
+                <p>This Refund Policy is part of our Terms and Conditions.</p>
+                <div class="footer-actions">
+                    <a href="/terms" class="btn btn-outline-light">Read Full Terms</a>
+                    <a href="/contact" class="btn btn-primary">Contact Support</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</article>
+{% endblock %}
