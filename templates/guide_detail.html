@@ -366,6 +366,401 @@
         border-left-color: {{ category.color }};
     }
 
+    /* Programs/Streams Cards */
+    .program-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--philata-border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .program-card:hover {
+        background: rgba(255,255,255,0.05);
+        border-color: {{ category.color }}55;
+    }
+
+    .program-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
+    .program-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: white;
+    }
+
+    .program-type {
+        font-size: 0.75rem;
+        padding: 4px 12px;
+        border-radius: 20px;
+        background: {{ category.color }}33;
+        color: {{ category.color }};
+        font-weight: 600;
+    }
+
+    .program-desc {
+        color: var(--philata-text-muted);
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .requirement-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .requirement-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+        color: var(--philata-text);
+        font-size: 0.9rem;
+    }
+
+    .requirement-list li i {
+        color: {{ category.color }};
+        margin-top: 3px;
+    }
+
+    /* CRS Breakdown Grid */
+    .crs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .crs-category {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--philata-border);
+        border-radius: 16px;
+        padding: 1.5rem;
+    }
+
+    .crs-category-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: {{ category.color }};
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--philata-border);
+    }
+
+    .crs-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .crs-item:last-child {
+        border-bottom: none;
+    }
+
+    .crs-label {
+        color: var(--philata-text-muted);
+        font-size: 0.9rem;
+    }
+
+    .crs-value {
+        color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    /* Improvement Strategies */
+    .strategy-card {
+        background: linear-gradient(135deg, {{ category.color }}15 0%, transparent 50%);
+        border: 1px solid {{ category.color }}33;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .strategy-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .strategy-points {
+        background: {{ category.color }};
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .strategy-change {
+        font-size: 0.9rem;
+        color: var(--philata-text-muted);
+    }
+
+    .strategy-change span {
+        color: #10B981;
+        font-weight: 600;
+    }
+
+    .strategy-text {
+        color: var(--philata-text);
+        line-height: 1.6;
+    }
+
+    /* Places to Explore */
+    .places-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .place-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--philata-border);
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .place-card:hover {
+        background: rgba(255,255,255,0.06);
+        transform: translateY(-3px);
+    }
+
+    .place-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .place-name {
+        color: white;
+        font-weight: 600;
+    }
+
+    /* Living Costs Table */
+    .costs-table {
+        background: rgba(255,255,255,0.02);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--philata-border);
+    }
+
+    .costs-table table {
+        width: 100%;
+        margin: 0;
+    }
+
+    .costs-table th {
+        background: rgba(255,255,255,0.05);
+        padding: 1rem;
+        font-weight: 600;
+        color: white;
+        text-align: left;
+        border-bottom: 1px solid var(--philata-border);
+    }
+
+    .costs-table td {
+        padding: 1rem;
+        color: var(--philata-text);
+        border-bottom: 1px solid var(--philata-border);
+    }
+
+    .costs-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .costs-table tr:hover td {
+        background: rgba(255,255,255,0.02);
+    }
+
+    /* Occupations Grid */
+    .occupations-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .occupation-tag {
+        background: {{ category.color }}22;
+        border: 1px solid {{ category.color }}44;
+        color: {{ category.color }};
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    /* Before You Start Checklist */
+    .checklist {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .checklist li {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        background: rgba(255,255,255,0.02);
+        border-radius: 12px;
+        border: 1px solid var(--philata-border);
+    }
+
+    .checklist li i {
+        color: {{ category.color }};
+        margin-top: 3px;
+    }
+
+    /* Form Sections */
+    .form-section-card {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--philata-border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-section-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .form-section-name i {
+        color: {{ category.color }};
+    }
+
+    .form-fields {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-field {
+        background: rgba(255,255,255,0.05);
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        color: var(--philata-text);
+    }
+
+    .form-section-tip {
+        background: linear-gradient(135deg, #10B98122 0%, transparent 50%);
+        border-left: 3px solid #10B981;
+        padding: 0.75rem 1rem;
+        border-radius: 0 8px 8px 0;
+        font-size: 0.9rem;
+        color: var(--philata-text);
+    }
+
+    /* Test Sections */
+    .test-section-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--philata-border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .test-section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
+    .test-section-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: white;
+    }
+
+    .test-section-duration {
+        font-size: 0.85rem;
+        color: {{ category.color }};
+        font-weight: 600;
+    }
+
+    .test-section-info {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 1rem;
+        color: var(--philata-text-muted);
+        font-size: 0.9rem;
+    }
+
+    .test-section-tips {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .test-section-tips li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0.5rem 0;
+        font-size: 0.9rem;
+        color: var(--philata-text);
+    }
+
+    .test-section-tips li i {
+        color: #10B981;
+        margin-top: 3px;
+    }
+
+    /* Advantages List */
+    .advantages-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .advantages-list li {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: rgba(255,255,255,0.02);
+        border-radius: 12px;
+        margin-bottom: 0.5rem;
+        border: 1px solid var(--philata-border);
+    }
+
+    .advantages-list li i {
+        color: #10B981;
+        font-size: 1.25rem;
+    }
+
+    /* Info Box */
+    .info-box {
+        background: linear-gradient(135deg, #3B82F622 0%, transparent 50%);
+        border: 1px solid #3B82F644;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-box p {
+        color: var(--philata-text);
+        margin: 0;
+    }
+
     /* Animations */
     @keyframes fadeInUp {
         from { opacity: 0; transform: translateY(20px); }
@@ -450,6 +845,386 @@
             </section>
             {% endif %}
 
+            <!-- Programs (Express Entry) -->
+            {% if guide.programs %}
+            <section class="content-section" id="programs">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-diagram-3"></i></div>
+                    <h2 class="section-title">Immigration Programs</h2>
+                </div>
+                {% for program in guide.programs %}
+                <div class="program-card">
+                    <div class="program-header">
+                        <span class="program-name">{{ program.name }}</span>
+                        {% if program.processing %}
+                        <span class="program-type">{{ program.processing }}</span>
+                        {% endif %}
+                    </div>
+                    <p class="program-desc">{{ program.description }}</p>
+                    {% if program.requirements %}
+                    <ul class="requirement-list">
+                        {% for req in program.requirements %}
+                        <li><i class="bi bi-check-circle"></i> {{ req }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% if program.best_for %}
+                    <p class="mt-2 mb-0"><strong style="color: {{ category.color }};">Best for:</strong> <span class="text-muted">{{ program.best_for }}</span></p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </section>
+            {% endif %}
+
+            <!-- CRS Breakdown (Express Entry) -->
+            {% if guide.crs_breakdown %}
+            <section class="content-section" id="crs-breakdown">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-calculator"></i></div>
+                    <h2 class="section-title">CRS Points Breakdown</h2>
+                </div>
+                {% if guide.crs_breakdown.description %}
+                <div class="info-box">
+                    <p>{{ guide.crs_breakdown.description }}</p>
+                </div>
+                {% endif %}
+                <div class="crs-grid">
+                    {% if guide.crs_breakdown.core_factors %}
+                    <div class="crs-category">
+                        <div class="crs-category-title">{{ guide.crs_breakdown.core_factors.title or 'Core Factors' }}</div>
+                        {% if guide.crs_breakdown.core_factors.age %}
+                        <div class="crs-item">
+                            <span class="crs-label">Age (peak: {{ guide.crs_breakdown.core_factors.age.peak_age }})</span>
+                            <span class="crs-value">{{ guide.crs_breakdown.core_factors.age.max_points }}</span>
+                        </div>
+                        {% endif %}
+                        {% if guide.crs_breakdown.core_factors.education %}
+                        <div class="crs-item">
+                            <span class="crs-label">Education (Doctorate)</span>
+                            <span class="crs-value">{{ guide.crs_breakdown.core_factors.education.doctorate }}</span>
+                        </div>
+                        <div class="crs-item">
+                            <span class="crs-label">Education (Master's)</span>
+                            <span class="crs-value">{{ guide.crs_breakdown.core_factors.education.masters }}</span>
+                        </div>
+                        {% endif %}
+                        {% if guide.crs_breakdown.core_factors.language %}
+                        <div class="crs-item">
+                            <span class="crs-label">Language (CLB 10)</span>
+                            <span class="crs-value">{{ guide.crs_breakdown.core_factors.language.per_ability_clb10 }}</span>
+                        </div>
+                        <div class="crs-item">
+                            <span class="crs-label">Language (CLB 9)</span>
+                            <span class="crs-value">{{ guide.crs_breakdown.core_factors.language.per_ability_clb9 }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    {% if guide.crs_breakdown.additional_factors %}
+                    <div class="crs-category">
+                        <div class="crs-category-title">{{ guide.crs_breakdown.additional_factors.title or 'Additional Factors' }}</div>
+                        {% if guide.crs_breakdown.additional_factors.provincial_nomination %}
+                        <div class="crs-item">
+                            <span class="crs-label">Provincial Nomination</span>
+                            <span class="crs-value">{{ guide.crs_breakdown.additional_factors.provincial_nomination }}</span>
+                        </div>
+                        {% endif %}
+                        {% if guide.crs_breakdown.additional_factors.canadian_education_3yr %}
+                        <div class="crs-item">
+                            <span class="crs-label">Canadian Education (3yr+)</span>
+                            <span class="crs-value">{{ guide.crs_breakdown.additional_factors.canadian_education_3yr }}</span>
+                        </div>
+                        {% endif %}
+                        {% if guide.crs_breakdown.additional_factors.sibling_in_canada %}
+                        <div class="crs-item">
+                            <span class="crs-label">Sibling in Canada</span>
+                            <span class="crs-value">{{ guide.crs_breakdown.additional_factors.sibling_in_canada }}</span>
+                        </div>
+                        {% endif %}
+                        {% if guide.crs_breakdown.additional_factors.french_ability %}
+                        <div class="crs-item">
+                            <span class="crs-label">French Ability</span>
+                            <span class="crs-value">{{ guide.crs_breakdown.additional_factors.french_ability }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Improvement Strategies (Express Entry) -->
+            {% if guide.improvement_strategies %}
+            <section class="content-section" id="improvement">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-graph-up-arrow"></i></div>
+                    <h2 class="section-title">CRS Improvement Strategies</h2>
+                </div>
+                {% for strategy in guide.improvement_strategies %}
+                <div class="strategy-card">
+                    <div class="strategy-header">
+                        <span class="strategy-points">{{ strategy.action }}</span>
+                        <span class="strategy-change">Gain: <span>+{{ strategy.points_gain }}</span></span>
+                    </div>
+                    <p class="strategy-text">{{ strategy.details }}</p>
+                </div>
+                {% endfor %}
+            </section>
+            {% endif %}
+
+            <!-- Streams (Provincial Programs) -->
+            {% if guide.streams %}
+            <section class="content-section" id="streams">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-signpost-split"></i></div>
+                    <h2 class="section-title">Immigration Streams</h2>
+                </div>
+                {% for stream in guide.streams %}
+                <div class="program-card">
+                    <div class="program-header">
+                        <span class="program-name">{{ stream.name }}</span>
+                        <span class="program-type">{{ stream.type }}</span>
+                    </div>
+                    {% if stream.requirements %}
+                    <ul class="requirement-list">
+                        {% for req in stream.requirements %}
+                        <li><i class="bi bi-check-circle"></i> {{ req }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% if stream.notes %}
+                    <p class="mt-2 mb-0 text-muted"><i class="bi bi-info-circle me-2"></i>{{ stream.notes }}</p>
+                    {% endif %}
+                    {% if stream.job_offer_required %}
+                    <p class="mt-2 mb-0"><span class="occupation-tag">Job Offer Required</span></p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </section>
+            {% endif %}
+
+            <!-- In-Demand Occupations (Provincial) -->
+            {% if guide.in_demand_occupations %}
+            <section class="content-section" id="occupations">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-briefcase"></i></div>
+                    <h2 class="section-title">In-Demand Occupations</h2>
+                </div>
+                <div class="occupations-grid">
+                    {% for occupation in guide.in_demand_occupations %}
+                    <span class="occupation-tag">{{ occupation }}</span>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Places to Explore (Provincial) -->
+            {% if guide.places_to_explore %}
+            <section class="content-section" id="places">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-geo-alt"></i></div>
+                    <h2 class="section-title">Places to Explore</h2>
+                </div>
+                <div class="places-grid">
+                    {% for place in guide.places_to_explore %}
+                    <div class="place-card">
+                        <div class="place-icon">{{ place.icon }}</div>
+                        <div class="place-name">{{ place.name }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Living Costs (Provincial) -->
+            {% if guide.living_costs %}
+            <section class="content-section" id="living-costs">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-currency-dollar"></i></div>
+                    <h2 class="section-title">Cost of Living</h2>
+                </div>
+                <div class="costs-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Expense</th>
+                                <th>Monthly Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for expense, cost in guide.living_costs.items() %}
+                            <tr>
+                                <td>{{ expense|replace('_', ' ')|title }}</td>
+                                <td>{{ cost }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Before You Start (Forms) -->
+            {% if guide.before_you_start %}
+            <section class="content-section" id="before-start">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-clipboard-check"></i></div>
+                    <h2 class="section-title">Before You Start</h2>
+                </div>
+                <ul class="checklist">
+                    {% for item in guide.before_you_start %}
+                    <li>
+                        <i class="bi bi-check-square"></i>
+                        <span>{{ item }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endif %}
+
+            <!-- Form Sections (Forms) -->
+            {% if guide.sections and guide.sections[0].section is defined %}
+            <section class="content-section" id="form-sections">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-card-list"></i></div>
+                    <h2 class="section-title">Form Sections</h2>
+                </div>
+                {% for section in guide.sections %}
+                <div class="form-section-card">
+                    <div class="form-section-name">
+                        <i class="bi bi-file-earmark-text"></i>
+                        {{ section.section }}
+                    </div>
+                    {% if section.fields %}
+                    <div class="form-fields">
+                        {% for field in section.fields %}
+                        <span class="form-field">{{ field }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if section.what_to_include %}
+                    <ul class="requirement-list mb-3">
+                        {% for item in section.what_to_include %}
+                        <li><i class="bi bi-dot"></i> {{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% if section.tips %}
+                    <div class="form-section-tip">
+                        <i class="bi bi-lightbulb me-2"></i>{{ section.tips }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </section>
+            {% endif %}
+
+            <!-- Test Sections (Language Tests) -->
+            {% if guide.sections and guide.sections[0].name is defined %}
+            <section class="content-section" id="test-sections">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-journal-text"></i></div>
+                    <h2 class="section-title">Test Sections</h2>
+                </div>
+                {% for section in guide.sections %}
+                <div class="test-section-card">
+                    <div class="test-section-header">
+                        <span class="test-section-name">{{ section.name }}</span>
+                        <span class="test-section-duration">{{ section.duration }}</span>
+                    </div>
+                    <div class="test-section-info">
+                        {% if section.questions %}
+                        <span><i class="bi bi-question-circle me-1"></i> {{ section.questions }}</span>
+                        {% endif %}
+                        {% if section.format %}
+                        <span><i class="bi bi-file-text me-1"></i> {{ section.format }}</span>
+                        {% endif %}
+                    </div>
+                    {% if section.tips %}
+                    <ul class="test-section-tips">
+                        {% for tip in section.tips %}
+                        <li><i class="bi bi-check-circle"></i> {{ tip }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </section>
+            {% endif %}
+
+            <!-- Advantages (CELPIP vs IELTS) -->
+            {% if guide.advantages_over_ielts %}
+            <section class="content-section" id="advantages">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-trophy"></i></div>
+                    <h2 class="section-title">Advantages Over IELTS</h2>
+                </div>
+                <ul class="advantages-list">
+                    {% for advantage in guide.advantages_over_ielts %}
+                    <li>
+                        <i class="bi bi-check-circle-fill"></i>
+                        <span>{{ advantage }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endif %}
+
+            <!-- Who to Include (Family Forms) -->
+            {% if guide.who_to_include %}
+            <section class="content-section" id="who-include">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-people"></i></div>
+                    <h2 class="section-title">Who to Include</h2>
+                </div>
+                <ul class="checklist">
+                    {% for person in guide.who_to_include %}
+                    <li>
+                        <i class="bi bi-person-check"></i>
+                        <span>{{ person }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endif %}
+
+            <!-- Required Information (Forms) -->
+            {% if guide.required_information %}
+            <section class="content-section" id="required-info">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-card-checklist"></i></div>
+                    <h2 class="section-title">Required Information</h2>
+                </div>
+                <ul class="checklist">
+                    {% for info in guide.required_information %}
+                    <li>
+                        <i class="bi bi-file-earmark-check"></i>
+                        <span>{{ info }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endif %}
+
+            <!-- Score Improvement (Language Tests) -->
+            {% if guide.score_improvement %}
+            <section class="content-section" id="score-improvement">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-arrow-up-circle"></i></div>
+                    <h2 class="section-title">Score Improvement Strategies</h2>
+                </div>
+                {% for improvement in guide.score_improvement %}
+                <div class="strategy-card">
+                    <div class="strategy-header">
+                        <span class="strategy-points">{{ improvement.from }} → {{ improvement.to }}</span>
+                        <span class="strategy-change">CRS: <span>{{ improvement.crs_gain }}</span></span>
+                    </div>
+                    <p class="strategy-text">{{ improvement.strategy }}</p>
+                </div>
+                {% endfor %}
+            </section>
+            {% endif %}
+
             <!-- CLB Conversion -->
             {% if guide.clb_conversion and guide.clb_conversion.keys()|list|length > 1 %}
             <section class="content-section" id="clb-conversion">
@@ -470,7 +1245,7 @@
                         </thead>
                         <tbody>
                             {% for level, scores in guide.clb_conversion.items() %}
-                            {% if scores is mapping %}
+                            {% if scores is mapping and scores.listening is defined %}
                             <tr>
                                 <td class="clb-level">{{ level }}</td>
                                 <td>{{ scores.listening }}</td>
@@ -576,6 +1351,20 @@
                 </div>
                 <ul class="toc-list">
                     {% if guide.key_facts %}<li><a href="#key-facts">Key Facts</a></li>{% endif %}
+                    {% if guide.programs %}<li><a href="#programs">Immigration Programs</a></li>{% endif %}
+                    {% if guide.crs_breakdown %}<li><a href="#crs-breakdown">CRS Breakdown</a></li>{% endif %}
+                    {% if guide.improvement_strategies %}<li><a href="#improvement">CRS Improvement</a></li>{% endif %}
+                    {% if guide.streams %}<li><a href="#streams">Immigration Streams</a></li>{% endif %}
+                    {% if guide.in_demand_occupations %}<li><a href="#occupations">In-Demand Jobs</a></li>{% endif %}
+                    {% if guide.places_to_explore %}<li><a href="#places">Places to Explore</a></li>{% endif %}
+                    {% if guide.living_costs %}<li><a href="#living-costs">Cost of Living</a></li>{% endif %}
+                    {% if guide.before_you_start %}<li><a href="#before-start">Before You Start</a></li>{% endif %}
+                    {% if guide.sections and guide.sections[0].section is defined %}<li><a href="#form-sections">Form Sections</a></li>{% endif %}
+                    {% if guide.sections and guide.sections[0].name is defined %}<li><a href="#test-sections">Test Sections</a></li>{% endif %}
+                    {% if guide.advantages_over_ielts %}<li><a href="#advantages">Advantages</a></li>{% endif %}
+                    {% if guide.who_to_include %}<li><a href="#who-include">Who to Include</a></li>{% endif %}
+                    {% if guide.required_information %}<li><a href="#required-info">Required Info</a></li>{% endif %}
+                    {% if guide.score_improvement %}<li><a href="#score-improvement">Score Improvement</a></li>{% endif %}
                     {% if guide.clb_conversion %}<li><a href="#clb-conversion">CLB Conversion</a></li>{% endif %}
                     {% if guide.step_by_step %}<li><a href="#steps">Step-by-Step</a></li>{% endif %}
                     {% if guide.tips %}<li><a href="#tips">Pro Tips</a></li>{% endif %}

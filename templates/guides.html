@@ -455,7 +455,96 @@
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
+{% if selected_category %}
+<!-- Category Detail View -->
+<section class="guides-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <nav aria-label="breadcrumb" class="mb-3">
+                    <ol class="breadcrumb" style="background: none; padding: 0;">
+                        <li class="breadcrumb-item"><a href="/guides" style="color: var(--philata-text-muted);">Guides</a></li>
+                        <li class="breadcrumb-item active" style="color: {{ selected_category.color }};">{{ selected_category.title }}</li>
+                    </ol>
+                </nav>
+                <div class="hero-badge" style="background: {{ selected_category.color }}22; border-color: {{ selected_category.color }}44;">
+                    <i class="{{ selected_category.icon }}" style="color: {{ selected_category.color }};"></i>
+                    <span style="color: {{ selected_category.color }};">{{ selected_category.guides|length if selected_category.guides else 0 }} Guides Available</span>
+                </div>
+                <h1 class="hero-title">
+                    <span class="gradient-text" style="background: linear-gradient(135deg, {{ selected_category.color }} 0%, #fff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ selected_category.title }}</span> Guides
+                </h1>
+                <p class="hero-subtitle">
+                    {{ selected_category.description }}
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Guides List for Selected Category -->
+<section class="section">
+    <div class="container">
+        <div class="row g-4">
+            {% if selected_category.guides %}
+            {% for guide in selected_category.guides %}
+            <div class="col-md-6 col-lg-4 animate-on-scroll stagger-{{ loop.index }}">
+                <a href="/guides/{{ selected_category.id }}/{{ guide.id }}" class="featured-card d-block text-decoration-none h-100">
+                    <div class="featured-image" style="background: linear-gradient(135deg, {{ selected_category.color }} 0%, {{ selected_category.color }}99 100%);">
+                        {{ guide.icon }}
+                    </div>
+                    <div class="featured-content">
+                        {% if guide.difficulty %}
+                        <span class="featured-badge" style="background: {{ selected_category.color }}33; color: {{ selected_category.color }};">{{ guide.difficulty }}</span>
+                        {% endif %}
+                        <h4 class="featured-title">{{ guide.title }}</h4>
+                        <p class="featured-desc">{{ guide.subtitle or guide.overview[:100] ~ '...' if guide.overview else '' }}</p>
+                        {% if guide.reading_time %}
+                        <p class="text-muted small mb-0"><i class="bi bi-clock me-1"></i> {{ guide.reading_time }}</p>
+                        {% endif %}
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 3rem; color: var(--philata-text-muted);"></i>
+                <h3 class="mt-3">No guides available yet</h3>
+                <p class="text-muted">We're working on adding guides for this category.</p>
+                <a href="/guides" class="btn btn-primary mt-3"><i class="bi bi-arrow-left me-2"></i>Back to All Guides</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Related Categories -->
+<section class="section" style="background: rgba(255,255,255,0.02);">
+    <div class="container">
+        <h3 class="section-title mb-4">Explore Other Categories</h3>
+        <div class="row g-3">
+            {% for cat_id, category in categories.items() %}
+            {% if category.id != selected_category.id %}
+            <div class="col-md-4 col-lg-3">
+                <a href="/guides/{{ category.id }}" class="category-card h-100" style="--card-accent: {{ category.color }}">
+                    <div class="category-icon" style="background: linear-gradient(135deg, {{ category.color }}33 0%, {{ category.color }}11 100%); width: 45px; height: 45px;">
+                        <i class="{{ category.icon }}" style="color: {{ category.color }}; font-size: 1rem;"></i>
+                    </div>
+                    <h5 class="category-title" style="font-size: 1.1rem;">{{ category.title }}</h5>
+                    <span class="category-count">
+                        <i class="bi bi-book"></i>
+                        {% if category.guides %}{{ category.guides|length }} guides{% elif category.provinces %}{{ category.provinces|length }} provinces{% endif %}
+                    </span>
+                </a>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% else %}
+<!-- Main Guides Page - Hero Section -->
 <section class="guides-hero">
     <div class="container">
         <div class="row align-items-center">
@@ -477,10 +566,10 @@
                 </div>
 
                 <div class="quick-links">
-                    <a href="#language-tests" class="quick-link"><i class="bi bi-translate"></i> Language Tests</a>
+                    <a href="/guides/language-tests" class="quick-link"><i class="bi bi-translate"></i> Language Tests</a>
                     <a href="#pnp" class="quick-link"><i class="bi bi-map"></i> Provincial Programs</a>
-                    <a href="#express-entry" class="quick-link"><i class="bi bi-lightning"></i> Express Entry</a>
-                    <a href="#credentials" class="quick-link"><i class="bi bi-mortarboard"></i> WES/ECA</a>
+                    <a href="/guides/express-entry" class="quick-link"><i class="bi bi-lightning"></i> Express Entry</a>
+                    <a href="/guides/credentials" class="quick-link"><i class="bi bi-mortarboard"></i> WES/ECA</a>
                 </div>
 
                 <div class="stats-bar">
@@ -505,7 +594,9 @@
         </div>
     </div>
 </section>
+{% endif %}
 
+{% if not selected_category %}
 <!-- Main Categories -->
 <section class="category-section" id="categories">
     <div class="container">
@@ -663,6 +754,7 @@
         </div>
     </div>
 </section>
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}
