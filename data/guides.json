@@ -1,0 +1,822 @@
+{
+  "categories": {
+    "language_tests": {
+      "id": "language-tests",
+      "title": "Language Tests",
+      "icon": "bi-translate",
+      "description": "Complete guides for all English and French language tests accepted for Canadian immigration",
+      "color": "#6366F1",
+      "guides": [
+        {
+          "id": "ielts",
+          "title": "IELTS General Training",
+          "subtitle": "International English Language Testing System",
+          "icon": "🎓",
+          "difficulty": "Beginner to Advanced",
+          "duration": "2-3 months preparation",
+          "overview": "IELTS General Training is the most widely accepted English language test for Canadian immigration. Required for Express Entry, PNPs, and citizenship applications.",
+          "key_facts": {
+            "test_type": "General Training (not Academic)",
+            "validity": "2 years from test date",
+            "cost": "$309-$350 CAD",
+            "format": "Paper or Computer-based",
+            "duration": "2 hours 45 minutes",
+            "sections": ["Listening (30 min)", "Reading (60 min)", "Writing (60 min)", "Speaking (11-14 min)"]
+          },
+          "clb_conversion": {
+            "CLB 10": {"listening": "8.5", "reading": "8.0", "writing": "7.5", "speaking": "7.5"},
+            "CLB 9": {"listening": "8.0", "reading": "7.0", "writing": "7.0", "speaking": "7.0"},
+            "CLB 8": {"listening": "7.5", "reading": "6.5", "writing": "6.5", "speaking": "6.5"},
+            "CLB 7": {"listening": "6.0", "reading": "6.0", "writing": "6.0", "speaking": "6.0"},
+            "CLB 6": {"listening": "5.5", "reading": "5.0", "writing": "5.5", "speaking": "5.5"},
+            "CLB 5": {"listening": "5.0", "reading": "4.0", "writing": "5.0", "speaking": "5.0"},
+            "CLB 4": {"listening": "4.5", "reading": "3.5", "writing": "4.0", "speaking": "4.0"}
+          },
+          "tips": [
+            "Practice with official IELTS materials from British Council or IDP",
+            "Focus on listening - you only hear recordings once",
+            "For writing, aim for clear structure: introduction, body paragraphs, conclusion",
+            "Speaking: Don't memorize answers - examiners can tell",
+            "Time management is crucial in Reading section",
+            "Take practice tests under real exam conditions"
+          ],
+          "common_mistakes": [
+            "Taking Academic instead of General Training",
+            "Not completing all sections of the answer sheet",
+            "Exceeding word limits in Writing tasks",
+            "Using informal language in formal writing tasks",
+            "Not leaving time to transfer answers"
+          ],
+          "resources": [
+            {"name": "IELTS Official", "url": "https://ielts.org"},
+            {"name": "British Council IELTS", "url": "https://www.britishcouncil.org/exam/ielts"},
+            {"name": "IDP IELTS", "url": "https://ielts.idp.com"}
+          ]
+        },
+        {
+          "id": "celpip",
+          "title": "CELPIP General",
+          "subtitle": "Canadian English Language Proficiency Index Program",
+          "icon": "🍁",
+          "difficulty": "Beginner to Advanced",
+          "duration": "1-2 months preparation",
+          "overview": "CELPIP is designed specifically for Canadian immigration and citizenship. It's fully computer-based with Canadian accents and contexts.",
+          "key_facts": {
+            "test_type": "General (for PR) or General LS (for citizenship)",
+            "validity": "2 years from test date",
+            "cost": "$280-$340 CAD",
+            "format": "Computer-based only",
+            "duration": "3 hours (General), 1 hour (General LS)",
+            "sections": ["Listening (47 min)", "Reading (55 min)", "Writing (53 min)", "Speaking (20 min)"]
+          },
+          "clb_conversion": {
+            "info": "CELPIP scores directly correspond to CLB levels (CELPIP 9 = CLB 9)"
+          },
+          "tips": [
+            "Familiarize yourself with Canadian accents and expressions",
+            "Practice with CELPIP's free online resources",
+            "The speaking section is recorded - speak clearly into the microphone",
+            "Writing tasks have specific formats - learn them",
+            "Results come within 3-4 business days",
+            "You can retake after 4 days if needed"
+          ],
+          "common_mistakes": [
+            "Not practicing with computer-based format",
+            "Ignoring Canadian cultural references",
+            "Speaking too fast or too slow in Speaking section",
+            "Not using the full time for Writing tasks"
+          ],
+          "resources": [
+            {"name": "CELPIP Official", "url": "https://www.celpip.ca"},
+            {"name": "CELPIP Free Practice Tests", "url": "https://www.celpip.ca/prepare-for-celpip/free-practice-tests/"}
+          ]
+        },
+        {
+          "id": "pte-core",
+          "title": "PTE Core",
+          "subtitle": "Pearson Test of English Core",
+          "icon": "📊",
+          "difficulty": "Beginner to Advanced",
+          "duration": "1-2 months preparation",
+          "overview": "PTE Core is the newest accepted English test for Canadian immigration. Fully computer-scored with fast results (48 hours).",
+          "key_facts": {
+            "test_type": "PTE Core (not PTE Academic)",
+            "validity": "2 years from test date",
+            "cost": "$340 CAD",
+            "format": "Computer-based only",
+            "duration": "2 hours",
+            "sections": ["Speaking & Writing", "Reading", "Listening"]
+          },
+          "tips": [
+            "Computer scores everything - clarity matters more than accent",
+            "Speak at a natural pace, not too fast",
+            "Results in 48 hours - great for tight deadlines",
+            "Practice with AI scoring to understand the system"
+          ],
+          "resources": [
+            {"name": "PTE Official", "url": "https://www.pearsonpte.com/pte-core"}
+          ]
+        },
+        {
+          "id": "tef-canada",
+          "title": "TEF Canada",
+          "subtitle": "Test d'évaluation de français",
+          "icon": "🇫🇷",
+          "difficulty": "Intermediate to Advanced",
+          "duration": "2-4 months preparation",
+          "overview": "TEF Canada tests French proficiency for Canadian immigration. French skills can add up to 50 bonus CRS points!",
+          "key_facts": {
+            "test_type": "TEF Canada (specifically for immigration)",
+            "validity": "2 years from test date",
+            "cost": "$350-$450 CAD",
+            "format": "Computer-based",
+            "duration": "2 hours 50 minutes",
+            "sections": ["Compréhension orale (40 min)", "Compréhension écrite (60 min)", "Expression écrite (60 min)", "Expression orale (15 min)"]
+          },
+          "nclc_requirements": {
+            "NCLC 7": "Required for Express Entry with French as first language",
+            "NCLC 5": "Minimum for bilingual bonus points"
+          },
+          "tips": [
+            "French proficiency can add 50+ CRS bonus points",
+            "Watch French Canadian media (Radio-Canada, TVA)",
+            "Practice with Quebec French expressions",
+            "Join French conversation groups"
+          ],
+          "resources": [
+            {"name": "TEF Canada Official", "url": "https://www.lefrancaisdesaffaires.fr/tests-diplomes/test-evaluation-francais-tef/tef-canada/"}
+          ]
+        },
+        {
+          "id": "tcf-canada",
+          "title": "TCF Canada",
+          "subtitle": "Test de connaissance du français",
+          "icon": "🏛️",
+          "difficulty": "Intermediate to Advanced",
+          "duration": "2-4 months preparation",
+          "overview": "TCF Canada is an alternative French test accepted for Canadian immigration. Administered by France Éducation International.",
+          "key_facts": {
+            "test_type": "TCF Canada",
+            "validity": "2 years from test date",
+            "cost": "$300-$400 CAD",
+            "format": "Computer or Paper-based",
+            "sections": ["Compréhension orale", "Compréhension écrite", "Expression écrite", "Expression orale"]
+          },
+          "resources": [
+            {"name": "TCF Canada Official", "url": "https://www.france-education-international.fr/test/tcf-canada"}
+          ]
+        }
+      ]
+    },
+    "credential_evaluation": {
+      "id": "credentials",
+      "title": "Credential Evaluation",
+      "icon": "bi-mortarboard",
+      "description": "How to get your foreign education recognized in Canada",
+      "color": "#10B981",
+      "guides": [
+        {
+          "id": "wes",
+          "title": "WES ECA",
+          "subtitle": "World Education Services - Educational Credential Assessment",
+          "icon": "🎓",
+          "difficulty": "Beginner",
+          "duration": "4-8 weeks",
+          "overview": "WES is the most popular credential evaluation service for Canadian immigration. Required for Express Entry if you studied outside Canada.",
+          "key_facts": {
+            "validity": "5 years from issue date",
+            "cost": "$256 CAD + delivery",
+            "processing_time": "7 business days (after documents received)",
+            "accepted_for": "Express Entry, PNPs, some employers"
+          },
+          "step_by_step": [
+            {
+              "step": 1,
+              "title": "Create WES Account",
+              "description": "Go to wes.org/ca and create an account. Make sure you're on the CANADA site, not USA."
+            },
+            {
+              "step": 2,
+              "title": "Select Evaluation Type",
+              "description": "Choose 'ECA Application for IRCC' for immigration purposes."
+            },
+            {
+              "step": 3,
+              "title": "Pay Fees",
+              "description": "$256 CAD for evaluation + delivery fees. Standard delivery $13 CAD, Courier $28-95 CAD."
+            },
+            {
+              "step": 4,
+              "title": "Get Reference Number",
+              "description": "Write this number on ALL documents you send to WES."
+            },
+            {
+              "step": 5,
+              "title": "Send Documents",
+              "description": "Transcripts must be sent directly from your university to WES. Degree certificates can be uploaded."
+            },
+            {
+              "step": 6,
+              "title": "Track & Receive",
+              "description": "Monitor status online. Digital report sent to IRCC automatically."
+            }
+          ],
+          "documents_required": [
+            "Degree certificate/diploma",
+            "Official transcripts (sent by institution)",
+            "For India: Both bachelor's and master's degrees required"
+          ],
+          "tips": [
+            "Start early - allow 2+ months buffer",
+            "Use FedEx or UPS (DHL has issues in Canada)",
+            "Only submit your highest credential usually",
+            "For India, request sealed transcripts via DigiLocker"
+          ],
+          "common_mistakes": [
+            "Using WES USA site instead of WES Canada",
+            "Forgetting to include reference number on documents",
+            "Sending transcripts yourself instead of through institution",
+            "Waiting too long and missing Express Entry deadlines"
+          ],
+          "resources": [
+            {"name": "WES Canada", "url": "https://www.wes.org/ca"}
+          ]
+        }
+      ]
+    },
+    "express_entry": {
+      "id": "express-entry",
+      "title": "Express Entry",
+      "icon": "bi-lightning-charge",
+      "description": "Canada's flagship immigration system for skilled workers",
+      "color": "#E31837",
+      "guides": [
+        {
+          "id": "express-entry-overview",
+          "title": "Express Entry Complete Guide",
+          "subtitle": "Everything you need to know about Canada's fastest PR pathway",
+          "icon": "🚀",
+          "difficulty": "Beginner to Advanced",
+          "overview": "Express Entry is Canada's points-based immigration system managing three federal programs. Most applicants get PR in 6 months or less!",
+          "programs": [
+            {
+              "name": "Federal Skilled Worker Program (FSWP)",
+              "requirements": ["CLB 7 in all abilities", "1+ year skilled work experience", "67/100 on selection grid", "ECA for foreign education"],
+              "best_for": "Skilled workers with foreign experience"
+            },
+            {
+              "name": "Canadian Experience Class (CEC)",
+              "requirements": ["CLB 7 for NOC TEER 0/1, CLB 5 for TEER 2/3", "1+ year Canadian work experience in last 3 years"],
+              "best_for": "Temporary workers and international students in Canada"
+            },
+            {
+              "name": "Federal Skilled Trades Program (FSTP)",
+              "requirements": ["CLB 5 speaking/listening, CLB 4 reading/writing", "2+ years trades experience", "Job offer or trade certificate"],
+              "best_for": "Skilled tradespeople"
+            }
+          ],
+          "crs_breakdown": {
+            "core_factors": {
+              "age": "Up to 110 points (max at 20-29 years)",
+              "education": "Up to 150 points",
+              "language": "Up to 136 points (first language)",
+              "second_language": "Up to 24 points",
+              "canadian_experience": "Up to 80 points"
+            },
+            "additional_factors": {
+              "sibling_in_canada": "15 points",
+              "french_proficiency": "Up to 50 points",
+              "canadian_education": "Up to 30 points",
+              "arranged_employment": "Removed March 2025",
+              "provincial_nomination": "600 points"
+            }
+          },
+          "improvement_strategies": [
+            {
+              "strategy": "Improve Language Scores",
+              "impact": "Up to 60 points",
+              "details": "Going from CLB 7 to CLB 9 can add 60 points. Retake IELTS/CELPIP!"
+            },
+            {
+              "strategy": "Learn French",
+              "impact": "Up to 50 bonus points",
+              "details": "NCLC 7 in French + CLB 5 in English = 50 bonus points. Plus access to French-focused draws with lower cutoffs."
+            },
+            {
+              "strategy": "Get Provincial Nomination",
+              "impact": "600 points",
+              "details": "PNP nomination virtually guarantees an ITA. Research all province programs."
+            },
+            {
+              "strategy": "Gain Canadian Experience",
+              "impact": "40-80 points",
+              "details": "Work in Canada on a work permit. Each year adds points."
+            },
+            {
+              "strategy": "Complete Canadian Education",
+              "impact": "15-30 points",
+              "details": "A Canadian diploma or degree adds points plus unlocks PGWP."
+            }
+          ]
+        }
+      ]
+    },
+    "provincial_programs": {
+      "id": "pnp",
+      "title": "Provincial Nominee Programs",
+      "icon": "bi-map",
+      "description": "Immigration pathways through Canadian provinces and territories",
+      "color": "#F59E0B",
+      "provinces": [
+        {
+          "id": "ontario",
+          "name": "Ontario",
+          "code": "ON",
+          "program_name": "Ontario Immigrant Nominee Program (OINP)",
+          "capital": "Toronto",
+          "population": "15.8 million",
+          "description": "Canada's most populous province and economic powerhouse. Home to Toronto, Ottawa, and numerous tech hubs.",
+          "highlights": [
+            "Largest provincial economy in Canada",
+            "Major tech hub (Toronto-Waterloo corridor)",
+            "Multicultural with 200+ ethnic groups",
+            "Home to Niagara Falls and world-class universities"
+          ],
+          "places_to_explore": [
+            {"name": "Toronto", "description": "Canada's largest city, financial and cultural capital"},
+            {"name": "Ottawa", "description": "National capital with rich history and museums"},
+            {"name": "Niagara Falls", "description": "World-famous waterfalls and wine region"},
+            {"name": "Muskoka", "description": "Cottage country with beautiful lakes"},
+            {"name": "Kingston", "description": "Historic city with limestone architecture"}
+          ],
+          "streams": [
+            {
+              "name": "Human Capital Priorities",
+              "type": "Express Entry",
+              "requirements": ["Active Express Entry profile", "CRS within draw range", "Skilled work experience"],
+              "job_offer_required": false
+            },
+            {
+              "name": "French-Speaking Skilled Worker",
+              "type": "Express Entry",
+              "requirements": ["NCLC 7 in French", "CLB 6 in English", "Express Entry profile"],
+              "job_offer_required": false
+            },
+            {
+              "name": "Skilled Trades",
+              "type": "Express Entry",
+              "requirements": ["Currently SUSPENDED (Nov 2025)", "Was for skilled trades workers"],
+              "job_offer_required": false,
+              "status": "SUSPENDED"
+            },
+            {
+              "name": "Employer Job Offer: Foreign Worker",
+              "type": "Base",
+              "requirements": ["Full-time permanent job offer", "NOC TEER 0-3 occupation"],
+              "job_offer_required": true
+            }
+          ],
+          "in_demand_occupations": [
+            "Software Developers (NOC 21232)",
+            "Registered Nurses (NOC 31301)",
+            "Financial Analysts (NOC 11101)",
+            "Marketing Managers (NOC 10022)",
+            "Mechanical Engineers (NOC 21301)"
+          ],
+          "processing_time": "60-150 days",
+          "application_fee": "$1,500-$2,500 CAD"
+        },
+        {
+          "id": "british-columbia",
+          "name": "British Columbia",
+          "code": "BC",
+          "program_name": "BC Provincial Nominee Program (BC PNP)",
+          "capital": "Victoria",
+          "population": "5.4 million",
+          "description": "Canada's westernmost province with stunning natural beauty. Tech hub of Western Canada.",
+          "highlights": [
+            "Mild climate year-round (especially Vancouver)",
+            "Thriving tech industry",
+            "Stunning mountains, ocean, and forests",
+            "Gateway to Asia-Pacific markets"
+          ],
+          "places_to_explore": [
+            {"name": "Vancouver", "description": "Cosmopolitan city surrounded by mountains and ocean"},
+            {"name": "Victoria", "description": "Charming capital city on Vancouver Island"},
+            {"name": "Whistler", "description": "World-class ski resort"},
+            {"name": "Okanagan Valley", "description": "Wine country with beautiful lakes"},
+            {"name": "Tofino", "description": "Surfing and rainforest on the Pacific coast"}
+          ],
+          "streams": [
+            {
+              "name": "Skills Immigration - Skilled Worker",
+              "type": "Base",
+              "requirements": ["Job offer in BC", "2+ years experience", "CLB 4+"],
+              "job_offer_required": true
+            },
+            {
+              "name": "Express Entry BC - Skilled Worker",
+              "type": "Express Entry",
+              "requirements": ["Express Entry profile", "Job offer in BC", "2+ years experience"],
+              "job_offer_required": true
+            },
+            {
+              "name": "BC PNP Tech",
+              "type": "Both",
+              "requirements": ["Job in 29 tech occupations", "1+ year duration job offer"],
+              "job_offer_required": true,
+              "processing": "Weekly draws, faster processing"
+            }
+          ],
+          "in_demand_occupations": [
+            "Software Engineers (NOC 21231)",
+            "Web Developers (NOC 21234)",
+            "Data Scientists (NOC 21211)",
+            "Registered Nurses (NOC 31301)",
+            "Early Childhood Educators (NOC 42202)"
+          ],
+          "processing_time": "2-3 months",
+          "application_fee": "$700-$1,150 CAD"
+        },
+        {
+          "id": "alberta",
+          "name": "Alberta",
+          "code": "AB",
+          "program_name": "Alberta Advantage Immigration Program (AAIP)",
+          "capital": "Edmonton",
+          "population": "4.6 million",
+          "description": "Canada's energy province with booming economy. No provincial sales tax and affordable living.",
+          "highlights": [
+            "No provincial sales tax",
+            "Low cost of living compared to BC/ON",
+            "Strong job market in energy, tech, healthcare",
+            "Beautiful Rocky Mountains",
+            "Calgary and Edmonton ranked best cities to live"
+          ],
+          "places_to_explore": [
+            {"name": "Banff National Park", "description": "Iconic Rocky Mountain destination"},
+            {"name": "Calgary", "description": "Modern city, home of the Calgary Stampede"},
+            {"name": "Edmonton", "description": "Capital city with West Edmonton Mall"},
+            {"name": "Jasper", "description": "Stunning mountain town and dark sky preserve"},
+            {"name": "Lake Louise", "description": "Turquoise glacier-fed lake"}
+          ],
+          "streams": [
+            {
+              "name": "Alberta Opportunity Stream",
+              "type": "Base",
+              "requirements": ["Working in Alberta", "12+ months AB experience", "CLB 4-5"],
+              "job_offer_required": true
+            },
+            {
+              "name": "Alberta Express Entry Stream",
+              "type": "Express Entry",
+              "requirements": ["Express Entry profile", "CRS 300+", "Intent to live in Alberta"],
+              "job_offer_required": false
+            },
+            {
+              "name": "Accelerated Tech Pathway",
+              "type": "Express Entry",
+              "requirements": ["Tech occupation", "Express Entry profile"],
+              "job_offer_required": false
+            },
+            {
+              "name": "Dedicated Healthcare Pathway",
+              "type": "Both",
+              "requirements": ["Healthcare occupation", "Alberta job or experience"],
+              "job_offer_required": false
+            }
+          ],
+          "processing_time": "12-16 weeks",
+          "application_fee": "$500-$3,500 CAD"
+        },
+        {
+          "id": "saskatchewan",
+          "name": "Saskatchewan",
+          "code": "SK",
+          "program_name": "Saskatchewan Immigrant Nominee Program (SINP)",
+          "capital": "Regina",
+          "population": "1.2 million",
+          "description": "Canada's breadbasket with growing economy and welcoming communities.",
+          "highlights": [
+            "Lower cost of living",
+            "Strong agriculture and mining sectors",
+            "Growing tech sector in Saskatoon and Regina",
+            "Friendly, welcoming communities"
+          ],
+          "places_to_explore": [
+            {"name": "Regina", "description": "Capital city with vibrant arts scene"},
+            {"name": "Saskatoon", "description": "River city with University of Saskatchewan"},
+            {"name": "Prince Albert National Park", "description": "Boreal forest and wildlife"}
+          ],
+          "streams": [
+            {
+              "name": "International Skilled Worker - Employment Offer",
+              "type": "Base",
+              "requirements": ["Job offer from SK employer", "1 year experience", "CLB 4+"],
+              "job_offer_required": true
+            },
+            {
+              "name": "International Skilled Worker - Occupation In-Demand",
+              "type": "Base",
+              "requirements": ["1 year experience in eligible occupation", "60/110 points", "CLB 4+"],
+              "job_offer_required": false
+            },
+            {
+              "name": "Saskatchewan Express Entry",
+              "type": "Express Entry",
+              "requirements": ["Express Entry profile", "60/110 points"],
+              "job_offer_required": false
+            }
+          ],
+          "processing_time": "16 weeks",
+          "application_fee": "$500 CAD"
+        },
+        {
+          "id": "manitoba",
+          "name": "Manitoba",
+          "code": "MB",
+          "program_name": "Manitoba Provincial Nominee Program (MPNP)",
+          "capital": "Winnipeg",
+          "population": "1.4 million",
+          "description": "Central Canadian province with diverse economy and strong immigration history.",
+          "highlights": [
+            "First PNP in Canada (1998)",
+            "Affordable housing",
+            "Growing aerospace and manufacturing sectors",
+            "Strong community support for newcomers"
+          ],
+          "places_to_explore": [
+            {"name": "Winnipeg", "description": "Cultural capital with The Forks and museums"},
+            {"name": "Churchill", "description": "Polar bear capital of the world"},
+            {"name": "Riding Mountain National Park", "description": "Wildlife and outdoor recreation"}
+          ],
+          "streams": [
+            {
+              "name": "Skilled Worker in Manitoba",
+              "type": "Base",
+              "requirements": ["Working in Manitoba", "6+ months with employer", "CLB 5+"],
+              "job_offer_required": true
+            },
+            {
+              "name": "Skilled Worker Overseas",
+              "type": "Base",
+              "requirements": ["Manitoba connection", "6+ months in-demand experience", "CLB 5+"],
+              "job_offer_required": false
+            }
+          ],
+          "processing_time": "6 months",
+          "application_fee": "$500 CAD"
+        },
+        {
+          "id": "nova-scotia",
+          "name": "Nova Scotia",
+          "code": "NS",
+          "program_name": "Nova Scotia Nominee Program (NSNP)",
+          "capital": "Halifax",
+          "population": "1.05 million",
+          "description": "Atlantic Canada's largest province with growing tech and healthcare sectors.",
+          "highlights": [
+            "Ocean lifestyle with affordable living",
+            "Growing tech hub in Halifax",
+            "Strong healthcare sector",
+            "Beautiful coastal scenery"
+          ],
+          "places_to_explore": [
+            {"name": "Halifax", "description": "Vibrant port city with rich maritime history"},
+            {"name": "Peggy's Cove", "description": "Iconic lighthouse and fishing village"},
+            {"name": "Cape Breton", "description": "Stunning Cabot Trail and Celtic culture"},
+            {"name": "Lunenburg", "description": "UNESCO World Heritage fishing town"}
+          ],
+          "streams": [
+            {
+              "name": "Labour Market Priorities",
+              "type": "Express Entry",
+              "requirements": ["Express Entry profile", "Letter of Interest from NS"],
+              "job_offer_required": false,
+              "note": "Invitation only based on labour market needs"
+            },
+            {
+              "name": "Nova Scotia Experience: Express Entry",
+              "type": "Express Entry",
+              "requirements": ["1+ year NS work experience", "Express Entry profile"],
+              "job_offer_required": false
+            }
+          ],
+          "processing_time": "3-6 months",
+          "application_fee": "Varies by stream"
+        },
+        {
+          "id": "new-brunswick",
+          "name": "New Brunswick",
+          "code": "NB",
+          "program_name": "New Brunswick Provincial Nominee Program (NBPNP)",
+          "capital": "Fredericton",
+          "population": "820,000",
+          "description": "Canada's only officially bilingual province with growing opportunities.",
+          "highlights": [
+            "Officially bilingual (English & French)",
+            "Lower cost of living",
+            "Strong francophone community",
+            "Growing tech and healthcare sectors"
+          ],
+          "places_to_explore": [
+            {"name": "Saint John", "description": "Canada's oldest incorporated city"},
+            {"name": "Fredericton", "description": "Capital with beautiful riverfront"},
+            {"name": "Bay of Fundy", "description": "World's highest tides"},
+            {"name": "Moncton", "description": "Bilingual hub with magnetic hill"}
+          ],
+          "streams": [
+            {
+              "name": "NB Skilled Worker",
+              "type": "Base",
+              "requirements": ["Working in NB or job offer", "6+ months experience", "CLB 4+"],
+              "job_offer_required": true
+            },
+            {
+              "name": "Express Entry Labour Market",
+              "type": "Express Entry",
+              "requirements": ["Express Entry profile", "CLB 7", "12 months NB experience"],
+              "job_offer_required": false
+            }
+          ],
+          "processing_time": "Longer in 2025 due to high volume",
+          "application_fee": "Varies by stream"
+        },
+        {
+          "id": "pei",
+          "name": "Prince Edward Island",
+          "code": "PE",
+          "program_name": "PEI Provincial Nominee Program (PEI PNP)",
+          "capital": "Charlottetown",
+          "population": "170,000",
+          "description": "Canada's smallest province with tight-knit communities and beautiful landscapes.",
+          "highlights": [
+            "Smallest province, warmest welcomes",
+            "Famous for Anne of Green Gables",
+            "Beautiful red sand beaches",
+            "Growing aerospace and bioscience sectors"
+          ],
+          "places_to_explore": [
+            {"name": "Charlottetown", "description": "Birthplace of Confederation"},
+            {"name": "Cavendish", "description": "Anne of Green Gables country"},
+            {"name": "North Shore", "description": "Red sand beaches and dunes"}
+          ],
+          "streams": [
+            {
+              "name": "PEI Express Entry",
+              "type": "Express Entry",
+              "requirements": ["Express Entry profile", "Skills matching PEI needs"],
+              "job_offer_required": false
+            },
+            {
+              "name": "Skilled Worker Stream",
+              "type": "Base",
+              "requirements": ["Job offer from PEI employer", "Skilled occupation"],
+              "job_offer_required": true
+            }
+          ],
+          "processing_time": "6-18 months",
+          "application_fee": "Varies"
+        },
+        {
+          "id": "newfoundland",
+          "name": "Newfoundland and Labrador",
+          "code": "NL",
+          "program_name": "Newfoundland and Labrador Provincial Nominee Program (NLPNP)",
+          "capital": "St. John's",
+          "population": "530,000",
+          "description": "Canada's easternmost province with unique culture and stunning landscapes.",
+          "highlights": [
+            "First sunrise in North America",
+            "Unique culture and dialect",
+            "Growing oil & gas, tech sectors",
+            "Stunning icebergs and whales"
+          ],
+          "places_to_explore": [
+            {"name": "St. John's", "description": "Colorful row houses and Signal Hill"},
+            {"name": "Gros Morne", "description": "UNESCO World Heritage National Park"},
+            {"name": "Iceberg Alley", "description": "See icebergs float by in spring"}
+          ],
+          "streams": [
+            {
+              "name": "Express Entry Skilled Worker",
+              "type": "Express Entry",
+              "requirements": ["Express Entry profile", "Job offer in NL"],
+              "job_offer_required": true
+            },
+            {
+              "name": "Skilled Worker Category",
+              "type": "Base",
+              "requirements": ["Job offer in NL", "Skilled occupation"],
+              "job_offer_required": true
+            }
+          ],
+          "processing_time": "3-6 months",
+          "application_fee": "Varies"
+        }
+      ]
+    },
+    "atlantic_immigration": {
+      "id": "aip",
+      "title": "Atlantic Immigration Program",
+      "icon": "bi-water",
+      "description": "Special program for Atlantic Canada's four provinces",
+      "color": "#0EA5E9",
+      "guides": [
+        {
+          "id": "aip-overview",
+          "title": "Atlantic Immigration Program (AIP)",
+          "subtitle": "Fast-track to PR in Atlantic Canada",
+          "icon": "🌊",
+          "overview": "The AIP is an employer-driven program for Nova Scotia, New Brunswick, PEI, and Newfoundland. No LMIA required!",
+          "key_facts": {
+            "provinces": ["Nova Scotia", "New Brunswick", "Prince Edward Island", "Newfoundland and Labrador"],
+            "lmia_required": false,
+            "processing": "Faster than regular PR",
+            "admission_target": "5,000 per year (2025)"
+          },
+          "requirements": [
+            "Job offer from designated employer",
+            "1,560 hours work experience in last 5 years",
+            "CLB 5 for TEER 0-3, CLB 4 for TEER 4",
+            "High school education minimum",
+            "Settlement funds (if not in Canada)"
+          ],
+          "benefits": [
+            "No LMIA required for employers",
+            "Work permit while PR processes",
+            "Spouse gets open work permit",
+            "Settlement support included"
+          ]
+        }
+      ]
+    },
+    "forms_guides": {
+      "id": "forms",
+      "title": "Form Filling Guides",
+      "icon": "bi-file-earmark-text",
+      "description": "Step-by-step guides for all IRCC immigration forms",
+      "color": "#8B5CF6",
+      "guides": [
+        {
+          "id": "imm0008",
+          "title": "IMM 0008 - Generic Application Form",
+          "subtitle": "The main PR application form",
+          "icon": "📝",
+          "overview": "IMM 0008 is the primary application form for Canadian permanent residence. It must generate barcodes when validated.",
+          "key_tips": [
+            "Use Adobe Reader 10+ to open and fill",
+            "Click 'Validate' button to generate barcodes",
+            "Include all family members even if not accompanying",
+            "Names must match passport exactly",
+            "Cannot be handwritten"
+          ],
+          "common_mistakes": [
+            "Missing barcode (form not validated)",
+            "Initials instead of full names",
+            "Inconsistent dates with other forms",
+            "Not listing all family members"
+          ]
+        },
+        {
+          "id": "imm5669",
+          "title": "IMM 5669 - Schedule A Background Declaration",
+          "subtitle": "Personal history and background form",
+          "icon": "📋",
+          "overview": "Schedule A declares your personal history including addresses, employment, education, and memberships.",
+          "key_tips": [
+            "List ALL addresses for past 10 years",
+            "Include all employment with no gaps",
+            "List all organizations/memberships",
+            "Account for all time periods",
+            "Use separate sheet if needed"
+          ],
+          "common_mistakes": [
+            "Gaps in timeline",
+            "Missing addresses",
+            "Forgetting volunteer organizations",
+            "Inconsistent dates with IMM 0008"
+          ]
+        },
+        {
+          "id": "imm5406",
+          "title": "IMM 5406 - Additional Family Information",
+          "subtitle": "Detailed family member information",
+          "icon": "👨‍👩‍👧‍👦",
+          "overview": "IMM 5406 requires detailed information about your family members including parents and siblings.",
+          "key_tips": [
+            "Complete TWO copies: one for you, one for spouse",
+            "Names in native alphabet AND English",
+            "Include deceased family members",
+            "List current addresses for all relatives"
+          ]
+        }
+      ]
+    }
+  },
+  "meta": {
+    "last_updated": "2025-12-26",
+    "version": "1.0",
+    "disclaimer": "This information is for educational purposes only. Always verify with official IRCC sources."
+  }
+}

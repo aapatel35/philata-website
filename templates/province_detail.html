@@ -1,0 +1,507 @@
+{% extends "base.html" %}
+
+{% block title %}{{ province.name }} PNP Guide{% endblock %}
+
+{% block extra_css %}
+<style>
+    .province-hero {
+        padding: 6rem 0 4rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .province-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(ellipse at top, {{ color }}22 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    .province-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        background: {{ color }}22;
+        border: 1px solid {{ color }}44;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        margin-bottom: 2rem;
+    }
+
+    .province-code-badge {
+        background: {{ color }};
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 1.25rem;
+    }
+
+    .province-program {
+        color: var(--philata-text-muted);
+        font-size: 0.95rem;
+    }
+
+    .province-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+    }
+
+    .province-description {
+        font-size: 1.25rem;
+        color: var(--philata-text-muted);
+        max-width: 700px;
+        margin-bottom: 2rem;
+    }
+
+    /* Info Cards */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 3rem;
+    }
+
+    .info-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--philata-border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .info-card:hover {
+        background: rgba(255,255,255,0.05);
+        transform: translateY(-3px);
+    }
+
+    .info-icon {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .info-label {
+        font-size: 0.8rem;
+        color: var(--philata-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .info-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: white;
+        margin-top: 0.25rem;
+    }
+
+    /* Highlights */
+    .highlights-section {
+        padding: 3rem 0;
+        border-bottom: 1px solid var(--philata-border);
+    }
+
+    .highlight-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 0;
+    }
+
+    .highlight-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: {{ color }}22;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: {{ color }};
+        flex-shrink: 0;
+    }
+
+    /* Streams Section */
+    .streams-section {
+        padding: 4rem 0;
+    }
+
+    .stream-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--philata-border);
+        border-radius: 20px;
+        padding: 2rem;
+        height: 100%;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stream-card:hover {
+        background: rgba(255,255,255,0.05);
+        transform: translateY(-5px);
+        border-color: {{ color }}44;
+    }
+
+    .stream-card.suspended {
+        opacity: 0.6;
+    }
+
+    .stream-card.suspended::after {
+        content: 'SUSPENDED';
+        position: absolute;
+        top: 20px;
+        right: -30px;
+        background: #EF4444;
+        color: white;
+        padding: 0.25rem 2rem;
+        font-size: 0.7rem;
+        font-weight: 700;
+        transform: rotate(45deg);
+    }
+
+    .stream-type {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .stream-type.express {
+        background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+        color: white;
+    }
+
+    .stream-type.base {
+        background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+        color: white;
+    }
+
+    .stream-type.both {
+        background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
+        color: #1a1a1a;
+    }
+
+    .stream-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 1rem;
+    }
+
+    .stream-requirements {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .stream-requirements li {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 0.5rem 0;
+        color: var(--philata-text-muted);
+        font-size: 0.9rem;
+    }
+
+    .stream-requirements li i {
+        color: {{ color }};
+        margin-top: 3px;
+    }
+
+    .job-offer-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        margin-top: 1rem;
+    }
+
+    .job-offer-badge.required {
+        background: rgba(239, 68, 68, 0.2);
+        color: #F87171;
+    }
+
+    .job-offer-badge.not-required {
+        background: rgba(16, 185, 129, 0.2);
+        color: #34D399;
+    }
+
+    /* Places to Explore */
+    .places-section {
+        padding: 4rem 0;
+        background: linear-gradient(180deg, transparent 0%, {{ color }}08 50%, transparent 100%);
+    }
+
+    .place-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--philata-border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        height: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .place-card:hover {
+        background: rgba(255,255,255,0.05);
+        transform: translateY(-3px);
+    }
+
+    .place-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .place-name i {
+        color: {{ color }};
+    }
+
+    .place-description {
+        color: var(--philata-text-muted);
+        font-size: 0.9rem;
+    }
+
+    /* In-Demand Occupations */
+    .occupations-section {
+        padding: 4rem 0;
+    }
+
+    .occupation-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0.75rem 1.25rem;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--philata-border);
+        border-radius: 50px;
+        color: var(--philata-text);
+        font-size: 0.9rem;
+        margin: 0.25rem;
+        transition: all 0.3s ease;
+    }
+
+    .occupation-tag:hover {
+        background: {{ color }}22;
+        border-color: {{ color }}44;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        padding: 4rem 0;
+    }
+
+    .cta-card {
+        background: linear-gradient(135deg, {{ color }}22 0%, {{ color }}11 100%);
+        border: 1px solid {{ color }}33;
+        border-radius: 24px;
+        padding: 3rem;
+        text-align: center;
+    }
+
+    /* Animations */
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeIn 0.6s ease forwards;
+    }
+
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<section class="breadcrumb-section py-3 border-bottom" style="border-color: var(--philata-border) !important;">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/guides" style="color: var(--philata-text-muted);">Guides</a></li>
+                <li class="breadcrumb-item"><a href="/guides/pnp" style="color: var(--philata-text-muted);">Provincial Programs</a></li>
+                <li class="breadcrumb-item active" style="color: {{ color }};">{{ province.name }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Province Hero -->
+<section class="province-hero">
+    <div class="container">
+        <div class="province-badge fade-in">
+            <span class="province-code-badge">{{ province.code }}</span>
+            <span class="province-program">{{ province.program_name }}</span>
+        </div>
+
+        <h1 class="province-title fade-in delay-1">
+            {{ province.name }}
+        </h1>
+
+        <p class="province-description fade-in delay-2">
+            {{ province.description }}
+        </p>
+
+        <div class="info-grid fade-in delay-3">
+            <div class="info-card">
+                <div class="info-icon">🏛️</div>
+                <div class="info-label">Capital</div>
+                <div class="info-value">{{ province.capital }}</div>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">👥</div>
+                <div class="info-label">Population</div>
+                <div class="info-value">{{ province.population }}</div>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">📋</div>
+                <div class="info-label">PNP Streams</div>
+                <div class="info-value">{{ province.streams|length }} streams</div>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">⏱️</div>
+                <div class="info-label">Processing</div>
+                <div class="info-value">{{ province.processing_time }}</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Highlights -->
+{% if province.highlights %}
+<section class="highlights-section">
+    <div class="container">
+        <h2 class="section-title mb-4">Why {{ province.name }}?</h2>
+        <div class="row">
+            {% for highlight in province.highlights %}
+            <div class="col-md-6">
+                <div class="highlight-item">
+                    <div class="highlight-icon"><i class="bi bi-check-lg"></i></div>
+                    <span>{{ highlight }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Immigration Streams -->
+<section class="streams-section">
+    <div class="container">
+        <h2 class="section-title mb-2">Immigration Streams</h2>
+        <p class="text-muted mb-4">Available pathways to permanent residence through {{ province.program_name }}</p>
+
+        <div class="row g-4">
+            {% for stream in province.streams %}
+            <div class="col-md-6 col-lg-4">
+                <div class="stream-card {% if stream.status == 'SUSPENDED' %}suspended{% endif %}">
+                    <span class="stream-type {% if stream.type == 'Express Entry' %}express{% elif stream.type == 'Base' %}base{% else %}both{% endif %}">
+                        {{ stream.type }}
+                    </span>
+                    <h3 class="stream-name">{{ stream.name }}</h3>
+                    <ul class="stream-requirements">
+                        {% for req in stream.requirements %}
+                        <li>
+                            <i class="bi bi-chevron-right"></i>
+                            <span>{{ req }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% if stream.job_offer_required %}
+                    <span class="job-offer-badge required">
+                        <i class="bi bi-briefcase"></i> Job Offer Required
+                    </span>
+                    {% else %}
+                    <span class="job-offer-badge not-required">
+                        <i class="bi bi-check-circle"></i> No Job Offer Needed
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Places to Explore -->
+{% if province.places_to_explore %}
+<section class="places-section">
+    <div class="container">
+        <h2 class="section-title mb-2">Places to Explore</h2>
+        <p class="text-muted mb-4">Beautiful destinations in {{ province.name }}</p>
+
+        <div class="row g-4">
+            {% for place in province.places_to_explore %}
+            <div class="col-md-6 col-lg-4">
+                <div class="place-card">
+                    <div class="place-name">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        {{ place.name }}
+                    </div>
+                    <p class="place-description">{{ place.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- In-Demand Occupations -->
+{% if province.in_demand_occupations %}
+<section class="occupations-section">
+    <div class="container">
+        <h2 class="section-title mb-2">In-Demand Occupations</h2>
+        <p class="text-muted mb-4">High-priority occupations for {{ province.name }} immigration</p>
+
+        <div class="d-flex flex-wrap">
+            {% for occupation in province.in_demand_occupations %}
+            <span class="occupation-tag">
+                <i class="bi bi-briefcase"></i>
+                {{ occupation }}
+            </span>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-card">
+            <h2 class="section-title mb-3">Ready to Apply?</h2>
+            <p class="text-muted mb-4">Check if you're eligible for {{ province.program_name }} and start your application.</p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a href="/guides/express-entry/express-entry-overview" class="btn btn-primary">
+                    <i class="bi bi-lightning-charge me-2"></i>Check Express Entry
+                </a>
+                <a href="/guides/pnp" class="btn btn-outline-light">
+                    <i class="bi bi-arrow-left me-2"></i>All Provinces
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

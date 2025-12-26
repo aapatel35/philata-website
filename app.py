@@ -1,6 +1,7 @@
 """
 Philata.ca - Canadian Immigration Content Hub
 Dashboard for viewing and approving generated content
+Comprehensive Immigration Guides
 """
 
 import os
@@ -20,6 +21,15 @@ os.makedirs(IMAGES_DIR, exist_ok=True)
 
 RESULTS_FILE = os.path.join(DATA_DIR, 'results.json')
 APPROVED_FILE = os.path.join(DATA_DIR, 'approved.json')
+GUIDES_FILE = os.path.join(DATA_DIR, 'guides.json')
+
+
+def load_guides():
+    """Load immigration guides data"""
+    if os.path.exists(GUIDES_FILE):
+        with open(GUIDES_FILE, 'r') as f:
+            return json.load(f)
+    return {"categories": {}}
 
 
 def load_results():
@@ -117,6 +127,99 @@ def dashboard():
     """Content dashboard"""
     results = load_results()
     return render_template('dashboard.html', results=results)
+
+
+# =============================================================================
+# GUIDES SECTION
+# =============================================================================
+
+@app.route('/guides')
+def guides():
+    """Immigration guides main page"""
+    guides_data = load_guides()
+    return render_template('guides.html', categories=guides_data.get('categories', {}))
+
+
+@app.route('/guides/<category_id>')
+def guides_category(category_id):
+    """Guide category page"""
+    guides_data = load_guides()
+    categories = guides_data.get('categories', {})
+
+    # Find the category
+    category = None
+    for cat_key, cat_data in categories.items():
+        if cat_data.get('id') == category_id:
+            category = cat_data
+            break
+
+    if not category:
+        return "Category not found", 404
+
+    return render_template('guides.html', categories=categories, selected_category=category)
+
+
+@app.route('/guides/<category_id>/<guide_id>')
+def guide_detail(category_id, guide_id):
+    """Individual guide detail page"""
+    guides_data = load_guides()
+    categories = guides_data.get('categories', {})
+
+    # Find the category and guide
+    category = None
+    guide = None
+
+    for cat_key, cat_data in categories.items():
+        if cat_data.get('id') == category_id:
+            category = cat_data
+            # Search in guides list
+            if 'guides' in cat_data:
+                for g in cat_data['guides']:
+                    if g.get('id') == guide_id:
+                        guide = g
+                        break
+            break
+
+    if not category or not guide:
+        return "Guide not found", 404
+
+    return render_template('guide_detail.html', category=category, guide=guide)
+
+
+@app.route('/guides/pnp/<province_id>')
+def province_detail(province_id):
+    """Province PNP detail page"""
+    guides_data = load_guides()
+    categories = guides_data.get('categories', {})
+
+    # Find the province
+    province = None
+    pnp_category = categories.get('provincial_programs', {})
+
+    if 'provinces' in pnp_category:
+        for p in pnp_category['provinces']:
+            if p.get('id') == province_id:
+                province = p
+                break
+
+    if not province:
+        return "Province not found", 404
+
+    # Define color based on province
+    colors = {
+        'ontario': '#E31837',
+        'british-columbia': '#0EA5E9',
+        'alberta': '#F59E0B',
+        'saskatchewan': '#10B981',
+        'manitoba': '#6366F1',
+        'nova-scotia': '#8B5CF6',
+        'new-brunswick': '#EC4899',
+        'pei': '#14B8A6',
+        'newfoundland': '#F97316'
+    }
+    color = colors.get(province_id, '#E31837')
+
+    return render_template('province_detail.html', province=province, color=color)
 
 
 @app.route('/content/<content_id>')

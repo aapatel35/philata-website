@@ -508,10 +508,13 @@
                         <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/about' %}active{% endif %}" href="/about">About</a>
+                        <a class="nav-link {% if '/guides' in request.path %}active{% endif %}" href="/guides">Guides</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if '/dashboard' in request.path %}active{% endif %}" href="/dashboard">News & Articles</a>
+                        <a class="nav-link {% if '/dashboard' in request.path %}active{% endif %}" href="/dashboard">News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/about' %}active{% endif %}" href="/about">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == '/contact' %}active{% endif %}" href="/contact">Contact</a>
@@ -555,10 +558,10 @@
                 </div>
                 <div class="col-lg-2 col-md-6 footer-links">
                     <h6>Guides</h6>
-                    <a href="/dashboard">Immigration Tips</a>
-                    <a href="/dashboard">Form Guides</a>
-                    <a href="/dashboard">CRS Calculator</a>
-                    <a href="#">IRCC Resources</a>
+                    <a href="/guides/language-tests">Language Tests</a>
+                    <a href="/guides/express-entry">Express Entry</a>
+                    <a href="/guides/pnp">Provincial Programs</a>
+                    <a href="/guides/credentials">WES/ECA</a>
                 </div>
                 <div class="col-lg-2 col-md-6 footer-links">
                     <h6>Company</h6>
