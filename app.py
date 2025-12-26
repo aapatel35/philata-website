@@ -23,6 +23,30 @@ RESULTS_FILE = os.path.join(DATA_DIR, 'results.json')
 APPROVED_FILE = os.path.join(DATA_DIR, 'approved.json')
 GUIDES_FILE = os.path.join(DATA_DIR, 'guides.json')
 
+# Cloudinary settings for URL conversion
+CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME', 'dg7yw1j18')
+
+
+def convert_to_cloudinary_url(image_url):
+    """Convert Docker/localhost URLs to Cloudinary URLs"""
+    if not image_url:
+        return ''
+
+    # Already a Cloudinary URL
+    if 'cloudinary.com' in image_url:
+        return image_url
+
+    # Convert Docker/localhost URLs to Cloudinary
+    if 'docker' in image_url.lower() or 'localhost' in image_url.lower():
+        # Extract filename from URL
+        filename = image_url.split('/')[-1]
+        if filename:
+            # Remove .png extension for public_id
+            public_id = filename.replace('.png', '')
+            return f"https://res.cloudinary.com/{CLOUDINARY_CLOUD_NAME}/image/upload/philata/{public_id}.png"
+
+    return image_url
+
 
 def load_guides():
     """Load immigration guides data"""
@@ -259,6 +283,11 @@ def get_results():
     if status:
         results = [r for r in results if r.get('status') == status]
 
+    # Convert Docker/localhost URLs to Cloudinary URLs
+    for r in results:
+        if 'image_url' in r:
+            r['image_url'] = convert_to_cloudinary_url(r.get('image_url', ''))
+
     return jsonify({
         "count": len(results),
         "results": results
@@ -281,7 +310,7 @@ def add_result():
             "track": data.get('track', 'unknown'),
             "category": data.get('category', ''),
             "content_type": data.get('content_type', 'news'),
-            "image_url": data.get('image_url', ''),
+            "image_url": convert_to_cloudinary_url(data.get('image_url', '')),
             "filename": data.get('filename', ''),
             "captions": data.get('captions', {}),
             "full_article": data.get('full_article', ''),
