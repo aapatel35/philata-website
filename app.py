@@ -416,6 +416,17 @@ def get_stats():
     return jsonify(stats)
 
 
+@app.route('/api/results/clear', methods=['POST'])
+def clear_results():
+    """Clear all results data"""
+    try:
+        save_results([])
+        save_approved([])
+        return jsonify({"success": True, "message": "All results cleared"})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 @app.route('/api/approved', methods=['GET'])
 def get_approved():
     """Get approved content ready for posting"""
