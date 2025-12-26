@@ -3,213 +3,558 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Philata{% endblock %} | Canadian Immigration Content</title>
+    <title>{% block title %}Philata{% endblock %} | Canadian Immigration Intelligence</title>
+    <meta name="description" content="AI-powered Canadian immigration news, insights, and content automation. Stay ahead with real-time updates from IRCC.">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --philata-red: #d52b1e;
-            --philata-white: #ffffff;
-            --philata-dark: #1a1a2e;
+            --philata-red: #E31837;
+            --philata-red-dark: #B91430;
+            --philata-red-light: #FF3D5A;
+            --philata-gold: #D4AF37;
+            --philata-dark: #0A0A0F;
+            --philata-darker: #050508;
+            --philata-card: rgba(255,255,255,0.03);
+            --philata-card-hover: rgba(255,255,255,0.06);
+            --philata-border: rgba(255,255,255,0.08);
+            --philata-text: #E8E8ED;
+            --philata-text-muted: #8B8B9E;
+            --gradient-primary: linear-gradient(135deg, #E31837 0%, #FF6B6B 50%, #E31837 100%);
+            --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #F4D03F 50%, #D4AF37 100%);
+            --gradient-dark: linear-gradient(180deg, #0A0A0F 0%, #12121A 50%, #0A0A0F 100%);
+            --glass-bg: rgba(255,255,255,0.02);
+            --glass-border: rgba(255,255,255,0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--philata-darker);
+            color: var(--philata-text);
             min-height: 100vh;
-            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
         }
 
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(227, 24, 55, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(227, 24, 55, 0.03) 0%, transparent 30%);
+            animation: bgFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(2%, 2%) rotate(1deg); }
+            66% { transform: translate(-1%, 1%) rotate(-1deg); }
+        }
+
+        /* Grid Pattern Overlay */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+        }
+
+        /* Navigation */
         .navbar {
-            background: rgba(26, 26, 46, 0.95) !important;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(10, 10, 15, 0.8) !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--philata-border);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(10, 10, 15, 0.95) !important;
+            padding: 0.5rem 0;
         }
 
         .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
             font-size: 1.5rem;
+            color: #fff !important;
+            text-decoration: none;
         }
 
-        .navbar-brand .maple {
-            color: var(--philata-red);
+        .navbar-brand .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 15px rgba(227, 24, 55, 0.3);
+            transition: transform 0.3s ease;
         }
 
+        .navbar-brand:hover .logo-icon {
+            transform: scale(1.05) rotate(-5deg);
+        }
+
+        .nav-link {
+            color: var(--philata-text-muted) !important;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #fff !important;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 2px;
+            background: var(--philata-red);
+            border-radius: 2px;
+        }
+
+        .btn-nav-cta {
+            background: var(--gradient-primary);
+            color: white !important;
+            font-weight: 600;
+            padding: 0.6rem 1.5rem !important;
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 4px 15px rgba(227, 24, 55, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(227, 24, 55, 0.4);
+        }
+
+        /* Cards */
         .card {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 16px;
+            background: var(--philata-card);
+            border: 1px solid var(--philata-border);
+            border-radius: 20px;
             backdrop-filter: blur(10px);
-            color: #ffffff;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
         }
 
-        .card-title, .card-body h6, .card-body h5, .card-body h4 {
-            color: #ffffff !important;
+        .card:hover {
+            background: var(--philata-card-hover);
+            border-color: rgba(255,255,255,0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+
+        .card-header {
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid var(--philata-border);
+            padding: 1.25rem 1.5rem;
+            font-weight: 600;
+            color: #fff;
         }
 
         .card-body {
-            color: #e0e0e0;
+            padding: 1.5rem;
         }
 
-        .card .text-muted {
-            color: #b0b0b0 !important;
-        }
-
-        .text-muted {
-            color: #a0a0a0 !important;
-        }
-
-        .card-img-top {
-            border-radius: 16px 16px 0 0;
-            object-fit: cover;
-            height: 200px;
-        }
-
-        .btn-approve {
-            background: #28a745;
+        /* Buttons */
+        .btn-primary {
+            background: var(--gradient-primary);
             border: none;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(227, 24, 55, 0.3);
+            transition: all 0.3s ease;
         }
 
-        .btn-reject {
-            background: #dc3545;
-            border: none;
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(227, 24, 55, 0.4);
+            background: var(--gradient-primary);
         }
 
+        .btn-outline-light {
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            font-weight: 500;
+            padding: 0.75rem 2rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-light:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-glass {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .btn-glass:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.15);
+            color: #fff;
+        }
+
+        /* Badges */
         .badge-breaking {
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            background: linear-gradient(135deg, #E31837, #FF6B6B);
+            color: white;
+            font-weight: 600;
+            padding: 0.5em 1em;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(227, 24, 55, 0.3);
         }
 
         .badge-regular {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #6366F1, #8B5CF6);
+            color: white;
+            font-weight: 600;
+            padding: 0.5em 1em;
+            border-radius: 8px;
         }
 
         .badge-educational {
-            background: linear-gradient(135deg, #11998e, #38ef7d);
+            background: linear-gradient(135deg, #10B981, #34D399);
+            color: white;
+            font-weight: 600;
+            padding: 0.5em 1em;
+            border-radius: 8px;
         }
 
         .badge-forms {
-            background: linear-gradient(135deg, #f093fb, #f5576c);
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-            border-radius: 16px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-        }
-
-        .status-pending { color: #ffc107; }
-        .status-approved { color: #28a745; }
-        .status-rejected { color: #dc3545; }
-        .status-posted { color: #17a2b8; }
-
-        .caption-box {
-            background: rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, #F59E0B, #FBBF24);
+            color: #1a1a1a;
+            font-weight: 600;
+            padding: 0.5em 1em;
             border-radius: 8px;
-            padding: 1rem;
-            font-family: monospace;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: var(--philata-text-muted);
+            max-width: 600px;
+        }
+
+        .gradient-text {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gold-text {
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Glow Effects */
+        .glow-red {
+            box-shadow: 0 0 60px rgba(227, 24, 55, 0.3);
+        }
+
+        .glow-gold {
+            box-shadow: 0 0 60px rgba(212, 175, 55, 0.2);
+        }
+
+        /* Text utilities */
+        .text-muted {
+            color: var(--philata-text-muted) !important;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        a {
+            color: var(--philata-red-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #fff;
+        }
+
+        /* Form Controls */
+        .form-control, .form-select {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--philata-border);
+            color: #fff;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--philata-red);
+            box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.1);
+            color: #fff;
+        }
+
+        .form-control::placeholder {
+            color: var(--philata-text-muted);
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(0,0,0,0.3);
+            border-top: 1px solid var(--philata-border);
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links h6 {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links a {
+            display: block;
+            color: var(--philata-text-muted);
+            padding: 0.3rem 0;
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .footer-bottom {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--philata-border);
+            text-align: center;
+            color: var(--philata-text-muted);
+            font-size: 0.9rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--philata-text-muted);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--philata-red);
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--philata-darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--philata-border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .section {
+                padding: 4rem 0;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .navbar-brand .logo-icon {
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        /* Caption box */
+        .caption-box {
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            padding: 1.25rem;
+            font-family: 'SF Mono', Monaco, monospace;
             font-size: 0.85rem;
             white-space: pre-wrap;
             max-height: 200px;
             overflow-y: auto;
-            color: #ffffff;
-            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--philata-text);
+            border: 1px solid var(--philata-border);
         }
 
-        /* Form controls */
-        .form-control, .form-select {
-            color: #ffffff !important;
+        /* Tables */
+        .table-dark {
+            --bs-table-bg: transparent;
+            --bs-table-color: var(--philata-text);
         }
 
-        .form-control::placeholder {
-            color: #888888 !important;
-        }
-
-        /* Better badge colors */
-        .badge {
-            font-weight: 600;
-            padding: 0.4em 0.8em;
-        }
-
-        /* Links */
-        a {
-            color: #87ceeb;
-        }
-
-        a:hover {
-            color: #add8e6;
-        }
-
-        /* Footer */
-        footer p {
-            color: #888888;
-        }
-
-        /* Card headers */
-        .card-header {
-            background: rgba(255,255,255,0.1);
-            color: #ffffff;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        /* Breadcrumbs */
-        .breadcrumb-item {
-            color: #b0b0b0;
-        }
-
-        .breadcrumb-item.active {
-            color: #ffffff;
-        }
-
-        .breadcrumb-item a {
-            color: #87ceeb;
-        }
-
-        /* Headings */
-        h1, h2, h3, h4, h5, h6 {
-            color: #ffffff;
-        }
-
-        .hero {
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .hero .maple-icon {
-            color: var(--philata-red);
-            font-size: 4rem;
-        }
+        {% block extra_css %}{% endblock %}
     </style>
-    {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="bg-animation"></div>
+    <div class="grid-overlay"></div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" id="mainNav">
         <div class="container">
             <a class="navbar-brand" href="/">
-                <span class="maple">&#127809;</span> Philata
+                <div class="logo-icon">🍁</div>
+                <span>Philata</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/"><i class="bi bi-house"></i> Home</a>
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/dashboard"><i class="bi bi-journal-text"></i> Content Log</a>
+                        <a class="nav-link {% if request.path == '/about' %}active{% endif %}" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/features' %}active{% endif %}" href="/features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if '/dashboard' in request.path %}active{% endif %}" href="/dashboard">Content Hub</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/contact' %}active{% endif %}" href="/contact">Contact</a>
                     </li>
                 </ul>
+                <a href="/dashboard" class="btn btn-nav-cta d-none d-lg-block">
+                    <i class="bi bi-lightning-charge-fill me-2"></i>Launch Hub
+                </a>
             </div>
         </div>
     </nav>
@@ -218,13 +563,82 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="py-4 mt-5 text-center text-muted">
+    <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 Philata.ca - Canadian Immigration Content Hub</p>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-logo">
+                        <div class="logo-icon" style="width: 36px; height: 36px; font-size: 1.1rem; background: var(--gradient-primary); border-radius: 10px; display: flex; align-items: center; justify-content: center;">🍁</div>
+                        <span>Philata</span>
+                    </div>
+                    <p class="text-muted mb-4" style="max-width: 300px;">
+                        AI-powered Canadian immigration intelligence. Delivering real-time news, insights, and automated content for immigration professionals.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-linkedin"></i></a>
+                        <a href="#"><i class="bi bi-twitter-x"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 footer-links">
+                    <h6>Platform</h6>
+                    <a href="/features">Features</a>
+                    <a href="/dashboard">Content Hub</a>
+                    <a href="#">API Access</a>
+                    <a href="#">Pricing</a>
+                </div>
+                <div class="col-lg-2 col-md-6 footer-links">
+                    <h6>Resources</h6>
+                    <a href="#">Documentation</a>
+                    <a href="#">Immigration Guide</a>
+                    <a href="#">IRCC Updates</a>
+                    <a href="#">Blog</a>
+                </div>
+                <div class="col-lg-2 col-md-6 footer-links">
+                    <h6>Company</h6>
+                    <a href="/about">About Us</a>
+                    <a href="/contact">Contact</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Press</a>
+                </div>
+                <div class="col-lg-2 col-md-6 footer-links">
+                    <h6>Legal</h6>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Philata.ca - Canadian Immigration Intelligence Platform</p>
+                <p class="small mt-2">Made with 🍁 in Canada</p>
+            </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

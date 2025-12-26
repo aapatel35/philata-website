@@ -60,6 +60,24 @@ def home():
     return render_template('index.html')
 
 
+@app.route('/about')
+def about():
+    """About page"""
+    return render_template('about.html')
+
+
+@app.route('/features')
+def features():
+    """Features page"""
+    return render_template('features.html')
+
+
+@app.route('/contact')
+def contact():
+    """Contact page"""
+    return render_template('contact.html')
+
+
 @app.route('/dashboard')
 def dashboard():
     """Content dashboard"""

@@ -1,125 +1,496 @@
 {% extends "base.html" %}
 
-{% block title %}Content Log{% endblock %}
-
-{% block content %}
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-white"><i class="bi bi-journal-text me-2"></i>Content Log</h2>
-        <div class="btn-group">
-            <button class="btn btn-outline-light active" onclick="filterTrack('all')">All</button>
-            <button class="btn btn-outline-danger" onclick="filterTrack('breaking')">Breaking</button>
-            <button class="btn btn-outline-primary" onclick="filterTrack('regular')">Regular</button>
-            <button class="btn btn-outline-success" onclick="filterTrack('educational')">Educational</button>
-            <button class="btn btn-outline-info" onclick="filterTrack('forms')">Forms</button>
-        </div>
-    </div>
-
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <input type="text" class="form-control bg-dark text-light border-secondary"
-                   placeholder="Search content..." id="searchInput" onkeyup="searchContent()">
-        </div>
-        <div class="col-md-4 text-end">
-            <button class="btn btn-outline-light" onclick="refreshContent()">
-                <i class="bi bi-arrow-clockwise me-1"></i>Refresh
-            </button>
-            <span class="ms-3 text-muted">{{ results|length }} items</span>
-        </div>
-    </div>
-
-    <div class="row g-4" id="content-grid">
-        {% for result in results %}
-        <div class="col-md-4 col-lg-3 content-card"
-             data-track="{{ result.track }}"
-             data-title="{{ result.title|lower }}">
-            <a href="/content/{{ result.id }}" class="text-decoration-none">
-                <div class="card h-100 content-card-hover">
-                    {% if result.image_url %}
-                    <img src="{{ result.image_url }}" class="card-img-top" alt="{{ result.title }}">
-                    {% else %}
-                    <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 180px;">
-                        <i class="bi bi-image" style="font-size: 3rem; opacity: 0.5;"></i>
-                    </div>
-                    {% endif %}
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="badge badge-{{ result.track }}">{{ result.track|upper }}</span>
-                            {% if result.content_type %}
-                            <span class="badge bg-secondary">{{ result.content_type }}</span>
-                            {% endif %}
-                        </div>
-                        <h6 class="card-title text-white mb-2">{{ result.title[:50] }}{% if result.title|length > 50 %}...{% endif %}</h6>
-                        <p class="small mb-0" style="color: #888;">
-                            <i class="bi bi-clock me-1"></i>{{ result.created_at[:10] if result.created_at else 'Unknown' }}
-                        </p>
-                    </div>
-                    <div class="card-footer bg-transparent border-top border-secondary text-center">
-                        <small class="text-info"><i class="bi bi-eye me-1"></i>Preview</small>
-                    </div>
-                </div>
-            </a>
-        </div>
-        {% else %}
-        <div class="col-12 text-center py-5">
-            <i class="bi bi-inbox" style="font-size: 4rem; opacity: 0.3; color: #666;"></i>
-            <h4 class="mt-3" style="color: #888;">No content yet</h4>
-            <p style="color: #666;">Content from n8n workflow will appear here</p>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-{% endblock %}
+{% block title %}Content Hub{% endblock %}
 
 {% block extra_css %}
 <style>
-    .content-card-hover {
-        transition: transform 0.2s, box-shadow 0.2s;
+    .dashboard-hero {
+        padding: 6rem 0 3rem;
     }
 
-    .content-card-hover:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    .dashboard-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
     }
 
-    .card-img-top {
-        height: 180px;
+    .dashboard-subtitle {
+        color: var(--philata-text-muted);
+        font-size: 1.1rem;
+    }
+
+    .stats-bar {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+    }
+
+    .stat-chip {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        transition: all 0.3s ease;
+    }
+
+    .stat-chip:hover {
+        border-color: rgba(255,255,255,0.15);
+        transform: translateY(-2px);
+    }
+
+    .stat-chip-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+
+    .stat-chip-value {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .stat-chip-label {
+        font-size: 0.8rem;
+        color: var(--philata-text-muted);
+    }
+
+    .filters-bar {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 16px;
+        padding: 1.25rem;
+        margin-bottom: 2rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .filter-group {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .filter-btn {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid transparent;
+        border-radius: 10px;
+        padding: 0.6rem 1.25rem;
+        color: var(--philata-text-muted);
+        font-weight: 500;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .filter-btn:hover {
+        background: rgba(255,255,255,0.06);
+        color: #fff;
+    }
+
+    .filter-btn.active {
+        background: var(--philata-red);
+        color: white;
+        border-color: var(--philata-red);
+    }
+
+    .search-box {
+        flex: 1;
+        min-width: 250px;
+    }
+
+    .search-box input {
+        width: 100%;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--philata-border);
+        border-radius: 10px;
+        padding: 0.6rem 1rem 0.6rem 2.5rem;
+        color: #fff;
+        font-size: 0.9rem;
+    }
+
+    .search-box input:focus {
+        outline: none;
+        border-color: var(--philata-red);
+        background: rgba(255,255,255,0.05);
+    }
+
+    .search-box {
+        position: relative;
+    }
+
+    .search-box i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--philata-text-muted);
+    }
+
+    .content-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .content-card {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+        display: block;
+    }
+
+    .content-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(255,255,255,0.15);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    }
+
+    .content-card-image {
+        aspect-ratio: 1;
+        background: linear-gradient(135deg, rgba(227,24,55,0.2), rgba(99,102,241,0.2));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .content-card-image img {
+        width: 100%;
+        height: 100%;
         object-fit: cover;
+    }
+
+    .content-card-image .placeholder-icon {
+        font-size: 4rem;
+        color: rgba(255,255,255,0.2);
+    }
+
+    .content-card-badge {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        z-index: 2;
+    }
+
+    .content-card-body {
+        padding: 1.5rem;
+    }
+
+    .content-card-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .content-card-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.85rem;
+        color: var(--philata-text-muted);
+    }
+
+    .content-card-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .content-card-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid var(--philata-border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .content-card-platforms {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .content-card-platforms i {
+        font-size: 1rem;
+        color: var(--philata-text-muted);
+    }
+
+    .content-card-arrow {
+        color: var(--philata-red-light);
+        font-size: 1.25rem;
+        transition: transform 0.3s ease;
+    }
+
+    .content-card:hover .content-card-arrow {
+        transform: translateX(5px);
+    }
+
+    .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 6rem 2rem;
+    }
+
+    .empty-state-icon {
+        font-size: 5rem;
+        color: rgba(255,255,255,0.1);
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-state h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .empty-state p {
+        color: var(--philata-text-muted);
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .refresh-btn {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--philata-border);
+        border-radius: 10px;
+        padding: 0.6rem 1rem;
+        color: var(--philata-text-muted);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .refresh-btn:hover {
+        background: rgba(255,255,255,0.1);
+        color: #fff;
+    }
+
+    .results-count {
+        color: var(--philata-text-muted);
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-title {
+            font-size: 2rem;
+        }
+
+        .stats-bar {
+            flex-direction: column;
+        }
+
+        .stat-chip {
+            width: 100%;
+        }
+
+        .filter-group {
+            flex-wrap: wrap;
+        }
+
+        .content-grid {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 {% endblock %}
 
+{% block content %}
+<!-- Dashboard Hero -->
+<section class="dashboard-hero">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+            <div>
+                <h1 class="dashboard-title">Content <span class="gradient-text">Hub</span></h1>
+                <p class="dashboard-subtitle">Preview and manage all generated immigration content</p>
+            </div>
+            <button class="refresh-btn" onclick="location.reload()">
+                <i class="bi bi-arrow-clockwise"></i>
+                Refresh
+            </button>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-chip">
+                <div class="stat-chip-icon" style="background: linear-gradient(135deg, #E31837, #FF6B6B);">
+                    <i class="bi bi-megaphone-fill text-white"></i>
+                </div>
+                <div>
+                    <div class="stat-chip-value" id="stat-breaking">-</div>
+                    <div class="stat-chip-label">Breaking News</div>
+                </div>
+            </div>
+            <div class="stat-chip">
+                <div class="stat-chip-icon" style="background: linear-gradient(135deg, #6366F1, #8B5CF6);">
+                    <i class="bi bi-newspaper text-white"></i>
+                </div>
+                <div>
+                    <div class="stat-chip-value" id="stat-regular">-</div>
+                    <div class="stat-chip-label">Regular News</div>
+                </div>
+            </div>
+            <div class="stat-chip">
+                <div class="stat-chip-icon" style="background: linear-gradient(135deg, #10B981, #34D399);">
+                    <i class="bi bi-lightbulb-fill text-white"></i>
+                </div>
+                <div>
+                    <div class="stat-chip-value" id="stat-educational">-</div>
+                    <div class="stat-chip-label">Educational</div>
+                </div>
+            </div>
+            <div class="stat-chip">
+                <div class="stat-chip-icon" style="background: linear-gradient(135deg, #F59E0B, #FBBF24);">
+                    <i class="bi bi-file-earmark-text-fill text-white"></i>
+                </div>
+                <div>
+                    <div class="stat-chip-value" id="stat-forms">-</div>
+                    <div class="stat-chip-label">Forms Guides</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters Bar -->
+        <div class="filters-bar">
+            <div class="filter-group">
+                <button class="filter-btn active" data-track="all">All</button>
+                <button class="filter-btn" data-track="breaking">Breaking</button>
+                <button class="filter-btn" data-track="regular">Regular</button>
+                <button class="filter-btn" data-track="educational">Educational</button>
+                <button class="filter-btn" data-track="forms">Forms</button>
+            </div>
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Search content..." id="searchInput">
+            </div>
+            <div class="results-count">
+                <span id="resultsCount">{{ results|length }}</span> items
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Content Grid -->
+<section class="pb-5">
+    <div class="container">
+        <div class="content-grid" id="contentGrid">
+            {% for result in results %}
+            <a href="/content/{{ result.id }}" class="content-card" data-track="{{ result.track }}" data-title="{{ result.title|lower }}">
+                <div class="content-card-image">
+                    <span class="content-card-badge badge-{{ result.track }}">{{ result.track|upper }}</span>
+                    {% if result.image_url %}
+                    <img src="{{ result.image_url }}" alt="{{ result.title }}">
+                    {% else %}
+                    <i class="bi bi-image placeholder-icon"></i>
+                    {% endif %}
+                </div>
+                <div class="content-card-body">
+                    <h3 class="content-card-title">{{ result.title }}</h3>
+                    <div class="content-card-meta">
+                        <span><i class="bi bi-clock"></i> {{ result.created_at[:10] if result.created_at else 'Recent' }}</span>
+                        {% if result.category %}
+                        <span><i class="bi bi-tag"></i> {{ result.category }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="content-card-footer">
+                    <div class="content-card-platforms">
+                        <i class="bi bi-instagram"></i>
+                        <i class="bi bi-facebook"></i>
+                        <i class="bi bi-linkedin"></i>
+                        <i class="bi bi-twitter-x"></i>
+                    </div>
+                    <i class="bi bi-arrow-right content-card-arrow"></i>
+                </div>
+            </a>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-inbox empty-state-icon"></i>
+                <h3>No content yet</h3>
+                <p>Content from the automation workflow will appear here. Run the n8n workflow to generate your first posts.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
 {% block extra_js %}
 <script>
-    function filterTrack(track) {
-        document.querySelectorAll('.content-card').forEach(card => {
-            if (track === 'all' || card.dataset.track === track) {
-                card.style.display = '';
-            } else {
-                card.style.display = 'none';
-            }
-        });
+    // Fetch stats
+    fetch('/api/stats')
+        .then(r => r.json())
+        .then(stats => {
+            document.getElementById('stat-breaking').textContent = stats.by_track?.breaking || 0;
+            document.getElementById('stat-regular').textContent = stats.by_track?.regular || 0;
+            document.getElementById('stat-educational').textContent = stats.by_track?.educational || 0;
+            document.getElementById('stat-forms').textContent = stats.by_track?.forms || 0;
+        })
+        .catch(e => console.error('Failed to load stats:', e));
 
-        // Update active button
-        document.querySelectorAll('.btn-group .btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        event.target.classList.add('active');
-    }
+    // Filter functionality
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.content-card');
+    const resultsCount = document.getElementById('resultsCount');
 
-    function searchContent() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        document.querySelectorAll('.content-card').forEach(card => {
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const track = this.dataset.track;
+            let visible = 0;
+
+            cards.forEach(card => {
+                if (track === 'all' || card.dataset.track === track) {
+                    card.style.display = '';
+                    visible++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            resultsCount.textContent = visible;
+        });
+    });
+
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', function() {
+        const query = this.value.toLowerCase();
+        let visible = 0;
+
+        cards.forEach(card => {
             if (card.dataset.title.includes(query)) {
                 card.style.display = '';
+                visible++;
             } else {
                 card.style.display = 'none';
             }
         });
-    }
 
-    function refreshContent() {
-        location.reload();
-    }
+        resultsCount.textContent = visible;
+    });
 </script>
 {% endblock %}

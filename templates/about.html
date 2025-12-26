@@ -1,0 +1,397 @@
+{% extends "base.html" %}
+
+{% block title %}About{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-hero {
+        padding: 8rem 0 6rem;
+        position: relative;
+    }
+
+    .about-hero-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+    }
+
+    .about-hero-subtitle {
+        font-size: 1.35rem;
+        color: var(--philata-text-muted);
+        max-width: 700px;
+        line-height: 1.7;
+    }
+
+    .mission-section {
+        padding: 6rem 0;
+    }
+
+    .mission-card {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 24px;
+        padding: 3rem;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .mission-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
+    }
+
+    .mission-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .mission-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .mission-desc {
+        color: var(--philata-text-muted);
+        font-size: 1rem;
+        line-height: 1.8;
+    }
+
+    .story-section {
+        padding: 6rem 0;
+        background: linear-gradient(180deg, transparent, rgba(227, 24, 55, 0.02), transparent);
+    }
+
+    .story-content {
+        font-size: 1.15rem;
+        color: var(--philata-text);
+        line-height: 1.9;
+    }
+
+    .story-content p {
+        margin-bottom: 1.5rem;
+    }
+
+    .story-highlight {
+        background: var(--philata-card);
+        border-left: 4px solid var(--philata-red);
+        padding: 2rem;
+        border-radius: 0 16px 16px 0;
+        margin: 2rem 0;
+    }
+
+    .story-highlight p {
+        font-size: 1.25rem;
+        font-style: italic;
+        color: #fff;
+        margin: 0;
+    }
+
+    .values-section {
+        padding: 6rem 0;
+    }
+
+    .value-item {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .value-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 1.25rem;
+    }
+
+    .value-content h4 {
+        font-size: 1.15rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .value-content p {
+        color: var(--philata-text-muted);
+        font-size: 0.95rem;
+        margin: 0;
+    }
+
+    .tech-section {
+        padding: 6rem 0;
+    }
+
+    .tech-stack {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .tech-item {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 16px;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .tech-item:hover {
+        transform: translateY(-5px);
+        border-color: var(--philata-red);
+    }
+
+    .tech-item i {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: var(--philata-red-light);
+    }
+
+    .tech-item span {
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .cta-section {
+        padding: 6rem 0;
+    }
+
+    @media (max-width: 768px) {
+        .about-hero-title {
+            font-size: 2.5rem;
+        }
+
+        .mission-card {
+            padding: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="about-hero">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-10">
+                <h1 class="about-hero-title">
+                    Transforming Immigration<br>
+                    <span class="gradient-text">Content Creation</span>
+                </h1>
+                <p class="about-hero-subtitle mx-auto">
+                    Philata is an AI-powered platform designed to revolutionize how immigration professionals
+                    and content creators stay informed and engage their audience with accurate, timely content.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mission Section -->
+<section class="mission-section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="mission-card">
+                    <div class="mission-icon" style="background: linear-gradient(135deg, rgba(227, 24, 55, 0.2), rgba(227, 24, 55, 0.05));">
+                        <i class="bi bi-bullseye" style="color: var(--philata-red);"></i>
+                    </div>
+                    <h3 class="mission-title">Our Mission</h3>
+                    <p class="mission-desc">
+                        To democratize access to accurate Canadian immigration information through intelligent automation,
+                        helping content creators deliver value to their audience while saving time.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mission-card">
+                    <div class="mission-icon" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.05));">
+                        <i class="bi bi-eye" style="color: #6366F1;"></i>
+                    </div>
+                    <h3 class="mission-title">Our Vision</h3>
+                    <p class="mission-desc">
+                        A world where immigration information is accessible, accurate, and delivered in formats that
+                        resonate with modern audiences across all social media platforms.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="mission-card">
+                    <div class="mission-icon" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));">
+                        <i class="bi bi-heart" style="color: #10B981;"></i>
+                    </div>
+                    <h3 class="mission-title">Our Purpose</h3>
+                    <p class="mission-desc">
+                        To bridge the gap between official IRCC updates and the public, ensuring that every
+                        aspiring immigrant has access to the information they need to succeed.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Story Section -->
+<section class="story-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="section-title text-center mb-5">The <span class="gradient-text">Philata</span> Story</h2>
+                <div class="story-content">
+                    <p>
+                        Philata was born from a simple observation: immigration content creators spend countless hours
+                        monitoring IRCC updates, Express Entry draws, and policy changes. Meanwhile, their audience
+                        eagerly awaits timely, accurate information that could impact their Canadian dream.
+                    </p>
+
+                    <div class="story-highlight">
+                        <p>
+                            "What if we could automate the monitoring, content creation, and distribution while
+                            maintaining the accuracy and authenticity that immigration content demands?"
+                        </p>
+                    </div>
+
+                    <p>
+                        This question led to the development of Philata - a comprehensive AI-powered platform that
+                        monitors official sources 24/7, generates verified content, and creates platform-specific
+                        captions ready for distribution.
+                    </p>
+
+                    <p>
+                        Today, Philata serves as the intelligent backbone for immigration content creators,
+                        allowing them to focus on what matters most: helping people navigate their immigration journey
+                        while we handle the content logistics.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Values Section -->
+<section class="values-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5 mb-4 mb-lg-0">
+                <h2 class="section-title">Our Core <span class="gold-text">Values</span></h2>
+                <p class="section-subtitle">
+                    These principles guide everything we do at Philata.
+                </p>
+            </div>
+            <div class="col-lg-7">
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="bi bi-patch-check-fill text-white"></i>
+                    </div>
+                    <div class="value-content">
+                        <h4>Accuracy First</h4>
+                        <p>Every piece of content is verified against official IRCC sources. We never compromise on accuracy.</p>
+                    </div>
+                </div>
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="bi bi-lightning-charge-fill text-white"></i>
+                    </div>
+                    <div class="value-content">
+                        <h4>Speed Matters</h4>
+                        <p>Immigration news is time-sensitive. Our systems are designed to deliver content within minutes of official announcements.</p>
+                    </div>
+                </div>
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="bi bi-people-fill text-white"></i>
+                    </div>
+                    <div class="value-content">
+                        <h4>Community Focus</h4>
+                        <p>We exist to serve the immigration community. Every feature is designed with their needs in mind.</p>
+                    </div>
+                </div>
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="bi bi-shield-check text-white"></i>
+                    </div>
+                    <div class="value-content">
+                        <h4>Trust & Transparency</h4>
+                        <p>We cite our sources, show verification status, and maintain the highest ethical standards.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Tech Stack Section -->
+<section class="tech-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Powered by <span class="gradient-text">Modern Tech</span></h2>
+            <p class="section-subtitle mx-auto">
+                Built with cutting-edge technologies to ensure reliability, speed, and intelligence.
+            </p>
+        </div>
+        <div class="tech-stack">
+            <div class="tech-item">
+                <i class="bi bi-robot"></i>
+                <span>Gemini AI</span>
+            </div>
+            <div class="tech-item">
+                <i class="bi bi-search"></i>
+                <span>Perplexity</span>
+            </div>
+            <div class="tech-item">
+                <i class="bi bi-diagram-3"></i>
+                <span>n8n Workflows</span>
+            </div>
+            <div class="tech-item">
+                <i class="bi bi-code-slash"></i>
+                <span>Python Flask</span>
+            </div>
+            <div class="tech-item">
+                <i class="bi bi-cloud"></i>
+                <span>Railway</span>
+            </div>
+            <div class="tech-item">
+                <i class="bi bi-image"></i>
+                <span>DALL-E 3</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="card p-5 text-center" style="border-radius: 24px;">
+            <h2 class="section-title mb-3">Ready to Join the <span class="gradient-text">Revolution?</span></h2>
+            <p class="text-muted mb-4" style="max-width: 500px; margin: 0 auto;">
+                Start exploring our content hub and see the power of AI-driven immigration content.
+            </p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="/dashboard" class="btn btn-primary">
+                    <i class="bi bi-rocket-takeoff me-2"></i>Explore Content Hub
+                </a>
+                <a href="/contact" class="btn btn-outline-light">
+                    <i class="bi bi-chat-dots me-2"></i>Get in Touch
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,564 @@
+{% extends "base.html" %}
+
+{% block title %}Features{% endblock %}
+
+{% block extra_css %}
+<style>
+    .features-hero {
+        padding: 8rem 0 4rem;
+        text-align: center;
+    }
+
+    .features-hero-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+    }
+
+    .features-hero-subtitle {
+        font-size: 1.35rem;
+        color: var(--philata-text-muted);
+        max-width: 700px;
+        margin: 0 auto;
+        line-height: 1.7;
+    }
+
+    .feature-showcase {
+        padding: 4rem 0;
+    }
+
+    .feature-row {
+        display: flex;
+        align-items: center;
+        gap: 4rem;
+        margin-bottom: 6rem;
+    }
+
+    .feature-row.reverse {
+        flex-direction: row-reverse;
+    }
+
+    .feature-content {
+        flex: 1;
+    }
+
+    .feature-visual {
+        flex: 1;
+    }
+
+    .feature-badge {
+        display: inline-block;
+        background: rgba(227, 24, 55, 0.1);
+        border: 1px solid rgba(227, 24, 55, 0.3);
+        color: var(--philata-red-light);
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+
+    .feature-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 2.25rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .feature-desc {
+        font-size: 1.1rem;
+        color: var(--philata-text-muted);
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+    }
+
+    .feature-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .feature-list li {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 0;
+        font-size: 1rem;
+        color: var(--philata-text);
+    }
+
+    .feature-list li i {
+        color: var(--philata-red-light);
+        font-size: 1.25rem;
+    }
+
+    .feature-visual-box {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 24px;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-visual-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
+    }
+
+    .visual-mockup {
+        background: rgba(0,0,0,0.3);
+        border-radius: 12px;
+        padding: 1.5rem;
+    }
+
+    .mockup-header {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .mockup-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+
+    .mockup-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .mockup-line {
+        height: 8px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 4px;
+    }
+
+    .platform-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .platform-item {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 12px;
+        padding: 1.25rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .platform-item:hover {
+        background: rgba(255,255,255,0.06);
+        border-color: rgba(255,255,255,0.1);
+    }
+
+    .platform-item i {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .platform-item span {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--philata-text-muted);
+    }
+
+    .workflow-visual {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .workflow-step {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: rgba(255,255,255,0.03);
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .workflow-step:hover {
+        background: rgba(255,255,255,0.06);
+    }
+
+    .workflow-num {
+        width: 36px;
+        height: 36px;
+        background: var(--gradient-primary);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+    }
+
+    .workflow-text {
+        font-size: 0.95rem;
+    }
+
+    .comparison-section {
+        padding: 6rem 0;
+        background: linear-gradient(180deg, transparent, rgba(227, 24, 55, 0.02), transparent);
+    }
+
+    .comparison-table {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 24px;
+        overflow: hidden;
+    }
+
+    .comparison-header {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        background: rgba(255,255,255,0.03);
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid var(--philata-border);
+    }
+
+    .comparison-header span {
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .comparison-header span:first-child {
+        text-align: left;
+    }
+
+    .comparison-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        padding: 1.25rem 2rem;
+        border-bottom: 1px solid var(--philata-border);
+        transition: background 0.3s ease;
+    }
+
+    .comparison-row:last-child {
+        border-bottom: none;
+    }
+
+    .comparison-row:hover {
+        background: rgba(255,255,255,0.02);
+    }
+
+    .comparison-row span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .comparison-row span:first-child {
+        justify-content: flex-start;
+        color: var(--philata-text);
+    }
+
+    .check-yes {
+        color: #10B981;
+        font-size: 1.25rem;
+    }
+
+    .check-no {
+        color: #6B7280;
+        font-size: 1.25rem;
+    }
+
+    @media (max-width: 992px) {
+        .feature-row, .feature-row.reverse {
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .features-hero-title {
+            font-size: 2.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.75rem;
+        }
+
+        .comparison-header, .comparison-row {
+            grid-template-columns: 1.5fr 1fr 1fr;
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="features-hero">
+    <div class="container">
+        <h1 class="features-hero-title">
+            Powerful <span class="gradient-text">Features</span>
+        </h1>
+        <p class="features-hero-subtitle">
+            Discover how Philata transforms immigration content creation with AI-powered
+            automation, real-time monitoring, and intelligent generation.
+        </p>
+    </div>
+</section>
+
+<!-- Feature Showcase -->
+<section class="feature-showcase">
+    <div class="container">
+        <!-- Feature 1: Real-time Monitoring -->
+        <div class="feature-row">
+            <div class="feature-content">
+                <span class="feature-badge">
+                    <i class="bi bi-lightning-charge-fill me-2"></i>Core Feature
+                </span>
+                <h2 class="feature-title">Real-Time <span class="gradient-text">Monitoring</span></h2>
+                <p class="feature-desc">
+                    Our AI systems monitor official IRCC sources 24/7, detecting Express Entry draws,
+                    policy changes, and important announcements within minutes of release.
+                </p>
+                <ul class="feature-list">
+                    <li><i class="bi bi-check-circle-fill"></i>Express Entry draw detection in real-time</li>
+                    <li><i class="bi bi-check-circle-fill"></i>Policy change alerts within minutes</li>
+                    <li><i class="bi bi-check-circle-fill"></i>Processing time updates tracking</li>
+                    <li><i class="bi bi-check-circle-fill"></i>PNP program announcements</li>
+                </ul>
+            </div>
+            <div class="feature-visual">
+                <div class="feature-visual-box">
+                    <div class="workflow-visual">
+                        <div class="workflow-step">
+                            <div class="workflow-num">1</div>
+                            <div class="workflow-text">IRCC publishes new update</div>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="workflow-num">2</div>
+                            <div class="workflow-text">Philata AI detects the change</div>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="workflow-num">3</div>
+                            <div class="workflow-text">Content automatically generated</div>
+                        </div>
+                        <div class="workflow-step">
+                            <div class="workflow-num">4</div>
+                            <div class="workflow-text">Ready for preview and posting</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature 2: AI Content Generation -->
+        <div class="feature-row reverse">
+            <div class="feature-content">
+                <span class="feature-badge">
+                    <i class="bi bi-robot me-2"></i>AI Powered
+                </span>
+                <h2 class="feature-title">Intelligent <span class="gold-text">Content Generation</span></h2>
+                <p class="feature-desc">
+                    Powered by advanced AI models including Gemini and Perplexity, our system generates
+                    accurate, engaging content tailored for each social media platform.
+                </p>
+                <ul class="feature-list">
+                    <li><i class="bi bi-check-circle-fill"></i>Platform-optimized captions</li>
+                    <li><i class="bi bi-check-circle-fill"></i>Hashtag research and optimization</li>
+                    <li><i class="bi bi-check-circle-fill"></i>Thread generation for Twitter</li>
+                    <li><i class="bi bi-check-circle-fill"></i>Professional tone for LinkedIn</li>
+                </ul>
+            </div>
+            <div class="feature-visual">
+                <div class="feature-visual-box">
+                    <div class="platform-grid">
+                        <div class="platform-item">
+                            <i class="bi bi-instagram" style="color: #E4405F;"></i>
+                            <span>Instagram</span>
+                        </div>
+                        <div class="platform-item">
+                            <i class="bi bi-facebook" style="color: #1877F2;"></i>
+                            <span>Facebook</span>
+                        </div>
+                        <div class="platform-item">
+                            <i class="bi bi-linkedin" style="color: #0A66C2;"></i>
+                            <span>LinkedIn</span>
+                        </div>
+                        <div class="platform-item">
+                            <i class="bi bi-twitter-x"></i>
+                            <span>X / Twitter</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature 3: Visual Generation -->
+        <div class="feature-row">
+            <div class="feature-content">
+                <span class="feature-badge">
+                    <i class="bi bi-image-fill me-2"></i>Visual AI
+                </span>
+                <h2 class="feature-title">AI-Generated <span class="gradient-text">Visuals</span></h2>
+                <p class="feature-desc">
+                    Every piece of content comes with AI-generated graphics, including relevant
+                    statistics displayed beautifully for maximum engagement.
+                </p>
+                <ul class="feature-list">
+                    <li><i class="bi bi-check-circle-fill"></i>Custom graphics for each post</li>
+                    <li><i class="bi bi-check-circle-fill"></i>CRS scores and ITA counts displayed</li>
+                    <li><i class="bi bi-check-circle-fill"></i>Platform-specific dimensions</li>
+                    <li><i class="bi bi-check-circle-fill"></i>Brand-consistent styling</li>
+                </ul>
+            </div>
+            <div class="feature-visual">
+                <div class="feature-visual-box">
+                    <div class="visual-mockup">
+                        <div class="mockup-header">
+                            <div class="mockup-dot" style="background: #FF5F57;"></div>
+                            <div class="mockup-dot" style="background: #FFBD2E;"></div>
+                            <div class="mockup-dot" style="background: #28CA41;"></div>
+                        </div>
+                        <div style="aspect-ratio: 1; background: linear-gradient(135deg, rgba(227,24,55,0.3), rgba(99,102,241,0.3)); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
+                            <div style="font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; color: var(--philata-text-muted); margin-bottom: 1rem;">EXPRESS ENTRY DRAW</div>
+                            <div style="font-family: 'Space Grotesk', sans-serif; font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem;">524</div>
+                            <div style="font-size: 0.85rem; color: var(--philata-text-muted);">CRS Cutoff</div>
+                            <div style="margin-top: 1.5rem; display: flex; gap: 2rem;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.5rem; font-weight: 700;">4,200</div>
+                                    <div style="font-size: 0.75rem; color: var(--philata-text-muted);">ITAs</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature 4: Preview Hub -->
+        <div class="feature-row reverse">
+            <div class="feature-content">
+                <span class="feature-badge">
+                    <i class="bi bi-phone me-2"></i>Preview
+                </span>
+                <h2 class="feature-title">Multi-Platform <span class="gold-text">Preview</span></h2>
+                <p class="feature-desc">
+                    See exactly how your content will appear on each platform before posting.
+                    Our realistic mockups help you perfect every post.
+                </p>
+                <ul class="feature-list">
+                    <li><i class="bi bi-check-circle-fill"></i>Pixel-perfect platform mockups</li>
+                    <li><i class="bi bi-check-circle-fill"></i>One-click caption copying</li>
+                    <li><i class="bi bi-check-circle-fill"></i>Thread preview for Twitter</li>
+                    <li><i class="bi bi-check-circle-fill"></i>Full article access</li>
+                </ul>
+            </div>
+            <div class="feature-visual">
+                <div class="feature-visual-box">
+                    <div class="d-flex gap-3">
+                        <div style="flex: 1; background: #000; border-radius: 12px; padding: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                                <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--gradient-primary);"></div>
+                                <span style="font-size: 0.8rem; font-weight: 600;">philata.ca</span>
+                            </div>
+                            <div style="aspect-ratio: 1; background: rgba(255,255,255,0.1); border-radius: 8px; margin-bottom: 0.75rem;"></div>
+                            <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-bottom: 0.5rem;"></div>
+                            <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; width: 70%;"></div>
+                        </div>
+                        <div style="flex: 1; background: #242526; border-radius: 12px; padding: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                                <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--gradient-primary);"></div>
+                                <span style="font-size: 0.75rem; font-weight: 600;">Philata</span>
+                            </div>
+                            <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-bottom: 0.5rem;"></div>
+                            <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; width: 80%; margin-bottom: 0.75rem;"></div>
+                            <div style="aspect-ratio: 16/9; background: rgba(255,255,255,0.1); border-radius: 8px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Comparison Section -->
+<section class="comparison-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Why Choose <span class="gradient-text">Philata?</span></h2>
+            <p class="section-subtitle mx-auto">
+                Compare the difference between manual content creation and Philata's automated approach.
+            </p>
+        </div>
+        <div class="comparison-table">
+            <div class="comparison-header">
+                <span>Feature</span>
+                <span>Manual</span>
+                <span style="color: var(--philata-red-light);">Philata</span>
+            </div>
+            <div class="comparison-row">
+                <span>Real-time IRCC monitoring</span>
+                <span><i class="bi bi-x-circle-fill check-no"></i></span>
+                <span><i class="bi bi-check-circle-fill check-yes"></i></span>
+            </div>
+            <div class="comparison-row">
+                <span>Automated content generation</span>
+                <span><i class="bi bi-x-circle-fill check-no"></i></span>
+                <span><i class="bi bi-check-circle-fill check-yes"></i></span>
+            </div>
+            <div class="comparison-row">
+                <span>Multi-platform captions</span>
+                <span><i class="bi bi-x-circle-fill check-no"></i></span>
+                <span><i class="bi bi-check-circle-fill check-yes"></i></span>
+            </div>
+            <div class="comparison-row">
+                <span>AI-generated visuals</span>
+                <span><i class="bi bi-x-circle-fill check-no"></i></span>
+                <span><i class="bi bi-check-circle-fill check-yes"></i></span>
+            </div>
+            <div class="comparison-row">
+                <span>Content verification</span>
+                <span><i class="bi bi-x-circle-fill check-no"></i></span>
+                <span><i class="bi bi-check-circle-fill check-yes"></i></span>
+            </div>
+            <div class="comparison-row">
+                <span>24/7 operation</span>
+                <span><i class="bi bi-x-circle-fill check-no"></i></span>
+                <span><i class="bi bi-check-circle-fill check-yes"></i></span>
+            </div>
+            <div class="comparison-row">
+                <span>Platform preview mockups</span>
+                <span><i class="bi bi-x-circle-fill check-no"></i></span>
+                <span><i class="bi bi-check-circle-fill check-yes"></i></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section">
+    <div class="container">
+        <div class="card p-5 text-center" style="border-radius: 24px;">
+            <h2 class="section-title mb-3">Experience the <span class="gradient-text">Difference</span></h2>
+            <p class="text-muted mb-4" style="max-width: 500px; margin: 0 auto;">
+                Start exploring our content hub and see these features in action.
+            </p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="/dashboard" class="btn btn-primary">
+                    <i class="bi bi-rocket-takeoff me-2"></i>Launch Content Hub
+                </a>
+                <a href="/contact" class="btn btn-outline-light">
+                    <i class="bi bi-chat-dots me-2"></i>Contact Us
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

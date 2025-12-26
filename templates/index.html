@@ -2,119 +2,782 @@
 
 {% block title %}Home{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        padding: 8rem 0 6rem;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(227, 24, 55, 0.1);
+        border: 1px solid rgba(227, 24, 55, 0.3);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        color: var(--philata-red-light);
+        margin-bottom: 2rem;
+        animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .hero-badge .pulse {
+        width: 8px;
+        height: 8px;
+        background: var(--philata-red);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(1.5); }
+    }
+
+    .hero-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 4.5rem;
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        animation: fadeInUp 0.8s ease forwards;
+        animation-delay: 0.1s;
+        opacity: 0;
+    }
+
+    .hero-subtitle {
+        font-size: 1.35rem;
+        color: var(--philata-text-muted);
+        max-width: 550px;
+        margin-bottom: 2.5rem;
+        line-height: 1.7;
+        animation: fadeInUp 0.8s ease forwards;
+        animation-delay: 0.2s;
+        opacity: 0;
+    }
+
+    .hero-cta {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        animation: fadeInUp 0.8s ease forwards;
+        animation-delay: 0.3s;
+        opacity: 0;
+    }
+
+    .hero-stats {
+        display: flex;
+        gap: 3rem;
+        margin-top: 4rem;
+        animation: fadeInUp 0.8s ease forwards;
+        animation-delay: 0.4s;
+        opacity: 0;
+    }
+
+    .hero-stat {
+        text-align: left;
+    }
+
+    .hero-stat-value {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 0.25rem;
+    }
+
+    .hero-stat-label {
+        font-size: 0.9rem;
+        color: var(--philata-text-muted);
+    }
+
+    /* Hero Visual */
+    .hero-visual {
+        position: relative;
+        animation: fadeInUp 1s ease forwards;
+        animation-delay: 0.5s;
+        opacity: 0;
+    }
+
+    .hero-card {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 24px;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
+    }
+
+    .floating-card {
+        position: absolute;
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 16px;
+        padding: 1rem 1.25rem;
+        backdrop-filter: blur(10px);
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .floating-card-1 {
+        top: -20px;
+        right: -30px;
+        animation-delay: 0s;
+    }
+
+    .floating-card-2 {
+        bottom: 40px;
+        left: -40px;
+        animation-delay: 2s;
+    }
+
+    .floating-card-3 {
+        top: 50%;
+        right: -60px;
+        animation-delay: 4s;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+    }
+
+    /* Live Feed Mockup */
+    .live-feed {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .feed-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1rem;
+        background: rgba(255,255,255,0.02);
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.05);
+        transition: all 0.3s ease;
+    }
+
+    .feed-item:hover {
+        background: rgba(255,255,255,0.04);
+        border-color: rgba(255,255,255,0.1);
+    }
+
+    .feed-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+    }
+
+    .feed-content h6 {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        color: #fff;
+    }
+
+    .feed-content p {
+        font-size: 0.8rem;
+        color: var(--philata-text-muted);
+        margin: 0;
+    }
+
+    .feed-time {
+        font-size: 0.75rem;
+        color: var(--philata-text-muted);
+        white-space: nowrap;
+    }
+
+    /* Features Section */
+    .features-section {
+        padding: 8rem 0;
+        position: relative;
+    }
+
+    .feature-card {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 24px;
+        padding: 2.5rem;
+        height: 100%;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--gradient-primary);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .feature-card:hover::before {
+        opacity: 1;
+    }
+
+    .feature-card:hover {
+        background: var(--philata-card-hover);
+        border-color: rgba(255,255,255,0.12);
+        transform: translateY(-8px);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .feature-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: #fff;
+    }
+
+    .feature-desc {
+        color: var(--philata-text-muted);
+        font-size: 0.95rem;
+        line-height: 1.7;
+    }
+
+    /* Stats Section */
+    .stats-section {
+        padding: 6rem 0;
+        background: linear-gradient(180deg, transparent, rgba(227, 24, 55, 0.03), transparent);
+    }
+
+    .stat-box {
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .stat-value {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 4rem;
+        font-weight: 800;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 1.1rem;
+        color: var(--philata-text-muted);
+    }
+
+    /* Tracks Section */
+    .tracks-section {
+        padding: 8rem 0;
+    }
+
+    .track-card {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 20px;
+        padding: 2rem;
+        height: 100%;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .track-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    .track-badge {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+    }
+
+    .track-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #fff;
+    }
+
+    .track-desc {
+        color: var(--philata-text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .track-features {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .track-features li {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+        font-size: 0.9rem;
+        color: var(--philata-text);
+    }
+
+    .track-features li i {
+        color: var(--philata-red-light);
+    }
+
+    /* CTA Section */
+    .cta-section {
+        padding: 8rem 0;
+        text-align: center;
+        position: relative;
+    }
+
+    .cta-box {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 32px;
+        padding: 4rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at center, rgba(227, 24, 55, 0.1), transparent 70%);
+        pointer-events: none;
+    }
+
+    .cta-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #fff;
+    }
+
+    .cta-subtitle {
+        font-size: 1.25rem;
+        color: var(--philata-text-muted);
+        max-width: 600px;
+        margin: 0 auto 2rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+        .hero-title {
+            font-size: 3rem;
+        }
+
+        .hero-stats {
+            gap: 2rem;
+        }
+
+        .hero-stat-value {
+            font-size: 2rem;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero {
+            padding: 6rem 0 4rem;
+            min-height: auto;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+        }
+
+        .hero-stats {
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .hero-visual {
+            margin-top: 3rem;
+        }
+
+        .floating-card {
+            display: none;
+        }
+
+        .cta-box {
+            padding: 3rem 2rem;
+        }
+
+        .cta-title {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="hero">
+<!-- Hero Section -->
+<section class="hero">
     <div class="container">
-        <div class="maple-icon">&#127809;</div>
-        <h1 class="text-white">Welcome to <span style="color: var(--philata-red);">Philata</span></h1>
-        <p class="lead mb-4" style="color: #b0b0b0;">Canadian Immigration Content Preview Hub</p>
-        <a href="/dashboard" class="btn btn-danger btn-lg px-5">
-            <i class="bi bi-journal-text me-2"></i>View Content Log
-        </a>
-    </div>
-</div>
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <span class="pulse"></span>
+                        Live Immigration Intelligence
+                    </div>
+                    <h1 class="hero-title">
+                        Canadian Immigration<br>
+                        <span class="gradient-text">Powered by AI</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Real-time immigration news, automated content generation, and intelligent insights.
+                        Stay ahead of policy changes with our AI-powered platform.
+                    </p>
+                    <div class="hero-cta">
+                        <a href="/dashboard" class="btn btn-primary btn-lg">
+                            <i class="bi bi-rocket-takeoff me-2"></i>Explore Content Hub
+                        </a>
+                        <a href="/features" class="btn btn-outline-light btn-lg">
+                            <i class="bi bi-play-circle me-2"></i>See How It Works
+                        </a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <div class="hero-stat-value" id="live-content">-</div>
+                            <div class="hero-stat-label">Content Pieces</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-value">4</div>
+                            <div class="hero-stat-label">Content Tracks</div>
+                        </div>
+                        <div class="hero-stat">
+                            <div class="hero-stat-value">24/7</div>
+                            <div class="hero-stat-label">Live Monitoring</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-visual">
+                    <div class="hero-card glow-red">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h5 class="mb-0" style="font-size: 1rem; color: #fff;">
+                                <i class="bi bi-lightning-charge-fill me-2" style="color: var(--philata-red);"></i>Live Feed
+                            </h5>
+                            <span class="badge bg-success">Active</span>
+                        </div>
+                        <div class="live-feed">
+                            <div class="feed-item">
+                                <div class="feed-icon" style="background: linear-gradient(135deg, #E31837, #FF6B6B);">
+                                    <i class="bi bi-megaphone-fill text-white"></i>
+                                </div>
+                                <div class="feed-content flex-grow-1">
+                                    <h6>Express Entry Draw #312</h6>
+                                    <p>CRS cutoff: 524 | 4,200 ITAs issued</p>
+                                </div>
+                                <span class="feed-time">2m ago</span>
+                            </div>
+                            <div class="feed-item">
+                                <div class="feed-icon" style="background: linear-gradient(135deg, #10B981, #34D399);">
+                                    <i class="bi bi-lightbulb-fill text-white"></i>
+                                </div>
+                                <div class="feed-content flex-grow-1">
+                                    <h6>Daily Tip: PNP Nominations</h6>
+                                    <p>Boost your CRS by 600 points with PNP</p>
+                                </div>
+                                <span class="feed-time">15m ago</span>
+                            </div>
+                            <div class="feed-item">
+                                <div class="feed-icon" style="background: linear-gradient(135deg, #6366F1, #8B5CF6);">
+                                    <i class="bi bi-newspaper text-white"></i>
+                                </div>
+                                <div class="feed-content flex-grow-1">
+                                    <h6>PGWP Policy Changes</h6>
+                                    <p>New eligibility requirements for 2025</p>
+                                </div>
+                                <span class="feed-time">1h ago</span>
+                            </div>
+                        </div>
+                    </div>
 
-<div class="container py-5">
-    <div class="row g-4" id="stats-row">
-        <div class="col-md-3">
-            <div class="stat-card">
-                <div class="stat-number text-danger" id="stat-breaking">-</div>
-                <div style="color: #b0b0b0;">Breaking News</div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <div class="stat-number text-primary" id="stat-regular">-</div>
-                <div style="color: #b0b0b0;">Regular News</div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <div class="stat-number text-success" id="stat-educational">-</div>
-                <div style="color: #b0b0b0;">Educational</div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <div class="stat-number text-info" id="stat-forms">-</div>
-                <div style="color: #b0b0b0;">Forms Guides</div>
-            </div>
-        </div>
-    </div>
+                    <!-- Floating Cards -->
+                    <div class="floating-card floating-card-1">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-check-circle-fill" style="color: #10B981;"></i>
+                            <span style="font-size: 0.85rem;">Content Verified</span>
+                        </div>
+                    </div>
 
-    <div class="row mt-5">
-        <div class="col-12 text-center mb-4">
-            <h3 class="text-white"><i class="bi bi-phone me-2"></i>Preview Before Posting</h3>
-            <p style="color: #888;">See exactly how your content will look on each platform</p>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-center p-4">
-                <i class="bi bi-instagram" style="font-size: 3rem; color: #e4405f;"></i>
-                <h5 class="text-white mt-3">Instagram</h5>
-                <p class="small" style="color: #b0b0b0;">Square post preview with caption</p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-center p-4">
-                <i class="bi bi-facebook" style="font-size: 3rem; color: #1877f2;"></i>
-                <h5 class="text-white mt-3">Facebook</h5>
-                <p class="small" style="color: #b0b0b0;">Feed post with reactions</p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-center p-4">
-                <i class="bi bi-linkedin" style="font-size: 3rem; color: #0a66c2;"></i>
-                <h5 class="text-white mt-3">LinkedIn</h5>
-                <p class="small" style="color: #b0b0b0;">Professional post format</p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-center p-4">
-                <i class="bi bi-twitter-x" style="font-size: 3rem; color: #fff;"></i>
-                <h5 class="text-white mt-3">X / Twitter</h5>
-                <p class="small" style="color: #b0b0b0;">Tweet with media</p>
+                    <div class="floating-card floating-card-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-instagram" style="color: #E4405F;"></i>
+                            <i class="bi bi-facebook" style="color: #1877F2;"></i>
+                            <i class="bi bi-linkedin" style="color: #0A66C2;"></i>
+                            <span style="font-size: 0.85rem; color: var(--philata-text-muted);">Ready to Post</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</section>
 
-    <div class="row mt-5">
-        <div class="col-12">
-            <h3 class="text-white mb-4"><i class="bi bi-lightning me-2"></i>Content Tracks</h3>
+<!-- Features Section -->
+<section class="features-section" id="features">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Intelligent <span class="gradient-text">Automation</span></h2>
+            <p class="section-subtitle mx-auto">
+                Our AI-powered platform transforms how you create and distribute immigration content.
+            </p>
         </div>
-        <div class="col-md-3">
-            <div class="card text-center p-4">
-                <div class="badge-breaking d-inline-block px-3 py-2 rounded mb-3 text-white">BREAKING</div>
-                <h5 class="text-white">Breaking News</h5>
-                <p class="small" style="color: #b0b0b0;">Real-time immigration alerts</p>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, rgba(227, 24, 55, 0.2), rgba(227, 24, 55, 0.05));">
+                        <i class="bi bi-lightning-charge-fill" style="color: var(--philata-red);"></i>
+                    </div>
+                    <h3 class="feature-title">Real-Time Monitoring</h3>
+                    <p class="feature-desc">
+                        24/7 surveillance of IRCC announcements, Express Entry draws, and policy changes. Never miss a breaking update.
+                    </p>
+                </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-center p-4">
-                <div class="badge-regular d-inline-block px-3 py-2 rounded mb-3 text-white">REGULAR</div>
-                <h5 class="text-white">Regular News</h5>
-                <p class="small" style="color: #b0b0b0;">Daily immigration updates</p>
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.05));">
+                        <i class="bi bi-robot" style="color: #6366F1;"></i>
+                    </div>
+                    <h3 class="feature-title">AI Content Generation</h3>
+                    <p class="feature-desc">
+                        Powered by advanced AI to create accurate, engaging captions for Instagram, Facebook, LinkedIn, and Twitter.
+                    </p>
+                </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-center p-4">
-                <div class="badge-educational d-inline-block px-3 py-2 rounded mb-3 text-white">EDUCATIONAL</div>
-                <h5 class="text-white">Educational</h5>
-                <p class="small" style="color: #b0b0b0;">365-day tips calendar</p>
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));">
+                        <i class="bi bi-patch-check-fill" style="color: #10B981;"></i>
+                    </div>
+                    <h3 class="feature-title">Content Verification</h3>
+                    <p class="feature-desc">
+                        Every piece of content is verified against official IRCC sources ensuring accuracy and compliance.
+                    </p>
+                </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-center p-4">
-                <div class="badge-forms d-inline-block px-3 py-2 rounded mb-3 text-white">FORMS</div>
-                <h5 class="text-white">Forms Guide</h5>
-                <p class="small" style="color: #b0b0b0;">Official forms & requirements</p>
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.05));">
+                        <i class="bi bi-image-fill" style="color: #F59E0B;"></i>
+                    </div>
+                    <h3 class="feature-title">Visual Generation</h3>
+                    <p class="feature-desc">
+                        AI-generated graphics optimized for each social platform. Professional visuals with relevant statistics.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.05));">
+                        <i class="bi bi-grid-1x2-fill" style="color: #EC4899;"></i>
+                    </div>
+                    <h3 class="feature-title">Multi-Platform Preview</h3>
+                    <p class="feature-desc">
+                        See exactly how your content will appear on each platform before posting. Perfect pixel previews.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05));">
+                        <i class="bi bi-calendar-check-fill" style="color: var(--philata-gold);"></i>
+                    </div>
+                    <h3 class="feature-title">365-Day Calendar</h3>
+                    <p class="feature-desc">
+                        Never run out of content. Our educational track provides daily immigration tips throughout the year.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-6 col-lg-3">
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-breaking">-</div>
+                    <div class="stat-label">Breaking News</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-regular">-</div>
+                    <div class="stat-label">Regular Updates</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-educational">-</div>
+                    <div class="stat-label">Educational Tips</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-forms">-</div>
+                    <div class="stat-label">Forms Guides</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Content Tracks Section -->
+<section class="tracks-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Four Content <span class="gold-text">Tracks</span></h2>
+            <p class="section-subtitle mx-auto">
+                Comprehensive coverage across all aspects of Canadian immigration.
+            </p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="track-card">
+                    <span class="track-badge badge-breaking">BREAKING</span>
+                    <h3 class="track-title">Breaking News</h3>
+                    <p class="track-desc">Real-time alerts on Express Entry draws, policy changes, and IRCC updates.</p>
+                    <ul class="track-features">
+                        <li><i class="bi bi-check2"></i>Express Entry Draws</li>
+                        <li><i class="bi bi-check2"></i>Policy Announcements</li>
+                        <li><i class="bi bi-check2"></i>IRCC Updates</li>
+                        <li><i class="bi bi-check2"></i>Processing Times</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="track-card">
+                    <span class="track-badge badge-regular">REGULAR</span>
+                    <h3 class="track-title">Regular News</h3>
+                    <p class="track-desc">Daily immigration news and industry updates from trusted sources.</p>
+                    <ul class="track-features">
+                        <li><i class="bi bi-check2"></i>Immigration News</li>
+                        <li><i class="bi bi-check2"></i>Industry Updates</li>
+                        <li><i class="bi bi-check2"></i>PNP Programs</li>
+                        <li><i class="bi bi-check2"></i>Pathway Changes</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="track-card">
+                    <span class="track-badge badge-educational">EDUCATIONAL</span>
+                    <h3 class="track-title">Educational Tips</h3>
+                    <p class="track-desc">Daily tips and guides to help applicants succeed in their journey.</p>
+                    <ul class="track-features">
+                        <li><i class="bi bi-check2"></i>CRS Score Tips</li>
+                        <li><i class="bi bi-check2"></i>Application Guides</li>
+                        <li><i class="bi bi-check2"></i>Document Prep</li>
+                        <li><i class="bi bi-check2"></i>Success Stories</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="track-card">
+                    <span class="track-badge badge-forms">FORMS</span>
+                    <h3 class="track-title">Forms Guide</h3>
+                    <p class="track-desc">Step-by-step guides for completing official IRCC forms correctly.</p>
+                    <ul class="track-features">
+                        <li><i class="bi bi-check2"></i>Form Tutorials</li>
+                        <li><i class="bi bi-check2"></i>Common Mistakes</li>
+                        <li><i class="bi bi-check2"></i>Do's & Don'ts</li>
+                        <li><i class="bi bi-check2"></i>Official Links</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-box">
+            <h2 class="cta-title">Ready to Transform Your <span class="gradient-text">Content Strategy?</span></h2>
+            <p class="cta-subtitle">
+                Join Philata and start generating professional immigration content automatically.
+            </p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="/dashboard" class="btn btn-primary btn-lg">
+                    <i class="bi bi-rocket-takeoff me-2"></i>Launch Content Hub
+                </a>
+                <a href="/contact" class="btn btn-outline-light btn-lg">
+                    <i class="bi bi-chat-dots me-2"></i>Get in Touch
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
 
 {% block extra_js %}
 <script>
+    // Fetch stats
     fetch('/api/stats')
         .then(r => r.json())
         .then(stats => {
@@ -122,7 +785,48 @@
             document.getElementById('stat-regular').textContent = stats.by_track?.regular || 0;
             document.getElementById('stat-educational').textContent = stats.by_track?.educational || 0;
             document.getElementById('stat-forms').textContent = stats.by_track?.forms || 0;
+
+            const total = (stats.by_track?.breaking || 0) + (stats.by_track?.regular || 0) +
+                         (stats.by_track?.educational || 0) + (stats.by_track?.forms || 0);
+            document.getElementById('live-content').textContent = total;
         })
-        .catch(e => console.error('Failed to load stats:', e));
+        .catch(e => {
+            console.error('Failed to load stats:', e);
+            document.getElementById('live-content').textContent = '100+';
+        });
+
+    // Counter animation
+    function animateCounters() {
+        const counters = document.querySelectorAll('.stat-value, .hero-stat-value');
+        counters.forEach(counter => {
+            const target = parseInt(counter.textContent);
+            if (isNaN(target)) return;
+
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    counter.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    counter.textContent = Math.floor(current);
+                }
+            }, 30);
+        });
+    }
+
+    // Intersection Observer for animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-fadeInUp');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.feature-card, .track-card, .stat-box').forEach(el => {
+        observer.observe(el);
+    });
 </script>
 {% endblock %}

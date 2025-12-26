@@ -1,0 +1,468 @@
+{% extends "base.html" %}
+
+{% block title %}Contact{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-hero {
+        padding: 8rem 0 4rem;
+        text-align: center;
+    }
+
+    .contact-hero-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+    }
+
+    .contact-hero-subtitle {
+        font-size: 1.35rem;
+        color: var(--philata-text-muted);
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.7;
+    }
+
+    .contact-section {
+        padding: 4rem 0 6rem;
+    }
+
+    .contact-card {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 24px;
+        padding: 3rem;
+        height: 100%;
+    }
+
+    .contact-form-card {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .contact-form-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: var(--philata-text);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--philata-border);
+        border-radius: 12px;
+        padding: 0.875rem 1rem;
+        color: #fff;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        background: rgba(255,255,255,0.05);
+        border-color: var(--philata-red);
+        box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.1);
+        color: #fff;
+    }
+
+    .form-control::placeholder {
+        color: var(--philata-text-muted);
+    }
+
+    textarea.form-control {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .contact-info-card h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .contact-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .contact-icon i {
+        color: white;
+        font-size: 1.25rem;
+    }
+
+    .contact-details h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .contact-details p {
+        color: var(--philata-text-muted);
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    .contact-details a {
+        color: var(--philata-red-light);
+    }
+
+    .social-section {
+        margin-top: 2.5rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--philata-border);
+    }
+
+    .social-section h4 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .social-buttons {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .social-btn {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--philata-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--philata-text-muted);
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .social-btn:hover {
+        background: var(--philata-red);
+        border-color: var(--philata-red);
+        color: white;
+        transform: translateY(-3px);
+    }
+
+    .social-btn i {
+        font-size: 1.25rem;
+    }
+
+    .faq-section {
+        padding: 6rem 0;
+        background: linear-gradient(180deg, transparent, rgba(227, 24, 55, 0.02), transparent);
+    }
+
+    .faq-item {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 16px;
+        padding: 1.5rem 2rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .faq-item:hover {
+        border-color: rgba(255,255,255,0.15);
+    }
+
+    .faq-question {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+    }
+
+    .faq-question h4 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .faq-question i {
+        color: var(--philata-red-light);
+        transition: transform 0.3s ease;
+    }
+
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+
+    .faq-answer.show {
+        max-height: 200px;
+    }
+
+    .faq-answer p {
+        padding-top: 1rem;
+        color: var(--philata-text-muted);
+        margin: 0;
+        line-height: 1.7;
+    }
+
+    .success-message {
+        display: none;
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+        color: #10B981;
+    }
+
+    .success-message.show {
+        display: block;
+    }
+
+    @media (max-width: 768px) {
+        .contact-hero-title {
+            font-size: 2.5rem;
+        }
+
+        .contact-card {
+            padding: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="contact-hero">
+    <div class="container">
+        <h1 class="contact-hero-title">
+            Get in <span class="gradient-text">Touch</span>
+        </h1>
+        <p class="contact-hero-subtitle">
+            Have questions about Philata? Want to learn more about our platform?
+            We'd love to hear from you.
+        </p>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="contact-card contact-form-card">
+                    <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Send Us a Message</h3>
+
+                    <div class="success-message" id="successMessage">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        Thank you for your message! We'll get back to you soon.
+                    </div>
+
+                    <form id="contactForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" placeholder="John" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" class="form-control" placeholder="Doe" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" class="form-control" placeholder="john@example.com" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Subject</label>
+                                <select class="form-select">
+                                    <option selected disabled>Select a topic</option>
+                                    <option>General Inquiry</option>
+                                    <option>Feature Request</option>
+                                    <option>Partnership Opportunity</option>
+                                    <option>Technical Support</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Message</label>
+                                <textarea class="form-control" placeholder="Tell us how we can help..." required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                    <i class="bi bi-send me-2"></i>Send Message
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="contact-card contact-info-card">
+                    <h3>Contact Information</h3>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="bi bi-envelope-fill"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p><a href="mailto:hello@philata.ca">hello@philata.ca</a></p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Location</h4>
+                            <p>Toronto, Ontario, Canada</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="bi bi-clock-fill"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Response Time</h4>
+                            <p>We typically respond within 24 hours</p>
+                        </div>
+                    </div>
+
+                    <div class="social-section">
+                        <h4>Follow Us</h4>
+                        <div class="social-buttons">
+                            <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
+                            <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
+                            <a href="#" class="social-btn"><i class="bi bi-linkedin"></i></a>
+                            <a href="#" class="social-btn"><i class="bi bi-twitter-x"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Frequently Asked <span class="gradient-text">Questions</span></h2>
+            <p class="section-subtitle mx-auto">
+                Find answers to common questions about Philata.
+            </p>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h4>What is Philata?</h4>
+                        <i class="bi bi-plus-lg"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Philata is an AI-powered platform that automates Canadian immigration content creation. It monitors IRCC updates in real-time, generates platform-specific captions, and creates professional visuals for social media.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h4>How accurate is the content?</h4>
+                        <i class="bi bi-plus-lg"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>All content is verified against official IRCC sources. Our AI systems cross-reference information to ensure accuracy, and we always include source citations for transparency.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h4>Which platforms are supported?</h4>
+                        <i class="bi bi-plus-lg"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Philata generates content optimized for Instagram, Facebook, LinkedIn, and Twitter/X. Each platform gets tailored captions that follow best practices for that specific platform.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h4>How fast are updates detected?</h4>
+                        <i class="bi bi-plus-lg"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our systems monitor IRCC and other official sources 24/7. Express Entry draws and major announcements are typically detected and content is generated within minutes of official release.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <h4>Can I customize the content?</h4>
+                        <i class="bi bi-plus-lg"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! All generated content is available in our Content Hub where you can preview, review, and make any adjustments before posting to your social media channels.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function toggleFaq(element) {
+        const answer = element.nextElementSibling;
+        const icon = element.querySelector('i');
+
+        // Close all other FAQs
+        document.querySelectorAll('.faq-answer').forEach(a => {
+            if (a !== answer) {
+                a.classList.remove('show');
+                a.previousElementSibling.querySelector('i').classList.remove('bi-dash-lg');
+                a.previousElementSibling.querySelector('i').classList.add('bi-plus-lg');
+            }
+        });
+
+        // Toggle current FAQ
+        answer.classList.toggle('show');
+        if (answer.classList.contains('show')) {
+            icon.classList.remove('bi-plus-lg');
+            icon.classList.add('bi-dash-lg');
+        } else {
+            icon.classList.remove('bi-dash-lg');
+            icon.classList.add('bi-plus-lg');
+        }
+    }
+
+    // Form submission
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        document.getElementById('successMessage').classList.add('show');
+        this.reset();
+
+        setTimeout(() => {
+            document.getElementById('successMessage').classList.remove('show');
+        }, 5000);
+    });
+</script>
+{% endblock %}
