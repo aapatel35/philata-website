@@ -108,6 +108,7 @@
     .search-box {
         flex: 1;
         min-width: 250px;
+        position: relative;
     }
 
     .search-box input {
@@ -126,16 +127,33 @@
         background: rgba(255,255,255,0.05);
     }
 
-    .search-box {
-        position: relative;
-    }
-
     .search-box i {
         position: absolute;
         left: 1rem;
         top: 50%;
         transform: translateY(-50%);
         color: var(--philata-text-muted);
+    }
+
+    .view-toggle {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .view-btn {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--philata-border);
+        border-radius: 8px;
+        padding: 0.5rem 0.75rem;
+        color: var(--philata-text-muted);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .view-btn:hover, .view-btn.active {
+        background: var(--philata-red);
+        border-color: var(--philata-red);
+        color: white;
     }
 
     .content-grid {
@@ -150,8 +168,7 @@
         border-radius: 20px;
         overflow: hidden;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        text-decoration: none;
-        display: block;
+        cursor: pointer;
     }
 
     .content-card:hover {
@@ -292,6 +309,280 @@
         font-size: 0.9rem;
     }
 
+    /* Slideshow Modal */
+    .slideshow-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 9999;
+        overflow: hidden;
+    }
+
+    .slideshow-modal.active {
+        display: flex;
+    }
+
+    .slideshow-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .slideshow-content {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        max-width: 1400px;
+        padding: 2rem;
+        gap: 2rem;
+    }
+
+    .slideshow-image-section {
+        flex: 0 0 45%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .slideshow-image {
+        max-width: 100%;
+        max-height: 80vh;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .slideshow-details {
+        flex: 1;
+        overflow-y: auto;
+        padding-right: 1rem;
+    }
+
+    .slideshow-badge {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+
+    .slideshow-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+    }
+
+    .slideshow-meta {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: var(--philata-text-muted);
+        font-size: 0.9rem;
+    }
+
+    .slideshow-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .slideshow-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .slideshow-section-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--philata-red-light);
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .slideshow-article {
+        background: rgba(255,255,255,0.03);
+        border-radius: 12px;
+        padding: 1.25rem;
+        color: var(--philata-text);
+        line-height: 1.7;
+        max-height: 200px;
+        overflow-y: auto;
+        font-size: 0.95rem;
+    }
+
+    .slideshow-caption {
+        background: rgba(255,255,255,0.03);
+        border-radius: 12px;
+        padding: 1.25rem;
+        color: var(--philata-text);
+        line-height: 1.6;
+        white-space: pre-wrap;
+        font-size: 0.9rem;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .platform-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .platform-tab {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--philata-border);
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        color: var(--philata-text-muted);
+        cursor: pointer;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .platform-tab:hover, .platform-tab.active {
+        background: var(--philata-red);
+        border-color: var(--philata-red);
+        color: white;
+    }
+
+    /* Navigation Arrows */
+    .slideshow-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 60px;
+        height: 60px;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+
+    .slideshow-nav:hover {
+        background: var(--philata-red);
+        border-color: var(--philata-red);
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    .slideshow-nav i {
+        font-size: 1.5rem;
+        color: #fff;
+    }
+
+    .slideshow-prev {
+        left: 1rem;
+    }
+
+    .slideshow-next {
+        right: 1rem;
+    }
+
+    .slideshow-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 50px;
+        height: 50px;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+
+    .slideshow-close:hover {
+        background: var(--philata-red);
+        border-color: var(--philata-red);
+    }
+
+    .slideshow-close i {
+        font-size: 1.25rem;
+        color: #fff;
+    }
+
+    .slideshow-counter {
+        position: absolute;
+        bottom: 1.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.6);
+        padding: 0.5rem 1.5rem;
+        border-radius: 20px;
+        color: #fff;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .copy-btn {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid var(--philata-border);
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        color: var(--philata-text-muted);
+        cursor: pointer;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .copy-btn:hover {
+        background: var(--philata-red);
+        border-color: var(--philata-red);
+        color: white;
+    }
+
+    .copy-btn.copied {
+        background: #10B981;
+        border-color: #10B981;
+        color: white;
+    }
+
+    @media (max-width: 992px) {
+        .slideshow-content {
+            flex-direction: column;
+            padding: 4rem 1rem 2rem;
+        }
+
+        .slideshow-image-section {
+            flex: 0 0 auto;
+        }
+
+        .slideshow-image {
+            max-height: 40vh;
+        }
+
+        .slideshow-nav {
+            width: 45px;
+            height: 45px;
+        }
+    }
+
     @media (max-width: 768px) {
         .dashboard-title {
             font-size: 2rem;
@@ -325,10 +616,20 @@
                 <h1 class="dashboard-title">Content <span class="gradient-text">Hub</span></h1>
                 <p class="dashboard-subtitle">Preview and manage all generated immigration content</p>
             </div>
-            <button class="refresh-btn" onclick="location.reload()">
-                <i class="bi bi-arrow-clockwise"></i>
-                Refresh
-            </button>
+            <div class="d-flex gap-2">
+                <div class="view-toggle">
+                    <button class="view-btn active" id="gridViewBtn" title="Grid View">
+                        <i class="bi bi-grid-3x3-gap-fill"></i>
+                    </button>
+                    <button class="view-btn" id="slideViewBtn" title="Slideshow View">
+                        <i class="bi bi-collection-play"></i>
+                    </button>
+                </div>
+                <button class="refresh-btn" onclick="location.reload()">
+                    <i class="bi bi-arrow-clockwise"></i>
+                    Refresh
+                </button>
+            </div>
         </div>
 
         <!-- Stats Bar -->
@@ -396,7 +697,7 @@
     <div class="container">
         <div class="content-grid" id="contentGrid">
             {% for result in results %}
-            <a href="/content/{{ result.id }}" class="content-card" data-track="{{ result.track }}" data-title="{{ result.title|lower }}">
+            <div class="content-card" data-index="{{ loop.index0 }}" data-track="{{ result.track }}" data-title="{{ result.title|lower }}" data-id="{{ result.id }}">
                 <div class="content-card-image">
                     <span class="content-card-badge badge-{{ result.track }}">{{ result.track|upper }}</span>
                     {% if result.image_url %}
@@ -423,7 +724,7 @@
                     </div>
                     <i class="bi bi-arrow-right content-card-arrow"></i>
                 </div>
-            </a>
+            </div>
             {% else %}
             <div class="empty-state">
                 <i class="bi bi-inbox empty-state-icon"></i>
@@ -434,10 +735,77 @@
         </div>
     </div>
 </section>
+
+<!-- Slideshow Modal -->
+<div class="slideshow-modal" id="slideshowModal">
+    <div class="slideshow-container">
+        <button class="slideshow-close" onclick="closeSlideshow()">
+            <i class="bi bi-x-lg"></i>
+        </button>
+        <button class="slideshow-nav slideshow-prev" onclick="navigateSlide(-1)">
+            <i class="bi bi-chevron-left"></i>
+        </button>
+        <button class="slideshow-nav slideshow-next" onclick="navigateSlide(1)">
+            <i class="bi bi-chevron-right"></i>
+        </button>
+
+        <div class="slideshow-content">
+            <div class="slideshow-image-section">
+                <img id="slideImage" class="slideshow-image" src="" alt="">
+            </div>
+            <div class="slideshow-details">
+                <span id="slideBadge" class="slideshow-badge"></span>
+                <h2 id="slideTitle" class="slideshow-title"></h2>
+                <div class="slideshow-meta">
+                    <span><i class="bi bi-clock"></i> <span id="slideDate"></span></span>
+                    <span><i class="bi bi-tag"></i> <span id="slideCategory"></span></span>
+                </div>
+
+                <div class="slideshow-section">
+                    <div class="slideshow-section-title">
+                        <i class="bi bi-file-text"></i> Full Article
+                    </div>
+                    <div id="slideArticle" class="slideshow-article"></div>
+                </div>
+
+                <div class="slideshow-section">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="slideshow-section-title mb-0">
+                            <i class="bi bi-chat-square-text"></i> Caption
+                        </div>
+                        <button class="copy-btn" onclick="copyCaption()">
+                            <i class="bi bi-clipboard"></i> Copy
+                        </button>
+                    </div>
+                    <div class="platform-tabs">
+                        <button class="platform-tab active" data-platform="instagram"><i class="bi bi-instagram"></i> Instagram</button>
+                        <button class="platform-tab" data-platform="facebook"><i class="bi bi-facebook"></i> Facebook</button>
+                        <button class="platform-tab" data-platform="linkedin"><i class="bi bi-linkedin"></i> LinkedIn</button>
+                        <button class="platform-tab" data-platform="twitter"><i class="bi bi-twitter-x"></i> Twitter</button>
+                    </div>
+                    <div id="slideCaption" class="slideshow-caption"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slideshow-counter">
+            <span id="slideCounter">1 / 10</span>
+        </div>
+    </div>
+</div>
+
+<!-- Store data for slideshow -->
+<script>
+    const contentData = {{ results | tojson | safe }};
+</script>
 {% endblock %}
 
 {% block extra_js %}
 <script>
+    let currentSlide = 0;
+    let visibleCards = [];
+    let currentPlatform = 'instagram';
+
     // Fetch stats
     fetch('/api/stats')
         .then(r => r.json())
@@ -448,6 +816,11 @@
             document.getElementById('stat-forms').textContent = stats.by_track?.forms || 0;
         })
         .catch(e => console.error('Failed to load stats:', e));
+
+    // Initialize visible cards
+    function updateVisibleCards() {
+        visibleCards = Array.from(document.querySelectorAll('.content-card')).filter(card => card.style.display !== 'none');
+    }
 
     // Filter functionality
     const filterBtns = document.querySelectorAll('.filter-btn');
@@ -472,6 +845,7 @@
             });
 
             resultsCount.textContent = visible;
+            updateVisibleCards();
         });
     });
 
@@ -491,6 +865,142 @@
         });
 
         resultsCount.textContent = visible;
+        updateVisibleCards();
     });
+
+    // Card click - open slideshow
+    cards.forEach(card => {
+        card.addEventListener('click', function() {
+            updateVisibleCards();
+            const cardIndex = visibleCards.indexOf(this);
+            if (cardIndex !== -1) {
+                openSlideshow(cardIndex);
+            }
+        });
+    });
+
+    // Slideshow functions
+    function openSlideshow(index) {
+        currentSlide = index;
+        updateSlide();
+        document.getElementById('slideshowModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeSlideshow() {
+        document.getElementById('slideshowModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function navigateSlide(direction) {
+        currentSlide += direction;
+        if (currentSlide < 0) currentSlide = visibleCards.length - 1;
+        if (currentSlide >= visibleCards.length) currentSlide = 0;
+        updateSlide();
+    }
+
+    function updateSlide() {
+        if (visibleCards.length === 0) return;
+
+        const card = visibleCards[currentSlide];
+        const dataId = card.dataset.id;
+        const data = contentData.find(d => d.id === dataId) || {};
+
+        // Update image
+        const imgEl = card.querySelector('img');
+        document.getElementById('slideImage').src = imgEl ? imgEl.src : '';
+
+        // Update badge
+        const badge = document.getElementById('slideBadge');
+        badge.textContent = (data.track || 'unknown').toUpperCase();
+        badge.className = 'slideshow-badge badge-' + (data.track || 'unknown');
+
+        // Update text
+        document.getElementById('slideTitle').textContent = data.title || 'Untitled';
+        document.getElementById('slideDate').textContent = data.created_at ? data.created_at.substring(0, 10) : 'Recent';
+        document.getElementById('slideCategory').textContent = data.category || data.track || 'General';
+        document.getElementById('slideArticle').textContent = data.full_article || 'No article available.';
+
+        // Update caption
+        updateCaption();
+
+        // Update counter
+        document.getElementById('slideCounter').textContent = `${currentSlide + 1} / ${visibleCards.length}`;
+    }
+
+    function updateCaption() {
+        const card = visibleCards[currentSlide];
+        const dataId = card.dataset.id;
+        const data = contentData.find(d => d.id === dataId) || {};
+        const captions = data.captions || {};
+        document.getElementById('slideCaption').textContent = captions[currentPlatform] || captions.instagram || 'No caption available.';
+    }
+
+    // Platform tabs
+    document.querySelectorAll('.platform-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.platform-tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            currentPlatform = this.dataset.platform;
+            updateCaption();
+        });
+    });
+
+    // Copy caption
+    function copyCaption() {
+        const caption = document.getElementById('slideCaption').textContent;
+        navigator.clipboard.writeText(caption).then(() => {
+            const btn = document.querySelector('.copy-btn');
+            btn.innerHTML = '<i class="bi bi-check"></i> Copied!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.innerHTML = '<i class="bi bi-clipboard"></i> Copy';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (!document.getElementById('slideshowModal').classList.contains('active')) return;
+
+        if (e.key === 'ArrowLeft') navigateSlide(-1);
+        if (e.key === 'ArrowRight') navigateSlide(1);
+        if (e.key === 'Escape') closeSlideshow();
+    });
+
+    // Touch swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.getElementById('slideshowModal').addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.getElementById('slideshowModal').addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) navigateSlide(1);
+            else navigateSlide(-1);
+        }
+    });
+
+    // View toggle buttons
+    document.getElementById('slideViewBtn').addEventListener('click', function() {
+        document.getElementById('gridViewBtn').classList.remove('active');
+        this.classList.add('active');
+        updateVisibleCards();
+        if (visibleCards.length > 0) openSlideshow(0);
+    });
+
+    document.getElementById('gridViewBtn').addEventListener('click', function() {
+        document.getElementById('slideViewBtn').classList.remove('active');
+        this.classList.add('active');
+        closeSlideshow();
+    });
+
+    // Initialize
+    updateVisibleCards();
 </script>
 {% endblock %}
