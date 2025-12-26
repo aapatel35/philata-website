@@ -508,6 +508,32 @@
                         </div>
                     </div>
                 </div>
+
+                {% if content.captions.twitter_thread %}
+                <!-- Twitter Thread -->
+                <div class="mt-4">
+                    <h6 class="text-white mb-3"><i class="bi bi-chat-left-text me-2"></i>Full Thread ({{ content.captions.twitter_thread|length }} tweets)</h6>
+                    <button class="btn btn-outline-light btn-sm mb-3" onclick="copyTwitterThread()">
+                        <i class="bi bi-clipboard me-1"></i>Copy Full Thread
+                    </button>
+                    <div class="thread-container" id="twitter-thread-container">
+                        {% for tweet in content.captions.twitter_thread %}
+                        <div class="twitter-mockup mb-2" style="border-left: 3px solid #1d9bf0;">
+                            <div class="tw-header">
+                                <div class="tw-avatar" style="width: 32px; height: 32px; font-size: 12px;">P</div>
+                                <div class="tw-body">
+                                    <div class="tw-names" style="font-size: 13px;">
+                                        <span class="tw-name">Philata</span>
+                                        <span class="tw-handle">@philata_ca</span>
+                                    </div>
+                                    <div class="tw-content" style="font-size: 14px;">{{ tweet }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
 
@@ -615,6 +641,28 @@
             const btn = event.target.closest('button');
             const originalHTML = btn.innerHTML;
             btn.innerHTML = '<i class="bi bi-check me-1"></i>Copied!';
+            btn.classList.add('btn-success');
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.classList.remove('btn-success');
+            }, 2000);
+        });
+    }
+
+    function copyTwitterThread() {
+        const container = document.getElementById('twitter-thread-container');
+        if (!container) return;
+
+        const tweets = container.querySelectorAll('.tw-content');
+        let threadText = '';
+        tweets.forEach((tweet, i) => {
+            threadText += tweet.innerText + '\n\n---\n\n';
+        });
+
+        navigator.clipboard.writeText(threadText.trim()).then(() => {
+            const btn = event.target.closest('button');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="bi bi-check me-1"></i>Thread Copied!';
             btn.classList.add('btn-success');
             setTimeout(() => {
                 btn.innerHTML = originalHTML;
