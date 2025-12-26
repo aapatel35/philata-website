@@ -980,6 +980,68 @@
     let visibleCards = [];
     let currentPlatform = 'instagram';
 
+    // Markdown to HTML converter
+    function markdownToHtml(markdown) {
+        if (!markdown) return '';
+
+        let html = markdown;
+
+        // Escape any existing HTML entities for safety
+        html = html.replace(/&/g, '&amp;');
+
+        // Headers (## and ###)
+        html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+        html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+        html = html.replace(/^# (.*$)/gim, '<h2>$1</h2>');
+
+        // Bold and italic
+        html = html.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+        // Bullet lists - handle nested bullets
+        html = html.replace(/^\s*\* (.*$)/gim, '<li>$1</li>');
+        html = html.replace(/^\s*- (.*$)/gim, '<li>$1</li>');
+
+        // Numbered lists
+        html = html.replace(/^\d+\. (.*$)/gim, '<li>$1</li>');
+
+        // Wrap consecutive <li> in <ul>
+        html = html.replace(/(<li>.*<\/li>\n?)+/g, function(match) {
+            return '<ul>' + match + '</ul>';
+        });
+
+        // Blockquotes
+        html = html.replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>');
+
+        // Paragraphs - split by double newlines
+        const blocks = html.split(/\n\n+/);
+        html = blocks.map(block => {
+            block = block.trim();
+            // Don't wrap if already wrapped in a tag
+            if (block.startsWith('<h') || block.startsWith('<ul') || block.startsWith('<ol') ||
+                block.startsWith('<blockquote') || block.startsWith('<div') || block.startsWith('<table')) {
+                return block;
+            }
+            // Don't wrap empty blocks
+            if (!block) return '';
+            // Wrap in paragraph
+            return '<p>' + block.replace(/\n/g, '<br>') + '</p>';
+        }).join('\n');
+
+        // Clean up any double-wrapped paragraphs
+        html = html.replace(/<p><p>/g, '<p>');
+        html = html.replace(/<\/p><\/p>/g, '</p>');
+
+        // Clean up lists inside paragraphs
+        html = html.replace(/<p>(<ul>)/g, '$1');
+        html = html.replace(/(<\/ul>)<\/p>/g, '$1');
+        html = html.replace(/<p>(<ol>)/g, '$1');
+        html = html.replace(/(<\/ol>)<\/p>/g, '$1');
+
+        return html;
+    }
+
     // Fetch stats
     fetch('/api/stats')
         .then(r => r.json())
@@ -1093,13 +1155,18 @@
         document.getElementById('slideTitle').textContent = data.title || 'Untitled';
         document.getElementById('slideDate').textContent = data.created_at ? data.created_at.substring(0, 10) : 'Recent';
         document.getElementById('slideCategory').textContent = data.category || data.track || 'General';
-        // Render HTML article if available, otherwise plain text
+        // Render article - convert markdown to HTML if needed
         const articleEl = document.getElementById('slideArticle');
         const articleContent = data.full_article || 'No article available.';
-        if (articleContent.includes('<') && articleContent.includes('>')) {
+        if (articleContent.includes('<h2>') || articleContent.includes('<p>') || articleContent.includes('<div')) {
+            // Already HTML formatted
             articleEl.innerHTML = articleContent;
+        } else if (articleContent.includes('##') || articleContent.includes('**') || articleContent.includes('* ')) {
+            // Markdown format - convert to HTML
+            articleEl.innerHTML = markdownToHtml(articleContent);
         } else {
-            articleEl.textContent = articleContent;
+            // Plain text - wrap in paragraphs
+            articleEl.innerHTML = '<p>' + articleContent.split('\n\n').join('</p><p>') + '</p>';
         }
 
         // Update caption
