@@ -35,10 +35,27 @@
         }
 
         .card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
             border-radius: 16px;
             backdrop-filter: blur(10px);
+            color: #ffffff;
+        }
+
+        .card-title, .card-body h6, .card-body h5, .card-body h4 {
+            color: #ffffff !important;
+        }
+
+        .card-body {
+            color: #e0e0e0;
+        }
+
+        .card .text-muted {
+            color: #b0b0b0 !important;
+        }
+
+        .text-muted {
+            color: #a0a0a0 !important;
         }
 
         .card-img-top {
@@ -91,7 +108,7 @@
         .status-posted { color: #17a2b8; }
 
         .caption-box {
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.5);
             border-radius: 8px;
             padding: 1rem;
             font-family: monospace;
@@ -99,6 +116,62 @@
             white-space: pre-wrap;
             max-height: 200px;
             overflow-y: auto;
+            color: #ffffff;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Form controls */
+        .form-control, .form-select {
+            color: #ffffff !important;
+        }
+
+        .form-control::placeholder {
+            color: #888888 !important;
+        }
+
+        /* Better badge colors */
+        .badge {
+            font-weight: 600;
+            padding: 0.4em 0.8em;
+        }
+
+        /* Links */
+        a {
+            color: #87ceeb;
+        }
+
+        a:hover {
+            color: #add8e6;
+        }
+
+        /* Footer */
+        footer p {
+            color: #888888;
+        }
+
+        /* Card headers */
+        .card-header {
+            background: rgba(255,255,255,0.1);
+            color: #ffffff;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Breadcrumbs */
+        .breadcrumb-item {
+            color: #b0b0b0;
+        }
+
+        .breadcrumb-item.active {
+            color: #ffffff;
+        }
+
+        .breadcrumb-item a {
+            color: #87ceeb;
+        }
+
+        /* Headings */
+        h1, h2, h3, h4, h5, h6 {
+            color: #ffffff;
         }
 
         .hero {
