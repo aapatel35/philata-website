@@ -6,8 +6,17 @@
 <style>
     /* Dashboard - Professional Forest Green Theme */
     .dashboard-hero {
-        padding: 6rem 0 3rem;
-        background: linear-gradient(135deg, #ECFDF5 0%, #FFFBEB 100%);
+        padding: 10rem 0 4rem;
+    }
+
+    .dashboard-hero-content {
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 2.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        margin-bottom: 2rem;
     }
 
     .dashboard-title {
@@ -15,11 +24,11 @@
         font-size: 2.5rem;
         font-weight: 700;
         margin-bottom: 0.5rem;
-        color: var(--philata-gray-900);
+        color: #1a1a1a;
     }
 
     .dashboard-subtitle {
-        color: var(--philata-text-muted);
+        color: #555;
         font-size: 1.1rem;
     }
 
@@ -794,11 +803,12 @@
 <!-- Dashboard Hero -->
 <section class="dashboard-hero">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
-            <div>
-                <h1 class="dashboard-title">Content <span class="gradient-text">Hub</span></h1>
-                <p class="dashboard-subtitle">Preview and manage all generated immigration content</p>
-            </div>
+        <div class="dashboard-hero-content">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                <div>
+                    <h1 class="dashboard-title">Content <span class="gradient-text">Hub</span></h1>
+                    <p class="dashboard-subtitle">Preview and manage all generated immigration content</p>
+                </div>
             <div class="d-flex gap-2">
                 <div class="view-toggle">
                     <button class="view-btn active" id="gridViewBtn" title="Grid View">
@@ -812,6 +822,7 @@
                     <i class="bi bi-arrow-clockwise"></i>
                     Refresh
                 </button>
+            </div>
             </div>
         </div>
 

@@ -6,20 +6,34 @@
 <style>
     /* Hero Section */
     .guides-hero {
-        padding: 8rem 0 4rem;
+        padding: 10rem 0 5rem;
         position: relative;
         overflow: hidden;
     }
 
-    .guides-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(ellipse at top, rgba(227, 24, 55, 0.15) 0%, transparent 60%);
-        pointer-events: none;
+    .guides-hero-content {
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 3rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .guides-hero-content .hero-title,
+    .guides-hero-content .hero-subtitle {
+        color: #1a1a1a;
+        text-shadow: none;
+    }
+
+    .guides-hero-content .hero-subtitle {
+        color: #555;
+    }
+
+    .guides-hero-content .hero-badge {
+        background: rgba(64, 145, 108, 0.15);
+        border-color: rgba(64, 145, 108, 0.3);
+        color: #1a1a1a;
     }
 
     .hero-badge {
@@ -712,12 +726,13 @@
 <section class="guides-hero">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-7">
-                <div class="hero-badge">
-                    <i class="bi bi-book"></i>
-                    <span>Comprehensive Immigration Guides</span>
-                </div>
-                <h1 class="hero-title">
+            <div class="col-lg-8">
+                <div class="guides-hero-content">
+                    <div class="hero-badge">
+                        <i class="bi bi-book"></i>
+                        <span>Comprehensive Immigration Guides</span>
+                    </div>
+                    <h1 class="hero-title">
                     Your Complete Guide to <span class="gradient-text">Canadian Immigration</span>
                 </h1>
                 <p class="hero-subtitle">
@@ -736,22 +751,23 @@
                     <a href="/guides/credentials" class="quick-link"><i class="bi bi-mortarboard"></i> WES/ECA</a>
                 </div>
 
-                <div class="stats-bar">
-                    <div class="stat-item">
-                        <div class="stat-number">50+</div>
-                        <div class="stat-label">Guides</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">13</div>
-                        <div class="stat-label">Provinces</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">5</div>
-                        <div class="stat-label">Language Tests</div>
+                    <div class="stats-bar">
+                        <div class="stat-item">
+                            <div class="stat-number">50+</div>
+                            <div class="stat-label">Guides</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">13</div>
+                            <div class="stat-label">Provinces</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">Language Tests</div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-5 d-none d-lg-block position-relative">
+            <div class="col-lg-4 d-none d-lg-block position-relative">
                 <div class="floating-element float-1">🍁</div>
                 <div class="floating-element float-2">📚</div>
             </div>

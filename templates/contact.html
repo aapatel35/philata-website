@@ -5,8 +5,19 @@
 {% block extra_css %}
 <style>
     .contact-hero {
-        padding: 8rem 0 4rem;
+        padding: 10rem 0 5rem;
         text-align: center;
+    }
+
+    .contact-hero-content {
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 3rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        max-width: 700px;
+        margin: 0 auto;
     }
 
     .contact-hero-title {
@@ -14,11 +25,12 @@
         font-size: 3.5rem;
         font-weight: 800;
         margin-bottom: 1.5rem;
+        color: #1a1a1a;
     }
 
     .contact-hero-subtitle {
         font-size: 1.35rem;
-        color: var(--philata-text-muted);
+        color: #555;
         max-width: 600px;
         margin: 0 auto;
         line-height: 1.7;
@@ -252,13 +264,15 @@
 <!-- Hero Section -->
 <section class="contact-hero">
     <div class="container">
-        <h1 class="contact-hero-title">
-            Get in <span class="gradient-text">Touch</span>
-        </h1>
-        <p class="contact-hero-subtitle">
-            Have questions about Philata? Want to learn more about our platform?
-            We'd love to hear from you.
-        </p>
+        <div class="contact-hero-content">
+            <h1 class="contact-hero-title">
+                Get in <span class="gradient-text">Touch</span>
+            </h1>
+            <p class="contact-hero-subtitle">
+                Have questions about Philata? Want to learn more about our platform?
+                We'd love to hear from you.
+            </p>
+        </div>
     </div>
 </section>
 

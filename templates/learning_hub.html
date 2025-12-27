@@ -5,21 +5,18 @@
 {% block extra_css %}
 <style>
     .hub-hero {
-        padding: 6rem 0 4rem;
+        padding: 10rem 0 5rem;
         position: relative;
         overflow: hidden;
     }
 
-    .hub-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(ellipse at top right, rgba(64, 145, 108, 0.15) 0%, transparent 50%),
-                    radial-gradient(ellipse at bottom left, rgba(27, 67, 50, 0.1) 0%, transparent 50%);
-        pointer-events: none;
+    .hub-hero-content {
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 3rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
     .hub-title {
@@ -28,11 +25,12 @@
         font-weight: 800;
         margin-bottom: 1rem;
         line-height: 1.1;
+        color: #1a1a1a;
     }
 
     .hub-subtitle {
         font-size: 1.25rem;
-        color: var(--philata-text-muted);
+        color: #333;
         max-width: 600px;
         line-height: 1.7;
     }
@@ -60,12 +58,21 @@
 
     .hub-stat-label {
         font-size: 0.9rem;
-        color: var(--philata-text-muted);
+        color: #555;
     }
 
     /* Learning Paths Section */
     .paths-section {
-        padding: 4rem 0;
+        padding: 5rem 0;
+    }
+
+    .section-container {
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 3rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
     .section-header {
@@ -78,10 +85,11 @@
         font-size: 2.25rem;
         font-weight: 700;
         margin-bottom: 0.75rem;
+        color: #1a1a1a;
     }
 
     .section-subtitle {
-        color: var(--philata-text-muted);
+        color: #555;
         font-size: 1.1rem;
         max-width: 600px;
         margin: 0 auto;
@@ -200,8 +208,7 @@
 
     /* Quick Access Tools */
     .tools-section {
-        padding: 4rem 0;
-        background: linear-gradient(180deg, transparent, rgba(64, 145, 108, 0.03), transparent);
+        padding: 5rem 0;
     }
 
     .tool-card {
@@ -252,7 +259,7 @@
 
     /* Category Grid */
     .categories-section {
-        padding: 4rem 0;
+        padding: 5rem 0;
     }
 
     .category-card {
@@ -401,12 +408,14 @@
 
     /* CTA Section */
     .cta-section {
-        padding: 4rem 0;
+        padding: 5rem 0;
     }
 
     .cta-card {
-        background: linear-gradient(135deg, var(--philata-card), rgba(64, 145, 108, 0.08));
-        border: 1px solid var(--philata-border);
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
         border-radius: 24px;
         padding: 3rem;
         text-align: center;
@@ -417,10 +426,11 @@
         font-size: 2rem;
         font-weight: 700;
         margin-bottom: 1rem;
+        color: #1a1a1a;
     }
 
     .cta-desc {
-        color: var(--philata-text-muted);
+        color: #555;
         max-width: 500px;
         margin: 0 auto 2rem;
     }
@@ -453,35 +463,37 @@
 <section class="hub-hero">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-7">
-                <h1 class="hub-title">
-                    <span class="gradient-text">Learning Hub</span><br>
-                    Your Immigration Education Center
-                </h1>
-                <p class="hub-subtitle">
-                    Master Canadian immigration with structured learning paths, comprehensive guides,
-                    and interactive tools. From beginners to advanced applicants.
-                </p>
-                <div class="hub-stats">
-                    <div class="hub-stat">
-                        <div class="hub-stat-value">50+</div>
-                        <div class="hub-stat-label">Guides</div>
-                    </div>
-                    <div class="hub-stat">
-                        <div class="hub-stat-value">6</div>
-                        <div class="hub-stat-label">Learning Paths</div>
-                    </div>
-                    <div class="hub-stat">
-                        <div class="hub-stat-value">13</div>
-                        <div class="hub-stat-label">Provinces</div>
-                    </div>
-                    <div class="hub-stat">
-                        <div class="hub-stat-value">100%</div>
-                        <div class="hub-stat-label">Free</div>
+            <div class="col-lg-8">
+                <div class="hub-hero-content">
+                    <h1 class="hub-title">
+                        <span class="gradient-text">Learning Hub</span><br>
+                        Your Immigration Education Center
+                    </h1>
+                    <p class="hub-subtitle">
+                        Master Canadian immigration with structured learning paths, comprehensive guides,
+                        and interactive tools. From beginners to advanced applicants.
+                    </p>
+                    <div class="hub-stats">
+                        <div class="hub-stat">
+                            <div class="hub-stat-value">50+</div>
+                            <div class="hub-stat-label">Guides</div>
+                        </div>
+                        <div class="hub-stat">
+                            <div class="hub-stat-value">6</div>
+                            <div class="hub-stat-label">Learning Paths</div>
+                        </div>
+                        <div class="hub-stat">
+                            <div class="hub-stat-value">13</div>
+                            <div class="hub-stat-label">Provinces</div>
+                        </div>
+                        <div class="hub-stat">
+                            <div class="hub-stat-value">100%</div>
+                            <div class="hub-stat-label">Free</div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-5 d-none d-lg-block text-center">
+            <div class="col-lg-4 d-none d-lg-block text-center">
                 <div style="font-size: 8rem;">📚</div>
             </div>
         </div>
@@ -491,12 +503,13 @@
 <!-- Learning Paths -->
 <section class="paths-section">
     <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Choose Your <span class="gradient-text">Learning Path</span></h2>
-            <p class="section-subtitle">Select the path that matches your immigration goal. Each path includes all the guides and resources you need.</p>
-        </div>
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">Choose Your <span class="gradient-text">Learning Path</span></h2>
+                <p class="section-subtitle">Select the path that matches your immigration goal. Each path includes all the guides and resources you need.</p>
+            </div>
 
-        <div class="row g-4">
+            <div class="row g-4">
             <!-- Express Entry Path -->
             <div class="col-lg-4 col-md-6">
                 <div class="path-card" style="--path-color: #40916C;">
@@ -646,6 +659,7 @@
                     </a>
                 </div>
             </div>
+            </div>
         </div>
     </div>
 </section>
@@ -653,12 +667,13 @@
 <!-- Quick Access Tools -->
 <section class="tools-section">
     <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Interactive <span class="gradient-text">Tools</span></h2>
-            <p class="section-subtitle">Use our free tools to calculate scores, check eligibility, and plan your immigration.</p>
-        </div>
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">Interactive <span class="gradient-text">Tools</span></h2>
+                <p class="section-subtitle">Use our free tools to calculate scores, check eligibility, and plan your immigration.</p>
+            </div>
 
-        <div class="row g-4">
+            <div class="row g-4">
             <div class="col-lg-3 col-md-6">
                 <a href="/tools/crs-calculator" class="tool-card">
                     <div class="tool-icon">
@@ -695,6 +710,7 @@
                     <p class="tool-desc">Find the best province for your profile</p>
                 </a>
             </div>
+            </div>
         </div>
     </div>
 </section>
@@ -702,12 +718,13 @@
 <!-- Browse by Category -->
 <section class="categories-section">
     <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Browse by <span class="gradient-text">Category</span></h2>
-            <p class="section-subtitle">Explore all our guides organized by topic</p>
-        </div>
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">Browse by <span class="gradient-text">Category</span></h2>
+                <p class="section-subtitle">Explore all our guides organized by topic</p>
+            </div>
 
-        <div class="row g-4">
+            <div class="row g-4">
             <!-- Language Tests -->
             <div class="col-lg-4 col-md-6">
                 <div class="category-card" style="--cat-color: #6366F1;">
@@ -834,6 +851,7 @@
                         <li><a href="/dashboard"><i class="bi bi-arrow-right"></i> All News →</a></li>
                     </ul>
                 </div>
+            </div>
             </div>
         </div>
     </div>

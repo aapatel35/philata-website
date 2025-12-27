@@ -5,19 +5,17 @@
 {% block extra_css %}
 <style>
     .practice-hero {
-        padding: 8rem 0 4rem;
+        padding: 10rem 0 5rem;
         position: relative;
     }
 
-    .practice-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(ellipse at top right, rgba(99, 102, 241, 0.15) 0%, transparent 50%);
-        pointer-events: none;
+    .practice-hero-content {
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 3rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
     .practice-title {
@@ -25,11 +23,12 @@
         font-size: 3rem;
         font-weight: 800;
         margin-bottom: 1rem;
+        color: #1a1a1a;
     }
 
     .practice-subtitle {
         font-size: 1.2rem;
-        color: var(--philata-text-muted);
+        color: #555;
         max-width: 600px;
     }
 
@@ -434,12 +433,14 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <h1 class="practice-title">
-                    Free <span class="gradient-text">Practice Tests</span>
-                </h1>
-                <p class="practice-subtitle">
-                    Prepare for IELTS, CELPIP, PTE, TEF, and TCF with our free sample questions, practice exercises, and expert tips. Similar to IELTS Liz but for all tests!
-                </p>
+                <div class="practice-hero-content">
+                    <h1 class="practice-title">
+                        Free <span class="gradient-text">Practice Tests</span>
+                    </h1>
+                    <p class="practice-subtitle">
+                        Prepare for IELTS, CELPIP, PTE, TEF, and TCF with our free sample questions, practice exercises, and expert tips. Similar to IELTS Liz but for all tests!
+                    </p>
+                </div>
             </div>
         </div>
     </div>
