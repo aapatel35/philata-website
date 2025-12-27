@@ -4,7 +4,7 @@
 
 {% block extra_css %}
 <style>
-    /* Hero Section - Forest Green & Cream Theme with Nature Background */
+    /* Hero Section - Dark Forest Green with Canadian Landscape */
     .hero {
         min-height: 100vh;
         display: flex;
@@ -12,8 +12,20 @@
         position: relative;
         overflow: hidden;
         padding: 8rem 0 6rem;
-        background: linear-gradient(135deg, rgba(20, 83, 45, 0.97) 0%, rgba(27, 67, 50, 0.97) 50%, rgba(45, 106, 79, 0.95) 100%),
-                    url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80') center/cover no-repeat;
+        background: linear-gradient(135deg, #0D1F17 0%, #14532D 50%, #1B4332 100%);
+    }
+
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 50%;
+        background: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1200&q=80') center/cover no-repeat;
+        opacity: 0.3;
+        mask-image: linear-gradient(to left, rgba(0,0,0,0.5), transparent);
+        -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.5), transparent);
     }
 
     .hero-content {
@@ -58,25 +70,20 @@
         margin-bottom: 1.5rem;
         color: #FFFFFF;
         letter-spacing: -0.03em;
-        text-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
 
     .hero-title .highlight {
-        background: linear-gradient(135deg, #95D5B2 0%, #D8F3DC 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        color: #52B788;
+        -webkit-text-fill-color: #52B788;
     }
 
     .hero-subtitle {
         font-size: 1.35rem;
-        color: #FFFFFF;
+        color: #D1D5DB;
         max-width: 550px;
         margin-bottom: 2.5rem;
         line-height: 1.7;
-        text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-        font-weight: 500;
+        font-weight: 400;
     }
 
     .hero-cta {
@@ -118,16 +125,14 @@
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 2.5rem;
         font-weight: 800;
-        color: #FFFFFF;
+        color: #52B788;
         margin-bottom: 0.25rem;
         letter-spacing: -0.02em;
-        text-shadow: 0 2px 8px rgba(0,0,0,0.5);
     }
 
     .hero-stat-label {
         font-size: 0.9rem;
-        color: #FFFFFF;
-        text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+        color: #9CA3AF;
         font-weight: 500;
     }
 
@@ -137,9 +142,9 @@
     }
 
     .hero-card {
-        background: rgba(0, 0, 0, 0.25);
+        background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 24px;
         padding: 2rem;
         position: relative;
@@ -194,15 +199,15 @@
         align-items: flex-start;
         gap: 1rem;
         padding: 1rem;
-        background: rgba(0, 0, 0, 0.3);
+        background: rgba(255, 255, 255, 0.08);
         border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         transition: all 0.3s ease;
     }
 
     .feed-item:hover {
-        background: rgba(0, 0, 0, 0.4);
-        border-color: rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(82, 183, 136, 0.5);
     }
 
     .feed-icon {
@@ -218,26 +223,21 @@
 
     .feed-content h6 {
         font-size: 0.9rem;
-        font-weight: 700;
+        font-weight: 600;
         margin-bottom: 0.25rem;
         color: #FFFFFF;
-        text-shadow: 0 1px 3px rgba(0,0,0,0.5);
     }
 
     .feed-content p {
         font-size: 0.85rem;
-        color: #FFFFFF;
+        color: #D1D5DB;
         margin: 0;
-        text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-        font-weight: 500;
     }
 
     .feed-time {
         font-size: 0.75rem;
-        color: #FFFFFF;
+        color: #9CA3AF;
         white-space: nowrap;
-        text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-        font-weight: 500;
     }
 
     /* Section Divider */
@@ -970,7 +970,7 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="/guides/provinces/quebec" class="text-decoration-none">
                     <div class="province-card">
-                        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Quebec - Montreal" onerror="this.style.display='none'">
+                        <img src="https://images.unsplash.com/photo-1519178614-68673b201f36?w=600&q=80" alt="Quebec - Old Quebec City" onerror="this.style.display='none'">
                         <div class="province-info">
                             <h3 class="province-name">Quebec</h3>
                             <p class="province-program">QISP</p>
@@ -984,7 +984,7 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="/guides/provinces/manitoba" class="text-decoration-none">
                     <div class="province-card">
-                        <img src="https://images.unsplash.com/photo-1569288052389-dac9b0ac9eac?w=600&q=80" alt="Manitoba - Prairies" onerror="this.style.display='none'">
+                        <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80" alt="Manitoba - Golden Prairie Fields" onerror="this.style.display='none'">
                         <div class="province-info">
                             <h3 class="province-name">Manitoba</h3>
                             <p class="province-program">MPNP</p>
