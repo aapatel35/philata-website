@@ -13,44 +13,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Professional Blue & Teal Theme - Canadian Immigration */
-            --philata-primary: #1E40AF;
-            --philata-primary-dark: #1E3A8A;
-            --philata-primary-light: #3B82F6;
-            --philata-teal: #0D9488;
-            --philata-teal-light: #14B8A6;
-            --philata-teal-dark: #0F766E;
-            --philata-maple: #DC2626;
-            --philata-gold: #F59E0B;
+            /* Forest Green & Cream Theme - Natural & Professional */
+            --philata-primary: #1B4332;
+            --philata-primary-dark: #14532D;
+            --philata-primary-light: #2D6A4F;
+            --philata-accent: #40916C;
+            --philata-accent-light: #52B788;
+            --philata-accent-dark: #2D6A4F;
+            --philata-cream: #FFFBEB;
+            --philata-cream-dark: #FEF3C7;
+            --philata-maple: #B91C1C;
+            --philata-gold: #D97706;
             --philata-white: #FFFFFF;
-            --philata-light: #F8FAFC;
-            --philata-gray-50: #F8FAFC;
-            --philata-gray-100: #F1F5F9;
-            --philata-gray-200: #E2E8F0;
-            --philata-gray-300: #CBD5E1;
-            --philata-gray-400: #94A3B8;
-            --philata-gray-500: #64748B;
-            --philata-gray-600: #475569;
-            --philata-gray-700: #334155;
-            --philata-gray-800: #1E293B;
-            --philata-gray-900: #0F172A;
+            --philata-light: #FEFCE8;
+            --philata-gray-50: #FEFCE8;
+            --philata-gray-100: #FEF9C3;
+            --philata-gray-200: #E5E7EB;
+            --philata-gray-300: #D1D5DB;
+            --philata-gray-400: #9CA3AF;
+            --philata-gray-500: #6B7280;
+            --philata-gray-600: #4B5563;
+            --philata-gray-700: #374151;
+            --philata-gray-800: #1F2937;
+            --philata-gray-900: #111827;
             --philata-card: #FFFFFF;
-            --philata-card-hover: #F8FAFC;
-            --philata-border: #E2E8F0;
-            --philata-text: #1E293B;
-            --philata-text-muted: #64748B;
-            --gradient-primary: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
-            --gradient-teal: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%);
-            --gradient-maple: linear-gradient(135deg, #DC2626 0%, #EF4444 100%);
-            --gradient-gold: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
-            --gradient-hero: linear-gradient(135deg, #0F172A 0%, #1E3A8A 50%, #1E40AF 100%);
-            --glass-bg: rgba(255,255,255,0.95);
-            --glass-border: rgba(0,0,0,0.05);
+            --philata-card-hover: #FEFCE8;
+            --philata-border: #D1D5DB;
+            --philata-text: #111827;
+            --philata-text-muted: #4B5563;
+            --gradient-primary: linear-gradient(135deg, #1B4332 0%, #2D6A4F 100%);
+            --gradient-accent: linear-gradient(135deg, #40916C 0%, #52B788 100%);
+            --gradient-maple: linear-gradient(135deg, #B91C1C 0%, #DC2626 100%);
+            --gradient-gold: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
+            --gradient-hero: linear-gradient(135deg, #1B4332 0%, #2D6A4F 50%, #40916C 100%);
+            --glass-bg: rgba(255,255,255,0.98);
+            --glass-border: rgba(27, 67, 50, 0.1);
             /* Compatibility aliases */
-            --philata-red: #DC2626;
-            --philata-red-light: #EF4444;
-            --philata-orange: #F59E0B;
-            --philata-orange-light: #FBBF24;
+            --philata-teal: #40916C;
+            --philata-teal-light: #52B788;
+            --philata-teal-dark: #2D6A4F;
+            --philata-red: #B91C1C;
+            --philata-red-light: #DC2626;
+            --philata-orange: #D97706;
+            --philata-orange-light: #F59E0B;
         }
 
         * {
@@ -81,7 +86,7 @@
             height: 100%;
             z-index: -1;
             overflow: hidden;
-            background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+            background: linear-gradient(180deg, #FFFBEB 0%, #FFFFFF 100%);
         }
 
         .bg-animation::before {
@@ -92,8 +97,8 @@
             width: 100%;
             height: 100%;
             background:
-                radial-gradient(circle at 0% 0%, rgba(30, 64, 175, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(13, 148, 136, 0.03) 0%, transparent 50%);
+                radial-gradient(circle at 0% 0%, rgba(27, 67, 50, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(64, 145, 108, 0.04) 0%, transparent 50%);
         }
 
         /* Grid Pattern Overlay */
@@ -251,19 +256,19 @@
         }
 
         .btn-secondary {
-            background: var(--gradient-teal);
+            background: var(--gradient-accent);
             border: none;
             font-weight: 600;
             padding: 0.75rem 2rem;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(13, 148, 136, 0.25);
+            box-shadow: 0 4px 15px rgba(64, 145, 108, 0.25);
             transition: all 0.3s ease;
             color: white;
         }
 
         .btn-secondary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(13, 148, 136, 0.35);
+            box-shadow: 0 8px 25px rgba(64, 145, 108, 0.35);
         }
 
         .btn-outline-light {
@@ -461,7 +466,7 @@
         }
 
         .footer-links a:hover {
-            color: var(--philata-teal-light);
+            color: var(--philata-accent-light);
         }
 
         .footer-bottom {
@@ -570,9 +575,9 @@
         .border-primary-custom { border-color: var(--philata-primary) !important; }
         .border-teal { border-color: var(--philata-teal) !important; }
 
-        /* Teal text gradient */
-        .teal-text {
-            background: var(--gradient-teal);
+        /* Accent text gradient */
+        .teal-text, .accent-text {
+            background: var(--gradient-accent);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;

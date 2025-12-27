@@ -4,7 +4,7 @@
 
 {% block extra_css %}
 <style>
-    /* Hero Section - Professional Blue/Teal Theme with Province Background */
+    /* Hero Section - Forest Green & Cream Theme with Nature Background */
     .hero {
         min-height: 100vh;
         display: flex;
@@ -12,8 +12,8 @@
         position: relative;
         overflow: hidden;
         padding: 8rem 0 6rem;
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 58, 138, 0.88) 50%, rgba(30, 64, 175, 0.85) 100%),
-                    url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1920&q=80') center/cover no-repeat;
+        background: linear-gradient(135deg, rgba(27, 67, 50, 0.92) 0%, rgba(45, 106, 79, 0.88) 50%, rgba(64, 145, 108, 0.85) 100%),
+                    url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80') center/cover no-repeat;
     }
 
     .hero-content {
@@ -25,7 +25,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: rgba(13, 148, 136, 0.9);
+        background: rgba(64, 145, 108, 0.95);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.3);
         padding: 0.5rem 1rem;
@@ -40,7 +40,7 @@
     .hero-badge .pulse {
         width: 8px;
         height: 8px;
-        background: var(--philata-teal-light);
+        background: #FEF3C7;
         border-radius: 50%;
         animation: pulse 2s infinite;
     }
@@ -64,7 +64,7 @@
     }
 
     .hero-title .highlight {
-        background: linear-gradient(135deg, #14B8A6 0%, #2DD4BF 100%);
+        background: linear-gradient(135deg, #52B788 0%, #95D5B2 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -92,12 +92,12 @@
     }
 
     .hero-cta .btn-primary {
-        background: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%);
-        box-shadow: 0 4px 20px rgba(13, 148, 136, 0.4);
+        background: linear-gradient(135deg, #40916C 0%, #52B788 100%);
+        box-shadow: 0 4px 20px rgba(64, 145, 108, 0.4);
     }
 
     .hero-cta .btn-primary:hover {
-        box-shadow: 0 8px 30px rgba(13, 148, 136, 0.5);
+        box-shadow: 0 8px 30px rgba(64, 145, 108, 0.5);
     }
 
     .hero-cta .btn-outline-light {
@@ -127,7 +127,7 @@
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 2.5rem;
         font-weight: 800;
-        color: var(--philata-teal-light);
+        color: #95D5B2;
         margin-bottom: 0.25rem;
         letter-spacing: -0.02em;
     }
@@ -163,7 +163,7 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(135deg, #0D9488, #14B8A6, #2DD4BF);
+        background: linear-gradient(135deg, #40916C, #52B788, #95D5B2);
     }
 
     .floating-card {
@@ -212,7 +212,7 @@
 
     .feed-item:hover {
         background: rgba(255, 255, 255, 0.15);
-        border-color: rgba(20, 184, 166, 0.5);
+        border-color: rgba(64, 145, 108, 0.5);
     }
 
     .feed-icon {
@@ -249,7 +249,7 @@
     .section-divider {
         width: 80px;
         height: 4px;
-        background: var(--gradient-teal);
+        background: var(--gradient-accent);
         border-radius: 4px;
         margin: 0 auto 1.5rem;
     }
@@ -258,7 +258,7 @@
     .learning-section {
         padding: 8rem 0;
         position: relative;
-        background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 50%, #F0FDFA 100%);
+        background: linear-gradient(180deg, #FFFBEB 0%, #FFFFFF 50%, #FEFCE8 100%);
     }
 
     .learning-card {
@@ -273,8 +273,8 @@
 
     .learning-card:hover {
         transform: translateY(-8px);
-        box-shadow: 0 25px 50px rgba(13, 148, 136, 0.15);
-        border-color: var(--philata-teal);
+        box-shadow: 0 25px 50px rgba(27, 67, 50, 0.15);
+        border-color: var(--philata-accent);
     }
 
     .learning-card-image {
@@ -299,7 +299,7 @@
         top: 1rem;
         left: 1rem;
         z-index: 2;
-        background: var(--gradient-teal);
+        background: var(--gradient-accent);
         color: white;
         padding: 0.4rem 1rem;
         border-radius: 8px;
@@ -329,7 +329,7 @@
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        color: var(--philata-teal);
+        color: var(--philata-accent);
         font-weight: 600;
         font-size: 0.9rem;
         transition: gap 0.3s ease;
@@ -337,7 +337,7 @@
 
     .learning-card-link:hover {
         gap: 0.75rem;
-        color: var(--philata-teal-dark);
+        color: var(--philata-primary);
     }
 
     /* Provincial Guides Section */
@@ -364,7 +364,7 @@
     }
 
     .province-card {
-        background: linear-gradient(135deg, #1E3A8A, #0D9488);
+        background: linear-gradient(135deg, #1B4332, #40916C);
     }
 
     .province-card:hover {
@@ -412,7 +412,7 @@
     .province-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(135deg, rgba(13, 148, 136, 0.9), rgba(30, 64, 175, 0.9));
+        background: linear-gradient(135deg, rgba(64, 145, 108, 0.92), rgba(27, 67, 50, 0.92));
         display: flex;
         align-items: center;
         justify-content: center;
@@ -432,7 +432,7 @@
     /* Federal Programs Section */
     .federal-section {
         padding: 8rem 0;
-        background: linear-gradient(180deg, #FFFFFF 0%, #EFF6FF 100%);
+        background: linear-gradient(180deg, #FFFFFF 0%, #ECFDF5 100%);
     }
 
     .federal-card {
@@ -447,8 +447,8 @@
 
     .federal-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 20px 40px rgba(30, 64, 175, 0.1);
-        border-color: var(--philata-primary-light);
+        box-shadow: 0 20px 40px rgba(27, 67, 50, 0.1);
+        border-color: var(--philata-accent);
     }
 
     .federal-icon {
@@ -478,7 +478,7 @@
     /* Tools Section */
     .tools-section {
         padding: 8rem 0;
-        background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%);
+        background: linear-gradient(135deg, #14532D 0%, #1B4332 100%);
         position: relative;
     }
 
@@ -502,7 +502,7 @@
 
     .tool-card:hover {
         background: rgba(255, 255, 255, 0.1);
-        border-color: var(--philata-teal);
+        border-color: var(--philata-accent);
         transform: translateY(-5px);
     }
 
@@ -510,7 +510,7 @@
         width: 80px;
         height: 80px;
         border-radius: 20px;
-        background: var(--gradient-teal);
+        background: var(--gradient-accent);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -539,8 +539,8 @@
     }
 
     .tool-card .btn:hover {
-        background: var(--philata-teal);
-        border-color: var(--philata-teal);
+        background: var(--philata-accent);
+        border-color: var(--philata-accent);
     }
 
     /* Social Media Testing Section - Separate */
@@ -652,7 +652,7 @@
     }
 
     .track-features li i {
-        color: var(--philata-teal);
+        color: var(--philata-accent);
     }
 
     /* CTA Section */
@@ -664,8 +664,8 @@
     }
 
     .cta-box {
-        background: linear-gradient(135deg, rgba(30, 64, 175, 0.08) 0%, rgba(13, 148, 136, 0.08) 100%);
-        border: 1px solid rgba(30, 64, 175, 0.15);
+        background: linear-gradient(135deg, rgba(27, 67, 50, 0.08) 0%, rgba(64, 145, 108, 0.08) 100%);
+        border: 1px solid rgba(27, 67, 50, 0.15);
         border-radius: 32px;
         padding: 4rem;
         position: relative;
@@ -679,7 +679,7 @@
         right: -50%;
         width: 100%;
         height: 100%;
-        background: radial-gradient(circle, rgba(13, 148, 136, 0.1), transparent 70%);
+        background: radial-gradient(circle, rgba(64, 145, 108, 0.1), transparent 70%);
         pointer-events: none;
     }
 
@@ -804,13 +804,13 @@
                     <div class="hero-card">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h5 class="mb-0" style="font-size: 1rem; color: #fff;">
-                                <i class="bi bi-lightning-charge-fill me-2" style="color: var(--philata-teal-light);"></i>Live Updates
+                                <i class="bi bi-lightning-charge-fill me-2" style="color: var(--philata-accent-light);"></i>Live Updates
                             </h5>
                             <span class="badge bg-success">Active</span>
                         </div>
                         <div class="live-feed">
                             <div class="feed-item">
-                                <div class="feed-icon" style="background: linear-gradient(135deg, #0D9488, #14B8A6);">
+                                <div class="feed-icon" style="background: linear-gradient(135deg, #40916C, #52B788);">
                                     <i class="bi bi-megaphone-fill text-white"></i>
                                 </div>
                                 <div class="feed-content flex-grow-1">
@@ -820,7 +820,7 @@
                                 <span class="feed-time">2m ago</span>
                             </div>
                             <div class="feed-item">
-                                <div class="feed-icon" style="background: linear-gradient(135deg, #1E40AF, #3B82F6);">
+                                <div class="feed-icon" style="background: linear-gradient(135deg, #1B4332, #2D6A4F);">
                                     <i class="bi bi-lightbulb-fill text-white"></i>
                                 </div>
                                 <div class="feed-content flex-grow-1">
@@ -852,7 +852,7 @@
 
                     <div class="floating-card floating-card-2">
                         <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-shield-check" style="color: #1E40AF;"></i>
+                            <i class="bi bi-shield-check" style="color: #1B4332;"></i>
                             <span style="font-size: 0.85rem; color: var(--philata-gray-700);">Official IRCC Data</span>
                         </div>
                     </div>
@@ -867,7 +867,7 @@
     <div class="container">
         <div class="text-center mb-5">
             <div class="section-divider"></div>
-            <h2 class="section-title">Learning <span class="teal-text">Hub</span></h2>
+            <h2 class="section-title">Learning <span class="accent-text">Hub</span></h2>
             <p class="section-subtitle mx-auto">
                 Master every aspect of Canadian immigration with our comprehensive guides and resources.
             </p>
@@ -1030,7 +1030,7 @@
             </div>
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="/learn#provinces" class="text-decoration-none">
-                    <div class="province-card" style="background: linear-gradient(135deg, #0D9488, #1E40AF);">
+                    <div class="province-card" style="background: linear-gradient(135deg, #40916C, #1B4332);">
                         <div class="province-info" style="top: 50%; transform: translateY(-50%); bottom: auto;">
                             <h3 class="province-name">View All Provinces</h3>
                             <p class="province-program">13 Provincial & Territorial Programs</p>
@@ -1056,8 +1056,8 @@
             <div class="col-md-6 col-lg-4">
                 <a href="/guides/express-entry" class="text-decoration-none">
                     <div class="federal-card">
-                        <div class="federal-icon" style="background: linear-gradient(135deg, rgba(13, 148, 136, 0.15), rgba(13, 148, 136, 0.05));">
-                            <i class="bi bi-lightning-charge-fill" style="color: #0D9488;"></i>
+                        <div class="federal-icon" style="background: linear-gradient(135deg, rgba(64, 145, 108, 0.15), rgba(64, 145, 108, 0.05));">
+                            <i class="bi bi-lightning-charge-fill" style="color: #40916C;"></i>
                         </div>
                         <h3 class="federal-title">Express Entry</h3>
                         <p class="federal-desc">Fast-track immigration for skilled workers. FSW, CEC, and FSTP programs.</p>
@@ -1111,8 +1111,8 @@
             <div class="col-md-6 col-lg-4">
                 <a href="/guides/visitor-visa" class="text-decoration-none">
                     <div class="federal-card">
-                        <div class="federal-icon" style="background: linear-gradient(135deg, rgba(30, 64, 175, 0.15), rgba(30, 64, 175, 0.05));">
-                            <i class="bi bi-globe" style="color: #1E40AF;"></i>
+                        <div class="federal-icon" style="background: linear-gradient(135deg, rgba(27, 67, 50, 0.15), rgba(27, 67, 50, 0.05));">
+                            <i class="bi bi-globe" style="color: #1B4332;"></i>
                         </div>
                         <h3 class="federal-title">Visitor Visa</h3>
                         <p class="federal-desc">Tourist visas, super visas, and temporary resident permits.</p>
@@ -1127,8 +1127,8 @@
 <section class="tools-section" id="tools">
     <div class="container">
         <div class="text-center mb-5">
-            <div class="section-divider" style="background: linear-gradient(135deg, #14B8A6, #2DD4BF);"></div>
-            <h2 class="section-title">Immigration <span style="color: #14B8A6;">Tools</span></h2>
+            <div class="section-divider" style="background: linear-gradient(135deg, #40916C, #52B788);"></div>
+            <h2 class="section-title">Immigration <span style="color: #52B788;">Tools</span></h2>
             <p class="section-subtitle mx-auto">
                 Free tools to help you plan and prepare for your Canadian immigration journey.
             </p>
@@ -1239,7 +1239,7 @@
 <section class="cta-section">
     <div class="container">
         <div class="cta-box">
-            <h2 class="cta-title">Start Your <span class="teal-text">Canadian Journey</span></h2>
+            <h2 class="cta-title">Start Your <span class="accent-text">Canadian Journey</span></h2>
             <p class="cta-subtitle">
                 Browse our comprehensive collection of immigration guides, news, and resources.
             </p>
