@@ -4,7 +4,7 @@
 
 {% block extra_css %}
 <style>
-    /* Hero Section - Dark Forest Green with Canadian Landscape */
+    /* Hero Section - Canadian Mountains with Dark Overlay */
     .hero {
         min-height: 100vh;
         display: flex;
@@ -12,41 +12,46 @@
         position: relative;
         overflow: hidden;
         padding: 8rem 0 6rem;
-        background: linear-gradient(135deg, #0D1F17 0%, #14532D 50%, #1B4332 100%);
+        background: #0a0a0a !important;
     }
 
     .hero::before {
         content: '';
         position: absolute;
         top: 0;
+        left: 0;
         right: 0;
         bottom: 0;
-        width: 50%;
-        background: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1200&q=80') center/cover no-repeat;
-        opacity: 0.3;
-        mask-image: linear-gradient(to left, rgba(0,0,0,0.5), transparent);
-        -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.5), transparent);
+        background: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1920&q=80') center/cover no-repeat;
+        opacity: 0.4;
+    }
+
+    .hero::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(10, 10, 10, 0.85) 0%, rgba(20, 83, 45, 0.7) 100%);
     }
 
     .hero-content {
         position: relative;
-        z-index: 2;
+        z-index: 10;
     }
 
     .hero-badge {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: rgba(64, 145, 108, 0.95);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: #22c55e !important;
         padding: 0.5rem 1rem;
         border-radius: 50px;
         font-size: 0.85rem;
-        color: #fff;
+        color: #ffffff !important;
         font-weight: 600;
         margin-bottom: 2rem;
-        animation: fadeInUp 0.8s ease forwards;
     }
 
     .hero-badge .pulse {
@@ -68,18 +73,18 @@
         font-weight: 800;
         line-height: 1.1;
         margin-bottom: 1.5rem;
-        color: #FFFFFF;
+        color: #ffffff !important;
         letter-spacing: -0.03em;
     }
 
     .hero-title .highlight {
-        color: #52B788;
-        -webkit-text-fill-color: #52B788;
+        color: #4ade80 !important;
+        -webkit-text-fill-color: #4ade80 !important;
     }
 
     .hero-subtitle {
         font-size: 1.35rem;
-        color: #D1D5DB;
+        color: #e5e7eb !important;
         max-width: 550px;
         margin-bottom: 2.5rem;
         line-height: 1.7;
@@ -125,14 +130,14 @@
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 2.5rem;
         font-weight: 800;
-        color: #52B788;
+        color: #4ade80 !important;
         margin-bottom: 0.25rem;
         letter-spacing: -0.02em;
     }
 
     .hero-stat-label {
         font-size: 0.9rem;
-        color: #9CA3AF;
+        color: #ffffff !important;
         font-weight: 500;
     }
 
@@ -142,9 +147,9 @@
     }
 
     .hero-card {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(0, 0, 0, 0.6) !important;
         backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 24px;
         padding: 2rem;
         position: relative;
@@ -225,18 +230,18 @@
         font-size: 0.9rem;
         font-weight: 600;
         margin-bottom: 0.25rem;
-        color: #FFFFFF;
+        color: #ffffff !important;
     }
 
     .feed-content p {
         font-size: 0.85rem;
-        color: #D1D5DB;
+        color: #e5e7eb !important;
         margin: 0;
     }
 
     .feed-time {
         font-size: 0.75rem;
-        color: #9CA3AF;
+        color: #d1d5db !important;
         white-space: nowrap;
     }
 
@@ -748,58 +753,85 @@
             height: 200px;
         }
     }
+
+    /* Smooth Scroll Reveal Animations */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    .scroll-reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .scroll-reveal.revealed {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Parallax-like fixed background for sections */
+    .learning-section,
+    .provinces-section,
+    .federal-section,
+    .tools-section,
+    .testing-section,
+    .tracks-section,
+    .cta-section {
+        position: relative;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <!-- Hero Section with Canada Background -->
-<section class="hero">
+<section class="hero" style="background: #0a0a0a !important;">
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
                 <div class="hero-content">
-                    <div class="hero-badge">
+                    <div class="hero-badge" style="background: #22c55e; color: #fff;">
                         <span class="pulse"></span>
                         Your Immigration Journey Starts Here
                     </div>
-                    <h1 class="hero-title">
+                    <h1 class="hero-title" style="color: #ffffff !important;">
                         Canadian Immigration<br>
-                        <span class="highlight">News & Resources</span>
+                        <span class="highlight" style="color: #4ade80 !important;">News & Resources</span>
                     </h1>
-                    <p class="hero-subtitle">
+                    <p class="hero-subtitle" style="color: #e5e7eb !important;">
                         Comprehensive coverage of immigration news, expert guides, and essential tools.
                         Everything you need to navigate your path to Canada.
                     </p>
                     <div class="hero-cta">
-                        <a href="/learn" class="btn btn-primary btn-lg">
+                        <a href="/learn" class="btn btn-primary btn-lg" style="background: #22c55e; border-color: #22c55e; color: #fff;">
                             <i class="bi bi-book me-2"></i>Start Learning
                         </a>
-                        <a href="/dashboard" class="btn btn-outline-light btn-lg">
+                        <a href="/dashboard" class="btn btn-outline-light btn-lg" style="border-color: #fff; color: #fff;">
                             <i class="bi bi-newspaper me-2"></i>Latest News
                         </a>
                     </div>
                     <div class="hero-stats">
                         <div class="hero-stat">
-                            <div class="hero-stat-value" id="live-content">100+</div>
-                            <div class="hero-stat-label">Articles & Guides</div>
+                            <div class="hero-stat-value" id="live-content" style="color: #4ade80 !important;">100+</div>
+                            <div class="hero-stat-label" style="color: #ffffff !important;">Articles & Guides</div>
                         </div>
                         <div class="hero-stat">
-                            <div class="hero-stat-value">13</div>
-                            <div class="hero-stat-label">Province Guides</div>
+                            <div class="hero-stat-value" style="color: #4ade80 !important;">13</div>
+                            <div class="hero-stat-label" style="color: #ffffff !important;">Province Guides</div>
                         </div>
                         <div class="hero-stat">
-                            <div class="hero-stat-value">24/7</div>
-                            <div class="hero-stat-label">News Coverage</div>
+                            <div class="hero-stat-value" style="color: #4ade80 !important;">24/7</div>
+                            <div class="hero-stat-label" style="color: #ffffff !important;">News Coverage</div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="hero-visual">
-                    <div class="hero-card">
+                    <div class="hero-card" style="background: rgba(0,0,0,0.6) !important;">
                         <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h5 class="mb-0" style="font-size: 1rem; color: #fff;">
-                                <i class="bi bi-lightning-charge-fill me-2" style="color: var(--philata-accent-light);"></i>Live Updates
+                            <h5 class="mb-0" style="font-size: 1rem; color: #ffffff !important;">
+                                <i class="bi bi-lightning-charge-fill me-2" style="color: #4ade80;"></i>Live Updates
                             </h5>
                             <span class="badge bg-success">Active</span>
                         </div>
@@ -809,30 +841,30 @@
                                     <i class="bi bi-megaphone-fill text-white"></i>
                                 </div>
                                 <div class="feed-content flex-grow-1">
-                                    <h6>Express Entry Draw #312</h6>
-                                    <p>CRS cutoff: 524 | 4,200 ITAs issued</p>
+                                    <h6 style="color: #ffffff !important;">Express Entry Draw #312</h6>
+                                    <p style="color: #e5e7eb !important;">CRS cutoff: 524 | 4,200 ITAs issued</p>
                                 </div>
-                                <span class="feed-time">2m ago</span>
+                                <span class="feed-time" style="color: #d1d5db !important;">2m ago</span>
                             </div>
                             <div class="feed-item">
                                 <div class="feed-icon" style="background: linear-gradient(135deg, #1B4332, #2D6A4F);">
                                     <i class="bi bi-lightbulb-fill text-white"></i>
                                 </div>
                                 <div class="feed-content flex-grow-1">
-                                    <h6>Daily Tip: PNP Nominations</h6>
-                                    <p>Boost your CRS by 600 points with PNP</p>
+                                    <h6 style="color: #ffffff !important;">Daily Tip: PNP Nominations</h6>
+                                    <p style="color: #e5e7eb !important;">Boost your CRS by 600 points with PNP</p>
                                 </div>
-                                <span class="feed-time">15m ago</span>
+                                <span class="feed-time" style="color: #d1d5db !important;">15m ago</span>
                             </div>
                             <div class="feed-item">
                                 <div class="feed-icon" style="background: linear-gradient(135deg, #6366F1, #8B5CF6);">
                                     <i class="bi bi-newspaper text-white"></i>
                                 </div>
                                 <div class="feed-content flex-grow-1">
-                                    <h6>PGWP Policy Changes</h6>
-                                    <p>New eligibility requirements for 2025</p>
+                                    <h6 style="color: #ffffff !important;">PGWP Policy Changes</h6>
+                                    <p style="color: #e5e7eb !important;">New eligibility requirements for 2025</p>
                                 </div>
-                                <span class="feed-time">1h ago</span>
+                                <span class="feed-time" style="color: #d1d5db !important;">1h ago</span>
                             </div>
                         </div>
                     </div>
@@ -1265,17 +1297,37 @@
             document.getElementById('live-content').textContent = '100+';
         });
 
-    // Intersection Observer for animations
-    const observer = new IntersectionObserver((entries) => {
+    // Scroll Reveal Animation
+    const scrollRevealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('animate-fadeInUp');
+                entry.target.classList.add('revealed');
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
             }
         });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-    document.querySelectorAll('.learning-card, .province-card, .federal-card, .tool-card, .track-card').forEach(el => {
-        observer.observe(el);
+    // Apply scroll reveal to sections and cards
+    document.querySelectorAll('.learning-section, .provinces-section, .federal-section, .tools-section, .testing-section, .tracks-section, .cta-section').forEach(el => {
+        el.classList.add('scroll-reveal');
+        scrollRevealObserver.observe(el);
+    });
+
+    document.querySelectorAll('.learning-card, .province-card, .federal-card, .tool-card, .track-card').forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+        scrollRevealObserver.observe(el);
+    });
+
+    // Smooth parallax effect on scroll
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const hero = document.querySelector('.hero');
+        if (hero) {
+            hero.style.backgroundPositionY = scrolled * 0.3 + 'px';
+        }
     });
 </script>
 {% endblock %}
