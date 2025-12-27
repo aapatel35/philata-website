@@ -1,0 +1,861 @@
+{% extends "base.html" %}
+
+{% block title %}Learning Hub - Canadian Immigration Education{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hub-hero {
+        padding: 6rem 0 4rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hub-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(ellipse at top right, rgba(227, 24, 55, 0.15) 0%, transparent 50%),
+                    radial-gradient(ellipse at bottom left, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    .hub-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        line-height: 1.1;
+    }
+
+    .hub-subtitle {
+        font-size: 1.25rem;
+        color: var(--philata-text-muted);
+        max-width: 600px;
+        line-height: 1.7;
+    }
+
+    /* Stats */
+    .hub-stats {
+        display: flex;
+        gap: 2rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .hub-stat {
+        text-align: center;
+    }
+
+    .hub-stat-value {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hub-stat-label {
+        font-size: 0.9rem;
+        color: var(--philata-text-muted);
+    }
+
+    /* Learning Paths Section */
+    .paths-section {
+        padding: 4rem 0;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .section-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 2.25rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
+
+    .section-subtitle {
+        color: var(--philata-text-muted);
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* Path Cards */
+    .path-card {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 24px;
+        padding: 2rem;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .path-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--path-color, var(--gradient-primary));
+    }
+
+    .path-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(255,255,255,0.15);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    }
+
+    .path-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .path-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.75rem;
+    }
+
+    .path-desc {
+        color: var(--philata-text-muted);
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+    }
+
+    .path-modules {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 1.5rem 0;
+    }
+
+    .path-modules li {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+        color: var(--philata-text);
+        font-size: 0.9rem;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .path-modules li:last-child {
+        border-bottom: none;
+    }
+
+    .path-modules li i {
+        color: var(--path-color, #10B981);
+        font-size: 0.8rem;
+    }
+
+    .path-meta {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.85rem;
+        color: var(--philata-text-muted);
+    }
+
+    .path-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .path-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--path-color, var(--philata-red));
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .path-btn:hover {
+        transform: translateX(5px);
+        color: white;
+    }
+
+    /* Quick Access Tools */
+    .tools-section {
+        padding: 4rem 0;
+        background: linear-gradient(180deg, transparent, rgba(227, 24, 55, 0.03), transparent);
+    }
+
+    .tool-card {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 20px;
+        padding: 1.75rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+        height: 100%;
+    }
+
+    .tool-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--philata-red);
+        background: rgba(227, 24, 55, 0.05);
+    }
+
+    .tool-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin: 0 auto 1rem;
+        background: linear-gradient(135deg, rgba(227, 24, 55, 0.2), rgba(227, 24, 55, 0.05));
+    }
+
+    .tool-icon i {
+        color: var(--philata-red-light);
+    }
+
+    .tool-name {
+        font-weight: 600;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+
+    .tool-desc {
+        font-size: 0.85rem;
+        color: var(--philata-text-muted);
+        margin: 0;
+    }
+
+    /* Category Grid */
+    .categories-section {
+        padding: 4rem 0;
+    }
+
+    .category-card {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 20px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+        height: 100%;
+    }
+
+    .category-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--cat-color, rgba(255,255,255,0.2));
+    }
+
+    .category-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .category-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+    }
+
+    .category-icon i {
+        color: var(--cat-color, var(--philata-red));
+    }
+
+    .category-title {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: white;
+        margin: 0;
+    }
+
+    .category-count {
+        font-size: 0.8rem;
+        color: var(--philata-text-muted);
+    }
+
+    .category-guides {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .category-guides li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .category-guides li:last-child {
+        border-bottom: none;
+    }
+
+    .category-guides a {
+        color: var(--philata-text);
+        text-decoration: none;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .category-guides a:hover {
+        color: var(--cat-color, var(--philata-red));
+    }
+
+    .category-guides a i {
+        font-size: 0.7rem;
+        color: var(--philata-text-muted);
+    }
+
+    /* Featured Guides */
+    .featured-section {
+        padding: 4rem 0;
+    }
+
+    .featured-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .featured-card {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+    }
+
+    .featured-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(255,255,255,0.2);
+    }
+
+    .featured-image {
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+    }
+
+    .featured-body {
+        padding: 1.25rem;
+    }
+
+    .featured-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 0.75rem;
+    }
+
+    .featured-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+    }
+
+    .featured-meta {
+        font-size: 0.8rem;
+        color: var(--philata-text-muted);
+    }
+
+    /* CTA Section */
+    .cta-section {
+        padding: 4rem 0;
+    }
+
+    .cta-card {
+        background: linear-gradient(135deg, var(--philata-card), rgba(227, 24, 55, 0.1));
+        border: 1px solid var(--philata-border);
+        border-radius: 24px;
+        padding: 3rem;
+        text-align: center;
+    }
+
+    .cta-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .cta-desc {
+        color: var(--philata-text-muted);
+        max-width: 500px;
+        margin: 0 auto 2rem;
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+        .hub-title {
+            font-size: 2.5rem;
+        }
+
+        .hub-stats {
+            justify-content: center;
+        }
+
+        .path-card {
+            padding: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hub-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h1 class="hub-title">
+                    <span class="gradient-text">Learning Hub</span><br>
+                    Your Immigration Education Center
+                </h1>
+                <p class="hub-subtitle">
+                    Master Canadian immigration with structured learning paths, comprehensive guides,
+                    and interactive tools. From beginners to advanced applicants.
+                </p>
+                <div class="hub-stats">
+                    <div class="hub-stat">
+                        <div class="hub-stat-value">50+</div>
+                        <div class="hub-stat-label">Guides</div>
+                    </div>
+                    <div class="hub-stat">
+                        <div class="hub-stat-value">6</div>
+                        <div class="hub-stat-label">Learning Paths</div>
+                    </div>
+                    <div class="hub-stat">
+                        <div class="hub-stat-value">13</div>
+                        <div class="hub-stat-label">Provinces</div>
+                    </div>
+                    <div class="hub-stat">
+                        <div class="hub-stat-value">100%</div>
+                        <div class="hub-stat-label">Free</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block text-center">
+                <div style="font-size: 8rem;">📚</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Learning Paths -->
+<section class="paths-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Choose Your <span class="gradient-text">Learning Path</span></h2>
+            <p class="section-subtitle">Select the path that matches your immigration goal. Each path includes all the guides and resources you need.</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Express Entry Path -->
+            <div class="col-lg-4 col-md-6">
+                <div class="path-card" style="--path-color: #E31837;">
+                    <div class="path-icon" style="background: linear-gradient(135deg, rgba(227, 24, 55, 0.2), rgba(227, 24, 55, 0.05));">
+                        ⚡
+                    </div>
+                    <h3 class="path-title">Express Entry Path</h3>
+                    <p class="path-desc">The fastest route to Canadian PR for skilled workers. Master CRS scoring, improve your points, and get your ITA.</p>
+                    <div class="path-meta">
+                        <span><i class="bi bi-book"></i> 8 Modules</span>
+                        <span><i class="bi bi-clock"></i> 2-3 hrs</span>
+                    </div>
+                    <ul class="path-modules">
+                        <li><i class="bi bi-check-circle-fill"></i> Express Entry Overview</li>
+                        <li><i class="bi bi-check-circle-fill"></i> CRS Score Calculator</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Language Tests (IELTS/CELPIP)</li>
+                        <li><i class="bi bi-check-circle-fill"></i> WES/ECA Evaluation</li>
+                        <li><i class="bi bi-check-circle-fill"></i> CRS Improvement Strategies</li>
+                    </ul>
+                    <a href="/guides/express-entry" class="path-btn" style="background: #E31837;">
+                        Start Learning <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Provincial Nominee Path -->
+            <div class="col-lg-4 col-md-6">
+                <div class="path-card" style="--path-color: #6366F1;">
+                    <div class="path-icon" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.05));">
+                        🍁
+                    </div>
+                    <h3 class="path-title">Provincial Nominee Path</h3>
+                    <p class="path-desc">Get nominated by a province for +600 CRS points. Explore streams for each province and find your best fit.</p>
+                    <div class="path-meta">
+                        <span><i class="bi bi-book"></i> 13 Provinces</span>
+                        <span><i class="bi bi-clock"></i> 3-4 hrs</span>
+                    </div>
+                    <ul class="path-modules">
+                        <li><i class="bi bi-check-circle-fill"></i> Ontario PNP Streams</li>
+                        <li><i class="bi bi-check-circle-fill"></i> BC PNP Programs</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Alberta Advantage</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Atlantic Immigration</li>
+                        <li><i class="bi bi-check-circle-fill"></i> All Province Guides</li>
+                    </ul>
+                    <a href="/guides/pnp" class="path-btn" style="background: #6366F1;">
+                        Explore Provinces <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Study Permit Path -->
+            <div class="col-lg-4 col-md-6">
+                <div class="path-card" style="--path-color: #10B981;">
+                    <div class="path-icon" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));">
+                        🎓
+                    </div>
+                    <h3 class="path-title">Study Permit Path</h3>
+                    <p class="path-desc">Study in Canada and build a pathway to PR. Learn about DLIs, study permits, PGWP, and more.</p>
+                    <div class="path-meta">
+                        <span><i class="bi bi-book"></i> 6 Modules</span>
+                        <span><i class="bi bi-clock"></i> 2 hrs</span>
+                    </div>
+                    <ul class="path-modules">
+                        <li><i class="bi bi-check-circle-fill"></i> IELTS Academic Guide</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Study Permit Application</li>
+                        <li><i class="bi bi-check-circle-fill"></i> DLI Selection</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Post-Graduation Work Permit</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Student to PR Pathway</li>
+                    </ul>
+                    <a href="/guides/language-tests/ielts-academic" class="path-btn" style="background: #10B981;">
+                        Begin Journey <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Work Permit Path -->
+            <div class="col-lg-4 col-md-6">
+                <div class="path-card" style="--path-color: #F59E0B;">
+                    <div class="path-icon" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.05));">
+                        💼
+                    </div>
+                    <h3 class="path-title">Work Permit Path</h3>
+                    <p class="path-desc">Get a Canadian work permit through LMIA or LMIA-exempt pathways. Build experience for PR.</p>
+                    <div class="path-meta">
+                        <span><i class="bi bi-book"></i> 5 Modules</span>
+                        <span><i class="bi bi-clock"></i> 1.5 hrs</span>
+                    </div>
+                    <ul class="path-modules">
+                        <li><i class="bi bi-check-circle-fill"></i> LMIA Process</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Open Work Permits</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Intra-Company Transfers</li>
+                        <li><i class="bi bi-check-circle-fill"></i> CUSMA/NAFTA</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Work to PR Pathways</li>
+                    </ul>
+                    <a href="/guides/forms" class="path-btn" style="background: #F59E0B;">
+                        Learn More <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Language Tests Path -->
+            <div class="col-lg-4 col-md-6">
+                <div class="path-card" style="--path-color: #8B5CF6;">
+                    <div class="path-icon" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.05));">
+                        📝
+                    </div>
+                    <h3 class="path-title">Language Tests Path</h3>
+                    <p class="path-desc">Master English and French tests. Improve your CLB score to maximize CRS points.</p>
+                    <div class="path-meta">
+                        <span><i class="bi bi-book"></i> 6 Tests</span>
+                        <span><i class="bi bi-clock"></i> 2-3 hrs</span>
+                    </div>
+                    <ul class="path-modules">
+                        <li><i class="bi bi-check-circle-fill"></i> IELTS General Training</li>
+                        <li><i class="bi bi-check-circle-fill"></i> IELTS Academic</li>
+                        <li><i class="bi bi-check-circle-fill"></i> CELPIP General</li>
+                        <li><i class="bi bi-check-circle-fill"></i> TEF/TCF Canada (French)</li>
+                        <li><i class="bi bi-check-circle-fill"></i> PTE Core</li>
+                    </ul>
+                    <a href="/guides/language-tests" class="path-btn" style="background: #8B5CF6;">
+                        Start Prep <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Forms & Applications Path -->
+            <div class="col-lg-4 col-md-6">
+                <div class="path-card" style="--path-color: #EC4899;">
+                    <div class="path-icon" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.05));">
+                        📋
+                    </div>
+                    <h3 class="path-title">Forms & Applications</h3>
+                    <p class="path-desc">Step-by-step guides for filling out IRCC forms correctly. Avoid common mistakes.</p>
+                    <div class="path-meta">
+                        <span><i class="bi bi-book"></i> 10+ Forms</span>
+                        <span><i class="bi bi-clock"></i> As needed</span>
+                    </div>
+                    <ul class="path-modules">
+                        <li><i class="bi bi-check-circle-fill"></i> IMM 0008 Generic Form</li>
+                        <li><i class="bi bi-check-circle-fill"></i> IMM 5669 Schedule A</li>
+                        <li><i class="bi bi-check-circle-fill"></i> IMM 5406 Family Info</li>
+                        <li><i class="bi bi-check-circle-fill"></i> IMM 5476 Representative</li>
+                        <li><i class="bi bi-check-circle-fill"></i> All Form Guides</li>
+                    </ul>
+                    <a href="/guides/forms" class="path-btn" style="background: #EC4899;">
+                        View Forms <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Access Tools -->
+<section class="tools-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Interactive <span class="gradient-text">Tools</span></h2>
+            <p class="section-subtitle">Use our free tools to calculate scores, check eligibility, and plan your immigration.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <a href="/tools/crs-calculator" class="tool-card">
+                    <div class="tool-icon">
+                        <i class="bi bi-calculator"></i>
+                    </div>
+                    <h4 class="tool-name">CRS Calculator</h4>
+                    <p class="tool-desc">Calculate your Express Entry CRS score instantly</p>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <a href="/guides/language-tests/ielts" class="tool-card">
+                    <div class="tool-icon">
+                        <i class="bi bi-table"></i>
+                    </div>
+                    <h4 class="tool-name">CLB Converter</h4>
+                    <p class="tool-desc">Convert IELTS/CELPIP scores to CLB levels</p>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <a href="/guides/express-entry" class="tool-card">
+                    <div class="tool-icon">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <h4 class="tool-name">Score Improvement</h4>
+                    <p class="tool-desc">Strategies to boost your CRS score</p>
+                </a>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <a href="/guides/pnp" class="tool-card">
+                    <div class="tool-icon">
+                        <i class="bi bi-geo-alt"></i>
+                    </div>
+                    <h4 class="tool-name">Province Finder</h4>
+                    <p class="tool-desc">Find the best province for your profile</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Browse by Category -->
+<section class="categories-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Browse by <span class="gradient-text">Category</span></h2>
+            <p class="section-subtitle">Explore all our guides organized by topic</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Language Tests -->
+            <div class="col-lg-4 col-md-6">
+                <div class="category-card" style="--cat-color: #6366F1;">
+                    <div class="category-header">
+                        <div class="category-icon" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.05));">
+                            <i class="bi bi-translate"></i>
+                        </div>
+                        <div>
+                            <h4 class="category-title">Language Tests</h4>
+                            <span class="category-count">6 guides</span>
+                        </div>
+                    </div>
+                    <ul class="category-guides">
+                        <li><a href="/guides/language-tests/ielts"><i class="bi bi-arrow-right"></i> IELTS General Training</a></li>
+                        <li><a href="/guides/language-tests/ielts-academic"><i class="bi bi-arrow-right"></i> IELTS Academic</a></li>
+                        <li><a href="/guides/language-tests/celpip"><i class="bi bi-arrow-right"></i> CELPIP General</a></li>
+                        <li><a href="/guides/language-tests/pte-core"><i class="bi bi-arrow-right"></i> PTE Core</a></li>
+                        <li><a href="/guides/language-tests/tef-canada"><i class="bi bi-arrow-right"></i> TEF Canada</a></li>
+                        <li><a href="/guides/language-tests/tcf-canada"><i class="bi bi-arrow-right"></i> TCF Canada</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Express Entry -->
+            <div class="col-lg-4 col-md-6">
+                <div class="category-card" style="--cat-color: #E31837;">
+                    <div class="category-header">
+                        <div class="category-icon" style="background: linear-gradient(135deg, rgba(227, 24, 55, 0.2), rgba(227, 24, 55, 0.05));">
+                            <i class="bi bi-lightning"></i>
+                        </div>
+                        <div>
+                            <h4 class="category-title">Express Entry</h4>
+                            <span class="category-count">3 guides</span>
+                        </div>
+                    </div>
+                    <ul class="category-guides">
+                        <li><a href="/guides/express-entry/express-entry-overview"><i class="bi bi-arrow-right"></i> Complete Overview</a></li>
+                        <li><a href="/tools/crs-calculator"><i class="bi bi-arrow-right"></i> CRS Calculator</a></li>
+                        <li><a href="/guides/express-entry"><i class="bi bi-arrow-right"></i> All Express Entry Guides</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Credentials -->
+            <div class="col-lg-4 col-md-6">
+                <div class="category-card" style="--cat-color: #10B981;">
+                    <div class="category-header">
+                        <div class="category-icon" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));">
+                            <i class="bi bi-mortarboard"></i>
+                        </div>
+                        <div>
+                            <h4 class="category-title">Credential Evaluation</h4>
+                            <span class="category-count">2 guides</span>
+                        </div>
+                    </div>
+                    <ul class="category-guides">
+                        <li><a href="/guides/credentials/wes"><i class="bi bi-arrow-right"></i> WES Evaluation</a></li>
+                        <li><a href="/guides/credentials/iqas"><i class="bi bi-arrow-right"></i> IQAS Evaluation</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Provincial Programs -->
+            <div class="col-lg-4 col-md-6">
+                <div class="category-card" style="--cat-color: #F59E0B;">
+                    <div class="category-header">
+                        <div class="category-icon" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.05));">
+                            <i class="bi bi-map"></i>
+                        </div>
+                        <div>
+                            <h4 class="category-title">Provincial Programs</h4>
+                            <span class="category-count">10 provinces</span>
+                        </div>
+                    </div>
+                    <ul class="category-guides">
+                        <li><a href="/guides/pnp/ontario"><i class="bi bi-arrow-right"></i> Ontario PNP</a></li>
+                        <li><a href="/guides/pnp/british-columbia"><i class="bi bi-arrow-right"></i> BC PNP</a></li>
+                        <li><a href="/guides/pnp/alberta"><i class="bi bi-arrow-right"></i> Alberta AAIP</a></li>
+                        <li><a href="/guides/pnp/atlantic"><i class="bi bi-arrow-right"></i> Atlantic Immigration</a></li>
+                        <li><a href="/guides/pnp"><i class="bi bi-arrow-right"></i> All Provinces →</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Forms -->
+            <div class="col-lg-4 col-md-6">
+                <div class="category-card" style="--cat-color: #EC4899;">
+                    <div class="category-header">
+                        <div class="category-icon" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.05));">
+                            <i class="bi bi-file-earmark-text"></i>
+                        </div>
+                        <div>
+                            <h4 class="category-title">Immigration Forms</h4>
+                            <span class="category-count">5 guides</span>
+                        </div>
+                    </div>
+                    <ul class="category-guides">
+                        <li><a href="/guides/forms/imm-0008"><i class="bi bi-arrow-right"></i> IMM 0008 Generic</a></li>
+                        <li><a href="/guides/forms/imm-5669"><i class="bi bi-arrow-right"></i> IMM 5669 Schedule A</a></li>
+                        <li><a href="/guides/forms/imm-5406"><i class="bi bi-arrow-right"></i> IMM 5406 Family Info</a></li>
+                        <li><a href="/guides/forms/imm-5476"><i class="bi bi-arrow-right"></i> IMM 5476 Representative</a></li>
+                        <li><a href="/guides/forms"><i class="bi bi-arrow-right"></i> All Forms →</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- News & Updates -->
+            <div class="col-lg-4 col-md-6">
+                <div class="category-card" style="--cat-color: #8B5CF6;">
+                    <div class="category-header">
+                        <div class="category-icon" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.05));">
+                            <i class="bi bi-newspaper"></i>
+                        </div>
+                        <div>
+                            <h4 class="category-title">News & Updates</h4>
+                            <span class="category-count">Daily updates</span>
+                        </div>
+                    </div>
+                    <ul class="category-guides">
+                        <li><a href="/dashboard"><i class="bi bi-arrow-right"></i> Breaking News</a></li>
+                        <li><a href="/dashboard"><i class="bi bi-arrow-right"></i> Express Entry Draws</a></li>
+                        <li><a href="/dashboard"><i class="bi bi-arrow-right"></i> Policy Changes</a></li>
+                        <li><a href="/dashboard"><i class="bi bi-arrow-right"></i> Processing Times</a></li>
+                        <li><a href="/dashboard"><i class="bi bi-arrow-right"></i> All News →</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-card">
+            <h2 class="cta-title">Ready to Start Your <span class="gradient-text">Canadian Journey</span>?</h2>
+            <p class="cta-desc">
+                Begin with our CRS Calculator to see where you stand, then follow a learning path to maximize your chances.
+            </p>
+            <div class="cta-buttons">
+                <a href="/tools/crs-calculator" class="btn btn-primary btn-lg">
+                    <i class="bi bi-calculator me-2"></i>Calculate CRS Score
+                </a>
+                <a href="/guides" class="btn btn-outline-light btn-lg">
+                    <i class="bi bi-book me-2"></i>Browse All Guides
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

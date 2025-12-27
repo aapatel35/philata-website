@@ -152,6 +152,18 @@ def crs_calculator():
     return render_template('crs_calculator.html')
 
 
+@app.route('/learn')
+def learning_hub():
+    """Learning Hub - Immigration Education Center"""
+    return render_template('learning_hub.html')
+
+
+@app.route('/practice-tests')
+def practice_tests():
+    """Practice Tests for Language Exams"""
+    return render_template('practice_tests.html')
+
+
 @app.route('/dashboard')
 def dashboard():
     """Content dashboard"""

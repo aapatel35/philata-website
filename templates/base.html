@@ -508,7 +508,7 @@
                         <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if '/guides' in request.path %}active{% endif %}" href="/guides">Guides</a>
+                        <a class="nav-link {% if '/learn' in request.path or '/guides' in request.path or '/practice' in request.path %}active{% endif %}" href="/learn">Learn</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if '/dashboard' in request.path %}active{% endif %}" href="/dashboard">News</a>
@@ -517,10 +517,10 @@
                         <a class="nav-link {% if '/tools/crs-calculator' in request.path %}active{% endif %}" href="/tools/crs-calculator">CRS Calculator</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/about' %}active{% endif %}" href="/about">About</a>
+                        <a class="nav-link {% if '/practice-tests' in request.path %}active{% endif %}" href="/practice-tests">Practice Tests</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/contact' %}active{% endif %}" href="/contact">Contact</a>
+                        <a class="nav-link {% if request.path == '/about' %}active{% endif %}" href="/about">About</a>
                     </li>
                 </ul>
                 <a href="/dashboard" class="btn btn-nav-cta d-none d-lg-block">

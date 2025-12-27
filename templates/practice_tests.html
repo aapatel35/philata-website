@@ -1,0 +1,1087 @@
+{% extends "base.html" %}
+
+{% block title %}Practice Tests - Free Language Test Preparation{% endblock %}
+
+{% block extra_css %}
+<style>
+    .practice-hero {
+        padding: 6rem 0 4rem;
+        position: relative;
+    }
+
+    .practice-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(ellipse at top right, rgba(99, 102, 241, 0.15) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    .practice-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+    }
+
+    .practice-subtitle {
+        font-size: 1.2rem;
+        color: var(--philata-text-muted);
+        max-width: 600px;
+    }
+
+    /* Test Selector Tabs */
+    .test-tabs {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+        padding: 0.5rem;
+        background: var(--philata-card);
+        border-radius: 16px;
+        border: 1px solid var(--philata-border);
+    }
+
+    .test-tab {
+        padding: 0.875rem 1.5rem;
+        border-radius: 12px;
+        border: none;
+        background: transparent;
+        color: var(--philata-text-muted);
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .test-tab:hover {
+        color: white;
+        background: rgba(255,255,255,0.05);
+    }
+
+    .test-tab.active {
+        background: var(--philata-red);
+        color: white;
+    }
+
+    .test-tab .test-icon {
+        font-size: 1.25rem;
+    }
+
+    /* Section Cards */
+    .section-card {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 20px;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+    }
+
+    .section-header {
+        background: rgba(255,255,255,0.03);
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--philata-border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: white;
+        margin: 0;
+    }
+
+    .section-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+
+    .section-badge {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10B981;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .section-body {
+        padding: 1.5rem;
+    }
+
+    /* Practice Item */
+    .practice-item {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--philata-border);
+        border-radius: 14px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .practice-item:hover {
+        border-color: rgba(255,255,255,0.15);
+        background: rgba(255,255,255,0.04);
+    }
+
+    .practice-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .practice-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+    }
+
+    .practice-name {
+        font-weight: 600;
+        color: white;
+        font-size: 1rem;
+    }
+
+    .practice-type {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .practice-type.listening {
+        background: rgba(99, 102, 241, 0.15);
+        color: #818CF8;
+    }
+
+    .practice-type.reading {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34D399;
+    }
+
+    .practice-type.writing {
+        background: rgba(245, 158, 11, 0.15);
+        color: #FBBF24;
+    }
+
+    .practice-type.speaking {
+        background: rgba(236, 72, 153, 0.15);
+        color: #F472B6;
+    }
+
+    .practice-desc {
+        color: var(--philata-text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .practice-meta {
+        display: flex;
+        gap: 1.5rem;
+        font-size: 0.85rem;
+        color: var(--philata-text-muted);
+    }
+
+    .practice-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    /* Sample Questions */
+    .sample-question {
+        background: rgba(0,0,0,0.2);
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin-top: 1rem;
+    }
+
+    .question-label {
+        font-size: 0.8rem;
+        color: var(--philata-red-light);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .question-text {
+        color: var(--philata-text);
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 1rem;
+    }
+
+    .question-options {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .question-options li {
+        padding: 0.5rem 0;
+        color: var(--philata-text);
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .option-letter {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .option-letter.correct {
+        background: rgba(16, 185, 129, 0.3);
+        color: #10B981;
+    }
+
+    /* Audio Player Placeholder */
+    .audio-player {
+        background: rgba(99, 102, 241, 0.1);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        border-radius: 12px;
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .audio-player i {
+        font-size: 2rem;
+        color: #818CF8;
+    }
+
+    .audio-info {
+        flex: 1;
+    }
+
+    .audio-title {
+        font-weight: 600;
+        color: white;
+        font-size: 0.9rem;
+    }
+
+    .audio-duration {
+        font-size: 0.8rem;
+        color: var(--philata-text-muted);
+    }
+
+    /* Writing Prompt */
+    .writing-prompt {
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 12px;
+        padding: 1.25rem;
+    }
+
+    .prompt-label {
+        font-size: 0.8rem;
+        color: #FBBF24;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .prompt-text {
+        color: var(--philata-text);
+        line-height: 1.7;
+        font-size: 0.95rem;
+    }
+
+    /* Tips Box */
+    .tips-box {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), transparent);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin-top: 1rem;
+    }
+
+    .tips-title {
+        font-weight: 600;
+        color: #34D399;
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .tips-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .tips-list li {
+        padding: 0.35rem 0;
+        font-size: 0.9rem;
+        color: var(--philata-text);
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .tips-list li i {
+        color: #34D399;
+        margin-top: 4px;
+        font-size: 0.75rem;
+    }
+
+    /* Test Content Panels */
+    .test-content {
+        display: none;
+    }
+
+    .test-content.active {
+        display: block;
+    }
+
+    /* Resources */
+    .resources-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .resource-card {
+        background: var(--philata-card);
+        border: 1px solid var(--philata-border);
+        border-radius: 14px;
+        padding: 1.25rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .resource-card:hover {
+        border-color: var(--philata-red);
+        transform: translateY(-3px);
+    }
+
+    .resource-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(227, 24, 55, 0.2), rgba(227, 24, 55, 0.05));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .resource-name {
+        font-weight: 600;
+        color: white;
+        margin-bottom: 0.25rem;
+    }
+
+    .resource-desc {
+        font-size: 0.85rem;
+        color: var(--philata-text-muted);
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        .practice-title {
+            font-size: 2rem;
+        }
+
+        .test-tabs {
+            justify-content: center;
+        }
+
+        .test-tab {
+            flex: 1;
+            justify-content: center;
+            min-width: 100px;
+        }
+
+        .practice-meta {
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="practice-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="practice-title">
+                    Free <span class="gradient-text">Practice Tests</span>
+                </h1>
+                <p class="practice-subtitle">
+                    Prepare for IELTS, CELPIP, PTE, TEF, and TCF with our free sample questions, practice exercises, and expert tips. Similar to IELTS Liz but for all tests!
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="pb-5">
+    <div class="container">
+        <!-- Test Selector Tabs -->
+        <div class="test-tabs">
+            <button class="test-tab active" data-test="ielts">
+                <span class="test-icon">🎓</span> IELTS
+            </button>
+            <button class="test-tab" data-test="celpip">
+                <span class="test-icon">🍁</span> CELPIP
+            </button>
+            <button class="test-tab" data-test="pte">
+                <span class="test-icon">💻</span> PTE Core
+            </button>
+            <button class="test-tab" data-test="tef">
+                <span class="test-icon">🇫🇷</span> TEF Canada
+            </button>
+            <button class="test-tab" data-test="tcf">
+                <span class="test-icon">🎯</span> TCF Canada
+            </button>
+        </div>
+
+        <!-- IELTS Content -->
+        <div class="test-content active" id="ielts-content">
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Listening Practice -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <div class="section-icon" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.05));">
+                                    <i class="bi bi-headphones" style="color: #818CF8;"></i>
+                                </div>
+                                Listening Practice
+                            </h3>
+                            <span class="section-badge">4 Sections</span>
+                        </div>
+                        <div class="section-body">
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">Section 1: Everyday Conversation</span>
+                                    <span class="practice-type listening">Listening</span>
+                                </div>
+                                <p class="practice-desc">A conversation between two people in an everyday social context. Practice completing forms, notes, and tables.</p>
+                                <div class="audio-player">
+                                    <i class="bi bi-play-circle-fill"></i>
+                                    <div class="audio-info">
+                                        <div class="audio-title">Sample: Hotel Booking Conversation</div>
+                                        <div class="audio-duration">Duration: 5:30</div>
+                                    </div>
+                                </div>
+                                <div class="sample-question">
+                                    <div class="question-label">Sample Question - Form Completion</div>
+                                    <p class="question-text">Complete the booking form. Write NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.</p>
+                                    <p class="question-text">Guest Name: Sarah _______<br>
+                                    Room Type: _______ with sea view<br>
+                                    Check-in Date: _______ March<br>
+                                    Special Request: Extra _______</p>
+                                </div>
+                                <div class="tips-box">
+                                    <div class="tips-title"><i class="bi bi-lightbulb"></i> Pro Tips</div>
+                                    <ul class="tips-list">
+                                        <li><i class="bi bi-check"></i> Read questions before audio plays</li>
+                                        <li><i class="bi bi-check"></i> Listen for spelling of names and numbers</li>
+                                        <li><i class="bi bi-check"></i> Watch for word limits in instructions</li>
+                                    </ul>
+                                </div>
+                                <div class="practice-meta mt-3">
+                                    <span><i class="bi bi-clock"></i> 10 questions</span>
+                                    <span><i class="bi bi-bar-chart"></i> Difficulty: Easy</span>
+                                </div>
+                            </div>
+
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">Section 3: Academic Discussion</span>
+                                    <span class="practice-type listening">Listening</span>
+                                </div>
+                                <p class="practice-desc">A conversation between up to 4 people in an academic context. Practice multiple choice and matching questions.</p>
+                                <div class="sample-question">
+                                    <div class="question-label">Sample Question - Multiple Choice</div>
+                                    <p class="question-text">What is the main topic of the students' discussion?</p>
+                                    <ul class="question-options">
+                                        <li><span class="option-letter">A</span> Research methodology</li>
+                                        <li><span class="option-letter correct">B</span> Environmental sustainability</li>
+                                        <li><span class="option-letter">C</span> Economic policies</li>
+                                        <li><span class="option-letter">D</span> Urban development</li>
+                                    </ul>
+                                </div>
+                                <div class="practice-meta mt-3">
+                                    <span><i class="bi bi-clock"></i> 10 questions</span>
+                                    <span><i class="bi bi-bar-chart"></i> Difficulty: Medium-Hard</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reading Practice -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <div class="section-icon" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));">
+                                    <i class="bi bi-book" style="color: #34D399;"></i>
+                                </div>
+                                Reading Practice
+                            </h3>
+                            <span class="section-badge">3 Passages</span>
+                        </div>
+                        <div class="section-body">
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">True/False/Not Given Questions</span>
+                                    <span class="practice-type reading">Reading</span>
+                                </div>
+                                <p class="practice-desc">Determine whether statements agree with the information in the text, contradict it, or if there is no information about it.</p>
+                                <div class="sample-question">
+                                    <div class="question-label">Sample Passage (excerpt)</div>
+                                    <p class="question-text" style="font-style: italic;">"The Canadian immigration system has undergone significant changes over the past decade. Express Entry, introduced in 2015, revolutionized how skilled workers apply for permanent residence. The system uses a points-based ranking called the Comprehensive Ranking System (CRS)..."</p>
+                                    <div class="question-label mt-3">Questions</div>
+                                    <p class="question-text">1. Express Entry was implemented before 2015. <strong>(FALSE)</strong><br>
+                                    2. The CRS is used to rank candidates. <strong>(TRUE)</strong><br>
+                                    3. All provinces use the same immigration criteria. <strong>(NOT GIVEN)</strong></p>
+                                </div>
+                                <div class="tips-box">
+                                    <div class="tips-title"><i class="bi bi-lightbulb"></i> Key Strategy</div>
+                                    <ul class="tips-list">
+                                        <li><i class="bi bi-check"></i> FALSE = Information contradicts the passage</li>
+                                        <li><i class="bi bi-check"></i> NOT GIVEN = Information is not in the passage at all</li>
+                                        <li><i class="bi bi-check"></i> Don't use your own knowledge - only use the text</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">Matching Headings</span>
+                                    <span class="practice-type reading">Reading</span>
+                                </div>
+                                <p class="practice-desc">Match the correct heading to each paragraph. This tests your ability to identify the main idea of each section.</p>
+                                <div class="sample-question">
+                                    <div class="question-label">List of Headings</div>
+                                    <p class="question-text">i. Economic benefits of immigration<br>
+                                    ii. Historical patterns of migration<br>
+                                    iii. Challenges in the integration process<br>
+                                    iv. Future trends and predictions<br>
+                                    v. Government policy changes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Writing Practice -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <div class="section-icon" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.05));">
+                                    <i class="bi bi-pencil" style="color: #FBBF24;"></i>
+                                </div>
+                                Writing Practice
+                            </h3>
+                            <span class="section-badge">2 Tasks</span>
+                        </div>
+                        <div class="section-body">
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">Task 1: Letter Writing (General Training)</span>
+                                    <span class="practice-type writing">Writing</span>
+                                </div>
+                                <p class="practice-desc">Write a letter of at least 150 words. The letter can be formal, semi-formal, or informal depending on the situation.</p>
+                                <div class="writing-prompt">
+                                    <div class="prompt-label">Sample Task</div>
+                                    <p class="prompt-text">You recently moved to a new city. Write a letter to a friend telling them about your new home. In your letter:<br><br>
+                                    - Describe your new home<br>
+                                    - Explain what you like about the area<br>
+                                    - Invite your friend to visit you</p>
+                                </div>
+                                <div class="tips-box">
+                                    <div class="tips-title"><i class="bi bi-lightbulb"></i> Structure Guide</div>
+                                    <ul class="tips-list">
+                                        <li><i class="bi bi-check"></i> Opening: Dear [Name],</li>
+                                        <li><i class="bi bi-check"></i> Purpose paragraph</li>
+                                        <li><i class="bi bi-check"></i> Details paragraph</li>
+                                        <li><i class="bi bi-check"></i> Closing: Looking forward to hearing from you</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">Task 2: Essay Writing</span>
+                                    <span class="practice-type writing">Writing</span>
+                                </div>
+                                <p class="practice-desc">Write an essay of at least 250 words. You should present a clear position and support it with reasons and examples.</p>
+                                <div class="writing-prompt">
+                                    <div class="prompt-label">Sample Task</div>
+                                    <p class="prompt-text">Some people believe that immigration benefits the economy, while others think it creates challenges for local workers.<br><br>
+                                    Discuss both views and give your own opinion.</p>
+                                </div>
+                                <div class="practice-meta mt-3">
+                                    <span><i class="bi bi-clock"></i> 40 minutes recommended</span>
+                                    <span><i class="bi bi-file-text"></i> 250+ words</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Speaking Practice -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <div class="section-icon" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.05));">
+                                    <i class="bi bi-mic" style="color: #F472B6;"></i>
+                                </div>
+                                Speaking Practice
+                            </h3>
+                            <span class="section-badge">3 Parts</span>
+                        </div>
+                        <div class="section-body">
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">Part 1: Introduction Questions</span>
+                                    <span class="practice-type speaking">Speaking</span>
+                                </div>
+                                <p class="practice-desc">Answer questions about yourself and familiar topics. Speak naturally for about 4-5 minutes.</p>
+                                <div class="sample-question">
+                                    <div class="question-label">Sample Questions - Topic: Work</div>
+                                    <p class="question-text">1. What kind of work do you do?<br>
+                                    2. Why did you choose this job?<br>
+                                    3. Do you prefer working alone or with others?<br>
+                                    4. What would be your ideal job?</p>
+                                </div>
+                            </div>
+
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">Part 2: Long Turn (Cue Card)</span>
+                                    <span class="practice-type speaking">Speaking</span>
+                                </div>
+                                <p class="practice-desc">Speak for 1-2 minutes on a given topic. You have 1 minute to prepare.</p>
+                                <div class="writing-prompt">
+                                    <div class="prompt-label">Sample Cue Card</div>
+                                    <p class="prompt-text"><strong>Describe a place you would like to visit in Canada.</strong><br><br>
+                                    You should say:<br>
+                                    - Where it is<br>
+                                    - How you know about this place<br>
+                                    - What you would do there<br>
+                                    - And explain why you want to visit this place</p>
+                                </div>
+                            </div>
+
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">Part 3: Discussion</span>
+                                    <span class="practice-type speaking">Speaking</span>
+                                </div>
+                                <p class="practice-desc">Discuss abstract ideas related to the Part 2 topic. Show your ability to analyze and express opinions.</p>
+                                <div class="sample-question">
+                                    <div class="question-label">Sample Questions - Topic: Travel & Tourism</div>
+                                    <p class="question-text">1. How has tourism changed in recent years?<br>
+                                    2. What are the benefits and drawbacks of tourism for local communities?<br>
+                                    3. Do you think virtual travel experiences will replace real travel?<br>
+                                    4. How can governments balance tourism with environmental protection?</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <div class="section-card" style="position: sticky; top: 100px;">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <i class="bi bi-link-45deg"></i>
+                                IELTS Resources
+                            </h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="resources-grid" style="grid-template-columns: 1fr;">
+                                <a href="/guides/language-tests/ielts" class="resource-card">
+                                    <div class="resource-icon">📘</div>
+                                    <div class="resource-name">IELTS General Guide</div>
+                                    <p class="resource-desc">Complete preparation guide with CLB conversion</p>
+                                </a>
+                                <a href="/guides/language-tests/ielts-academic" class="resource-card">
+                                    <div class="resource-icon">📚</div>
+                                    <div class="resource-name">IELTS Academic Guide</div>
+                                    <p class="resource-desc">For study permits and university admission</p>
+                                </a>
+                                <a href="https://ielts.org" target="_blank" class="resource-card">
+                                    <div class="resource-icon">🌐</div>
+                                    <div class="resource-name">Official IELTS Website</div>
+                                    <p class="resource-desc">Book your test and access official materials</p>
+                                </a>
+                                <a href="https://ieltsliz.com" target="_blank" class="resource-card">
+                                    <div class="resource-icon">👩‍🏫</div>
+                                    <div class="resource-name">IELTS Liz</div>
+                                    <p class="resource-desc">Free lessons and tips from a former examiner</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CELPIP Content -->
+        <div class="test-content" id="celpip-content">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <div class="section-icon" style="background: linear-gradient(135deg, rgba(227, 24, 55, 0.2), rgba(227, 24, 55, 0.05));">
+                                    🍁
+                                </div>
+                                CELPIP Practice Materials
+                            </h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">Listening: Conversation in Context</span>
+                                    <span class="practice-type listening">Listening</span>
+                                </div>
+                                <p class="practice-desc">Listen to a conversation in a Canadian workplace or social setting. Answer questions about the main ideas and specific details.</p>
+                                <div class="sample-question">
+                                    <div class="question-label">Sample Question Type</div>
+                                    <p class="question-text">You will hear a conversation between a manager and employee about a project deadline. Listen and answer:<br><br>
+                                    What is the main concern of the employee?<br>
+                                    A) The budget is too small<br>
+                                    B) The timeline is too short<br>
+                                    C) The team is understaffed<br>
+                                    D) The requirements are unclear</p>
+                                </div>
+                                <div class="tips-box">
+                                    <div class="tips-title"><i class="bi bi-lightbulb"></i> CELPIP Advantage</div>
+                                    <ul class="tips-list">
+                                        <li><i class="bi bi-check"></i> All Canadian accents - no British/Australian confusion</li>
+                                        <li><i class="bi bi-check"></i> Computer-based - type your answers</li>
+                                        <li><i class="bi bi-check"></i> Results in 4-5 business days</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">Writing: Email Response</span>
+                                    <span class="practice-type writing">Writing</span>
+                                </div>
+                                <p class="practice-desc">Write an email responding to a given situation. Common topics include workplace issues, community matters, or personal situations.</p>
+                                <div class="writing-prompt">
+                                    <div class="prompt-label">Sample Task</div>
+                                    <p class="prompt-text">Your neighbour's dog has been barking loudly at night, disturbing your sleep. Write an email to your neighbour:<br><br>
+                                    - Explain the problem<br>
+                                    - Describe how it affects you<br>
+                                    - Suggest a solution</p>
+                                </div>
+                            </div>
+
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">Speaking: Giving Advice</span>
+                                    <span class="practice-type speaking">Speaking</span>
+                                </div>
+                                <p class="practice-desc">Record your response giving advice to someone in a particular situation. Speak clearly into the microphone.</p>
+                                <div class="sample-question">
+                                    <div class="question-label">Sample Prompt</div>
+                                    <p class="question-text">A friend is thinking about moving to a new city for a job. They are unsure whether to accept the offer. Give them advice about what they should consider when making this decision.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <i class="bi bi-link-45deg"></i>
+                                CELPIP Resources
+                            </h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="resources-grid" style="grid-template-columns: 1fr;">
+                                <a href="/guides/language-tests/celpip" class="resource-card">
+                                    <div class="resource-icon">📘</div>
+                                    <div class="resource-name">CELPIP Complete Guide</div>
+                                    <p class="resource-desc">Everything you need to know about CELPIP</p>
+                                </a>
+                                <a href="https://www.celpip.ca" target="_blank" class="resource-card">
+                                    <div class="resource-icon">🌐</div>
+                                    <div class="resource-name">Official CELPIP Website</div>
+                                    <p class="resource-desc">Book your test and free practice materials</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PTE Content -->
+        <div class="test-content" id="pte-content">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <div class="section-icon" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));">
+                                    💻
+                                </div>
+                                PTE Core Practice Materials
+                            </h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">Read Aloud</span>
+                                    <span class="practice-type speaking">Speaking</span>
+                                </div>
+                                <p class="practice-desc">Read a text aloud. Your pronunciation, fluency, and oral fluency are assessed by AI.</p>
+                                <div class="sample-question">
+                                    <div class="question-label">Sample Text</div>
+                                    <p class="question-text" style="font-style: italic;">"Canada's Express Entry system has transformed the way skilled workers immigrate to the country. By using a points-based ranking system, the government can efficiently select candidates who will contribute to the Canadian economy and society."</p>
+                                </div>
+                            </div>
+
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">Summarize Written Text</span>
+                                    <span class="practice-type writing">Writing</span>
+                                </div>
+                                <p class="practice-desc">Read a passage and write a one-sentence summary of 5-75 words. Tests both reading and writing skills.</p>
+                                <div class="tips-box">
+                                    <div class="tips-title"><i class="bi bi-lightbulb"></i> PTE Core Tips</div>
+                                    <ul class="tips-list">
+                                        <li><i class="bi bi-check"></i> Accepted for Canadian immigration since 2023</li>
+                                        <li><i class="bi bi-check"></i> Fully computer-based with AI scoring</li>
+                                        <li><i class="bi bi-check"></i> Results typically in 2 business days</li>
+                                        <li><i class="bi bi-check"></i> Direct CLB score on your result</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <i class="bi bi-link-45deg"></i>
+                                PTE Resources
+                            </h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="resources-grid" style="grid-template-columns: 1fr;">
+                                <a href="/guides/language-tests/pte-core" class="resource-card">
+                                    <div class="resource-icon">📘</div>
+                                    <div class="resource-name">PTE Core Complete Guide</div>
+                                    <p class="resource-desc">Full guide with CLB conversion tables</p>
+                                </a>
+                                <a href="https://www.pearsonpte.com" target="_blank" class="resource-card">
+                                    <div class="resource-icon">🌐</div>
+                                    <div class="resource-name">Official PTE Website</div>
+                                    <p class="resource-desc">Book your test and access practice materials</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TEF Content -->
+        <div class="test-content" id="tef-content">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <div class="section-icon" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.05));">
+                                    🇫🇷
+                                </div>
+                                TEF Canada Practice Materials
+                            </h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">Compréhension Orale (Listening)</span>
+                                    <span class="practice-type listening">Écoute</span>
+                                </div>
+                                <p class="practice-desc">Écoutez des conversations et des annonces en français canadien. Répondez aux questions de compréhension.</p>
+                                <div class="sample-question">
+                                    <div class="question-label">Exemple de Question</div>
+                                    <p class="question-text">Vous entendez une annonce dans un aéroport. De quoi s'agit-il?<br><br>
+                                    A) Un retard de vol<br>
+                                    B) Un changement de porte d'embarquement<br>
+                                    C) Une annulation de vol<br>
+                                    D) Un appel pour un passager</p>
+                                </div>
+                            </div>
+
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">Expression Écrite (Writing)</span>
+                                    <span class="practice-type writing">Écriture</span>
+                                </div>
+                                <p class="practice-desc">Rédigez des textes en français pour des situations variées: lettres, courriels, articles d'opinion.</p>
+                                <div class="tips-box">
+                                    <div class="tips-title"><i class="bi bi-lightbulb"></i> Bonus Points</div>
+                                    <ul class="tips-list">
+                                        <li><i class="bi bi-check"></i> French ability gives +25-50 CRS bonus points</li>
+                                        <li><i class="bi bi-check"></i> NCLC 7+ in all abilities for bonus</li>
+                                        <li><i class="bi bi-check"></i> French-speaking draws have lower cut-offs</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <i class="bi bi-link-45deg"></i>
+                                TEF Resources
+                            </h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="resources-grid" style="grid-template-columns: 1fr;">
+                                <a href="/guides/language-tests/tef-canada" class="resource-card">
+                                    <div class="resource-icon">📘</div>
+                                    <div class="resource-name">TEF Canada Guide</div>
+                                    <p class="resource-desc">Complete guide with NCLC conversion</p>
+                                </a>
+                                <a href="https://www.lefrancaisdesaffaires.fr/tests-diplomes/test-evaluation-francais-tef/" target="_blank" class="resource-card">
+                                    <div class="resource-icon">🌐</div>
+                                    <div class="resource-name">Official TEF Website</div>
+                                    <p class="resource-desc">Test registration and preparation</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TCF Content -->
+        <div class="test-content" id="tcf-content">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <div class="section-icon" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.05));">
+                                    🎯
+                                </div>
+                                TCF Canada Practice Materials
+                            </h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">Structure et Vocabulaire</span>
+                                    <span class="practice-type reading">Lecture</span>
+                                </div>
+                                <p class="practice-desc">Testez votre maîtrise de la grammaire et du vocabulaire français à travers des exercices à choix multiples.</p>
+                                <div class="sample-question">
+                                    <div class="question-label">Exemple</div>
+                                    <p class="question-text">Complétez la phrase: "Si j'avais su, je _______ plus tôt."<br><br>
+                                    A) serais venu<br>
+                                    B) viendrai<br>
+                                    C) viendrais<br>
+                                    D) suis venu</p>
+                                </div>
+                            </div>
+
+                            <div class="practice-item">
+                                <div class="practice-title-row">
+                                    <span class="practice-name">Expression Orale (Speaking)</span>
+                                    <span class="practice-type speaking">Oral</span>
+                                </div>
+                                <p class="practice-desc">Pratiquez les trois tâches d'expression orale: entretien dirigé, exercice en interaction, et expression d'un point de vue.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <i class="bi bi-link-45deg"></i>
+                                TCF Resources
+                            </h3>
+                        </div>
+                        <div class="section-body">
+                            <div class="resources-grid" style="grid-template-columns: 1fr;">
+                                <a href="/guides/language-tests/tcf-canada" class="resource-card">
+                                    <div class="resource-icon">📘</div>
+                                    <div class="resource-name">TCF Canada Guide</div>
+                                    <p class="resource-desc">Complete guide with NCLC conversion</p>
+                                </a>
+                                <a href="https://www.france-education-international.fr/tcf-canada" target="_blank" class="resource-card">
+                                    <div class="resource-icon">🌐</div>
+                                    <div class="resource-name">Official TCF Website</div>
+                                    <p class="resource-desc">Test centers and registration</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Test Tab Switching
+    const testTabs = document.querySelectorAll('.test-tab');
+    const testContents = document.querySelectorAll('.test-content');
+
+    testTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Remove active from all tabs
+            testTabs.forEach(t => t.classList.remove('active'));
+            // Add active to clicked tab
+            this.classList.add('active');
+
+            // Hide all content
+            testContents.forEach(content => content.classList.remove('active'));
+
+            // Show selected content
+            const testId = this.dataset.test;
+            document.getElementById(testId + '-content').classList.add('active');
+        });
+    });
+</script>
+{% endblock %}
