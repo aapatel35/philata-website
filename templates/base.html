@@ -955,19 +955,28 @@
 
     <!-- Splash Screen Script -->
     <script>
-        // Hide splash screen after animation completes
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                const splash = document.getElementById('splashScreen');
-                if (splash) {
-                    splash.classList.add('fade-out');
-                    // Remove from DOM after fade
+        // Only show splash screen on first visit (per session)
+        (function() {
+            const splash = document.getElementById('splashScreen');
+            if (!splash) return;
+
+            // Check if splash has been shown this session
+            if (sessionStorage.getItem('splashShown')) {
+                // Hide splash immediately
+                splash.style.display = 'none';
+            } else {
+                // Show splash and mark as shown
+                sessionStorage.setItem('splashShown', 'true');
+                window.addEventListener('load', function() {
                     setTimeout(function() {
-                        splash.style.display = 'none';
-                    }, 800);
-                }
-            }, 3000); // Show splash for 3 seconds
-        });
+                        splash.classList.add('fade-out');
+                        setTimeout(function() {
+                            splash.style.display = 'none';
+                        }, 800);
+                    }, 3000);
+                });
+            }
+        })();
     </script>
     {% block extra_js %}{% endblock %}
 </body>

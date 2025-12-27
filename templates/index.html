@@ -247,10 +247,14 @@
 
     .hero-stats {
         display: flex;
-        gap: 3rem;
-        margin-top: 4rem;
-        padding-top: 2rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        gap: 2rem;
+        margin-top: 3rem;
+        padding: 1.5rem 2rem;
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .hero-stat {
@@ -466,7 +470,7 @@
 
     /* Learning Hub Section - Transparent for parallax */
     .learning-section {
-        padding: 8rem 0;
+        padding: 10rem 0 8rem;
         position: relative;
         background: transparent;
     }
@@ -1130,8 +1134,8 @@
 
     .scroll-reveal {
         opacity: 0;
-        transform: translateY(40px);
-        transition: opacity 0.8s ease, transform 0.8s ease;
+        transform: translateY(30px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
     .scroll-reveal.revealed {
@@ -1441,7 +1445,7 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="/guides/pnp/nova-scotia" class="text-decoration-none">
                     <div class="province-card">
-                        <img src="https://images.unsplash.com/photo-1499092346589-b9b6be3e94b2?w=600&q=80" alt="Nova Scotia - Peggy's Cove" onerror="this.parentElement.style.background='linear-gradient(135deg, #1B4332, #14532D)'">
+                        <img src="https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=600&q=80" alt="Nova Scotia - Lighthouse" onerror="this.parentElement.style.background='linear-gradient(135deg, #1B4332, #14532D)'">
                         <div class="province-info">
                             <h3 class="province-name">Nova Scotia</h3>
                             <p class="province-program">NSNP</p>
@@ -1793,8 +1797,8 @@
 
     document.querySelectorAll('.learning-card, .province-card, .federal-card, .tool-card, .track-card').forEach((el, index) => {
         el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = `opacity 0.25s ease ${index * 0.03}s, transform 0.25s ease ${index * 0.03}s`;
         scrollRevealObserver.observe(el);
     });
 
