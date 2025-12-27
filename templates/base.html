@@ -13,38 +13,44 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* White and Orange Theme */
-            --philata-orange: #F97316;
-            --philata-orange-dark: #EA580C;
-            --philata-orange-light: #FB923C;
-            --philata-orange-pale: #FFF7ED;
+            /* Professional Blue & Teal Theme - Canadian Immigration */
+            --philata-primary: #1E40AF;
+            --philata-primary-dark: #1E3A8A;
+            --philata-primary-light: #3B82F6;
+            --philata-teal: #0D9488;
+            --philata-teal-light: #14B8A6;
+            --philata-teal-dark: #0F766E;
+            --philata-maple: #DC2626;
             --philata-gold: #F59E0B;
             --philata-white: #FFFFFF;
-            --philata-light: #FAFAFA;
-            --philata-gray-50: #F9FAFB;
-            --philata-gray-100: #F3F4F6;
-            --philata-gray-200: #E5E7EB;
-            --philata-gray-300: #D1D5DB;
-            --philata-gray-400: #9CA3AF;
-            --philata-gray-500: #6B7280;
-            --philata-gray-600: #4B5563;
-            --philata-gray-700: #374151;
-            --philata-gray-800: #1F2937;
-            --philata-gray-900: #111827;
+            --philata-light: #F8FAFC;
+            --philata-gray-50: #F8FAFC;
+            --philata-gray-100: #F1F5F9;
+            --philata-gray-200: #E2E8F0;
+            --philata-gray-300: #CBD5E1;
+            --philata-gray-400: #94A3B8;
+            --philata-gray-500: #64748B;
+            --philata-gray-600: #475569;
+            --philata-gray-700: #334155;
+            --philata-gray-800: #1E293B;
+            --philata-gray-900: #0F172A;
             --philata-card: #FFFFFF;
-            --philata-card-hover: #FAFAFA;
-            --philata-border: #E5E7EB;
-            --philata-text: #1F2937;
-            --philata-text-muted: #6B7280;
-            --gradient-primary: linear-gradient(135deg, #F97316 0%, #FB923C 50%, #F97316 100%);
-            --gradient-gold: linear-gradient(135deg, #F59E0B 0%, #FBBF24 50%, #F59E0B 100%);
-            --gradient-light: linear-gradient(180deg, #FFFFFF 0%, #F9FAFB 100%);
-            --glass-bg: rgba(255,255,255,0.9);
+            --philata-card-hover: #F8FAFC;
+            --philata-border: #E2E8F0;
+            --philata-text: #1E293B;
+            --philata-text-muted: #64748B;
+            --gradient-primary: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
+            --gradient-teal: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%);
+            --gradient-maple: linear-gradient(135deg, #DC2626 0%, #EF4444 100%);
+            --gradient-gold: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
+            --gradient-hero: linear-gradient(135deg, #0F172A 0%, #1E3A8A 50%, #1E40AF 100%);
+            --glass-bg: rgba(255,255,255,0.95);
             --glass-border: rgba(0,0,0,0.05);
-            /* Keep old red vars for compatibility */
-            --philata-red: #F97316;
-            --philata-red-dark: #EA580C;
-            --philata-red-light: #FB923C;
+            /* Compatibility aliases */
+            --philata-red: #DC2626;
+            --philata-red-light: #EF4444;
+            --philata-orange: #F59E0B;
+            --philata-orange-light: #FBBF24;
         }
 
         * {
@@ -66,7 +72,7 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Subtle Background Pattern */
+        /* Clean Background */
         .bg-animation {
             position: fixed;
             top: 0;
@@ -75,42 +81,24 @@
             height: 100%;
             z-index: -1;
             overflow: hidden;
-            background: linear-gradient(135deg, #FFF7ED 0%, #FFFFFF 50%, #FEF3C7 100%);
+            background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
         }
 
         .bg-animation::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background:
-                radial-gradient(circle at 20% 80%, rgba(249, 115, 22, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(249, 115, 22, 0.03) 0%, transparent 30%);
-            animation: bgFloat 20s ease-in-out infinite;
-        }
-
-        @keyframes bgFloat {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(2%, 2%) rotate(1deg); }
-            66% { transform: translate(-1%, 1%) rotate(-1deg); }
-        }
-
-        /* Grid Pattern Overlay */
-        .grid-overlay {
-            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
-            background-image:
-                linear-gradient(rgba(249, 115, 22, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(249, 115, 22, 0.02) 1px, transparent 1px);
-            background-size: 60px 60px;
-            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+            background:
+                radial-gradient(circle at 0% 0%, rgba(30, 64, 175, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(13, 148, 136, 0.03) 0%, transparent 50%);
+        }
+
+        /* Grid Pattern Overlay */
+        .grid-overlay {
+            display: none;
         }
 
         /* Navigation */
@@ -144,14 +132,19 @@
         .navbar-brand .logo-icon {
             width: 42px;
             height: 42px;
-            background: var(--gradient-primary);
+            background: transparent;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.4rem;
-            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
             transition: transform 0.3s ease;
+        }
+
+        .navbar-brand .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .navbar-brand:hover .logo-icon {
@@ -169,8 +162,8 @@
         }
 
         .nav-link:hover, .nav-link.active {
-            color: var(--philata-orange) !important;
-            background: rgba(249, 115, 22, 0.08);
+            color: var(--philata-primary) !important;
+            background: rgba(30, 64, 175, 0.06);
         }
 
         .nav-link.active::after {
@@ -181,7 +174,7 @@
             transform: translateX(-50%);
             width: 20px;
             height: 2px;
-            background: var(--philata-orange);
+            background: var(--philata-primary);
             border-radius: 2px;
         }
 
@@ -192,13 +185,13 @@
             padding: 0.6rem 1.5rem !important;
             border-radius: 10px;
             border: none;
-            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.25);
             transition: all 0.3s ease;
         }
 
         .btn-nav-cta:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(249, 115, 22, 0.4);
+            box-shadow: 0 6px 25px rgba(30, 64, 175, 0.35);
         }
 
         /* Mobile Menu Toggle */
@@ -222,7 +215,7 @@
 
         .card:hover {
             background: var(--philata-card-hover);
-            border-color: rgba(249, 115, 22, 0.2);
+            border-color: rgba(30, 64, 175, 0.2);
             transform: translateY(-5px);
             box-shadow: 0 25px 50px rgba(0,0,0,0.1);
         }
@@ -246,15 +239,31 @@
             font-weight: 600;
             padding: 0.75rem 2rem;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.25);
             transition: all 0.3s ease;
             color: white;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.35);
             background: var(--gradient-primary);
+        }
+
+        .btn-secondary {
+            background: var(--gradient-teal);
+            border: none;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(13, 148, 136, 0.25);
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(13, 148, 136, 0.35);
         }
 
         .btn-outline-light {
@@ -274,8 +283,8 @@
         }
 
         .btn-outline-primary {
-            border: 2px solid var(--philata-orange);
-            color: var(--philata-orange);
+            border: 2px solid var(--philata-primary);
+            color: var(--philata-primary);
             font-weight: 600;
             padding: 0.75rem 2rem;
             border-radius: 12px;
@@ -284,10 +293,10 @@
         }
 
         .btn-outline-primary:hover {
-            background: var(--philata-orange);
+            background: var(--philata-primary);
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
         }
 
         /* Badges */
@@ -385,13 +394,13 @@
         h6 { font-size: 1rem; }
 
         a {
-            color: var(--philata-orange);
+            color: var(--philata-primary);
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
         a:hover {
-            color: var(--philata-orange-dark);
+            color: var(--philata-primary-dark);
         }
 
         /* Form Controls */
@@ -406,8 +415,8 @@
 
         .form-control:focus, .form-select:focus {
             background: var(--philata-white);
-            border-color: var(--philata-orange);
-            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+            border-color: var(--philata-primary);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
             color: var(--philata-text);
         }
 
@@ -452,7 +461,7 @@
         }
 
         .footer-links a:hover {
-            color: var(--philata-orange-light);
+            color: var(--philata-teal-light);
         }
 
         .footer-bottom {
@@ -482,7 +491,7 @@
         }
 
         .social-links a:hover {
-            background: var(--philata-orange);
+            background: var(--philata-primary);
             color: #fff;
             transform: translateY(-3px);
         }
@@ -551,11 +560,23 @@
             border: 1px solid var(--philata-border);
         }
 
-        /* Orange accent utilities */
-        .bg-orange-50 { background-color: #FFF7ED; }
-        .bg-orange-100 { background-color: #FFEDD5; }
-        .text-orange { color: var(--philata-orange) !important; }
-        .border-orange { border-color: var(--philata-orange) !important; }
+        /* Accent utilities */
+        .bg-primary-50 { background-color: #EFF6FF; }
+        .bg-primary-100 { background-color: #DBEAFE; }
+        .bg-teal-50 { background-color: #F0FDFA; }
+        .bg-teal-100 { background-color: #CCFBF1; }
+        .text-primary-custom { color: var(--philata-primary) !important; }
+        .text-teal { color: var(--philata-teal) !important; }
+        .border-primary-custom { border-color: var(--philata-primary) !important; }
+        .border-teal { border-color: var(--philata-teal) !important; }
+
+        /* Teal text gradient */
+        .teal-text {
+            background: var(--gradient-teal);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
         {% block extra_css %}{% endblock %}
     </style>

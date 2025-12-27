@@ -4,7 +4,7 @@
 
 {% block extra_css %}
 <style>
-    /* Hero Section - White and Orange Theme */
+    /* Hero Section - Professional Blue/Teal Theme with Province Background */
     .hero {
         min-height: 100vh;
         display: flex;
@@ -12,7 +12,8 @@
         position: relative;
         overflow: hidden;
         padding: 8rem 0 6rem;
-        background: linear-gradient(135deg, #FFF7ED 0%, #FFFFFF 50%, #FEF3C7 100%);
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 58, 138, 0.88) 50%, rgba(30, 64, 175, 0.85) 100%),
+                    url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1920&q=80') center/cover no-repeat;
     }
 
     .hero-content {
@@ -24,21 +25,21 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: white;
-        border: 1px solid var(--philata-border);
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         padding: 0.5rem 1rem;
         border-radius: 50px;
         font-size: 0.85rem;
-        color: var(--philata-orange);
+        color: #fff;
         margin-bottom: 2rem;
         animation: fadeInUp 0.8s ease forwards;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
 
     .hero-badge .pulse {
         width: 8px;
         height: 8px;
-        background: var(--philata-orange);
+        background: var(--philata-teal-light);
         border-radius: 50%;
         animation: pulse 2s infinite;
     }
@@ -50,20 +51,27 @@
 
     .hero-title {
         font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 4.5rem;
+        font-size: 4rem;
         font-weight: 800;
-        line-height: 1.05;
+        line-height: 1.1;
         margin-bottom: 1.5rem;
         animation: fadeInUp 0.8s ease forwards;
         animation-delay: 0.1s;
         opacity: 0;
-        color: var(--philata-gray-900);
+        color: #fff;
         letter-spacing: -0.03em;
+    }
+
+    .hero-title .highlight {
+        background: linear-gradient(135deg, #14B8A6 0%, #2DD4BF 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
     .hero-subtitle {
         font-size: 1.35rem;
-        color: var(--philata-text-muted);
+        color: rgba(255, 255, 255, 0.8);
         max-width: 550px;
         margin-bottom: 2.5rem;
         line-height: 1.7;
@@ -79,6 +87,25 @@
         animation: fadeInUp 0.8s ease forwards;
         animation-delay: 0.3s;
         opacity: 0;
+    }
+
+    .hero-cta .btn-primary {
+        background: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%);
+        box-shadow: 0 4px 20px rgba(13, 148, 136, 0.4);
+    }
+
+    .hero-cta .btn-primary:hover {
+        box-shadow: 0 8px 30px rgba(13, 148, 136, 0.5);
+    }
+
+    .hero-cta .btn-outline-light {
+        border-color: rgba(255, 255, 255, 0.4);
+        color: #fff;
+    }
+
+    .hero-cta .btn-outline-light:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #fff;
     }
 
     .hero-stats {
@@ -98,14 +125,14 @@
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 2.5rem;
         font-weight: 800;
-        color: var(--philata-orange);
+        color: var(--philata-teal-light);
         margin-bottom: 0.25rem;
         letter-spacing: -0.02em;
     }
 
     .hero-stat-label {
         font-size: 0.9rem;
-        color: var(--philata-text-muted);
+        color: rgba(255, 255, 255, 0.7);
     }
 
     /* Hero Visual */
@@ -117,13 +144,13 @@
     }
 
     .hero-card {
-        background: white;
-        border: 1px solid var(--philata-border);
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         border-radius: 24px;
         padding: 2rem;
         position: relative;
         overflow: hidden;
-        box-shadow: 0 25px 50px rgba(0,0,0,0.1);
     }
 
     .hero-card::before {
@@ -133,16 +160,15 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: var(--gradient-primary);
+        background: linear-gradient(135deg, #0D9488, #14B8A6, #2DD4BF);
     }
 
     .floating-card {
         position: absolute;
-        background: white;
-        border: 1px solid var(--philata-border);
+        background: rgba(255, 255, 255, 0.95);
         border-radius: 16px;
         padding: 1rem 1.25rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         animation: float 6s ease-in-out infinite;
     }
 
@@ -156,12 +182,6 @@
         bottom: 40px;
         left: -40px;
         animation-delay: 2s;
-    }
-
-    .floating-card-3 {
-        top: 50%;
-        right: -60px;
-        animation-delay: 4s;
     }
 
     @keyframes float {
@@ -181,15 +201,15 @@
         align-items: flex-start;
         gap: 1rem;
         padding: 1rem;
-        background: var(--philata-gray-50);
+        background: rgba(255, 255, 255, 0.1);
         border-radius: 12px;
-        border: 1px solid var(--philata-border);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         transition: all 0.3s ease;
     }
 
     .feed-item:hover {
-        background: var(--philata-gray-100);
-        border-color: var(--philata-orange);
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(20, 184, 166, 0.5);
     }
 
     .feed-icon {
@@ -207,115 +227,360 @@
         font-size: 0.9rem;
         font-weight: 600;
         margin-bottom: 0.25rem;
-        color: var(--philata-gray-900);
+        color: #fff;
     }
 
     .feed-content p {
         font-size: 0.8rem;
-        color: var(--philata-text-muted);
+        color: rgba(255, 255, 255, 0.7);
         margin: 0;
     }
 
     .feed-time {
         font-size: 0.75rem;
-        color: var(--philata-text-muted);
+        color: rgba(255, 255, 255, 0.6);
         white-space: nowrap;
     }
 
-    /* Features Section */
-    .features-section {
-        padding: 8rem 0;
-        position: relative;
-        background: white;
+    /* Section Divider */
+    .section-divider {
+        width: 80px;
+        height: 4px;
+        background: var(--gradient-teal);
+        border-radius: 4px;
+        margin: 0 auto 1.5rem;
     }
 
-    .feature-card {
+    /* Learning Hub Section */
+    .learning-section {
+        padding: 8rem 0;
+        position: relative;
+        background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 50%, #F0FDFA 100%);
+    }
+
+    .learning-card {
         background: white;
         border: 1px solid var(--philata-border);
-        border-radius: 24px;
-        padding: 2.5rem;
-        height: 100%;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
+        border-radius: 20px;
         overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
         box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
-    .feature-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: var(--gradient-primary);
-        opacity: 0;
-        transition: opacity 0.3s ease;
+    .learning-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 25px 50px rgba(13, 148, 136, 0.15);
+        border-color: var(--philata-teal);
     }
 
-    .feature-card:hover::before {
+    .learning-card-image {
+        height: 180px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    .learning-card-image::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60%;
+        background: linear-gradient(transparent, rgba(0,0,0,0.4));
+    }
+
+    .learning-card-badge {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        z-index: 2;
+        background: var(--gradient-teal);
+        color: white;
+        padding: 0.4rem 1rem;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .learning-card-body {
+        padding: 1.5rem;
+    }
+
+    .learning-card-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: var(--philata-gray-900);
+    }
+
+    .learning-card-desc {
+        color: var(--philata-text-muted);
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .learning-card-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--philata-teal);
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: gap 0.3s ease;
+    }
+
+    .learning-card-link:hover {
+        gap: 0.75rem;
+        color: var(--philata-teal-dark);
+    }
+
+    /* Provincial Guides Section */
+    .provinces-section {
+        padding: 8rem 0;
+        background: white;
+    }
+
+    .province-card {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        height: 280px;
+        transition: all 0.4s ease;
+        cursor: pointer;
+    }
+
+    .province-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.8) 100%);
+        z-index: 1;
+    }
+
+    .province-card:hover {
+        transform: translateY(-8px) scale(1.02);
+    }
+
+    .province-card:hover .province-overlay {
         opacity: 1;
     }
 
-    .feature-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 30px 60px rgba(0,0,0,0.1);
-        border-color: var(--philata-orange);
+    .province-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
     }
 
-    .feature-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 16px;
+    .province-card:hover img {
+        transform: scale(1.1);
+    }
+
+    .province-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 1.5rem;
+        z-index: 2;
+    }
+
+    .province-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.25rem;
+    }
+
+    .province-program {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .province-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(13, 148, 136, 0.9), rgba(30, 64, 175, 0.9));
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 3;
     }
 
-    .feature-title {
-        font-size: 1.25rem;
+    .province-overlay span {
+        color: white;
         font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Federal Programs Section */
+    .federal-section {
+        padding: 8rem 0;
+        background: linear-gradient(180deg, #FFFFFF 0%, #EFF6FF 100%);
+    }
+
+    .federal-card {
+        background: white;
+        border: 1px solid var(--philata-border);
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.4s ease;
+        height: 100%;
+    }
+
+    .federal-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(30, 64, 175, 0.1);
+        border-color: var(--philata-primary-light);
+    }
+
+    .federal-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2rem;
+    }
+
+    .federal-title {
+        font-size: 1.1rem;
+        font-weight: 700;
         margin-bottom: 0.75rem;
         color: var(--philata-gray-900);
     }
 
-    .feature-desc {
+    .federal-desc {
         color: var(--philata-text-muted);
-        font-size: 0.95rem;
-        line-height: 1.7;
+        font-size: 0.9rem;
+        line-height: 1.6;
     }
 
-    /* Stats Section */
-    .stats-section {
-        padding: 6rem 0;
-        background: linear-gradient(180deg, white, rgba(249, 115, 22, 0.05), white);
+    /* Tools Section */
+    .tools-section {
+        padding: 8rem 0;
+        background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%);
+        position: relative;
     }
 
-    .stat-box {
+    .tools-section .section-title {
+        color: white;
+    }
+
+    .tools-section .section-subtitle {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .tool-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 2.5rem;
         text-align: center;
-        padding: 2rem;
+        transition: all 0.4s ease;
     }
 
-    .stat-value {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 4rem;
-        font-weight: 800;
-        background: var(--gradient-primary);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.03em;
+    .tool-card:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: var(--philata-teal);
+        transform: translateY(-5px);
     }
 
-    .stat-label {
-        font-size: 1.1rem;
-        color: var(--philata-text-muted);
+    .tool-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        background: var(--gradient-teal);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2rem;
+        color: white;
     }
 
-    /* Tracks Section */
+    .tool-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.75rem;
+    }
+
+    .tool-desc {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .tool-card .btn {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+    }
+
+    .tool-card .btn:hover {
+        background: var(--philata-teal);
+        border-color: var(--philata-teal);
+    }
+
+    /* Social Media Testing Section - Separate */
+    .testing-section {
+        padding: 6rem 0;
+        background: linear-gradient(180deg, #FEF3C7 0%, #FFFBEB 50%, #FEF3C7 100%);
+        border-top: 3px dashed #F59E0B;
+        border-bottom: 3px dashed #F59E0B;
+    }
+
+    .testing-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #F59E0B;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+    }
+
+    .testing-section .section-title {
+        color: #92400E;
+    }
+
+    .testing-section .section-subtitle {
+        color: #B45309;
+    }
+
+    .testing-note {
+        background: white;
+        border: 2px solid #F59E0B;
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 2rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .testing-note p {
+        color: #92400E;
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    /* Content Tracks Section */
     .tracks-section {
         padding: 8rem 0;
         background: var(--philata-gray-50);
@@ -336,7 +601,7 @@
     .track-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        border-color: var(--philata-orange);
+        border-color: var(--philata-primary);
     }
 
     .track-badge {
@@ -377,7 +642,7 @@
     }
 
     .track-features li i {
-        color: var(--philata-orange);
+        color: var(--philata-teal);
     }
 
     /* CTA Section */
@@ -389,8 +654,8 @@
     }
 
     .cta-box {
-        background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(249, 115, 22, 0.05) 100%);
-        border: 1px solid rgba(249, 115, 22, 0.2);
+        background: linear-gradient(135deg, rgba(30, 64, 175, 0.08) 0%, rgba(13, 148, 136, 0.08) 100%);
+        border: 1px solid rgba(30, 64, 175, 0.15);
         border-radius: 32px;
         padding: 4rem;
         position: relative;
@@ -400,11 +665,11 @@
     .cta-box::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(circle at center, rgba(249, 115, 22, 0.1), transparent 70%);
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(13, 148, 136, 0.1), transparent 70%);
         pointer-events: none;
     }
 
@@ -436,10 +701,6 @@
 
         .hero-stat-value {
             font-size: 2rem;
-        }
-
-        .stat-value {
-            font-size: 3rem;
         }
     }
 
@@ -477,12 +738,16 @@
         .cta-title {
             font-size: 2rem;
         }
+
+        .province-card {
+            height: 200px;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
+<!-- Hero Section with Canada Background -->
 <section class="hero">
     <div class="container">
         <div class="row align-items-center g-5">
@@ -490,32 +755,32 @@
                 <div class="hero-content">
                     <div class="hero-badge">
                         <span class="pulse"></span>
-                        Breaking Immigration News
+                        Your Immigration Journey Starts Here
                     </div>
                     <h1 class="hero-title">
                         Canadian Immigration<br>
-                        <span class="gradient-text">News & Updates</span>
+                        <span class="highlight">News & Resources</span>
                     </h1>
                     <p class="hero-subtitle">
-                        Real-time immigration news, expert analysis, and comprehensive guides.
-                        Stay ahead of policy changes with timely updates from official sources.
+                        Comprehensive coverage of immigration news, expert guides, and essential tools.
+                        Everything you need to navigate your path to Canada.
                     </p>
                     <div class="hero-cta">
-                        <a href="/dashboard" class="btn btn-primary btn-lg">
-                            <i class="bi bi-newspaper me-2"></i>Read Latest News
+                        <a href="/learn" class="btn btn-primary btn-lg">
+                            <i class="bi bi-book me-2"></i>Start Learning
                         </a>
-                        <a href="/dashboard#educational" class="btn btn-outline-light btn-lg">
-                            <i class="bi bi-book me-2"></i>Browse Guides
+                        <a href="/dashboard" class="btn btn-outline-light btn-lg">
+                            <i class="bi bi-newspaper me-2"></i>Latest News
                         </a>
                     </div>
                     <div class="hero-stats">
                         <div class="hero-stat">
-                            <div class="hero-stat-value" id="live-content">-</div>
-                            <div class="hero-stat-label">Articles Published</div>
+                            <div class="hero-stat-value" id="live-content">100+</div>
+                            <div class="hero-stat-label">Articles & Guides</div>
                         </div>
                         <div class="hero-stat">
-                            <div class="hero-stat-value">4</div>
-                            <div class="hero-stat-label">News Categories</div>
+                            <div class="hero-stat-value">13</div>
+                            <div class="hero-stat-label">Province Guides</div>
                         </div>
                         <div class="hero-stat">
                             <div class="hero-stat-value">24/7</div>
@@ -526,16 +791,16 @@
             </div>
             <div class="col-lg-6">
                 <div class="hero-visual">
-                    <div class="hero-card glow-red">
+                    <div class="hero-card">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h5 class="mb-0" style="font-size: 1rem; color: #fff;">
-                                <i class="bi bi-lightning-charge-fill me-2" style="color: var(--philata-red);"></i>Live Feed
+                                <i class="bi bi-lightning-charge-fill me-2" style="color: var(--philata-teal-light);"></i>Live Updates
                             </h5>
                             <span class="badge bg-success">Active</span>
                         </div>
                         <div class="live-feed">
                             <div class="feed-item">
-                                <div class="feed-icon" style="background: linear-gradient(135deg, #E31837, #FF6B6B);">
+                                <div class="feed-icon" style="background: linear-gradient(135deg, #0D9488, #14B8A6);">
                                     <i class="bi bi-megaphone-fill text-white"></i>
                                 </div>
                                 <div class="feed-content flex-grow-1">
@@ -545,7 +810,7 @@
                                 <span class="feed-time">2m ago</span>
                             </div>
                             <div class="feed-item">
-                                <div class="feed-icon" style="background: linear-gradient(135deg, #10B981, #34D399);">
+                                <div class="feed-icon" style="background: linear-gradient(135deg, #1E40AF, #3B82F6);">
                                     <i class="bi bi-lightbulb-fill text-white"></i>
                                 </div>
                                 <div class="feed-content flex-grow-1">
@@ -571,16 +836,14 @@
                     <div class="floating-card floating-card-1">
                         <div class="d-flex align-items-center gap-2">
                             <i class="bi bi-check-circle-fill" style="color: #10B981;"></i>
-                            <span style="font-size: 0.85rem;">Verified Sources</span>
+                            <span style="font-size: 0.85rem; color: var(--philata-gray-700);">Verified Sources</span>
                         </div>
                     </div>
 
                     <div class="floating-card floating-card-2">
                         <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-globe" style="color: #E4405F;"></i>
-                            <i class="bi bi-newspaper" style="color: #1877F2;"></i>
-                            <i class="bi bi-file-text" style="color: #0A66C2;"></i>
-                            <span style="font-size: 0.85rem; color: var(--philata-text-muted);">Daily Updates</span>
+                            <i class="bi bi-shield-check" style="color: #1E40AF;"></i>
+                            <span style="font-size: 0.85rem; color: var(--philata-gray-700);">Official IRCC Data</span>
                         </div>
                     </div>
                 </div>
@@ -589,180 +852,375 @@
     </div>
 </section>
 
-<!-- Features Section -->
-<section class="features-section" id="features">
+<!-- Learning Hub Section -->
+<section class="learning-section" id="learn">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="section-title">Comprehensive <span class="gradient-text">Coverage</span></h2>
+            <div class="section-divider"></div>
+            <h2 class="section-title">Learning <span class="teal-text">Hub</span></h2>
             <p class="section-subtitle mx-auto">
-                Your trusted source for Canadian immigration news, guides, and expert analysis.
+                Master every aspect of Canadian immigration with our comprehensive guides and resources.
             </p>
         </div>
         <div class="row g-4">
             <div class="col-md-6 col-lg-4">
-                <div class="feature-card">
-                    <div class="feature-icon" style="background: linear-gradient(135deg, rgba(227, 24, 55, 0.2), rgba(227, 24, 55, 0.05));">
-                        <i class="bi bi-lightning-charge-fill" style="color: var(--philata-red);"></i>
+                <a href="/learn" class="text-decoration-none">
+                    <div class="learning-card">
+                        <div class="learning-card-image" style="background-image: url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80');">
+                            <span class="learning-card-badge">Popular</span>
+                        </div>
+                        <div class="learning-card-body">
+                            <h3 class="learning-card-title">Immigration Guides</h3>
+                            <p class="learning-card-desc">Comprehensive guides covering Express Entry, PNP, work permits, study permits, and more.</p>
+                            <span class="learning-card-link">Explore Guides <i class="bi bi-arrow-right"></i></span>
+                        </div>
                     </div>
-                    <h3 class="feature-title">Breaking News</h3>
-                    <p class="feature-desc">
-                        Stay informed with real-time coverage of IRCC announcements, Express Entry draws, and policy changes.
-                    </p>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <a href="/practice-tests" class="text-decoration-none">
+                    <div class="learning-card">
+                        <div class="learning-card-image" style="background-image: url('https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=600&q=80');">
+                            <span class="learning-card-badge">Interactive</span>
+                        </div>
+                        <div class="learning-card-body">
+                            <h3 class="learning-card-title">Practice Tests</h3>
+                            <p class="learning-card-desc">Prepare for citizenship tests and IELTS with our interactive practice exams and quizzes.</p>
+                            <span class="learning-card-link">Take a Test <i class="bi bi-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <a href="/tools/crs-calculator" class="text-decoration-none">
+                    <div class="learning-card">
+                        <div class="learning-card-image" style="background-image: url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&q=80');">
+                            <span class="learning-card-badge">Tool</span>
+                        </div>
+                        <div class="learning-card-body">
+                            <h3 class="learning-card-title">CRS Calculator</h3>
+                            <p class="learning-card-desc">Calculate your Comprehensive Ranking System score for Express Entry eligibility.</p>
+                            <span class="learning-card-link">Calculate Score <i class="bi bi-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Provincial Guides Section -->
+<section class="provinces-section" id="provinces">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="section-divider"></div>
+            <h2 class="section-title">Provincial Nominee <span class="gradient-text">Programs</span></h2>
+            <p class="section-subtitle mx-auto">
+                Each Canadian province offers unique pathways to permanent residence. Explore your options.
+            </p>
+        </div>
+        <div class="row g-4">
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/guides/provinces/ontario" class="text-decoration-none">
+                    <div class="province-card">
+                        <img src="https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=600&q=80" alt="Ontario">
+                        <div class="province-info">
+                            <h3 class="province-name">Ontario</h3>
+                            <p class="province-program">OINP</p>
+                        </div>
+                        <div class="province-overlay">
+                            <span><i class="bi bi-arrow-right"></i> View Guide</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/guides/provinces/british-columbia" class="text-decoration-none">
+                    <div class="province-card">
+                        <img src="https://images.unsplash.com/photo-1559511260-66a68e7e9eb0?w=600&q=80" alt="British Columbia">
+                        <div class="province-info">
+                            <h3 class="province-name">British Columbia</h3>
+                            <p class="province-program">BC PNP</p>
+                        </div>
+                        <div class="province-overlay">
+                            <span><i class="bi bi-arrow-right"></i> View Guide</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/guides/provinces/alberta" class="text-decoration-none">
+                    <div class="province-card">
+                        <img src="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=600&q=80" alt="Alberta">
+                        <div class="province-info">
+                            <h3 class="province-name">Alberta</h3>
+                            <p class="province-program">AINP</p>
+                        </div>
+                        <div class="province-overlay">
+                            <span><i class="bi bi-arrow-right"></i> View Guide</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/guides/provinces/quebec" class="text-decoration-none">
+                    <div class="province-card">
+                        <img src="https://images.unsplash.com/photo-1519178614-68673b201f36?w=600&q=80" alt="Quebec">
+                        <div class="province-info">
+                            <h3 class="province-name">Quebec</h3>
+                            <p class="province-program">QISP</p>
+                        </div>
+                        <div class="province-overlay">
+                            <span><i class="bi bi-arrow-right"></i> View Guide</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/guides/provinces/manitoba" class="text-decoration-none">
+                    <div class="province-card">
+                        <img src="https://images.unsplash.com/photo-1567878779892-b347d7c4a409?w=600&q=80" alt="Manitoba">
+                        <div class="province-info">
+                            <h3 class="province-name">Manitoba</h3>
+                            <p class="province-program">MPNP</p>
+                        </div>
+                        <div class="province-overlay">
+                            <span><i class="bi bi-arrow-right"></i> View Guide</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/guides/provinces/saskatchewan" class="text-decoration-none">
+                    <div class="province-card">
+                        <img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=600&q=80" alt="Saskatchewan">
+                        <div class="province-info">
+                            <h3 class="province-name">Saskatchewan</h3>
+                            <p class="province-program">SINP</p>
+                        </div>
+                        <div class="province-overlay">
+                            <span><i class="bi bi-arrow-right"></i> View Guide</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/guides/provinces/nova-scotia" class="text-decoration-none">
+                    <div class="province-card">
+                        <img src="https://images.unsplash.com/photo-1499092346589-b9b6be3e94b2?w=600&q=80" alt="Nova Scotia">
+                        <div class="province-info">
+                            <h3 class="province-name">Nova Scotia</h3>
+                            <p class="province-program">NSNP</p>
+                        </div>
+                        <div class="province-overlay">
+                            <span><i class="bi bi-arrow-right"></i> View Guide</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/learn#provinces" class="text-decoration-none">
+                    <div class="province-card" style="background: linear-gradient(135deg, #0D9488, #1E40AF);">
+                        <div class="province-info" style="top: 50%; transform: translateY(-50%); bottom: auto;">
+                            <h3 class="province-name">View All Provinces</h3>
+                            <p class="province-program">13 Provincial & Territorial Programs</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Federal Programs Section -->
+<section class="federal-section" id="federal">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="section-divider"></div>
+            <h2 class="section-title">Federal Immigration <span class="gradient-text">Programs</span></h2>
+            <p class="section-subtitle mx-auto">
+                Explore the main federal pathways to Canadian permanent residence.
+            </p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <a href="/guides/express-entry" class="text-decoration-none">
+                    <div class="federal-card">
+                        <div class="federal-icon" style="background: linear-gradient(135deg, rgba(13, 148, 136, 0.15), rgba(13, 148, 136, 0.05));">
+                            <i class="bi bi-lightning-charge-fill" style="color: #0D9488;"></i>
+                        </div>
+                        <h3 class="federal-title">Express Entry</h3>
+                        <p class="federal-desc">Fast-track immigration for skilled workers. FSW, CEC, and FSTP programs.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <a href="/guides/family-sponsorship" class="text-decoration-none">
+                    <div class="federal-card">
+                        <div class="federal-icon" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(236, 72, 153, 0.05));">
+                            <i class="bi bi-heart-fill" style="color: #EC4899;"></i>
+                        </div>
+                        <h3 class="federal-title">Family Sponsorship</h3>
+                        <p class="federal-desc">Sponsor your spouse, children, parents, or grandparents to Canada.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <a href="/guides/study-permit" class="text-decoration-none">
+                    <div class="federal-card">
+                        <div class="federal-icon" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(99, 102, 241, 0.05));">
+                            <i class="bi bi-mortarboard-fill" style="color: #6366F1;"></i>
+                        </div>
+                        <h3 class="federal-title">Study Permits</h3>
+                        <p class="federal-desc">Complete guide to studying in Canada and post-graduation options.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <a href="/guides/work-permit" class="text-decoration-none">
+                    <div class="federal-card">
+                        <div class="federal-icon" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05));">
+                            <i class="bi bi-briefcase-fill" style="color: #F59E0B;"></i>
+                        </div>
+                        <h3 class="federal-title">Work Permits</h3>
+                        <p class="federal-desc">LMIA, open work permits, PGWP, and IEC working holiday visas.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <a href="/guides/citizenship" class="text-decoration-none">
+                    <div class="federal-card">
+                        <div class="federal-icon" style="background: linear-gradient(135deg, rgba(220, 38, 38, 0.15), rgba(220, 38, 38, 0.05));">
+                            <i class="bi bi-flag-fill" style="color: #DC2626;"></i>
+                        </div>
+                        <h3 class="federal-title">Citizenship</h3>
+                        <p class="federal-desc">Requirements and process for becoming a Canadian citizen.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <a href="/guides/visitor-visa" class="text-decoration-none">
+                    <div class="federal-card">
+                        <div class="federal-icon" style="background: linear-gradient(135deg, rgba(30, 64, 175, 0.15), rgba(30, 64, 175, 0.05));">
+                            <i class="bi bi-globe" style="color: #1E40AF;"></i>
+                        </div>
+                        <h3 class="federal-title">Visitor Visa</h3>
+                        <p class="federal-desc">Tourist visas, super visas, and temporary resident permits.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Tools Section -->
+<section class="tools-section" id="tools">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="section-divider" style="background: linear-gradient(135deg, #14B8A6, #2DD4BF);"></div>
+            <h2 class="section-title">Immigration <span style="color: #14B8A6;">Tools</span></h2>
+            <p class="section-subtitle mx-auto">
+                Free tools to help you plan and prepare for your Canadian immigration journey.
+            </p>
+        </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="bi bi-calculator"></i>
+                    </div>
+                    <h3 class="tool-title">CRS Calculator</h3>
+                    <p class="tool-desc">Calculate your Comprehensive Ranking System score for Express Entry.</p>
+                    <a href="/tools/crs-calculator" class="btn btn-lg px-4">
+                        <i class="bi bi-arrow-right me-2"></i>Calculate Now
+                    </a>
                 </div>
             </div>
             <div class="col-md-6 col-lg-4">
-                <div class="feature-card">
-                    <div class="feature-icon" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.05));">
-                        <i class="bi bi-file-earmark-text" style="color: #6366F1;"></i>
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="bi bi-journal-check"></i>
                     </div>
-                    <h3 class="feature-title">Expert Analysis</h3>
-                    <p class="feature-desc">
-                        In-depth articles and analysis to help you understand immigration policies and make informed decisions.
-                    </p>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="feature-card">
-                    <div class="feature-icon" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));">
-                        <i class="bi bi-patch-check-fill" style="color: #10B981;"></i>
-                    </div>
-                    <h3 class="feature-title">Verified Information</h3>
-                    <p class="feature-desc">
-                        Every article is verified against official IRCC sources ensuring accuracy and reliability.
-                    </p>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="feature-card">
-                    <div class="feature-icon" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.05));">
-                        <i class="bi bi-book-fill" style="color: #F59E0B;"></i>
-                    </div>
-                    <h3 class="feature-title">Educational Guides</h3>
-                    <p class="feature-desc">
-                        Comprehensive guides on Express Entry, PNP programs, study permits, work permits, and more.
-                    </p>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="feature-card">
-                    <div class="feature-icon" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.05));">
-                        <i class="bi bi-file-earmark-ruled" style="color: #EC4899;"></i>
-                    </div>
-                    <h3 class="feature-title">Forms & Documents</h3>
-                    <p class="feature-desc">
-                        Step-by-step guides for completing IRCC forms correctly. Avoid common mistakes that delay applications.
-                    </p>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="feature-card">
-                    <div class="feature-icon" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05));">
-                        <i class="bi bi-calendar-check-fill" style="color: var(--philata-gold);"></i>
-                    </div>
-                    <h3 class="feature-title">Daily Tips</h3>
-                    <p class="feature-desc">
-                        Daily immigration tips and insights to help you on your journey to Canada. 365 days of valuable content.
-                    </p>
+                    <h3 class="tool-title">Practice Tests</h3>
+                    <p class="tool-desc">Prepare for your citizenship test with our interactive practice exams.</p>
+                    <a href="/practice-tests" class="btn btn-lg px-4">
+                        <i class="bi bi-arrow-right me-2"></i>Start Test
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Stats Section -->
-<section class="stats-section">
+<!-- Social Media Testing Section - Separate (Will be removed) -->
+<section class="testing-section" id="social-testing">
     <div class="container">
-        <div class="row g-4">
-            <div class="col-6 col-lg-3">
-                <div class="stat-box">
-                    <div class="stat-value" id="stat-breaking">-</div>
-                    <div class="stat-label">Breaking News</div>
-                </div>
-            </div>
-            <div class="col-6 col-lg-3">
-                <div class="stat-box">
-                    <div class="stat-value" id="stat-regular">-</div>
-                    <div class="stat-label">Regular Updates</div>
-                </div>
-            </div>
-            <div class="col-6 col-lg-3">
-                <div class="stat-box">
-                    <div class="stat-value" id="stat-educational">-</div>
-                    <div class="stat-label">Educational Tips</div>
-                </div>
-            </div>
-            <div class="col-6 col-lg-3">
-                <div class="stat-box">
-                    <div class="stat-value" id="stat-forms">-</div>
-                    <div class="stat-label">Forms Guides</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Content Tracks Section -->
-<section class="tracks-section">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="section-title">Four Content <span class="gold-text">Tracks</span></h2>
-            <p class="section-subtitle mx-auto">
-                Comprehensive coverage across all aspects of Canadian immigration.
+        <div class="text-center mb-4">
+            <span class="testing-badge">
+                <i class="bi bi-tools"></i> Testing Only
+            </span>
+            <h2 class="section-title">Social Media <span style="color: #B45309;">Content</span></h2>
+            <p class="section-subtitle mx-auto" style="color: #B45309;">
+                Generated social media posts for testing purposes.
             </p>
+            <div class="testing-note">
+                <p><i class="bi bi-info-circle me-2"></i>This section is for development testing only and will be removed in production.</p>
+            </div>
         </div>
         <div class="row g-4">
             <div class="col-md-6 col-lg-3">
-                <div class="track-card">
+                <div class="track-card" style="border-color: #F59E0B;">
                     <span class="track-badge badge-breaking">BREAKING</span>
                     <h3 class="track-title">Breaking News</h3>
-                    <p class="track-desc">Real-time alerts on Express Entry draws, policy changes, and IRCC updates.</p>
+                    <p class="track-desc">Real-time alerts on Express Entry draws and policy changes.</p>
                     <ul class="track-features">
                         <li><i class="bi bi-check2"></i>Express Entry Draws</li>
                         <li><i class="bi bi-check2"></i>Policy Announcements</li>
                         <li><i class="bi bi-check2"></i>IRCC Updates</li>
-                        <li><i class="bi bi-check2"></i>Processing Times</li>
                     </ul>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
-                <div class="track-card">
+                <div class="track-card" style="border-color: #F59E0B;">
                     <span class="track-badge badge-regular">REGULAR</span>
                     <h3 class="track-title">Regular News</h3>
-                    <p class="track-desc">Daily immigration news and industry updates from trusted sources.</p>
+                    <p class="track-desc">Daily immigration news from trusted sources.</p>
                     <ul class="track-features">
                         <li><i class="bi bi-check2"></i>Immigration News</li>
                         <li><i class="bi bi-check2"></i>Industry Updates</li>
                         <li><i class="bi bi-check2"></i>PNP Programs</li>
-                        <li><i class="bi bi-check2"></i>Pathway Changes</li>
                     </ul>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
-                <div class="track-card">
+                <div class="track-card" style="border-color: #F59E0B;">
                     <span class="track-badge badge-educational">EDUCATIONAL</span>
                     <h3 class="track-title">Educational Tips</h3>
-                    <p class="track-desc">Daily tips and guides to help applicants succeed in their journey.</p>
+                    <p class="track-desc">Daily tips to help applicants succeed.</p>
                     <ul class="track-features">
                         <li><i class="bi bi-check2"></i>CRS Score Tips</li>
                         <li><i class="bi bi-check2"></i>Application Guides</li>
                         <li><i class="bi bi-check2"></i>Document Prep</li>
-                        <li><i class="bi bi-check2"></i>Success Stories</li>
                     </ul>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
-                <div class="track-card">
+                <div class="track-card" style="border-color: #F59E0B;">
                     <span class="track-badge badge-forms">FORMS</span>
                     <h3 class="track-title">Forms Guide</h3>
-                    <p class="track-desc">Step-by-step guides for completing official IRCC forms correctly.</p>
+                    <p class="track-desc">Step-by-step guides for IRCC forms.</p>
                     <ul class="track-features">
                         <li><i class="bi bi-check2"></i>Form Tutorials</li>
                         <li><i class="bi bi-check2"></i>Common Mistakes</li>
                         <li><i class="bi bi-check2"></i>Do's & Don'ts</li>
-                        <li><i class="bi bi-check2"></i>Official Links</li>
                     </ul>
                 </div>
             </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="/dashboard" class="btn btn-lg" style="background: #F59E0B; color: white;">
+                <i class="bi bi-newspaper me-2"></i>View All Content
+            </a>
         </div>
     </div>
 </section>
@@ -771,15 +1229,15 @@
 <section class="cta-section">
     <div class="container">
         <div class="cta-box">
-            <h2 class="cta-title">Stay Informed on <span class="gradient-text">Canadian Immigration</span></h2>
+            <h2 class="cta-title">Start Your <span class="teal-text">Canadian Journey</span></h2>
             <p class="cta-subtitle">
-                Browse our comprehensive collection of immigration news, guides, and expert analysis.
+                Browse our comprehensive collection of immigration guides, news, and resources.
             </p>
             <div class="d-flex gap-3 justify-content-center flex-wrap">
-                <a href="/dashboard" class="btn btn-primary btn-lg">
-                    <i class="bi bi-newspaper me-2"></i>Read Latest Articles
+                <a href="/learn" class="btn btn-primary btn-lg">
+                    <i class="bi bi-book me-2"></i>Explore Guides
                 </a>
-                <a href="/contact" class="btn btn-outline-light btn-lg">
+                <a href="/contact" class="btn btn-outline-primary btn-lg">
                     <i class="bi bi-chat-dots me-2"></i>Get in Touch
                 </a>
             </div>
@@ -794,40 +1252,13 @@
     fetch('/api/stats')
         .then(r => r.json())
         .then(stats => {
-            document.getElementById('stat-breaking').textContent = stats.by_track?.breaking || 0;
-            document.getElementById('stat-regular').textContent = stats.by_track?.regular || 0;
-            document.getElementById('stat-educational').textContent = stats.by_track?.educational || 0;
-            document.getElementById('stat-forms').textContent = stats.by_track?.forms || 0;
-
             const total = (stats.by_track?.breaking || 0) + (stats.by_track?.regular || 0) +
                          (stats.by_track?.educational || 0) + (stats.by_track?.forms || 0);
-            document.getElementById('live-content').textContent = total;
+            document.getElementById('live-content').textContent = total > 0 ? total + '+' : '100+';
         })
         .catch(e => {
-            console.error('Failed to load stats:', e);
             document.getElementById('live-content').textContent = '100+';
         });
-
-    // Counter animation
-    function animateCounters() {
-        const counters = document.querySelectorAll('.stat-value, .hero-stat-value');
-        counters.forEach(counter => {
-            const target = parseInt(counter.textContent);
-            if (isNaN(target)) return;
-
-            let current = 0;
-            const increment = target / 50;
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    counter.textContent = target;
-                    clearInterval(timer);
-                } else {
-                    counter.textContent = Math.floor(current);
-                }
-            }, 30);
-        });
-    }
 
     // Intersection Observer for animations
     const observer = new IntersectionObserver((entries) => {
@@ -838,7 +1269,7 @@
         });
     }, { threshold: 0.1 });
 
-    document.querySelectorAll('.feature-card, .track-card, .stat-box').forEach(el => {
+    document.querySelectorAll('.learning-card, .province-card, .federal-card, .tool-card, .track-card').forEach(el => {
         observer.observe(el);
     });
 </script>
