@@ -1170,6 +1170,134 @@
             </section>
             {% endif %}
 
+            <!-- Academic vs General Comparison -->
+            {% if guide.academic_vs_general %}
+            <section class="content-section" id="comparison">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-arrow-left-right"></i></div>
+                    <h2 class="section-title">Academic vs General Training</h2>
+                </div>
+                <div class="info-box mb-4">
+                    <p>{{ guide.academic_vs_general.description }}</p>
+                </div>
+                <div class="costs-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Aspect</th>
+                                <th>Academic</th>
+                                <th>General Training</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if guide.academic_vs_general.reading %}
+                            <tr>
+                                <td><strong>Reading</strong></td>
+                                <td>{{ guide.academic_vs_general.reading.academic }}</td>
+                                <td>{{ guide.academic_vs_general.reading.general }}</td>
+                            </tr>
+                            {% endif %}
+                            {% if guide.academic_vs_general.writing_task_1 %}
+                            <tr>
+                                <td><strong>Writing Task 1</strong></td>
+                                <td>{{ guide.academic_vs_general.writing_task_1.academic }}</td>
+                                <td>{{ guide.academic_vs_general.writing_task_1.general }}</td>
+                            </tr>
+                            {% endif %}
+                            {% if guide.academic_vs_general.difficulty %}
+                            <tr>
+                                <td><strong>Difficulty</strong></td>
+                                <td>{{ guide.academic_vs_general.difficulty.academic }}</td>
+                                <td>{{ guide.academic_vs_general.difficulty.general }}</td>
+                            </tr>
+                            {% endif %}
+                            {% if guide.academic_vs_general.scoring %}
+                            <tr>
+                                <td><strong>Scoring</strong></td>
+                                <td>{{ guide.academic_vs_general.scoring.academic }}</td>
+                                <td>{{ guide.academic_vs_general.scoring.general }}</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- When to Use -->
+            {% if guide.when_to_use %}
+            <section class="content-section" id="when-to-use">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-question-circle"></i></div>
+                    <h2 class="section-title">When to Use This Test</h2>
+                </div>
+                <div class="row g-3">
+                    {% for use_case, description in guide.when_to_use.items() %}
+                    <div class="col-md-6">
+                        <div class="program-card h-100">
+                            <div class="program-name mb-2">{{ use_case|replace('_', ' ')|title }}</div>
+                            <p class="program-desc mb-0">{{ description }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- University Requirements -->
+            {% if guide.university_requirements %}
+            <section class="content-section" id="university-requirements">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-mortarboard"></i></div>
+                    <h2 class="section-title">University Score Requirements</h2>
+                </div>
+                <div class="row g-3">
+                    {% for level, scores in guide.university_requirements.items() %}
+                    <div class="col-md-4">
+                        <div class="program-card h-100">
+                            <div class="program-name mb-3">{{ level|replace('_', ' ')|title }}</div>
+                            {% if scores is mapping %}
+                            {% for score_type, score_value in scores.items() %}
+                            <p class="mb-1"><strong style="color: {{ category.color }};">{{ score_type|title }}:</strong> {{ score_value }}</p>
+                            {% endfor %}
+                            {% else %}
+                            <p class="program-desc mb-0">{{ scores }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Score Requirements by Program -->
+            {% if guide.score_requirements_by_program %}
+            <section class="content-section" id="program-scores">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-bar-chart"></i></div>
+                    <h2 class="section-title">Score Requirements by Program</h2>
+                </div>
+                <div class="costs-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Program Type</th>
+                                <th>Typical Score Required</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for req in guide.score_requirements_by_program %}
+                            <tr>
+                                <td>{{ req.program }}</td>
+                                <td><strong>{{ req.typical_score }}</strong></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            {% endif %}
+
             <!-- Who to Include (Family Forms) -->
             {% if guide.who_to_include %}
             <section class="content-section" id="who-include">
@@ -1362,6 +1490,10 @@
                     {% if guide.sections and guide.sections[0].section is defined %}<li><a href="#form-sections">Form Sections</a></li>{% endif %}
                     {% if guide.sections and guide.sections[0].name is defined %}<li><a href="#test-sections">Test Sections</a></li>{% endif %}
                     {% if guide.advantages_over_ielts %}<li><a href="#advantages">Advantages</a></li>{% endif %}
+                    {% if guide.academic_vs_general %}<li><a href="#comparison">Academic vs General</a></li>{% endif %}
+                    {% if guide.when_to_use %}<li><a href="#when-to-use">When to Use</a></li>{% endif %}
+                    {% if guide.university_requirements %}<li><a href="#university-requirements">University Requirements</a></li>{% endif %}
+                    {% if guide.score_requirements_by_program %}<li><a href="#program-scores">Program Scores</a></li>{% endif %}
                     {% if guide.who_to_include %}<li><a href="#who-include">Who to Include</a></li>{% endif %}
                     {% if guide.required_information %}<li><a href="#required-info">Required Info</a></li>{% endif %}
                     {% if guide.score_improvement %}<li><a href="#score-improvement">Score Improvement</a></li>{% endif %}

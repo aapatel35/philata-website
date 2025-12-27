@@ -122,6 +122,143 @@
           ]
         },
         {
+          "id": "ielts-academic",
+          "title": "IELTS Academic Complete Guide",
+          "subtitle": "For Study Permits, Professional Licensing & Graduate Programs",
+          "icon": "📚",
+          "difficulty": "Intermediate to Advanced",
+          "duration": "2-4 months preparation",
+          "reading_time": "15 min read",
+          "overview": "IELTS Academic is designed for students seeking admission to universities and colleges in Canada, as well as professionals requiring registration with regulatory bodies. While General Training is used for immigration, Academic IELTS is essential for study permits and professional pathways. This guide covers everything you need to know about the Academic version.",
+          "key_facts": {
+            "test_type": "Academic (for study/professional purposes)",
+            "validity": "2 years from test date",
+            "cost": "$309-$350 CAD",
+            "format": "Paper or Computer-based",
+            "duration": "2 hours 45 minutes",
+            "results": "13 days (paper) / 5-7 days (computer)",
+            "test_centers": "900+ locations in 140 countries",
+            "use_cases": "Study permits, university admission, professional registration"
+          },
+          "when_to_use": {
+            "study_permit": "Required by most Canadian universities and colleges for international students",
+            "professional_licensing": "Nursing (NNAS), Medicine, Engineering, Pharmacy, Dentistry",
+            "graduate_programs": "Master's and PhD program admissions",
+            "not_for_immigration": "Express Entry and PR applications require General Training, NOT Academic"
+          },
+          "sections": [
+            {
+              "name": "Listening",
+              "duration": "30 minutes + 10 min transfer",
+              "questions": "40 questions",
+              "format": "4 recordings (same as General Training)",
+              "tips": ["Listen for signpost words like 'however', 'firstly'", "Section 3 and 4 are academic contexts", "Practice with lectures and academic discussions"]
+            },
+            {
+              "name": "Reading",
+              "duration": "60 minutes",
+              "questions": "40 questions",
+              "format": "3 long academic texts from journals/textbooks",
+              "tips": ["Texts are more complex than General Training", "Practice with academic journals and research papers", "Learn to identify writer's opinion vs. factual information"]
+            },
+            {
+              "name": "Writing",
+              "duration": "60 minutes",
+              "questions": "2 tasks",
+              "format": "Task 1: Describe visual data (150+ words), Task 2: Academic essay (250+ words)",
+              "tips": ["Task 1: Charts, graphs, diagrams, maps or processes", "Use academic vocabulary and formal register", "Task 2 is worth twice as much as Task 1"]
+            },
+            {
+              "name": "Speaking",
+              "duration": "11-14 minutes",
+              "questions": "3 parts",
+              "format": "Face-to-face with examiner (same as General)",
+              "tips": ["Part 3 involves abstract discussion on academic topics", "Use sophisticated vocabulary where appropriate", "Support your opinions with examples"]
+            }
+          ],
+          "academic_vs_general": {
+            "description": "Key differences between Academic and General Training IELTS",
+            "reading": {
+              "academic": "3 long academic texts from books, journals, magazines",
+              "general": "Shorter texts from everyday sources - ads, manuals, notices"
+            },
+            "writing_task_1": {
+              "academic": "Describe chart, graph, table, diagram, map or process",
+              "general": "Write a letter (formal, semi-formal, or informal)"
+            },
+            "difficulty": {
+              "academic": "More challenging reading and writing tasks",
+              "general": "More practical, everyday English contexts"
+            },
+            "scoring": {
+              "academic": "Same 0-9 band scale",
+              "general": "Same scale but different raw score conversion"
+            }
+          },
+          "university_requirements": {
+            "undergraduate": {
+              "minimum": "6.0 overall (no band below 5.5)",
+              "competitive": "6.5 overall (no band below 6.0)"
+            },
+            "graduate": {
+              "minimum": "6.5 overall (no band below 6.0)",
+              "competitive": "7.0 overall (no band below 6.5)"
+            },
+            "professional_programs": {
+              "medicine": "7.0-7.5 overall (no band below 7.0)",
+              "nursing": "6.5-7.0 overall with specific band requirements",
+              "engineering": "6.5 overall varies by licensing body"
+            }
+          },
+          "step_by_step": [
+            {"step": 1, "title": "Verify Requirement", "description": "Confirm your university/institution requires Academic IELTS (not General Training). Check specific band score requirements."},
+            {"step": 2, "title": "Register for Test", "description": "Book at ielts.org, British Council, or IDP. Choose paper or computer-based. Book 4-6 weeks in advance."},
+            {"step": 3, "title": "Master Task 1 Writing", "description": "Practice describing graphs, charts, and processes. Learn vocabulary for trends, comparisons, and data description."},
+            {"step": 4, "title": "Build Academic Vocabulary", "description": "Study Academic Word List (AWL). Read academic journals and textbooks. Practice paraphrasing."},
+            {"step": 5, "title": "Practice with Cambridge Books", "description": "Use official Cambridge IELTS Academic practice tests (Books 14-18). Take full timed tests."},
+            {"step": 6, "title": "Take the Test", "description": "Bring passport, arrive early. Manage time carefully in Reading section."},
+            {"step": 7, "title": "Send Results", "description": "Request additional Test Report Forms (TRFs) be sent to your institutions. Some accept online verification."}
+          ],
+          "tips": [
+            "Read academic journals like The Economist, Nature, or Scientific American for reading practice",
+            "For Task 1, memorize vocabulary for describing trends: 'increased sharply', 'fluctuated', 'remained stable'",
+            "Practice writing under timed conditions - many students run out of time",
+            "Learn to quickly identify question types: True/False/Not Given, Matching Headings, Summary Completion",
+            "For graphs and charts, always describe the main trend first before details",
+            "Use transition words to show relationships between ideas in essays",
+            "Speaking Part 3 tests abstract thinking - practice discussing societal issues",
+            "Many universities have specific requirements per band - check your program carefully"
+          ],
+          "common_mistakes": [
+            "Taking General Training instead of Academic (they are NOT interchangeable)",
+            "Describing every detail in Task 1 instead of key trends and comparisons",
+            "Using informal language in academic writing",
+            "Not reaching minimum word count (150/250 words)",
+            "Spending too long on Task 1 (only worth 1/3 of writing score)",
+            "Not practicing with authentic academic reading materials",
+            "Forgetting to state your own opinion in Task 2 essays",
+            "Assuming Speaking is the same - Part 3 is more abstract in Academic context"
+          ],
+          "score_requirements_by_program": [
+            {"program": "University Foundation Programs", "typical_score": "5.0-5.5 overall"},
+            {"program": "Undergraduate (Arts/Business)", "typical_score": "6.0-6.5 overall"},
+            {"program": "Undergraduate (Engineering/Science)", "typical_score": "6.5 overall"},
+            {"program": "Master's Programs", "typical_score": "6.5-7.0 overall"},
+            {"program": "MBA Programs", "typical_score": "6.5-7.0 overall"},
+            {"program": "PhD Programs", "typical_score": "7.0+ overall"},
+            {"program": "Medical Schools", "typical_score": "7.0-7.5 overall"},
+            {"program": "Law Schools (LLM)", "typical_score": "7.0+ overall"},
+            {"program": "Nursing Registration", "typical_score": "6.5-7.0 with specific bands"}
+          ],
+          "resources": [
+            {"name": "IELTS Official Academic", "url": "https://ielts.org/take-a-test/test-types/ielts-academic"},
+            {"name": "British Council IELTS Academic", "url": "https://www.britishcouncil.org/exam/ielts/which-test/academic"},
+            {"name": "Cambridge Academic Materials", "url": "https://www.cambridge.org/gb/cambridgeenglish/catalog/cambridge-english-exams-ielts"},
+            {"name": "IDP Academic IELTS", "url": "https://ielts.idp.com/prepare/test-format/academic"},
+            {"name": "Academic Word List", "url": "https://www.wgtn.ac.nz/lals/resources/academicwordlist"}
+          ]
+        },
+        {
           "id": "celpip",
           "title": "CELPIP General Complete Guide",
           "subtitle": "Canadian English Language Proficiency Index Program",
