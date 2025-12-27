@@ -963,9 +963,12 @@
                 {% for strategy in guide.improvement_strategies %}
                 <div class="strategy-card">
                     <div class="strategy-header">
-                        <span class="strategy-points">{{ strategy.action }}</span>
-                        <span class="strategy-change">Gain: <span>+{{ strategy.points_gain }}</span></span>
+                        <span class="strategy-points">{{ strategy.strategy or strategy.action }}</span>
+                        <span class="strategy-change">Impact: <span>{{ strategy.impact or strategy.points_gain }}</span></span>
                     </div>
+                    {% if strategy.difficulty or strategy.timeline %}
+                    <p class="mb-2"><small class="text-muted"><i class="bi bi-clock me-1"></i>{{ strategy.timeline }} | Difficulty: {{ strategy.difficulty }}</small></p>
+                    {% endif %}
                     <p class="strategy-text">{{ strategy.details }}</p>
                 </div>
                 {% endfor %}
@@ -1446,6 +1449,34 @@
             </section>
             {% endif %}
 
+            <!-- Costs Breakdown (Express Entry) -->
+            {% if guide.costs_breakdown %}
+            <section class="content-section" id="costs">
+                <div class="section-header">
+                    <div class="section-icon"><i class="bi bi-currency-dollar"></i></div>
+                    <h2 class="section-title">Application Costs</h2>
+                </div>
+                <div class="costs-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item, cost in guide.costs_breakdown.items() %}
+                            <tr>
+                                <td>{{ item|replace('_', ' ')|title }}</td>
+                                <td><strong>{{ cost }}</strong></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            {% endif %}
+
             <!-- Resources -->
             {% if guide.resources %}
             <section class="content-section" id="resources">
@@ -1501,6 +1532,7 @@
                     {% if guide.step_by_step %}<li><a href="#steps">Step-by-Step</a></li>{% endif %}
                     {% if guide.tips %}<li><a href="#tips">Pro Tips</a></li>{% endif %}
                     {% if guide.common_mistakes %}<li><a href="#mistakes">Common Mistakes</a></li>{% endif %}
+                    {% if guide.costs_breakdown %}<li><a href="#costs">Application Costs</a></li>{% endif %}
                     {% if guide.resources %}<li><a href="#resources">Resources</a></li>{% endif %}
                 </ul>
             </div>
