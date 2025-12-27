@@ -4,8 +4,10 @@
 
 {% block extra_css %}
 <style>
+    /* Dashboard - White and Orange Theme */
     .dashboard-hero {
         padding: 6rem 0 3rem;
+        background: linear-gradient(135deg, #FFF7ED 0%, #FFFFFF 100%);
     }
 
     .dashboard-title {
@@ -13,6 +15,7 @@
         font-size: 2.5rem;
         font-weight: 700;
         margin-bottom: 0.5rem;
+        color: var(--philata-gray-900);
     }
 
     .dashboard-subtitle {
@@ -28,7 +31,7 @@
     }
 
     .stat-chip {
-        background: var(--philata-card);
+        background: white;
         border: 1px solid var(--philata-border);
         border-radius: 12px;
         padding: 1rem 1.5rem;
@@ -36,11 +39,13 @@
         align-items: center;
         gap: 0.75rem;
         transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .stat-chip:hover {
-        border-color: rgba(255,255,255,0.15);
+        border-color: var(--philata-orange);
         transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
 
     .stat-chip-icon {
@@ -57,7 +62,7 @@
         font-family: 'Space Grotesk', sans-serif;
         font-size: 1.5rem;
         font-weight: 700;
-        color: #fff;
+        color: var(--philata-gray-900);
     }
 
     .stat-chip-label {
@@ -66,7 +71,7 @@
     }
 
     .filters-bar {
-        background: var(--philata-card);
+        background: white;
         border: 1px solid var(--philata-border);
         border-radius: 16px;
         padding: 1.25rem;
@@ -75,6 +80,7 @@
         gap: 1rem;
         flex-wrap: wrap;
         align-items: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .filter-group {
@@ -83,7 +89,7 @@
     }
 
     .filter-btn {
-        background: rgba(255,255,255,0.03);
+        background: var(--philata-gray-50);
         border: 1px solid transparent;
         border-radius: 10px;
         padding: 0.6rem 1.25rem;
@@ -95,14 +101,14 @@
     }
 
     .filter-btn:hover {
-        background: rgba(255,255,255,0.06);
-        color: #fff;
+        background: var(--philata-gray-100);
+        color: var(--philata-gray-800);
     }
 
     .filter-btn.active {
-        background: var(--philata-red);
+        background: var(--philata-orange);
         color: white;
-        border-color: var(--philata-red);
+        border-color: var(--philata-orange);
     }
 
     .search-box {
@@ -113,18 +119,18 @@
 
     .search-box input {
         width: 100%;
-        background: rgba(255,255,255,0.03);
+        background: var(--philata-gray-50);
         border: 1px solid var(--philata-border);
         border-radius: 10px;
         padding: 0.6rem 1rem 0.6rem 2.5rem;
-        color: #fff;
+        color: var(--philata-text);
         font-size: 0.9rem;
     }
 
     .search-box input:focus {
         outline: none;
-        border-color: var(--philata-red);
-        background: rgba(255,255,255,0.05);
+        border-color: var(--philata-orange);
+        background: white;
     }
 
     .search-box i {
@@ -141,7 +147,7 @@
     }
 
     .view-btn {
-        background: rgba(255,255,255,0.03);
+        background: var(--philata-gray-50);
         border: 1px solid var(--philata-border);
         border-radius: 8px;
         padding: 0.5rem 0.75rem;
@@ -151,8 +157,8 @@
     }
 
     .view-btn:hover, .view-btn.active {
-        background: var(--philata-red);
-        border-color: var(--philata-red);
+        background: var(--philata-orange);
+        border-color: var(--philata-orange);
         color: white;
     }
 
@@ -163,23 +169,24 @@
     }
 
     .content-card {
-        background: var(--philata-card);
+        background: white;
         border: 1px solid var(--philata-border);
         border-radius: 20px;
         overflow: hidden;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .content-card:hover {
         transform: translateY(-8px);
-        border-color: rgba(255,255,255,0.15);
-        box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        border-color: var(--philata-orange);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.15);
     }
 
     .content-card-image {
         aspect-ratio: 1;
-        background: linear-gradient(135deg, rgba(227,24,55,0.2), rgba(99,102,241,0.2));
+        background: linear-gradient(135deg, rgba(249,115,22,0.2), rgba(245,158,11,0.2));
         display: flex;
         align-items: center;
         justify-content: center;
@@ -195,7 +202,7 @@
 
     .content-card-image .placeholder-icon {
         font-size: 4rem;
-        color: rgba(255,255,255,0.2);
+        color: rgba(249,115,22,0.3);
     }
 
     .content-card-badge {
@@ -212,7 +219,7 @@
     .content-card-title {
         font-size: 1rem;
         font-weight: 600;
-        color: #fff;
+        color: var(--philata-gray-900);
         margin-bottom: 0.75rem;
         line-height: 1.4;
         display: -webkit-box;
@@ -254,7 +261,7 @@
     }
 
     .content-card-arrow {
-        color: var(--philata-red-light);
+        color: var(--philata-orange);
         font-size: 1.25rem;
         transition: transform 0.3s ease;
     }
@@ -271,13 +278,14 @@
 
     .empty-state-icon {
         font-size: 5rem;
-        color: rgba(255,255,255,0.1);
+        color: rgba(249,115,22,0.2);
         margin-bottom: 1.5rem;
     }
 
     .empty-state h3 {
         font-size: 1.5rem;
         margin-bottom: 0.75rem;
+        color: var(--philata-gray-900);
     }
 
     .empty-state p {
@@ -287,7 +295,7 @@
     }
 
     .refresh-btn {
-        background: rgba(255,255,255,0.05);
+        background: white;
         border: 1px solid var(--philata-border);
         border-radius: 10px;
         padding: 0.6rem 1rem;
@@ -300,8 +308,9 @@
     }
 
     .refresh-btn:hover {
-        background: rgba(255,255,255,0.1);
-        color: #fff;
+        background: var(--philata-gray-50);
+        color: var(--philata-gray-800);
+        border-color: var(--philata-orange);
     }
 
     .results-count {
@@ -870,14 +879,22 @@
 <section class="pb-5">
     <div class="container">
         <div class="content-grid" id="contentGrid">
+            {# Stock images for different tracks (Unsplash - copyright free) #}
+            {% set stock_images = {
+                'breaking': 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=600&q=80',
+                'regular': 'https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=600&q=80',
+                'educational': 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80',
+                'forms': 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&q=80',
+                'default': 'https://images.unsplash.com/photo-1569974507005-6dc61f97fb5c?w=600&q=80'
+            } %}
             {% for result in results %}
             <div class="content-card" data-index="{{ loop.index0 }}" data-track="{{ result.track }}" data-title="{{ result.title|lower }}" data-id="{{ result.id }}">
                 <div class="content-card-image">
                     <span class="content-card-badge badge-{{ result.track }}">{{ result.track|upper }}</span>
                     {% if result.image_url %}
-                    <img src="{{ result.image_url }}" alt="{{ result.title }}">
+                    <img src="{{ result.image_url }}" alt="{{ result.title }}" onerror="this.src='{{ stock_images.get(result.track, stock_images.default) }}'">
                     {% else %}
-                    <i class="bi bi-image placeholder-icon"></i>
+                    <img src="{{ stock_images.get(result.track, stock_images.default) }}" alt="{{ result.title }}">
                     {% endif %}
                 </div>
                 <div class="content-card-body">

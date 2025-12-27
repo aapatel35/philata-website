@@ -4,7 +4,7 @@
 
 {% block extra_css %}
 <style>
-    /* Hero Section */
+    /* Hero Section - White and Orange Theme */
     .hero {
         min-height: 100vh;
         display: flex;
@@ -12,6 +12,7 @@
         position: relative;
         overflow: hidden;
         padding: 8rem 0 6rem;
+        background: linear-gradient(135deg, #FFF7ED 0%, #FFFFFF 50%, #FEF3C7 100%);
     }
 
     .hero-content {
@@ -23,20 +24,21 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: rgba(227, 24, 55, 0.1);
-        border: 1px solid rgba(227, 24, 55, 0.3);
+        background: white;
+        border: 1px solid var(--philata-border);
         padding: 0.5rem 1rem;
         border-radius: 50px;
         font-size: 0.85rem;
-        color: var(--philata-red-light);
+        color: var(--philata-orange);
         margin-bottom: 2rem;
         animation: fadeInUp 0.8s ease forwards;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
 
     .hero-badge .pulse {
         width: 8px;
         height: 8px;
-        background: var(--philata-red);
+        background: var(--philata-orange);
         border-radius: 50%;
         animation: pulse 2s infinite;
     }
@@ -55,6 +57,7 @@
         animation: fadeInUp 0.8s ease forwards;
         animation-delay: 0.1s;
         opacity: 0;
+        color: var(--philata-gray-900);
     }
 
     .hero-subtitle {
@@ -94,7 +97,7 @@
         font-family: 'Space Grotesk', sans-serif;
         font-size: 2.5rem;
         font-weight: 700;
-        color: #fff;
+        color: var(--philata-orange);
         margin-bottom: 0.25rem;
     }
 
@@ -112,12 +115,13 @@
     }
 
     .hero-card {
-        background: var(--philata-card);
+        background: white;
         border: 1px solid var(--philata-border);
         border-radius: 24px;
         padding: 2rem;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.1);
     }
 
     .hero-card::before {
@@ -132,11 +136,11 @@
 
     .floating-card {
         position: absolute;
-        background: var(--philata-card);
+        background: white;
         border: 1px solid var(--philata-border);
         border-radius: 16px;
         padding: 1rem 1.25rem;
-        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         animation: float 6s ease-in-out infinite;
     }
 
@@ -175,15 +179,15 @@
         align-items: flex-start;
         gap: 1rem;
         padding: 1rem;
-        background: rgba(255,255,255,0.02);
+        background: var(--philata-gray-50);
         border-radius: 12px;
-        border: 1px solid rgba(255,255,255,0.05);
+        border: 1px solid var(--philata-border);
         transition: all 0.3s ease;
     }
 
     .feed-item:hover {
-        background: rgba(255,255,255,0.04);
-        border-color: rgba(255,255,255,0.1);
+        background: var(--philata-gray-100);
+        border-color: var(--philata-orange);
     }
 
     .feed-icon {
@@ -201,7 +205,7 @@
         font-size: 0.9rem;
         font-weight: 600;
         margin-bottom: 0.25rem;
-        color: #fff;
+        color: var(--philata-gray-900);
     }
 
     .feed-content p {
@@ -220,10 +224,11 @@
     .features-section {
         padding: 8rem 0;
         position: relative;
+        background: white;
     }
 
     .feature-card {
-        background: var(--philata-card);
+        background: white;
         border: 1px solid var(--philata-border);
         border-radius: 24px;
         padding: 2.5rem;
@@ -231,6 +236,7 @@
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .feature-card::before {
@@ -250,10 +256,9 @@
     }
 
     .feature-card:hover {
-        background: var(--philata-card-hover);
-        border-color: rgba(255,255,255,0.12);
         transform: translateY(-8px);
-        box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+        border-color: var(--philata-orange);
     }
 
     .feature-icon {
@@ -271,7 +276,7 @@
         font-size: 1.25rem;
         font-weight: 600;
         margin-bottom: 0.75rem;
-        color: #fff;
+        color: var(--philata-gray-900);
     }
 
     .feature-desc {
@@ -283,7 +288,7 @@
     /* Stats Section */
     .stats-section {
         padding: 6rem 0;
-        background: linear-gradient(180deg, transparent, rgba(227, 24, 55, 0.03), transparent);
+        background: linear-gradient(180deg, white, rgba(249, 115, 22, 0.05), white);
     }
 
     .stat-box {
@@ -310,10 +315,11 @@
     /* Tracks Section */
     .tracks-section {
         padding: 8rem 0;
+        background: var(--philata-gray-50);
     }
 
     .track-card {
-        background: var(--philata-card);
+        background: white;
         border: 1px solid var(--philata-border);
         border-radius: 20px;
         padding: 2rem;
@@ -321,11 +327,13 @@
         transition: all 0.4s ease;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .track-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        border-color: var(--philata-orange);
     }
 
     .track-badge {
@@ -341,7 +349,7 @@
         font-size: 1.25rem;
         font-weight: 600;
         margin-bottom: 0.5rem;
-        color: #fff;
+        color: var(--philata-gray-900);
     }
 
     .track-desc {
@@ -366,7 +374,7 @@
     }
 
     .track-features li i {
-        color: var(--philata-red-light);
+        color: var(--philata-orange);
     }
 
     /* CTA Section */
@@ -374,11 +382,12 @@
         padding: 8rem 0;
         text-align: center;
         position: relative;
+        background: white;
     }
 
     .cta-box {
-        background: var(--philata-card);
-        border: 1px solid var(--philata-border);
+        background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(249, 115, 22, 0.05) 100%);
+        border: 1px solid rgba(249, 115, 22, 0.2);
         border-radius: 32px;
         padding: 4rem;
         position: relative;
@@ -392,7 +401,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: radial-gradient(circle at center, rgba(227, 24, 55, 0.1), transparent 70%);
+        background: radial-gradient(circle at center, rgba(249, 115, 22, 0.1), transparent 70%);
         pointer-events: none;
     }
 
@@ -401,7 +410,7 @@
         font-size: 3rem;
         font-weight: 700;
         margin-bottom: 1rem;
-        color: #fff;
+        color: var(--philata-gray-900);
     }
 
     .cta-subtitle {

@@ -4,10 +4,27 @@
 
 {% block extra_css %}
 <style>
+    /* Province Background Images (Unsplash - Copyright Free) */
+    {% set province_backgrounds = {
+        'ontario': 'https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=1920&q=80',
+        'british-columbia': 'https://images.unsplash.com/photo-1559511260-66a68e7e9eb0?w=1920&q=80',
+        'alberta': 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=1920&q=80',
+        'saskatchewan': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80',
+        'manitoba': 'https://images.unsplash.com/photo-1580910051074-3eb694886f5c?w=1920&q=80',
+        'nova-scotia': 'https://images.unsplash.com/photo-1548690312-e3b507d8c110?w=1920&q=80',
+        'new-brunswick': 'https://images.unsplash.com/photo-1543807535-eceef0bc6599?w=1920&q=80',
+        'pei': 'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=1920&q=80',
+        'newfoundland': 'https://images.unsplash.com/photo-1545048702-79362596cdc9?w=1920&q=80'
+    } %}
+
     .province-hero {
-        padding: 6rem 0 4rem;
+        padding: 8rem 0 5rem;
         position: relative;
         overflow: hidden;
+        background: linear-gradient(135deg, rgba(249, 115, 22, 0.05) 0%, rgba(255, 255, 255, 0.9) 100%),
+                    url('{{ province_backgrounds.get(province.id, "https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1920&q=80") }}');
+        background-size: cover;
+        background-position: center;
     }
 
     .province-hero::before {
@@ -17,23 +34,29 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: radial-gradient(ellipse at top, {{ color }}22 0%, transparent 60%);
+        background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0.95) 100%);
         pointer-events: none;
+    }
+
+    .province-hero .container {
+        position: relative;
+        z-index: 2;
     }
 
     .province-badge {
         display: inline-flex;
         align-items: center;
         gap: 12px;
-        background: {{ color }}22;
-        border: 1px solid {{ color }}44;
+        background: white;
+        border: 1px solid var(--philata-border);
         padding: 0.75rem 1.5rem;
         border-radius: 50px;
         margin-bottom: 2rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
     .province-code-badge {
-        background: {{ color }};
+        background: var(--philata-orange);
         color: white;
         padding: 0.5rem 1rem;
         border-radius: 8px;
@@ -50,6 +73,7 @@
         font-size: 3.5rem;
         font-weight: 800;
         margin-bottom: 1rem;
+        color: var(--philata-gray-900);
     }
 
     .province-description {
@@ -68,17 +92,19 @@
     }
 
     .info-card {
-        background: rgba(255,255,255,0.03);
+        background: white;
         border: 1px solid var(--philata-border);
         border-radius: 16px;
         padding: 1.5rem;
         text-align: center;
         transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .info-card:hover {
-        background: rgba(255,255,255,0.05);
         transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        border-color: var(--philata-orange);
     }
 
     .info-icon {
@@ -96,7 +122,7 @@
     .info-value {
         font-size: 1.1rem;
         font-weight: 600;
-        color: white;
+        color: var(--philata-gray-900);
         margin-top: 0.25rem;
     }
 
@@ -104,6 +130,7 @@
     .highlights-section {
         padding: 3rem 0;
         border-bottom: 1px solid var(--philata-border);
+        background: white;
     }
 
     .highlight-item {
@@ -117,21 +144,26 @@
         width: 40px;
         height: 40px;
         border-radius: 10px;
-        background: {{ color }}22;
+        background: rgba(249, 115, 22, 0.1);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: {{ color }};
+        color: var(--philata-orange);
         flex-shrink: 0;
+    }
+
+    .highlight-item span {
+        color: var(--philata-text);
     }
 
     /* Streams Section */
     .streams-section {
         padding: 4rem 0;
+        background: var(--philata-gray-50);
     }
 
     .stream-card {
-        background: rgba(255,255,255,0.03);
+        background: white;
         border: 1px solid var(--philata-border);
         border-radius: 20px;
         padding: 2rem;
@@ -139,12 +171,13 @@
         transition: all 0.4s ease;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .stream-card:hover {
-        background: rgba(255,255,255,0.05);
         transform: translateY(-5px);
-        border-color: {{ color }}44;
+        border-color: var(--philata-orange);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.1);
     }
 
     .stream-card.suspended {
@@ -191,7 +224,7 @@
     .stream-name {
         font-size: 1.25rem;
         font-weight: 700;
-        color: white;
+        color: var(--philata-gray-900);
         margin-bottom: 1rem;
     }
 
@@ -211,7 +244,7 @@
     }
 
     .stream-requirements li i {
-        color: {{ color }};
+        color: var(--philata-orange);
         margin-top: 3px;
     }
 
@@ -226,39 +259,41 @@
     }
 
     .job-offer-badge.required {
-        background: rgba(239, 68, 68, 0.2);
-        color: #F87171;
+        background: rgba(239, 68, 68, 0.1);
+        color: #DC2626;
     }
 
     .job-offer-badge.not-required {
-        background: rgba(16, 185, 129, 0.2);
-        color: #34D399;
+        background: rgba(16, 185, 129, 0.1);
+        color: #059669;
     }
 
     /* Places to Explore */
     .places-section {
         padding: 4rem 0;
-        background: linear-gradient(180deg, transparent 0%, {{ color }}08 50%, transparent 100%);
+        background: linear-gradient(180deg, white 0%, rgba(249, 115, 22, 0.05) 50%, white 100%);
     }
 
     .place-card {
-        background: rgba(255,255,255,0.03);
+        background: white;
         border: 1px solid var(--philata-border);
         border-radius: 16px;
         padding: 1.5rem;
         height: 100%;
         transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .place-card:hover {
-        background: rgba(255,255,255,0.05);
         transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        border-color: var(--philata-orange);
     }
 
     .place-name {
         font-size: 1.1rem;
         font-weight: 600;
-        color: white;
+        color: var(--philata-gray-900);
         margin-bottom: 0.5rem;
         display: flex;
         align-items: center;
@@ -266,7 +301,7 @@
     }
 
     .place-name i {
-        color: {{ color }};
+        color: var(--philata-orange);
     }
 
     .place-description {
@@ -277,6 +312,7 @@
     /* In-Demand Occupations */
     .occupations-section {
         padding: 4rem 0;
+        background: white;
     }
 
     .occupation-tag {
@@ -284,7 +320,7 @@
         align-items: center;
         gap: 6px;
         padding: 0.75rem 1.25rem;
-        background: rgba(255,255,255,0.03);
+        background: var(--philata-gray-50);
         border: 1px solid var(--philata-border);
         border-radius: 50px;
         color: var(--philata-text);
@@ -294,18 +330,24 @@
     }
 
     .occupation-tag:hover {
-        background: {{ color }}22;
-        border-color: {{ color }}44;
+        background: rgba(249, 115, 22, 0.1);
+        border-color: var(--philata-orange);
+        color: var(--philata-orange);
+    }
+
+    .occupation-tag i {
+        color: var(--philata-orange);
     }
 
     /* CTA Section */
     .cta-section {
         padding: 4rem 0;
+        background: var(--philata-gray-50);
     }
 
     .cta-card {
-        background: linear-gradient(135deg, {{ color }}22 0%, {{ color }}11 100%);
-        border: 1px solid {{ color }}33;
+        background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(249, 115, 22, 0.05) 100%);
+        border: 1px solid rgba(249, 115, 22, 0.2);
         border-radius: 24px;
         padding: 3rem;
         text-align: center;

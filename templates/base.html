@@ -10,22 +10,38 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --philata-red: #E31837;
-            --philata-red-dark: #B91430;
-            --philata-red-light: #FF3D5A;
-            --philata-gold: #D4AF37;
-            --philata-dark: #0A0A0F;
-            --philata-darker: #050508;
-            --philata-card: rgba(255,255,255,0.03);
-            --philata-card-hover: rgba(255,255,255,0.06);
-            --philata-border: rgba(255,255,255,0.08);
-            --philata-text: #E8E8ED;
-            --philata-text-muted: #8B8B9E;
-            --gradient-primary: linear-gradient(135deg, #E31837 0%, #FF6B6B 50%, #E31837 100%);
-            --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #F4D03F 50%, #D4AF37 100%);
-            --gradient-dark: linear-gradient(180deg, #0A0A0F 0%, #12121A 50%, #0A0A0F 100%);
-            --glass-bg: rgba(255,255,255,0.02);
-            --glass-border: rgba(255,255,255,0.05);
+            /* White and Orange Theme */
+            --philata-orange: #F97316;
+            --philata-orange-dark: #EA580C;
+            --philata-orange-light: #FB923C;
+            --philata-orange-pale: #FFF7ED;
+            --philata-gold: #F59E0B;
+            --philata-white: #FFFFFF;
+            --philata-light: #FAFAFA;
+            --philata-gray-50: #F9FAFB;
+            --philata-gray-100: #F3F4F6;
+            --philata-gray-200: #E5E7EB;
+            --philata-gray-300: #D1D5DB;
+            --philata-gray-400: #9CA3AF;
+            --philata-gray-500: #6B7280;
+            --philata-gray-600: #4B5563;
+            --philata-gray-700: #374151;
+            --philata-gray-800: #1F2937;
+            --philata-gray-900: #111827;
+            --philata-card: #FFFFFF;
+            --philata-card-hover: #FAFAFA;
+            --philata-border: #E5E7EB;
+            --philata-text: #1F2937;
+            --philata-text-muted: #6B7280;
+            --gradient-primary: linear-gradient(135deg, #F97316 0%, #FB923C 50%, #F97316 100%);
+            --gradient-gold: linear-gradient(135deg, #F59E0B 0%, #FBBF24 50%, #F59E0B 100%);
+            --gradient-light: linear-gradient(180deg, #FFFFFF 0%, #F9FAFB 100%);
+            --glass-bg: rgba(255,255,255,0.9);
+            --glass-border: rgba(0,0,0,0.05);
+            /* Keep old red vars for compatibility */
+            --philata-red: #F97316;
+            --philata-red-dark: #EA580C;
+            --philata-red-light: #FB923C;
         }
 
         * {
@@ -36,14 +52,14 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--philata-darker);
+            background: var(--philata-light);
             color: var(--philata-text);
             min-height: 100vh;
             overflow-x: hidden;
             line-height: 1.6;
         }
 
-        /* Animated Background */
+        /* Subtle Background Pattern */
         .bg-animation {
             position: fixed;
             top: 0;
@@ -52,6 +68,7 @@
             height: 100%;
             z-index: -1;
             overflow: hidden;
+            background: linear-gradient(135deg, #FFF7ED 0%, #FFFFFF 50%, #FEF3C7 100%);
         }
 
         .bg-animation::before {
@@ -62,9 +79,9 @@
             width: 200%;
             height: 200%;
             background:
-                radial-gradient(circle at 20% 80%, rgba(227, 24, 55, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(227, 24, 55, 0.03) 0%, transparent 30%);
+                radial-gradient(circle at 20% 80%, rgba(249, 115, 22, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(249, 115, 22, 0.03) 0%, transparent 30%);
             animation: bgFloat 20s ease-in-out infinite;
         }
 
@@ -83,15 +100,15 @@
             height: 100%;
             z-index: -1;
             background-image:
-                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+                linear-gradient(rgba(249, 115, 22, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(249, 115, 22, 0.02) 1px, transparent 1px);
             background-size: 60px 60px;
             mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
         }
 
         /* Navigation */
         .navbar {
-            background: rgba(10, 10, 15, 0.8) !important;
+            background: rgba(255, 255, 255, 0.95) !important;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--philata-border);
@@ -100,8 +117,9 @@
         }
 
         .navbar.scrolled {
-            background: rgba(10, 10, 15, 0.95) !important;
+            background: rgba(255, 255, 255, 0.98) !important;
             padding: 0.5rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         }
 
         .navbar-brand {
@@ -111,7 +129,7 @@
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
             font-size: 1.5rem;
-            color: #fff !important;
+            color: var(--philata-gray-900) !important;
             text-decoration: none;
         }
 
@@ -124,7 +142,7 @@
             align-items: center;
             justify-content: center;
             font-size: 1.4rem;
-            box-shadow: 0 4px 15px rgba(227, 24, 55, 0.3);
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
             transition: transform 0.3s ease;
         }
 
@@ -133,7 +151,7 @@
         }
 
         .nav-link {
-            color: var(--philata-text-muted) !important;
+            color: var(--philata-gray-600) !important;
             font-weight: 500;
             font-size: 0.95rem;
             padding: 0.5rem 1rem !important;
@@ -143,8 +161,8 @@
         }
 
         .nav-link:hover, .nav-link.active {
-            color: #fff !important;
-            background: rgba(255,255,255,0.05);
+            color: var(--philata-orange) !important;
+            background: rgba(249, 115, 22, 0.08);
         }
 
         .nav-link.active::after {
@@ -155,7 +173,7 @@
             transform: translateX(-50%);
             width: 20px;
             height: 2px;
-            background: var(--philata-red);
+            background: var(--philata-orange);
             border-radius: 2px;
         }
 
@@ -166,13 +184,22 @@
             padding: 0.6rem 1.5rem !important;
             border-radius: 10px;
             border: none;
-            box-shadow: 0 4px 15px rgba(227, 24, 55, 0.3);
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
             transition: all 0.3s ease;
         }
 
         .btn-nav-cta:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(227, 24, 55, 0.4);
+            box-shadow: 0 6px 25px rgba(249, 115, 22, 0.4);
+        }
+
+        /* Mobile Menu Toggle */
+        .navbar-toggler {
+            border-color: var(--philata-gray-300) !important;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(75, 85, 99, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
         }
 
         /* Cards */
@@ -180,24 +207,24 @@
             background: var(--philata-card);
             border: 1px solid var(--philata-border);
             border-radius: 20px;
-            backdrop-filter: blur(10px);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .card:hover {
             background: var(--philata-card-hover);
-            border-color: rgba(255,255,255,0.12);
+            border-color: rgba(249, 115, 22, 0.2);
             transform: translateY(-5px);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
         }
 
         .card-header {
-            background: rgba(255,255,255,0.03);
+            background: var(--philata-gray-50);
             border-bottom: 1px solid var(--philata-border);
             padding: 1.25rem 1.5rem;
             font-weight: 600;
-            color: #fff;
+            color: var(--philata-gray-800);
         }
 
         .card-body {
@@ -211,19 +238,20 @@
             font-weight: 600;
             padding: 0.75rem 2rem;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(227, 24, 55, 0.3);
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
             transition: all 0.3s ease;
+            color: white;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(227, 24, 55, 0.4);
+            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
             background: var(--gradient-primary);
         }
 
         .btn-outline-light {
-            border: 1px solid rgba(255,255,255,0.2);
-            color: #fff;
+            border: 1px solid var(--philata-gray-300);
+            color: var(--philata-gray-700);
             font-weight: 500;
             padding: 0.75rem 2rem;
             border-radius: 12px;
@@ -231,19 +259,37 @@
         }
 
         .btn-outline-light:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: rgba(255,255,255,0.3);
+            background: var(--philata-gray-100);
+            border-color: var(--philata-gray-400);
+            color: var(--philata-gray-800);
             transform: translateY(-2px);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--philata-orange);
+            color: var(--philata-orange);
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--philata-orange);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
         }
 
         /* Badges */
         .badge-breaking {
-            background: linear-gradient(135deg, #E31837, #FF6B6B);
+            background: linear-gradient(135deg, #F97316, #FB923C);
             color: white;
             font-weight: 600;
             padding: 0.5em 1em;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(227, 24, 55, 0.3);
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
         }
 
         .badge-regular {
@@ -280,7 +326,7 @@
             font-family: 'Space Grotesk', sans-serif;
             font-size: 3rem;
             font-weight: 700;
-            color: #fff;
+            color: var(--philata-gray-900);
             margin-bottom: 1rem;
             line-height: 1.2;
         }
@@ -306,8 +352,8 @@
         }
 
         /* Glow Effects */
-        .glow-red {
-            box-shadow: 0 0 60px rgba(227, 24, 55, 0.3);
+        .glow-red, .glow-orange {
+            box-shadow: 0 0 60px rgba(249, 115, 22, 0.2);
         }
 
         /* Text utilities */
@@ -316,35 +362,35 @@
         }
 
         h1, h2, h3, h4, h5, h6 {
-            color: #fff;
+            color: var(--philata-gray-900);
             font-family: 'Space Grotesk', sans-serif;
         }
 
         a {
-            color: var(--philata-red-light);
+            color: var(--philata-orange);
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
         a:hover {
-            color: #fff;
+            color: var(--philata-orange-dark);
         }
 
         /* Form Controls */
         .form-control, .form-select {
-            background: rgba(255,255,255,0.03);
+            background: var(--philata-white);
             border: 1px solid var(--philata-border);
-            color: #fff;
+            color: var(--philata-text);
             border-radius: 12px;
             padding: 0.75rem 1rem;
             transition: all 0.3s ease;
         }
 
         .form-control:focus, .form-select:focus {
-            background: rgba(255,255,255,0.05);
-            border-color: var(--philata-red);
-            box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.1);
-            color: #fff;
+            background: var(--philata-white);
+            border-color: var(--philata-orange);
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+            color: var(--philata-text);
         }
 
         .form-control::placeholder {
@@ -353,7 +399,7 @@
 
         /* Footer */
         .footer {
-            background: rgba(0,0,0,0.3);
+            background: var(--philata-gray-900);
             border-top: 1px solid var(--philata-border);
             padding: 4rem 0 2rem;
             margin-top: 4rem;
@@ -381,21 +427,21 @@
 
         .footer-links a {
             display: block;
-            color: var(--philata-text-muted);
+            color: var(--philata-gray-400);
             padding: 0.3rem 0;
             font-size: 0.95rem;
         }
 
         .footer-links a:hover {
-            color: #fff;
+            color: var(--philata-orange-light);
         }
 
         .footer-bottom {
             margin-top: 3rem;
             padding-top: 2rem;
-            border-top: 1px solid var(--philata-border);
+            border-top: 1px solid var(--philata-gray-700);
             text-align: center;
-            color: var(--philata-text-muted);
+            color: var(--philata-gray-400);
             font-size: 0.9rem;
         }
 
@@ -408,16 +454,16 @@
             width: 40px;
             height: 40px;
             border-radius: 10px;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--philata-text-muted);
+            color: var(--philata-gray-400);
             transition: all 0.3s ease;
         }
 
         .social-links a:hover {
-            background: var(--philata-red);
+            background: var(--philata-orange);
             color: #fff;
             transform: translateY(-3px);
         }
@@ -444,16 +490,16 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: var(--philata-darker);
+            background: var(--philata-gray-100);
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--philata-border);
+            background: var(--philata-gray-300);
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255,255,255,0.2);
+            background: var(--philata-gray-400);
         }
 
         /* Responsive */
@@ -474,7 +520,7 @@
 
         /* Caption box */
         .caption-box {
-            background: rgba(0,0,0,0.4);
+            background: var(--philata-gray-50);
             border-radius: 12px;
             padding: 1.25rem;
             font-family: 'SF Mono', Monaco, monospace;
@@ -485,6 +531,12 @@
             color: var(--philata-text);
             border: 1px solid var(--philata-border);
         }
+
+        /* Orange accent utilities */
+        .bg-orange-50 { background-color: #FFF7ED; }
+        .bg-orange-100 { background-color: #FFEDD5; }
+        .text-orange { color: var(--philata-orange) !important; }
+        .border-orange { border-color: var(--philata-orange) !important; }
 
         {% block extra_css %}{% endblock %}
     </style>
