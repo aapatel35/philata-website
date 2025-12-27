@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <meta name="version" content="2.0.7-visible-bg-20251227">
+    <meta name="version" content="2.1.0-splash-fancy-hero-20251227">
     <title>{% block title %}Philata{% endblock %} | Canadian Immigration News</title>
     <meta name="description" content="Your trusted source for Canadian immigration news, Express Entry updates, and immigration guides. Stay informed with the latest IRCC announcements.">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -645,10 +645,203 @@
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
 
+        /* ========================================
+           ANIMATED SPLASH SCREEN
+           ======================================== */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #14532d 50%, #0f172a 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .splash-screen.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .splash-logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .splash-logo {
+            width: 120px;
+            height: 120px;
+            animation: logoAppear 1s ease forwards, logoPulse 2s ease-in-out infinite 1s;
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        @keyframes logoAppear {
+            0% {
+                opacity: 0;
+                transform: scale(0.5) rotate(-10deg);
+            }
+            50% {
+                transform: scale(1.1) rotate(5deg);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes logoPulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 20px rgba(74, 222, 128, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 40px rgba(74, 222, 128, 0.8));
+            }
+        }
+
+        .splash-text {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+            opacity: 0;
+            animation: textAppear 0.8s ease forwards 0.5s;
+        }
+
+        .splash-text span {
+            background: linear-gradient(135deg, #4ade80, #22c55e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes textAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .splash-tagline {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            opacity: 0;
+            animation: textAppear 0.6s ease forwards 0.9s;
+        }
+
+        .splash-loader {
+            margin-top: 2rem;
+            width: 200px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            opacity: 0;
+            animation: textAppear 0.5s ease forwards 1.2s;
+        }
+
+        .splash-loader-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #22c55e, #4ade80, #22c55e);
+            border-radius: 3px;
+            animation: loadProgress 1.5s ease forwards 1.4s;
+        }
+
+        @keyframes loadProgress {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+
+        /* Floating particles in splash */
+        .splash-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .splash-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: rgba(74, 222, 128, 0.3);
+            border-radius: 50%;
+            animation: particleFloat 4s ease-in-out infinite;
+        }
+
+        .splash-particle:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
+        .splash-particle:nth-child(2) { left: 20%; top: 80%; animation-delay: 0.5s; }
+        .splash-particle:nth-child(3) { left: 80%; top: 30%; animation-delay: 1s; }
+        .splash-particle:nth-child(4) { left: 70%; top: 70%; animation-delay: 1.5s; }
+        .splash-particle:nth-child(5) { left: 50%; top: 10%; animation-delay: 2s; }
+        .splash-particle:nth-child(6) { left: 90%; top: 50%; animation-delay: 0.3s; }
+        .splash-particle:nth-child(7) { left: 30%; top: 60%; animation-delay: 0.8s; }
+        .splash-particle:nth-child(8) { left: 60%; top: 90%; animation-delay: 1.3s; }
+
+        @keyframes particleFloat {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-30px) scale(1.5);
+                opacity: 0.6;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .splash-logo {
+                width: 80px;
+                height: 80px;
+            }
+            .splash-text {
+                font-size: 2rem;
+            }
+            .splash-tagline {
+                font-size: 0.85rem;
+            }
+        }
+
         {% block extra_css %}{% endblock %}
     </style>
 </head>
 <body>
+    <!-- Animated Splash Screen -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-particles">
+            <div class="splash-particle"></div>
+            <div class="splash-particle"></div>
+            <div class="splash-particle"></div>
+            <div class="splash-particle"></div>
+            <div class="splash-particle"></div>
+            <div class="splash-particle"></div>
+            <div class="splash-particle"></div>
+            <div class="splash-particle"></div>
+        </div>
+        <div class="splash-logo-container">
+            <img src="{{ url_for('static', filename='images/philata-logo.png') }}" alt="Philata" class="splash-logo">
+            <div class="splash-text">Philata<span>.</span></div>
+            <div class="splash-tagline">Your Canadian Immigration Journey</div>
+            <div class="splash-loader">
+                <div class="splash-loader-bar"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="bg-animation"></div>
     <div class="grid-overlay"></div>
 
@@ -757,6 +950,23 @@
             } else {
                 nav.classList.remove('scrolled');
             }
+        });
+    </script>
+
+    <!-- Splash Screen Script -->
+    <script>
+        // Hide splash screen after animation completes
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const splash = document.getElementById('splashScreen');
+                if (splash) {
+                    splash.classList.add('fade-out');
+                    // Remove from DOM after fade
+                    setTimeout(function() {
+                        splash.style.display = 'none';
+                    }, 800);
+                }
+            }, 3000); // Show splash for 3 seconds
         });
     </script>
     {% block extra_js %}{% endblock %}

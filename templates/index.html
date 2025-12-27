@@ -4,7 +4,9 @@
 
 {% block extra_css %}
 <style>
-    /* Hero Section - Canadian Mountains with Dark Overlay */
+    /* ========================================
+       FANCY HERO SECTION - Green Theme
+       ======================================== */
     .hero {
         min-height: 100vh;
         display: flex;
@@ -12,9 +14,29 @@
         position: relative;
         overflow: hidden;
         padding: 8rem 0 6rem;
-        background-color: #0f172a !important;
-        background-image: linear-gradient(135deg, #0f172a 0%, #14532d 50%, #1e3a2f 100%) !important;
+        background: linear-gradient(135deg, #0f172a 0%, #14532d 50%, #0f172a 100%);
         z-index: 1;
+    }
+
+    /* Animated gradient background */
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+            radial-gradient(circle at 20% 80%, rgba(74, 222, 128, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
+        z-index: 1;
+        animation: gradientPulse 8s ease-in-out infinite;
+    }
+
+    @keyframes gradientPulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.1); }
     }
 
     .hero-bg {
@@ -24,7 +46,7 @@
         right: 0;
         bottom: 0;
         background: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1920&q=80') center/cover no-repeat;
-        opacity: 0.25;
+        opacity: 0.3;
         z-index: 1;
     }
 
@@ -34,59 +56,132 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(20, 83, 45, 0.85) 100%);
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(20, 83, 45, 0.75) 50%, rgba(15, 23, 42, 0.85) 100%);
         z-index: 2;
+    }
+
+    /* Floating particles */
+    .hero-particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 3;
+        pointer-events: none;
+        overflow: hidden;
+    }
+
+    .particle {
+        position: absolute;
+        border-radius: 50%;
+        animation: particleRise 15s ease-in-out infinite;
+        opacity: 0;
+    }
+
+    .particle-1 { width: 4px; height: 4px; background: #4ade80; left: 10%; animation-delay: 0s; }
+    .particle-2 { width: 6px; height: 6px; background: #22c55e; left: 20%; animation-delay: 2s; }
+    .particle-3 { width: 3px; height: 3px; background: #86efac; left: 30%; animation-delay: 4s; }
+    .particle-4 { width: 5px; height: 5px; background: #4ade80; left: 50%; animation-delay: 1s; }
+    .particle-5 { width: 4px; height: 4px; background: #10b981; left: 70%; animation-delay: 3s; }
+    .particle-6 { width: 6px; height: 6px; background: #22c55e; left: 85%; animation-delay: 5s; }
+    .particle-7 { width: 3px; height: 3px; background: #86efac; left: 95%; animation-delay: 2.5s; }
+    .particle-8 { width: 5px; height: 5px; background: #4ade80; left: 40%; animation-delay: 6s; }
+
+    @keyframes particleRise {
+        0% {
+            bottom: -10%;
+            opacity: 0;
+            transform: translateX(0) scale(0);
+        }
+        10% {
+            opacity: 0.6;
+            transform: scale(1);
+        }
+        90% {
+            opacity: 0.6;
+        }
+        100% {
+            bottom: 110%;
+            opacity: 0;
+            transform: translateX(100px) scale(0.5);
+        }
     }
 
     .hero-content {
         position: relative;
         z-index: 10;
+        animation: heroContentAppear 1s ease forwards;
+        opacity: 0;
+    }
+
+    @keyframes heroContentAppear {
+        0% { opacity: 0; transform: translateY(30px); }
+        100% { opacity: 1; transform: translateY(0); }
     }
 
     .hero-badge {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        background: #22c55e !important;
-        padding: 0.5rem 1rem;
+        gap: 10px;
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        padding: 0.6rem 1.25rem;
         border-radius: 50px;
         font-size: 0.85rem;
-        color: #ffffff !important;
+        color: #ffffff;
         font-weight: 600;
         margin-bottom: 2rem;
+        box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+        animation: badgeGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes badgeGlow {
+        0%, 100% { box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4); }
+        50% { box-shadow: 0 4px 30px rgba(34, 197, 94, 0.6), 0 0 40px rgba(74, 222, 128, 0.3); }
     }
 
     .hero-badge .pulse {
-        width: 8px;
-        height: 8px;
-        background: #FEF3C7;
+        width: 10px;
+        height: 10px;
+        background: #ffffff;
         border-radius: 50%;
-        animation: pulse 2s infinite;
+        animation: pulse 1.5s infinite;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     }
 
     @keyframes pulse {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.5; transform: scale(1.5); }
+        0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+        50% { opacity: 0.8; transform: scale(1.2); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
     }
 
     .hero-title {
         font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 4rem;
+        font-size: 4.5rem;
         font-weight: 800;
-        line-height: 1.1;
+        line-height: 1.05;
         margin-bottom: 1.5rem;
-        color: #ffffff !important;
+        color: #ffffff;
         letter-spacing: -0.03em;
     }
 
     .hero-title .highlight {
-        color: #4ade80 !important;
-        -webkit-text-fill-color: #4ade80 !important;
+        background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #86efac 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+        display: inline-block;
+        animation: textShimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes textShimmer {
+        0%, 100% { filter: brightness(1); }
+        50% { filter: brightness(1.3); }
     }
 
     .hero-subtitle {
         font-size: 1.35rem;
-        color: #e5e7eb !important;
+        color: rgba(255, 255, 255, 0.85);
         max-width: 550px;
         margin-bottom: 2.5rem;
         line-height: 1.7;
@@ -100,62 +195,112 @@
     }
 
     .hero-cta .btn-primary {
-        background: linear-gradient(135deg, #40916C 0%, #52B788 100%);
-        box-shadow: 0 4px 20px rgba(64, 145, 108, 0.4);
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        border: none;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        font-size: 1rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-cta .btn-primary::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .hero-cta .btn-primary:hover::before {
+        left: 100%;
     }
 
     .hero-cta .btn-primary:hover {
-        box-shadow: 0 8px 30px rgba(64, 145, 108, 0.5);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(34, 197, 94, 0.5);
     }
 
     .hero-cta .btn-outline-light {
-        border-color: rgba(255, 255, 255, 0.4);
+        border: 2px solid rgba(255, 255, 255, 0.3);
         color: #fff;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        font-size: 1rem;
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
     }
 
     .hero-cta .btn-outline-light:hover {
         background: rgba(255, 255, 255, 0.1);
-        border-color: #fff;
+        border-color: #4ade80;
+        color: #4ade80;
+        transform: translateY(-3px);
     }
 
     .hero-stats {
         display: flex;
         gap: 3rem;
         margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .hero-stat {
         text-align: left;
+        position: relative;
     }
 
     .hero-stat-value {
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 2.5rem;
         font-weight: 800;
-        color: #4ade80 !important;
+        background: linear-gradient(135deg, #4ade80, #22c55e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         margin-bottom: 0.25rem;
         letter-spacing: -0.02em;
     }
 
     .hero-stat-label {
         font-size: 0.9rem;
-        color: #ffffff !important;
+        color: rgba(255, 255, 255, 0.7);
         font-weight: 500;
     }
 
-    /* Hero Visual */
+    /* Hero Visual - Fancy Card */
     .hero-visual {
         position: relative;
+        animation: heroVisualAppear 1s ease forwards 0.3s;
+        opacity: 0;
+    }
+
+    @keyframes heroVisualAppear {
+        0% { opacity: 0; transform: translateX(30px) scale(0.95); }
+        100% { opacity: 1; transform: translateX(0) scale(1); }
     }
 
     .hero-card {
-        background: rgba(0, 0, 0, 0.6) !important;
+        background: rgba(15, 23, 42, 0.8);
         backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(74, 222, 128, 0.2);
         border-radius: 24px;
         padding: 2rem;
         position: relative;
         overflow: hidden;
+        box-shadow:
+            0 25px 50px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(74, 222, 128, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
     }
 
     .hero-card::before {
@@ -165,7 +310,34 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(135deg, #40916C, #52B788, #95D5B2);
+        background: linear-gradient(90deg, #22c55e, #4ade80, #86efac, #4ade80, #22c55e);
+        background-size: 200% 100%;
+        animation: gradientMove 3s ease infinite;
+    }
+
+    @keyframes gradientMove {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .hero-card::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(74, 222, 128, 0.05) 0%, transparent 50%);
+        animation: cardGlow 4s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    @keyframes cardGlow {
+        0%, 100% { transform: translate(0, 0); }
+        25% { transform: translate(10%, 10%); }
+        50% { transform: translate(0, 20%); }
+        75% { transform: translate(-10%, 10%); }
     }
 
     .floating-card {
@@ -173,25 +345,60 @@
         background: rgba(255, 255, 255, 0.95);
         border-radius: 16px;
         padding: 1rem 1.25rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
         animation: float 6s ease-in-out infinite;
+        border: 1px solid rgba(74, 222, 128, 0.2);
     }
 
     .floating-card-1 {
         top: -20px;
         right: -30px;
         animation-delay: 0s;
+        background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(240,253,244,0.95));
     }
 
     .floating-card-2 {
         bottom: 40px;
         left: -40px;
         animation-delay: 2s;
+        background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(240,253,244,0.95));
     }
 
     @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-15px); }
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(2deg); }
+    }
+
+    /* Glowing orb decorations */
+    .glow-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(40px);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .glow-orb-1 {
+        width: 300px;
+        height: 300px;
+        background: rgba(74, 222, 128, 0.15);
+        top: -100px;
+        right: -100px;
+        animation: orbFloat 8s ease-in-out infinite;
+    }
+
+    .glow-orb-2 {
+        width: 200px;
+        height: 200px;
+        background: rgba(34, 197, 94, 0.1);
+        bottom: -50px;
+        left: -50px;
+        animation: orbFloat 10s ease-in-out infinite reverse;
+    }
+
+    @keyframes orbFloat {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(30px, -30px) scale(1.1); }
     }
 
     /* Live Feed Mockup */
@@ -946,64 +1153,81 @@
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section with Canada Background -->
-<section class="hero" style="background-color: #0f172a !important; background-image: linear-gradient(135deg, #0f172a 0%, #14532d 50%, #1e3a2f 100%) !important;">
+<!-- Fancy Hero Section with Particles and Glow Effects -->
+<section class="hero">
     <!-- Background Image -->
-    <div class="hero-bg" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1920&q=80') center/cover no-repeat; opacity: 0.25; z-index: 1;"></div>
-    <!-- Dark Overlay -->
-    <div class="hero-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(20, 83, 45, 0.85) 100%); z-index: 2;"></div>
+    <div class="hero-bg"></div>
+    <!-- Gradient Overlay -->
+    <div class="hero-overlay"></div>
+
+    <!-- Floating Particles -->
+    <div class="hero-particles">
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+        <div class="particle particle-4"></div>
+        <div class="particle particle-5"></div>
+        <div class="particle particle-6"></div>
+        <div class="particle particle-7"></div>
+        <div class="particle particle-8"></div>
+    </div>
+
+    <!-- Glowing Orbs -->
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+
     <div class="container" style="position: relative; z-index: 10;">
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
                 <div class="hero-content">
-                    <div class="hero-badge" style="background: #22c55e; color: #fff;">
+                    <div class="hero-badge">
                         <span class="pulse"></span>
                         Your Immigration Journey Starts Here
                     </div>
-                    <h1 class="hero-title" style="color: #ffffff !important;">
+                    <h1 class="hero-title">
                         Canadian Immigration<br>
-                        <span class="highlight" style="color: #4ade80 !important;">News & Resources</span>
+                        <span class="highlight">News & Resources</span>
                     </h1>
-                    <p class="hero-subtitle" style="color: #e5e7eb !important;">
+                    <p class="hero-subtitle">
                         Comprehensive coverage of immigration news, expert guides, and essential tools.
                         Everything you need to navigate your path to Canada.
                     </p>
                     <div class="hero-cta">
-                        <a href="/learn" class="btn btn-primary btn-lg" style="background: #22c55e; border-color: #22c55e; color: #fff;">
+                        <a href="/learn" class="btn btn-primary btn-lg">
                             <i class="bi bi-book me-2"></i>Start Learning
                         </a>
-                        <a href="/dashboard" class="btn btn-outline-light btn-lg" style="border-color: #fff; color: #fff;">
+                        <a href="/dashboard" class="btn btn-outline-light btn-lg">
                             <i class="bi bi-newspaper me-2"></i>Latest News
                         </a>
                     </div>
                     <div class="hero-stats">
                         <div class="hero-stat">
-                            <div class="hero-stat-value" id="live-content" style="color: #4ade80 !important;">100+</div>
-                            <div class="hero-stat-label" style="color: #ffffff !important;">Articles & Guides</div>
+                            <div class="hero-stat-value" id="live-content">100+</div>
+                            <div class="hero-stat-label">Articles & Guides</div>
                         </div>
                         <div class="hero-stat">
-                            <div class="hero-stat-value" style="color: #4ade80 !important;">13</div>
-                            <div class="hero-stat-label" style="color: #ffffff !important;">Province Guides</div>
+                            <div class="hero-stat-value">13</div>
+                            <div class="hero-stat-label">Province Guides</div>
                         </div>
                         <div class="hero-stat">
-                            <div class="hero-stat-value" style="color: #4ade80 !important;">24/7</div>
-                            <div class="hero-stat-label" style="color: #ffffff !important;">News Coverage</div>
+                            <div class="hero-stat-value">24/7</div>
+                            <div class="hero-stat-label">News Coverage</div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6" style="position: relative; z-index: 10;">
-                <div class="hero-visual" style="position: relative; z-index: 10;">
-                    <div class="hero-card" style="background: rgba(0,0,0,0.7) !important; border: 1px solid rgba(255,255,255,0.2);">
+            <div class="col-lg-6">
+                <div class="hero-visual">
+                    <div class="hero-card">
                         <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h5 class="mb-0" style="font-size: 1rem; color: #ffffff !important;">
+                            <h5 class="mb-0" style="font-size: 1rem; color: #ffffff;">
                                 <i class="bi bi-lightning-charge-fill me-2" style="color: #4ade80;"></i>Live Updates
                             </h5>
                             <span class="badge bg-success">Active</span>
                         </div>
                         <div class="live-feed">
                             <div class="feed-item">
-                                <div class="feed-icon" style="background: linear-gradient(135deg, #40916C, #52B788);">
+                                <div class="feed-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
                                     <i class="bi bi-megaphone-fill text-white"></i>
                                 </div>
                                 <div class="feed-content flex-grow-1">
