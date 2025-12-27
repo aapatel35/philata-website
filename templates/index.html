@@ -250,11 +250,12 @@
         gap: 2rem;
         margin-top: 3rem;
         padding: 1.5rem 2rem;
-        background: rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        background: rgba(20, 83, 45, 0.85);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
         border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(74, 222, 128, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
 
     .hero-stat {
@@ -1134,8 +1135,8 @@
 
     .scroll-reveal {
         opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.3s ease, transform 0.3s ease;
+        transform: translateY(15px);
+        transition: opacity 0.15s ease, transform 0.15s ease;
     }
 
     .scroll-reveal.revealed {
@@ -1797,8 +1798,8 @@
 
     document.querySelectorAll('.learning-card, .province-card, .federal-card, .tool-card, .track-card').forEach((el, index) => {
         el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = `opacity 0.25s ease ${index * 0.03}s, transform 0.25s ease ${index * 0.03}s`;
+        el.style.transform = 'translateY(10px)';
+        el.style.transition = `opacity 0.1s ease ${index * 0.02}s, transform 0.1s ease ${index * 0.02}s`;
         scrollRevealObserver.observe(el);
     });
 
