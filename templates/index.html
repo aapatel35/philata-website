@@ -739,18 +739,60 @@
         }
     }
 
-    @media (max-width: 768px) {
+    /* iPad / Tablet Styles (768px - 1024px) */
+    @media (max-width: 1024px) {
         .hero {
-            padding: 6rem 0 4rem;
-            min-height: auto;
+            padding: 7rem 0 5rem;
         }
 
         .hero-title {
+            font-size: 3rem;
+        }
+
+        .hero-bg {
+            background: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1200&q=80') center/cover no-repeat;
+        }
+
+        .learning-card,
+        .federal-card,
+        .track-card,
+        .tool-card,
+        .cta-box {
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .section-title {
             font-size: 2.5rem;
         }
 
+        .province-card {
+            height: 240px;
+        }
+    }
+
+    /* Mobile Styles (up to 768px) */
+    @media (max-width: 768px) {
+        .hero {
+            padding: 5rem 0 3rem;
+            min-height: auto;
+        }
+
+        .hero-bg {
+            background: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=800&q=70') center/cover no-repeat;
+            opacity: 0.2;
+        }
+
+        .hero-overlay {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(20, 83, 45, 0.88) 100%);
+        }
+
+        .hero-title {
+            font-size: 2.2rem;
+        }
+
         .hero-subtitle {
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
 
         .hero-stats {
@@ -766,16 +808,111 @@
             display: none;
         }
 
+        /* Glass cards on mobile - more opaque for readability */
+        .learning-card,
+        .federal-card,
+        .track-card,
         .cta-box {
-            padding: 3rem 2rem;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
-        .cta-title {
+        .tool-card {
+            background: rgba(20, 83, 45, 0.92);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .section-title {
             font-size: 2rem;
         }
 
+        .section-subtitle {
+            font-size: 1rem;
+        }
+
+        .cta-box {
+            padding: 2.5rem 1.5rem;
+        }
+
+        .cta-title {
+            font-size: 1.75rem;
+        }
+
         .province-card {
-            height: 200px;
+            height: 180px;
+        }
+
+        /* Sections padding on mobile */
+        .learning-section,
+        .provinces-section,
+        .federal-section,
+        .tools-section,
+        .tracks-section,
+        .cta-section {
+            padding: 4rem 0;
+        }
+
+        .testing-section {
+            padding: 3rem 0;
+        }
+    }
+
+    /* Small Mobile (up to 480px) */
+    @media (max-width: 480px) {
+        .hero {
+            padding: 4rem 0 2.5rem;
+        }
+
+        .hero-bg {
+            background: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=600&q=60') center/cover no-repeat;
+            opacity: 0.15;
+        }
+
+        .hero-title {
+            font-size: 1.85rem;
+        }
+
+        .hero-subtitle {
+            font-size: 0.95rem;
+        }
+
+        .hero-badge {
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
+        }
+
+        /* Even more opaque on small screens */
+        .learning-card,
+        .federal-card,
+        .track-card,
+        .cta-box {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .tool-card {
+            background: rgba(20, 83, 45, 0.95);
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+        }
+
+        .cta-title {
+            font-size: 1.5rem;
+        }
+
+        .province-card {
+            height: 160px;
+        }
+
+        .province-name {
+            font-size: 0.9rem;
+        }
+
+        .province-program {
+            font-size: 0.7rem;
         }
     }
 
