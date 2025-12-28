@@ -383,6 +383,25 @@
         background: #ffffff;
         border-radius: 16px;
         color: #1a1a1a;
+        max-height: calc(100vh - 4rem);
+    }
+
+    .slideshow-details::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .slideshow-details::-webkit-scrollbar-track {
+        background: #f0f0f0;
+        border-radius: 4px;
+    }
+
+    .slideshow-details::-webkit-scrollbar-thumb {
+        background: #E31837;
+        border-radius: 4px;
+    }
+
+    .slideshow-details::-webkit-scrollbar-thumb:hover {
+        background: #c01530;
     }
 
     .slideshow-badge {
@@ -448,8 +467,6 @@
         padding: 1.5rem;
         color: #333;
         line-height: 1.8;
-        max-height: 400px;
-        overflow-y: auto;
         font-size: 0.95rem;
         border: 1px solid #e5e5e5;
     }
@@ -634,11 +651,9 @@
         border-radius: 12px;
         padding: 1.25rem;
         color: #1a1a1a;
-        line-height: 1.6;
+        line-height: 1.8;
         white-space: pre-wrap;
-        font-size: 0.9rem;
-        max-height: 300px;
-        overflow-y: auto;
+        font-size: 0.95rem;
         border: 1px solid #e5e5e5;
     }
 
