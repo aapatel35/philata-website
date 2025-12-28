@@ -6,12 +6,16 @@ Comprehensive Immigration Guides
 
 import os
 import json
+import requests
 from datetime import datetime
 from flask import Flask, render_template, jsonify, request, send_from_directory
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
+
+# Post API URL for fetching results
+POST_API_URL = os.environ.get('POST_API_URL', 'https://web-production-35219.up.railway.app')
 
 # Data storage
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
@@ -57,7 +61,22 @@ def load_guides():
 
 
 def load_results():
-    """Load all results"""
+    """Load all results from Post API"""
+    try:
+        response = requests.get(f"{POST_API_URL}/results/list", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            # The API returns a list of results
+            results = data if isinstance(data, list) else data.get('results', [])
+            # Convert image URLs to Cloudinary
+            for r in results:
+                if r.get('image_url'):
+                    r['image_url'] = convert_to_cloudinary_url(r['image_url'])
+            return results
+    except Exception as e:
+        print(f"Error fetching from Post API: {e}")
+
+    # Fallback to local file if API fails
     if os.path.exists(RESULTS_FILE):
         with open(RESULTS_FILE, 'r') as f:
             return json.load(f)
