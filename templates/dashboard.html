@@ -943,10 +943,8 @@
                     <h3 class="content-card-title">{{ result.title }}</h3>
                     <div class="content-card-meta">
                         <span><i class="bi bi-hash"></i> {{ result.id[:8] if result.id else 'N/A' }}</span>
-                        <span><i class="bi bi-clock"></i> {{ result.created_at[:10] if result.created_at else 'Recent' }}</span>
-                        {% if result.category %}
-                        <span><i class="bi bi-tag"></i> {{ result.category }}</span>
-                        {% endif %}
+                        <span><i class="bi bi-calendar3"></i> {{ result.created_at[:10] if result.created_at else 'Recent' }}</span>
+                        <span><i class="bi bi-clock"></i> {{ result.created_at[11:16] if result.created_at and result.created_at|length > 16 else '' }}</span>
                     </div>
                 </div>
                 <div class="content-card-footer">
@@ -1219,7 +1217,7 @@
 
         // Update text
         document.getElementById('slideTitle').textContent = data.title || 'Untitled';
-        document.getElementById('slideDate').textContent = data.created_at ? data.created_at.substring(0, 10) : 'Recent';
+        document.getElementById('slideDate').textContent = data.created_at ? data.created_at.substring(0, 10) + ' at ' + data.created_at.substring(11, 16) : 'Recent';
         document.getElementById('slideCategory').textContent = data.category || data.track || 'General';
         // Render article - convert markdown to HTML if needed
         const articleEl = document.getElementById('slideArticle');
