@@ -405,5 +405,52 @@ export function useVocabulary() {
   return { words, reviewWords, loading, error, addWord, updateWord, deleteWord, refetch: fetchWords };
 }
 
+// Combined AI hook for backwards compatibility
+export function useAI() {
+  const [analyzing, setAnalyzing] = useState(false);
+  const [chatting, setChatting] = useState(false);
+
+  const analyzeWriting = async (text, taskType = 'task2') => {
+    setAnalyzing(true);
+    try {
+      const response = await aiAPI.analyzeWriting(text, taskType);
+      return response.data;
+    } catch (error) {
+      console.error('Writing analysis error:', error);
+      throw error;
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+
+  const analyzeSpeaking = async (transcript, partNumber = 2) => {
+    setAnalyzing(true);
+    try {
+      const response = await aiAPI.analyzeSpeaking(transcript, partNumber);
+      return response.data;
+    } catch (error) {
+      console.error('Speaking analysis error:', error);
+      throw error;
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+
+  const chat = async (message, history = []) => {
+    setChatting(true);
+    try {
+      const response = await aiAPI.chat(message, history);
+      return response.data;
+    } catch (error) {
+      console.error('Chat error:', error);
+      throw error;
+    } finally {
+      setChatting(false);
+    }
+  };
+
+  return { analyzeWriting, analyzeSpeaking, chat, analyzing, chatting };
+}
+
 // Export default api instance for custom requests
 export default api;

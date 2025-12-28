@@ -75,6 +75,32 @@ services:
     networks:
       - philata-network
 
+  # Social Media Automation
+  social-automation:
+    build:
+      context: ./social-automation
+      dockerfile: Dockerfile
+    container_name: philata-social-automation
+    restart: "no"
+    environment:
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+      - FB_PAGE_ID=${FB_PAGE_ID}
+      - IG_BUSINESS_ID=${IG_BUSINESS_ID}
+      - FB_ACCESS_TOKEN=${FB_ACCESS_TOKEN}
+      - X_API_KEY=${X_API_KEY}
+      - X_API_SECRET=${X_API_SECRET}
+      - X_ACCESS_TOKEN=${X_ACCESS_TOKEN}
+      - X_ACCESS_TOKEN_SECRET=${X_ACCESS_TOKEN_SECRET}
+      - LINKEDIN_WEBHOOK_URL=${LINKEDIN_WEBHOOK_URL}
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+    volumes:
+      - ./social-automation:/app
+      - ./generated_content:/app/generated_content
+    networks:
+      - philata-network
+
   # Mongo Express (Database Admin UI)
   mongo-express:
     image: mongo-express:latest

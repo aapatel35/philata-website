@@ -15,7 +15,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Default port
-ENV PORT=5001
+ENV PORT=8080
 
 # Run with gunicorn for production
-CMD ["/bin/sh", "-c", "gunicorn --bind 0.0.0.0:${PORT} --workers 4 app:app"]
+CMD gunicorn --bind 0.0.0.0:$PORT --workers 4 app:app
