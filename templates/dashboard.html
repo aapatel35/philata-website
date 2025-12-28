@@ -379,7 +379,10 @@
     .slideshow-details {
         flex: 1;
         overflow-y: auto;
-        padding-right: 1rem;
+        padding: 2rem;
+        background: #ffffff;
+        border-radius: 16px;
+        color: #1a1a1a;
     }
 
     .slideshow-badge {
@@ -396,16 +399,26 @@
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 1.75rem;
         font-weight: 700;
-        color: #fff;
+        color: #1a1a1a;
         margin-bottom: 1rem;
         line-height: 1.3;
+    }
+
+    .slideshow-post-id {
+        font-size: 0.75rem;
+        color: #666;
+        background: #f0f0f0;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-family: monospace;
+        margin-left: 0.5rem;
     }
 
     .slideshow-meta {
         display: flex;
         gap: 1.5rem;
         margin-bottom: 1.5rem;
-        color: var(--philata-text-muted);
+        color: #666;
         font-size: 0.9rem;
     }
 
@@ -422,7 +435,7 @@
     .slideshow-section-title {
         font-size: 0.9rem;
         font-weight: 600;
-        color: var(--philata-red-light);
+        color: #E31837;
         margin-bottom: 0.75rem;
         display: flex;
         align-items: center;
@@ -430,14 +443,15 @@
     }
 
     .slideshow-article {
-        background: rgba(255,255,255,0.03);
+        background: #f8f9fa;
         border-radius: 12px;
         padding: 1.5rem;
-        color: var(--philata-text);
+        color: #333;
         line-height: 1.8;
         max-height: 400px;
         overflow-y: auto;
         font-size: 0.95rem;
+        border: 1px solid #e5e5e5;
     }
 
     /* Rich Article Styling */
@@ -445,22 +459,22 @@
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 1.3rem;
         font-weight: 700;
-        color: #fff;
+        color: #1a1a1a;
         margin: 1.5rem 0 1rem;
         padding-bottom: 0.5rem;
-        border-bottom: 2px solid var(--philata-red);
+        border-bottom: 2px solid #E31837;
     }
 
     .slideshow-article h3 {
         font-size: 1.1rem;
         font-weight: 600;
-        color: var(--philata-red-light);
+        color: #E31837;
         margin: 1.25rem 0 0.75rem;
     }
 
     .slideshow-article p {
         margin-bottom: 1rem;
-        color: #FFFFFF;
+        color: #333;
     }
 
     .slideshow-article ul, .slideshow-article ol {
@@ -470,20 +484,21 @@
 
     .slideshow-article li {
         margin-bottom: 0.5rem;
-        color: #FFFFFF;
+        color: #333;
     }
 
     .slideshow-article table {
         width: 100%;
         border-collapse: collapse;
         margin: 1.5rem 0;
-        background: rgba(0,0,0,0.3);
+        background: #fff;
         border-radius: 12px;
         overflow: hidden;
+        border: 1px solid #e5e5e5;
     }
 
     .slideshow-article thead {
-        background: linear-gradient(135deg, var(--philata-red), #ff6b6b);
+        background: linear-gradient(135deg, #E31837, #ff6b6b);
     }
 
     .slideshow-article th {
@@ -496,23 +511,23 @@
 
     .slideshow-article td {
         padding: 0.875rem 1rem;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        color: #FFFFFF;
+        border-bottom: 1px solid #e5e5e5;
+        color: #333;
         font-size: 0.9rem;
     }
 
     .slideshow-article tbody tr:hover {
-        background: rgba(255,255,255,0.05);
+        background: #f8f9fa;
     }
 
     .slideshow-article blockquote {
         margin: 1.5rem 0;
         padding: 1rem 1.5rem;
-        border-left: 4px solid var(--philata-red);
+        border-left: 4px solid #E31837;
         background: rgba(227,24,55,0.1);
         border-radius: 0 12px 12px 0;
         font-style: italic;
-        color: #FFFFFF;
+        color: #333;
     }
 
     .slideshow-article .tip-box {
@@ -570,21 +585,21 @@
     }
 
     .slideshow-article strong {
-        color: #fff;
+        color: #1a1a1a;
         font-weight: 600;
     }
 
     .slideshow-article em {
-        color: var(--philata-red-light);
+        color: #E31837;
     }
 
     .slideshow-article a {
-        color: var(--philata-red-light);
+        color: #E31837;
         text-decoration: underline;
     }
 
     .slideshow-article a:hover {
-        color: var(--philata-red);
+        color: #c01530;
     }
 
     .slideshow-article img {
@@ -634,11 +649,11 @@
     }
 
     .platform-tab {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid var(--philata-border);
+        background: #f0f0f0;
+        border: 1px solid #e5e5e5;
         border-radius: 8px;
         padding: 0.5rem 1rem;
-        color: var(--philata-text-muted);
+        color: #666;
         cursor: pointer;
         font-size: 0.85rem;
         display: flex;
@@ -648,8 +663,8 @@
     }
 
     .platform-tab:hover, .platform-tab.active {
-        background: var(--philata-red);
-        border-color: var(--philata-red);
+        background: #E31837;
+        border-color: #E31837;
         color: white;
     }
 
@@ -731,11 +746,11 @@
     }
 
     .copy-btn {
-        background: rgba(255,255,255,0.1);
-        border: 1px solid var(--philata-border);
+        background: #f0f0f0;
+        border: 1px solid #e5e5e5;
         border-radius: 8px;
         padding: 0.5rem 1rem;
-        color: var(--philata-text-muted);
+        color: #666;
         cursor: pointer;
         font-size: 0.8rem;
         display: flex;
@@ -745,8 +760,8 @@
     }
 
     .copy-btn:hover {
-        background: var(--philata-red);
-        border-color: var(--philata-red);
+        background: #E31837;
+        border-color: #E31837;
         color: white;
     }
 
@@ -912,6 +927,7 @@
                 <div class="content-card-body">
                     <h3 class="content-card-title">{{ result.title }}</h3>
                     <div class="content-card-meta">
+                        <span><i class="bi bi-hash"></i> {{ result.id[:8] if result.id else 'N/A' }}</span>
                         <span><i class="bi bi-clock"></i> {{ result.created_at[:10] if result.created_at else 'Recent' }}</span>
                         {% if result.category %}
                         <span><i class="bi bi-tag"></i> {{ result.category }}</span>
@@ -957,7 +973,10 @@
                 <img id="slideImage" class="slideshow-image" src="" alt="">
             </div>
             <div class="slideshow-details">
-                <span id="slideBadge" class="slideshow-badge"></span>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span id="slideBadge" class="slideshow-badge"></span>
+                    <span id="slidePostId" class="slideshow-post-id"></span>
+                </div>
                 <h2 id="slideTitle" class="slideshow-title"></h2>
                 <div class="slideshow-meta">
                     <span><i class="bi bi-clock"></i> <span id="slideDate"></span></span>
@@ -1179,6 +1198,9 @@
         const badge = document.getElementById('slideBadge');
         badge.textContent = (data.track || 'unknown').toUpperCase();
         badge.className = 'slideshow-badge badge-' + (data.track || 'unknown');
+
+        // Update post ID
+        document.getElementById('slidePostId').textContent = 'ID: ' + (data.id || 'N/A');
 
         // Update text
         document.getElementById('slideTitle').textContent = data.title || 'Untitled';
