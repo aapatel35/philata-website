@@ -67,11 +67,29 @@ def load_results():
         if response.status_code == 200:
             data = response.json()
             # The API returns a list of results
-            results = data if isinstance(data, list) else data.get('results', [])
-            # Convert image URLs to Cloudinary
-            for r in results:
-                if r.get('image_url'):
-                    r['image_url'] = convert_to_cloudinary_url(r['image_url'])
+            raw_results = data if isinstance(data, list) else data.get('results', [])
+
+            # Transform to expected format
+            results = []
+            for r in raw_results:
+                result = {
+                    'id': r.get('id', ''),
+                    'title': r.get('title', ''),
+                    'track': r.get('track', 'regular'),
+                    'category': r.get('category', ''),
+                    'created_at': r.get('timestamp', r.get('date', '')),
+                    'image_url': convert_to_cloudinary_url(r.get('image_url', '')),
+                    'full_article': r.get('full_article', r.get('title', '')),
+                    'source': r.get('source', ''),
+                    'source_url': r.get('source_url', ''),
+                    'captions': {
+                        'instagram': r.get('caption_instagram', r.get('captions', {}).get('instagram', '')),
+                        'facebook': r.get('caption_facebook', r.get('captions', {}).get('facebook', '')),
+                        'linkedin': r.get('caption_linkedin', r.get('captions', {}).get('linkedin', '')),
+                        'twitter': r.get('caption_twitter', r.get('captions', {}).get('twitter', ''))
+                    }
+                }
+                results.append(result)
             return results
     except Exception as e:
         print(f"Error fetching from Post API: {e}")
