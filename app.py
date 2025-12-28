@@ -90,6 +90,9 @@ def load_results():
                     }
                 }
                 results.append(result)
+
+            # Sort by created_at (most recent first)
+            results.sort(key=lambda x: x.get('created_at', ''), reverse=True)
             return results
     except Exception as e:
         print(f"Error fetching from Post API: {e}")
