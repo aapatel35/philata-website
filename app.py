@@ -50,61 +50,92 @@ def convert_image_url(image_url):
     return image_url
 
 
-# Default images for article categories (Unsplash direct URLs - no API needed)
-DEFAULT_ARTICLE_IMAGES = {
-    'express_entry': {
-        'url': 'https://images.unsplash.com/photo-1569974507005-6dc61f97fb5c?w=1200&q=80',
-        'thumb': 'https://images.unsplash.com/photo-1569974507005-6dc61f97fb5c?w=400&q=80',
-        'credit': 'Ali Tawfiq',
-        'credit_link': 'https://unsplash.com/@alitwfiq'
-    },
-    'pnp': {
-        'url': 'https://images.unsplash.com/photo-1517935706615-2717063c2225?w=1200&q=80',
-        'thumb': 'https://images.unsplash.com/photo-1517935706615-2717063c2225?w=400&q=80',
-        'credit': 'Scott Webb',
-        'credit_link': 'https://unsplash.com/@scottwebb'
-    },
-    'policy': {
-        'url': 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=1200&q=80',
-        'thumb': 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=400&q=80',
-        'credit': 'Jason Hafso',
-        'credit_link': 'https://unsplash.com/@jasonhafso'
-    },
-    'study_permit': {
-        'url': 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1200&q=80',
-        'thumb': 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&q=80',
-        'credit': 'Vasily Koloda',
-        'credit_link': 'https://unsplash.com/@napr0tiv'
-    },
-    'work_permit': {
-        'url': 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80',
-        'thumb': 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&q=80',
-        'credit': 'Alex Kotliarskyi',
-        'credit_link': 'https://unsplash.com/@frantic'
-    },
-    'forms': {
-        'url': 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&q=80',
-        'thumb': 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&q=80',
-        'credit': 'Scott Graham',
-        'credit_link': 'https://unsplash.com/@homajob'
-    },
-    'educational': {
-        'url': 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&q=80',
-        'thumb': 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&q=80',
-        'credit': 'Green Chameleon',
-        'credit_link': 'https://unsplash.com/@craftedbygc'
-    },
-    'default': {
-        'url': 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1200&q=80',
-        'thumb': 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=400&q=80',
-        'credit': 'John Lee',
-        'credit_link': 'https://unsplash.com/@john_artifexfilms'
-    }
+# Multiple images per category for variety (Unsplash direct URLs - no API needed)
+ARTICLE_IMAGES = {
+    'express_entry': [
+        {'url': 'https://images.unsplash.com/photo-1569974507005-6dc61f97fb5c?w=1200&q=80', 'credit': 'Ali Tawfiq', 'credit_link': 'https://unsplash.com/@alitwfiq'},
+        {'url': 'https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=1200&q=80', 'credit': 'Hermes Rivera', 'credit_link': 'https://unsplash.com/@hermez777'},
+        {'url': 'https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=1200&q=80', 'credit': 'Jason Hafso', 'credit_link': 'https://unsplash.com/@jasonhafso'},
+        {'url': 'https://images.unsplash.com/photo-1473163928189-364b2c4e1135?w=1200&q=80', 'credit': 'Meric Dagli', 'credit_link': 'https://unsplash.com/@meric'},
+        {'url': 'https://images.unsplash.com/photo-1559311648-d5dad5deea1d?w=1200&q=80', 'credit': 'Erik Mclean', 'credit_link': 'https://unsplash.com/@introspectivedsgn'},
+    ],
+    'pnp': [
+        {'url': 'https://images.unsplash.com/photo-1517935706615-2717063c2225?w=1200&q=80', 'credit': 'Scott Webb', 'credit_link': 'https://unsplash.com/@scottwebb'},
+        {'url': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&q=80', 'credit': 'Joseph Gonzalez', 'credit_link': 'https://unsplash.com/@miracletwentyone'},
+        {'url': 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=1200&q=80', 'credit': 'Ben O\'Sullivan', 'credit_link': 'https://unsplash.com/@benjamino'},
+        {'url': 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=1200&q=80', 'credit': 'Sam Poullain', 'credit_link': 'https://unsplash.com/@sampoullain'},
+        {'url': 'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1200&q=80', 'credit': 'Chris Karidis', 'credit_link': 'https://unsplash.com/@chriskaridis'},
+    ],
+    'policy': [
+        {'url': 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=1200&q=80', 'credit': 'Jason Hafso', 'credit_link': 'https://unsplash.com/@jasonhafso'},
+        {'url': 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&q=80', 'credit': 'Tingey Injury Law', 'credit_link': 'https://unsplash.com/@tingeyinjurylawfirm'},
+        {'url': 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&q=80', 'credit': 'Scott Graham', 'credit_link': 'https://unsplash.com/@homajob'},
+        {'url': 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1200&q=80', 'credit': 'Iñaki del Olmo', 'credit_link': 'https://unsplash.com/@inakihxz'},
+        {'url': 'https://images.unsplash.com/photo-1436450412740-6b988f486c6b?w=1200&q=80', 'credit': 'Helloquence', 'credit_link': 'https://unsplash.com/@helloquence'},
+    ],
+    'study_permit': [
+        {'url': 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1200&q=80', 'credit': 'Vasily Koloda', 'credit_link': 'https://unsplash.com/@napr0tiv'},
+        {'url': 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1200&q=80', 'credit': 'Changbok Ko', 'credit_link': 'https://unsplash.com/@kochangbok'},
+        {'url': 'https://images.unsplash.com/photo-1562774053-701939374585?w=1200&q=80', 'credit': 'Nathan Dumlao', 'credit_link': 'https://unsplash.com/@nate_dumlao'},
+        {'url': 'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=1200&q=80', 'credit': 'Tim Gouw', 'credit_link': 'https://unsplash.com/@punttim'},
+        {'url': 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1200&q=80', 'credit': 'Priscilla Du Preez', 'credit_link': 'https://unsplash.com/@priscilladupreez'},
+    ],
+    'work_permit': [
+        {'url': 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80', 'credit': 'Alex Kotliarskyi', 'credit_link': 'https://unsplash.com/@frantic'},
+        {'url': 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200&q=80', 'credit': 'Annie Spratt', 'credit_link': 'https://unsplash.com/@anniespratt'},
+        {'url': 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&q=80', 'credit': 'You X Ventures', 'credit_link': 'https://unsplash.com/@youxventures'},
+        {'url': 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&q=80', 'credit': 'Austin Distel', 'credit_link': 'https://unsplash.com/@austindistel'},
+        {'url': 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&q=80', 'credit': 'Campaign Creators', 'credit_link': 'https://unsplash.com/@campaign_creators'},
+    ],
+    'forms': [
+        {'url': 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&q=80', 'credit': 'Scott Graham', 'credit_link': 'https://unsplash.com/@homajob'},
+        {'url': 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=1200&q=80', 'credit': 'Kelly Sikkema', 'credit_link': 'https://unsplash.com/@kellysikkema'},
+        {'url': 'https://images.unsplash.com/photo-1568667256549-094345857637?w=1200&q=80', 'credit': 'Glenn Carstens-Peters', 'credit_link': 'https://unsplash.com/@glenncarstenspeters'},
+        {'url': 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&q=80', 'credit': 'Helloquence', 'credit_link': 'https://unsplash.com/@helloquence'},
+        {'url': 'https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?w=1200&q=80', 'credit': 'Kelly Sikkema', 'credit_link': 'https://unsplash.com/@kellysikkema'},
+    ],
+    'educational': [
+        {'url': 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&q=80', 'credit': 'Green Chameleon', 'credit_link': 'https://unsplash.com/@craftedbygc'},
+        {'url': 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&q=80', 'credit': 'Aaron Burden', 'credit_link': 'https://unsplash.com/@aaronburden'},
+        {'url': 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1200&q=80', 'credit': 'Element5 Digital', 'credit_link': 'https://unsplash.com/@element5digital'},
+        {'url': 'https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?w=1200&q=80', 'credit': 'Thought Catalog', 'credit_link': 'https://unsplash.com/@thoughtcatalog'},
+        {'url': 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=1200&q=80', 'credit': 'Kimberly Farmer', 'credit_link': 'https://unsplash.com/@kimberlyfarmer'},
+    ],
+    'default': [
+        {'url': 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1200&q=80', 'credit': 'John Lee', 'credit_link': 'https://unsplash.com/@john_artifexfilms'},
+        {'url': 'https://images.unsplash.com/photo-1517935706615-2717063c2225?w=1200&q=80', 'credit': 'Scott Webb', 'credit_link': 'https://unsplash.com/@scottwebb'},
+        {'url': 'https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=1200&q=80', 'credit': 'Jason Hafso', 'credit_link': 'https://unsplash.com/@jasonhafso'},
+        {'url': 'https://images.unsplash.com/photo-1508693926297-1d61ee3df82a?w=1200&q=80', 'credit': 'Mike Benna', 'credit_link': 'https://unsplash.com/@mbenna'},
+        {'url': 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1200&q=80', 'credit': 'Marc-Olivier Jodoin', 'credit_link': 'https://unsplash.com/@marcojodoin'},
+    ]
 }
 
+# Flatten all images into a single list for unique assignment
+ALL_ARTICLE_IMAGES = []
+for category_images in ARTICLE_IMAGES.values():
+    ALL_ARTICLE_IMAGES.extend(category_images)
+
+def get_unsplash_image_by_index(index):
+    """Get Unsplash image by index, cycling through all available images"""
+    img = ALL_ARTICLE_IMAGES[index % len(ALL_ARTICLE_IMAGES)]
+    return {
+        'url': img['url'],
+        'thumb': img['url'].replace('w=1200', 'w=400'),
+        'credit': img['credit'],
+        'credit_link': img['credit_link']
+    }
+
 def get_unsplash_image(category, title=''):
-    """Get default Unsplash image based on category"""
-    return DEFAULT_ARTICLE_IMAGES.get(category, DEFAULT_ARTICLE_IMAGES['default'])
+    """Get Unsplash image based on category (fallback)"""
+    images = ARTICLE_IMAGES.get(category, ARTICLE_IMAGES['default'])
+    index = hash(title) % len(images) if title else 0
+    img = images[index]
+    return {
+        'url': img['url'],
+        'thumb': img['url'].replace('w=1200', 'w=400'),
+        'credit': img['credit'],
+        'credit_link': img['credit_link']
+    }
 
 
 def load_guides():
@@ -127,14 +158,7 @@ def load_articles():
             articles = []
             for r in raw_results:
                 if r.get('full_article') and len(r.get('full_article', '')) > 200:
-                    # Get Unsplash image data if available from stored data
-                    unsplash = r.get('unsplash_image', {}) or {}
                     category = r.get('category', '')
-
-                    # If no Unsplash image stored, fetch one based on category
-                    if not unsplash.get('url'):
-                        unsplash = get_unsplash_image(category, r.get('title', '')) or {}
-
                     article = {
                         'id': r.get('id', ''),
                         'slug': create_slug(r.get('title', '')),
@@ -142,10 +166,6 @@ def load_articles():
                         'track': r.get('track', 'regular'),
                         'category': category,
                         'created_at': r.get('timestamp', r.get('date', '')),
-                        'image_url': unsplash.get('url', ''),
-                        'image_thumb': unsplash.get('thumb', ''),
-                        'image_credit': unsplash.get('credit', ''),
-                        'image_credit_link': unsplash.get('credit_link', ''),
                         'full_article': r.get('full_article', ''),
                         'source': r.get('source', ''),
                         'source_url': r.get('source_url', ''),
@@ -153,7 +173,17 @@ def load_articles():
                     }
                     articles.append(article)
 
+            # Sort articles by date
             articles.sort(key=lambda x: x.get('created_at', ''), reverse=True)
+
+            # Assign unique images to each article by index
+            for idx, article in enumerate(articles):
+                unsplash = get_unsplash_image_by_index(idx)
+                article['image_url'] = unsplash.get('url', '')
+                article['image_thumb'] = unsplash.get('thumb', '')
+                article['image_credit'] = unsplash.get('credit', '')
+                article['image_credit_link'] = unsplash.get('credit_link', '')
+
             return articles
     except Exception as e:
         print(f"Error fetching articles: {e}")
