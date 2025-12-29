@@ -50,6 +50,52 @@ def convert_image_url(image_url):
     return image_url
 
 
+# Unsplash API for article images
+UNSPLASH_ACCESS_KEY = 'gNUbGW08cec0vLgpKBvG9VqMhIQq3TaZNlhv9VQXSOA'
+
+def get_unsplash_image(category, title=''):
+    """Fetch relevant Unsplash image based on category"""
+    # Map categories to search queries
+    category_queries = {
+        'express_entry': 'canada immigration passport',
+        'pnp': 'canada province city skyline',
+        'policy': 'canada parliament government',
+        'study_permit': 'canada university students',
+        'work_permit': 'canada office work professional',
+        'forms': 'documents paperwork official',
+        'educational': 'canada learning education',
+        'breaking': 'canada news breaking',
+    }
+
+    query = category_queries.get(category, 'canada immigration')
+
+    try:
+        response = requests.get(
+            f'https://api.unsplash.com/search/photos',
+            params={
+                'query': query,
+                'per_page': 1,
+                'orientation': 'landscape'
+            },
+            headers={'Authorization': f'Client-ID {UNSPLASH_ACCESS_KEY}'},
+            timeout=5
+        )
+        if response.status_code == 200:
+            data = response.json()
+            if data.get('results'):
+                photo = data['results'][0]
+                return {
+                    'url': photo['urls']['regular'],
+                    'thumb': photo['urls']['thumb'],
+                    'credit': photo['user']['name'],
+                    'credit_link': photo['user']['links']['html']
+                }
+    except Exception as e:
+        print(f"Unsplash fetch error: {e}")
+
+    return None
+
+
 def load_guides():
     """Load immigration guides data"""
     if os.path.exists(GUIDES_FILE):
@@ -70,17 +116,22 @@ def load_articles():
             articles = []
             for r in raw_results:
                 if r.get('full_article') and len(r.get('full_article', '')) > 200:
-                    # Get Unsplash image data if available
+                    # Get Unsplash image data if available from stored data
                     unsplash = r.get('unsplash_image', {}) or {}
+                    category = r.get('category', '')
+
+                    # If no Unsplash image stored, fetch one based on category
+                    if not unsplash.get('url'):
+                        unsplash = get_unsplash_image(category, r.get('title', '')) or {}
 
                     article = {
                         'id': r.get('id', ''),
                         'slug': create_slug(r.get('title', '')),
                         'title': r.get('title', ''),
                         'track': r.get('track', 'regular'),
-                        'category': r.get('category', ''),
+                        'category': category,
                         'created_at': r.get('timestamp', r.get('date', '')),
-                        'image_url': unsplash.get('url') or convert_image_url(r.get('image_url', '')),
+                        'image_url': unsplash.get('url', ''),
                         'image_thumb': unsplash.get('thumb', ''),
                         'image_credit': unsplash.get('credit', ''),
                         'image_credit_link': unsplash.get('credit_link', ''),
