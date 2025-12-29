@@ -32,23 +32,20 @@ ARTICLES_FILE = os.path.join(DATA_DIR, 'articles.json')
 CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME', 'dg7yw1j18')
 
 
-def convert_to_cloudinary_url(image_url):
-    """Convert Docker/localhost URLs to Cloudinary URLs"""
+def convert_image_url(image_url):
+    """Convert Docker/localhost URLs to Post API URLs"""
     if not image_url:
         return ''
 
-    # Already a Cloudinary URL
-    if 'cloudinary.com' in image_url:
+    # Already a proper URL (Cloudinary, Unsplash, or Post API)
+    if 'cloudinary.com' in image_url or 'unsplash.com' in image_url or 'web-production' in image_url:
         return image_url
 
-    # Convert Docker/localhost URLs to Cloudinary
+    # Convert Docker/localhost URLs to Post API server
     if 'docker' in image_url.lower() or 'localhost' in image_url.lower():
-        # Extract filename from URL
         filename = image_url.split('/')[-1]
         if filename:
-            # Remove .png extension for public_id
-            public_id = filename.replace('.png', '')
-            return f"https://res.cloudinary.com/{CLOUDINARY_CLOUD_NAME}/image/upload/philata/{public_id}.png"
+            return f"{POST_API_URL}/images/{filename}"
 
     return image_url
 
@@ -83,7 +80,7 @@ def load_articles():
                         'track': r.get('track', 'regular'),
                         'category': r.get('category', ''),
                         'created_at': r.get('timestamp', r.get('date', '')),
-                        'image_url': unsplash.get('url') or convert_to_cloudinary_url(r.get('image_url', '')),
+                        'image_url': unsplash.get('url') or convert_image_url(r.get('image_url', '')),
                         'image_thumb': unsplash.get('thumb', ''),
                         'image_credit': unsplash.get('credit', ''),
                         'image_credit_link': unsplash.get('credit_link', ''),
@@ -129,7 +126,7 @@ def load_results():
                     'track': r.get('track', 'regular'),
                     'category': r.get('category', ''),
                     'created_at': r.get('timestamp', r.get('date', '')),
-                    'image_url': convert_to_cloudinary_url(r.get('image_url', '')),
+                    'image_url': convert_image_url(r.get('image_url', '')),
                     'full_article': r.get('full_article', r.get('title', '')),
                     'source': r.get('source', ''),
                     'source_url': r.get('source_url', ''),
@@ -432,7 +429,7 @@ def get_results():
     # Convert Docker/localhost URLs to Cloudinary URLs
     for r in results:
         if 'image_url' in r:
-            r['image_url'] = convert_to_cloudinary_url(r.get('image_url', ''))
+            r['image_url'] = convert_image_url(r.get('image_url', ''))
 
     return jsonify({
         "count": len(results),
@@ -456,7 +453,7 @@ def add_result():
             "track": data.get('track', 'unknown'),
             "category": data.get('category', ''),
             "content_type": data.get('content_type', 'news'),
-            "image_url": convert_to_cloudinary_url(data.get('image_url', '')),
+            "image_url": convert_image_url(data.get('image_url', '')),
             "filename": data.get('filename', ''),
             "captions": data.get('captions', {}),
             "full_article": data.get('full_article', ''),
