@@ -110,31 +110,28 @@ ARTICLE_IMAGES = {
     ]
 }
 
-# Flatten all images into a single list for unique assignment
-ALL_ARTICLE_IMAGES = []
-for category_images in ARTICLE_IMAGES.values():
-    ALL_ARTICLE_IMAGES.extend(category_images)
+# Category-specific search terms for Unsplash
+CATEGORY_SEARCH_TERMS = {
+    'express_entry': 'canada,passport,travel',
+    'pnp': 'canada,city,skyline',
+    'policy': 'government,parliament,law',
+    'study_permit': 'university,students,campus',
+    'work_permit': 'office,business,workplace',
+    'forms': 'documents,paperwork,desk',
+    'educational': 'learning,books,education',
+    'default': 'canada,nature,landscape'
+}
 
-def get_unsplash_image_by_index(index):
-    """Get Unsplash image by index, cycling through all available images"""
-    img = ALL_ARTICLE_IMAGES[index % len(ALL_ARTICLE_IMAGES)]
+def get_unique_unsplash_image(article_id, category='default'):
+    """Get a unique Unsplash image for each article using dynamic source URL"""
+    search_terms = CATEGORY_SEARCH_TERMS.get(category, CATEGORY_SEARCH_TERMS['default'])
+    # Use article_id as signature to get consistent but unique image per article
+    unique_sig = hash(str(article_id)) % 100000
     return {
-        'url': img['url'],
-        'thumb': img['url'].replace('w=1200', 'w=400'),
-        'credit': img['credit'],
-        'credit_link': img['credit_link']
-    }
-
-def get_unsplash_image(category, title=''):
-    """Get Unsplash image based on category (fallback)"""
-    images = ARTICLE_IMAGES.get(category, ARTICLE_IMAGES['default'])
-    index = hash(title) % len(images) if title else 0
-    img = images[index]
-    return {
-        'url': img['url'],
-        'thumb': img['url'].replace('w=1200', 'w=400'),
-        'credit': img['credit'],
-        'credit_link': img['credit_link']
+        'url': f'https://source.unsplash.com/1200x800/?{search_terms}&sig={unique_sig}',
+        'thumb': f'https://source.unsplash.com/400x300/?{search_terms}&sig={unique_sig}',
+        'credit': 'Unsplash',
+        'credit_link': 'https://unsplash.com'
     }
 
 
@@ -176,9 +173,9 @@ def load_articles():
             # Sort articles by date
             articles.sort(key=lambda x: x.get('created_at', ''), reverse=True)
 
-            # Assign unique images to each article by index
-            for idx, article in enumerate(articles):
-                unsplash = get_unsplash_image_by_index(idx)
+            # Assign unique images to each article based on its ID and category
+            for article in articles:
+                unsplash = get_unique_unsplash_image(article['id'], article['category'])
                 article['image_url'] = unsplash.get('url', '')
                 article['image_thumb'] = unsplash.get('thumb', '')
                 article['image_credit'] = unsplash.get('credit', '')
