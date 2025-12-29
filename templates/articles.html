@@ -318,7 +318,7 @@
                         <span><i class="bi bi-clock"></i> {{ article.reading_time }} min read</span>
                     </div>
                     <h2 class="article-card-title">{{ article.title }}</h2>
-                    <p class="article-card-excerpt">{{ article.full_article[:200] }}...</p>
+                    <p class="article-card-excerpt">{{ article.full_article | striptags | truncate(200) }}</p>
                     <div class="article-card-footer">
                         <span class="article-card-source">{{ article.source }}</span>
                         <span class="article-card-read">Read More <i class="bi bi-arrow-right"></i></span>
