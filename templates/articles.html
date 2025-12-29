@@ -81,6 +81,8 @@
         padding: 4rem 0 6rem;
         background: transparent;
         min-height: 60vh;
+        position: relative;
+        z-index: 10;
     }
 
     .category-filters {
@@ -125,6 +127,8 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
         gap: 2rem;
+        position: relative;
+        z-index: 50;
     }
 
     .article-card {
@@ -140,6 +144,9 @@
         color: inherit;
         display: flex;
         flex-direction: column;
+        position: relative;
+        z-index: 51;
+        cursor: pointer;
     }
 
     .article-card:hover {
