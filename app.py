@@ -50,50 +50,61 @@ def convert_image_url(image_url):
     return image_url
 
 
-# Unsplash API for article images
-UNSPLASH_ACCESS_KEY = 'gNUbGW08cec0vLgpKBvG9VqMhIQq3TaZNlhv9VQXSOA'
+# Default images for article categories (Unsplash direct URLs - no API needed)
+DEFAULT_ARTICLE_IMAGES = {
+    'express_entry': {
+        'url': 'https://images.unsplash.com/photo-1569974507005-6dc61f97fb5c?w=1200&q=80',
+        'thumb': 'https://images.unsplash.com/photo-1569974507005-6dc61f97fb5c?w=400&q=80',
+        'credit': 'Ali Tawfiq',
+        'credit_link': 'https://unsplash.com/@alitwfiq'
+    },
+    'pnp': {
+        'url': 'https://images.unsplash.com/photo-1517935706615-2717063c2225?w=1200&q=80',
+        'thumb': 'https://images.unsplash.com/photo-1517935706615-2717063c2225?w=400&q=80',
+        'credit': 'Scott Webb',
+        'credit_link': 'https://unsplash.com/@scottwebb'
+    },
+    'policy': {
+        'url': 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=1200&q=80',
+        'thumb': 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=400&q=80',
+        'credit': 'Jason Hafso',
+        'credit_link': 'https://unsplash.com/@jasonhafso'
+    },
+    'study_permit': {
+        'url': 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1200&q=80',
+        'thumb': 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&q=80',
+        'credit': 'Vasily Koloda',
+        'credit_link': 'https://unsplash.com/@napr0tiv'
+    },
+    'work_permit': {
+        'url': 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80',
+        'thumb': 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&q=80',
+        'credit': 'Alex Kotliarskyi',
+        'credit_link': 'https://unsplash.com/@frantic'
+    },
+    'forms': {
+        'url': 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&q=80',
+        'thumb': 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&q=80',
+        'credit': 'Scott Graham',
+        'credit_link': 'https://unsplash.com/@homajob'
+    },
+    'educational': {
+        'url': 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&q=80',
+        'thumb': 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&q=80',
+        'credit': 'Green Chameleon',
+        'credit_link': 'https://unsplash.com/@craftedbygc'
+    },
+    'default': {
+        'url': 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1200&q=80',
+        'thumb': 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=400&q=80',
+        'credit': 'John Lee',
+        'credit_link': 'https://unsplash.com/@john_artifexfilms'
+    }
+}
 
 def get_unsplash_image(category, title=''):
-    """Fetch relevant Unsplash image based on category"""
-    # Map categories to search queries
-    category_queries = {
-        'express_entry': 'canada immigration passport',
-        'pnp': 'canada province city skyline',
-        'policy': 'canada parliament government',
-        'study_permit': 'canada university students',
-        'work_permit': 'canada office work professional',
-        'forms': 'documents paperwork official',
-        'educational': 'canada learning education',
-        'breaking': 'canada news breaking',
-    }
-
-    query = category_queries.get(category, 'canada immigration')
-
-    try:
-        response = requests.get(
-            f'https://api.unsplash.com/search/photos',
-            params={
-                'query': query,
-                'per_page': 1,
-                'orientation': 'landscape'
-            },
-            headers={'Authorization': f'Client-ID {UNSPLASH_ACCESS_KEY}'},
-            timeout=5
-        )
-        if response.status_code == 200:
-            data = response.json()
-            if data.get('results'):
-                photo = data['results'][0]
-                return {
-                    'url': photo['urls']['regular'],
-                    'thumb': photo['urls']['thumb'],
-                    'credit': photo['user']['name'],
-                    'credit_link': photo['user']['links']['html']
-                }
-    except Exception as e:
-        print(f"Unsplash fetch error: {e}")
-
-    return None
+    """Get default Unsplash image based on category"""
+    return DEFAULT_ARTICLE_IMAGES.get(category, DEFAULT_ARTICLE_IMAGES['default'])
 
 
 def load_guides():
