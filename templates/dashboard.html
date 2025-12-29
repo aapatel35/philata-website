@@ -943,8 +943,9 @@
             <div class="content-card" data-index="{{ loop.index0 }}" data-track="{{ result.track }}" data-title="{{ result.title|lower }}" data-id="{{ result.id }}">
                 <div class="content-card-image">
                     <span class="content-card-badge badge-{{ result.track }}">{{ result.track|upper }}</span>
-                    {% if result.image_url %}
-                    <img src="{{ result.image_url }}" alt="{{ result.title }}" onerror="this.src='{{ stock_images.get(result.track, stock_images.default) }}'">
+                    {# Use article_image_url (Gemini/Unsplash) for clean images, fallback to stock #}
+                    {% if result.article_image_url %}
+                    <img src="{{ result.article_image_url }}" alt="{{ result.title }}" onerror="this.src='{{ stock_images.get(result.track, stock_images.default) }}'">
                     {% else %}
                     <img src="{{ stock_images.get(result.track, stock_images.default) }}" alt="{{ result.title }}">
                     {% endif %}
