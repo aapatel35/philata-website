@@ -110,26 +110,47 @@ ARTICLE_IMAGES = {
     ]
 }
 
-# Category-specific search terms for Unsplash
-CATEGORY_SEARCH_TERMS = {
-    'express_entry': 'canada,passport,travel',
-    'pnp': 'canada,city,skyline',
-    'policy': 'government,parliament,law',
-    'study_permit': 'university,students,campus',
-    'work_permit': 'office,business,workplace',
-    'forms': 'documents,paperwork,desk',
-    'educational': 'learning,books,education',
-    'default': 'canada,nature,landscape'
-}
+# Large pool of direct Unsplash photo IDs for unique images
+UNSPLASH_PHOTO_IDS = [
+    # Canada & Travel
+    'photo-1503614472-8c93d56e92ce', 'photo-1517935706615-2717063c2225', 'photo-1551632436-cbf8dd35adfa',
+    'photo-1508693926297-1d61ee3df82a', 'photo-1486325212027-8081e485255e', 'photo-1569974507005-6dc61f97fb5c',
+    'photo-1526778548025-fa2f459cd5c1', 'photo-1473163928189-364b2c4e1135', 'photo-1559311648-d5dad5deea1d',
+    # Cities & Skylines
+    'photo-1480714378408-67cf0d13bc1b', 'photo-1474487548417-781cb71495f3', 'photo-1499856871958-5b9627545d1a',
+    'photo-1507003211169-0a1dd7228f2d', 'photo-1477959858617-67f85cf4f1df', 'photo-1514565131-fce0801e5785',
+    # Government & Law
+    'photo-1505664194779-8beaceb93744', 'photo-1589829545856-d10d557cf95f', 'photo-1450101499163-c8848c66ca85',
+    'photo-1521587760476-6c12a4b040da', 'photo-1436450412740-6b988f486c6b', 'photo-1575505586569-646b2ca898fc',
+    # Education & Study
+    'photo-1523050854058-8df90110c9f1', 'photo-1541339907198-e08756dedf3f', 'photo-1562774053-701939374585',
+    'photo-1498243691581-b145c3f54a5a', 'photo-1517486808906-6ca8b3f04846', 'photo-1503676260728-1c00da094a0b',
+    # Work & Office
+    'photo-1497366216548-37526070297c', 'photo-1521737604893-d14cc237f11d', 'photo-1504384308090-c894fdcc538d',
+    'photo-1556761175-5973dc0f32e7', 'photo-1542744173-8e7e53415bb0', 'photo-1497215842964-222b430dc094',
+    # Documents & Forms
+    'photo-1554224155-6726b3ff858f', 'photo-1586281380349-632531db7ed4', 'photo-1568667256549-094345857637',
+    'photo-1507925921958-8a62f3d1a50d', 'photo-1450101499163-c8848c66ca85', 'photo-1456324504439-367cee3b3c32',
+    # Learning & Books
+    'photo-1434030216411-0b793f4b4173', 'photo-1456513080510-7bf3a84b82f8', 'photo-1488190211105-8b0e65b80b4e',
+    'photo-1497633762265-9d179a990aa6', 'photo-1491841550275-ad7854e35ca6', 'photo-1524995997946-a1c2e315a42f',
+    # Nature & Landscapes
+    'photo-1464822759023-fed622ff2c3b', 'photo-1506905925346-21bda4d32df4', 'photo-1470071459604-3b5ec3a7fe05',
+    'photo-1441974231531-c6227db76b6e', 'photo-1469474968028-56623f02e42e', 'photo-1447752875215-b2761acb3c5d',
+    # More variety
+    'photo-1454165804606-c3d57bc86b40', 'photo-1460925895917-afdab827c52f', 'photo-1553484771-047a44eee27b',
+    'photo-1551836022-d5d88e9218df', 'photo-1517245386807-bb43f82c33c4', 'photo-1522202176988-66273c2fd55f',
+    'photo-1531482615713-2afd69097998', 'photo-1519389950473-47ba0277781c', 'photo-1552664730-d307ca884978',
+]
 
 def get_unique_unsplash_image(article_id, category='default'):
-    """Get a unique Unsplash image for each article using dynamic source URL"""
-    search_terms = CATEGORY_SEARCH_TERMS.get(category, CATEGORY_SEARCH_TERMS['default'])
-    # Use article_id as signature to get consistent but unique image per article
-    unique_sig = hash(str(article_id)) % 100000
+    """Get a unique Unsplash image for each article from the photo pool"""
+    # Use hash of article_id to select a unique image
+    index = abs(hash(str(article_id))) % len(UNSPLASH_PHOTO_IDS)
+    photo_id = UNSPLASH_PHOTO_IDS[index]
     return {
-        'url': f'https://source.unsplash.com/1200x800/?{search_terms}&sig={unique_sig}',
-        'thumb': f'https://source.unsplash.com/400x300/?{search_terms}&sig={unique_sig}',
+        'url': f'https://images.unsplash.com/{photo_id}?w=1200&q=80',
+        'thumb': f'https://images.unsplash.com/{photo_id}?w=400&q=80',
         'credit': 'Unsplash',
         'credit_link': 'https://unsplash.com'
     }
