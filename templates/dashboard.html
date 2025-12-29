@@ -275,8 +275,18 @@
         transition: transform 0.3s ease;
     }
 
-    .content-card:hover .content-card-arrow {
-        transform: translateX(5px);
+    .content-card-link {
+        color: var(--philata-orange);
+        font-size: 1.1rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .content-card-link:hover {
+        background: var(--philata-orange);
+        color: white;
     }
 
     .empty-state {
@@ -954,7 +964,9 @@
                         <i class="bi bi-linkedin"></i>
                         <i class="bi bi-twitter-x"></i>
                     </div>
-                    <i class="bi bi-arrow-right content-card-arrow"></i>
+                    <a href="/content/{{ result.id }}" class="content-card-link" onclick="event.stopPropagation();" title="Open post page">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
                 </div>
             </div>
             {% else %}
@@ -986,9 +998,19 @@
                 <img id="slideImage" class="slideshow-image" src="" alt="">
             </div>
             <div class="slideshow-details">
-                <div class="d-flex align-items-center gap-2 mb-2">
-                    <span id="slideBadge" class="slideshow-badge"></span>
-                    <span id="slidePostId" class="slideshow-post-id"></span>
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <span id="slideBadge" class="slideshow-badge"></span>
+                        <span id="slidePostId" class="slideshow-post-id"></span>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="copy-btn" onclick="copyPostLink()" title="Copy link">
+                            <i class="bi bi-link-45deg"></i> Copy Link
+                        </button>
+                        <a id="slideOpenPage" href="#" class="copy-btn" target="_blank" style="text-decoration: none;" title="Open full page">
+                            <i class="bi bi-box-arrow-up-right"></i> Open Page
+                        </a>
+                    </div>
                 </div>
                 <h2 id="slideTitle" class="slideshow-title"></h2>
                 <div class="slideshow-meta">
@@ -1212,8 +1234,9 @@
         badge.textContent = (data.track || 'unknown').toUpperCase();
         badge.className = 'slideshow-badge badge-' + (data.track || 'unknown');
 
-        // Update post ID
+        // Update post ID and link
         document.getElementById('slidePostId').textContent = 'ID: ' + (data.id || 'N/A');
+        document.getElementById('slideOpenPage').href = '/content/' + (data.id || '');
 
         // Update text
         document.getElementById('slideTitle').textContent = data.title || 'Untitled';
@@ -1258,11 +1281,27 @@
         });
     });
 
+    // Copy post link
+    function copyPostLink() {
+        const card = visibleCards[currentSlide];
+        const dataId = card.dataset.id;
+        const link = window.location.origin + '/content/' + dataId;
+        navigator.clipboard.writeText(link).then(() => {
+            const btn = event.target.closest('button');
+            btn.innerHTML = '<i class="bi bi-check"></i> Copied!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.innerHTML = '<i class="bi bi-link-45deg"></i> Copy Link';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
     // Copy caption
     function copyCaption() {
         const caption = document.getElementById('slideCaption').textContent;
         navigator.clipboard.writeText(caption).then(() => {
-            const btn = document.querySelector('.copy-btn');
+            const btn = event.target.closest('button');
             btn.innerHTML = '<i class="bi bi-check"></i> Copied!';
             btn.classList.add('copied');
             setTimeout(() => {
