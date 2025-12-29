@@ -73,6 +73,9 @@ def load_articles():
             articles = []
             for r in raw_results:
                 if r.get('full_article') and len(r.get('full_article', '')) > 200:
+                    # Get Unsplash image data if available
+                    unsplash = r.get('unsplash_image', {}) or {}
+
                     article = {
                         'id': r.get('id', ''),
                         'slug': create_slug(r.get('title', '')),
@@ -80,7 +83,10 @@ def load_articles():
                         'track': r.get('track', 'regular'),
                         'category': r.get('category', ''),
                         'created_at': r.get('timestamp', r.get('date', '')),
-                        'image_url': convert_to_cloudinary_url(r.get('image_url', '')),
+                        'image_url': unsplash.get('url') or convert_to_cloudinary_url(r.get('image_url', '')),
+                        'image_thumb': unsplash.get('thumb', ''),
+                        'image_credit': unsplash.get('credit', ''),
+                        'image_credit_link': unsplash.get('credit_link', ''),
                         'full_article': r.get('full_article', ''),
                         'source': r.get('source', ''),
                         'source_url': r.get('source_url', ''),

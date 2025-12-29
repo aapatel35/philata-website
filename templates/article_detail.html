@@ -87,7 +87,23 @@
     .article-featured-image {
         width: 100%;
         border-radius: 12px;
-        margin-bottom: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .image-credit {
+        font-size: 0.8rem;
+        color: #888;
+        margin-bottom: 1.5rem;
+    }
+
+    .image-credit a {
+        color: #666;
+        text-decoration: none;
+    }
+
+    .image-credit a:hover {
+        color: var(--philata-red);
+        text-decoration: underline;
     }
 
     .article-body {
@@ -267,6 +283,11 @@
             <main class="article-main">
                 {% if article.image_url %}
                 <img src="{{ article.image_url }}" alt="{{ article.title }}" class="article-featured-image">
+                {% if article.image_credit %}
+                <div class="image-credit">
+                    Photo by <a href="{{ article.image_credit_link }}" target="_blank" rel="noopener">{{ article.image_credit }}</a> on <a href="https://unsplash.com/?utm_source=philata&utm_medium=referral" target="_blank" rel="noopener">Unsplash</a>
+                </div>
+                {% endif %}
                 {% endif %}
 
                 <article class="article-body">

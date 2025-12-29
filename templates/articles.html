@@ -188,8 +188,8 @@
         <div class="articles-grid">
             {% for article in articles %}
             <a href="/articles/{{ article.slug or article.id }}" class="article-card">
-                {% if article.image_url %}
-                <img src="{{ article.image_url }}" alt="{{ article.title }}" class="article-card-image">
+                {% if article.image_thumb or article.image_url %}
+                <img src="{{ article.image_thumb or article.image_url }}" alt="{{ article.title }}" class="article-card-image" loading="lazy">
                 {% else %}
                 <div class="article-card-image"></div>
                 {% endif %}
