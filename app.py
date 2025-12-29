@@ -143,14 +143,18 @@ UNSPLASH_PHOTO_IDS = [
     'photo-1531482615713-2afd69097998', 'photo-1519389950473-47ba0277781c', 'photo-1552664730-d307ca884978',
 ]
 
-def get_unique_unsplash_image(article_id, category='default'):
+def get_unique_unsplash_image(article_id, category='default', title=''):
     """Get a unique Unsplash image for each article from the photo pool"""
-    # Use hash of article_id to select a unique image
-    index = abs(hash(str(article_id))) % len(UNSPLASH_PHOTO_IDS)
+    # Use combination of id and title for better distribution
+    unique_key = f"{article_id}_{title}"
+    index = abs(hash(unique_key)) % len(UNSPLASH_PHOTO_IDS)
     photo_id = UNSPLASH_PHOTO_IDS[index]
+
+    # Unsplash direct image URL format
+    base_url = f'https://images.unsplash.com/{photo_id}'
     return {
-        'url': f'https://images.unsplash.com/{photo_id}?w=1200&q=80',
-        'thumb': f'https://images.unsplash.com/{photo_id}?w=400&q=80',
+        'url': f'{base_url}?auto=format&fit=crop&w=1200&q=80',
+        'thumb': f'{base_url}?auto=format&fit=crop&w=400&q=80',
         'credit': 'Unsplash',
         'credit_link': 'https://unsplash.com'
     }
@@ -194,9 +198,9 @@ def load_articles():
             # Sort articles by date
             articles.sort(key=lambda x: x.get('created_at', ''), reverse=True)
 
-            # Assign unique images to each article based on its ID and category
+            # Assign unique images to each article based on its ID, category, and title
             for article in articles:
-                unsplash = get_unique_unsplash_image(article['id'], article['category'])
+                unsplash = get_unique_unsplash_image(article['id'], article['category'], article['title'])
                 article['image_url'] = unsplash.get('url', '')
                 article['image_thumb'] = unsplash.get('thumb', '')
                 article['image_credit'] = unsplash.get('credit', '')
