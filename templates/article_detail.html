@@ -1,0 +1,316 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.title }} - Philata{% endblock %}
+
+{% block content %}
+<style>
+    .article-header {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        padding: 3rem 0;
+        color: white;
+    }
+
+    .article-header-inner {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .article-breadcrumb {
+        margin-bottom: 1.5rem;
+    }
+
+    .article-breadcrumb a {
+        color: rgba(255,255,255,0.7);
+        text-decoration: none;
+    }
+
+    .article-breadcrumb a:hover {
+        color: white;
+    }
+
+    .article-category {
+        display: inline-block;
+        background: var(--philata-red);
+        color: white;
+        padding: 0.35rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+
+    .article-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1.3;
+        margin-bottom: 1.5rem;
+    }
+
+    .article-meta {
+        display: flex;
+        gap: 2rem;
+        font-size: 0.95rem;
+        opacity: 0.9;
+    }
+
+    .article-meta i {
+        margin-right: 0.5rem;
+    }
+
+    .article-content-section {
+        padding: 3rem 0;
+        background: #f8f9fa;
+    }
+
+    .article-container {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 3rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    @media (max-width: 992px) {
+        .article-container {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .article-main {
+        background: white;
+        border-radius: 16px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .article-featured-image {
+        width: 100%;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+    }
+
+    .article-body {
+        font-size: 1.1rem;
+        line-height: 1.9;
+        color: #333;
+    }
+
+    .article-body h2, .article-body h3 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        color: #1a1a1a;
+    }
+
+    .article-body ul, .article-body ol {
+        margin: 1.5rem 0;
+        padding-left: 1.5rem;
+    }
+
+    .article-body li {
+        margin-bottom: 0.75rem;
+    }
+
+    .article-body p {
+        margin-bottom: 1.5rem;
+    }
+
+    .article-source-box {
+        background: #f8f9fa;
+        border-left: 4px solid var(--philata-red);
+        padding: 1.25rem;
+        margin: 2rem 0;
+        border-radius: 0 8px 8px 0;
+    }
+
+    .article-source-box h4 {
+        font-size: 0.9rem;
+        color: #888;
+        margin-bottom: 0.5rem;
+    }
+
+    .article-source-box a {
+        color: var(--philata-red);
+        font-weight: 600;
+    }
+
+    .article-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .sidebar-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    .sidebar-card h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #1a1a1a;
+    }
+
+    .related-article {
+        display: block;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #eee;
+        text-decoration: none;
+        color: #333;
+        transition: color 0.3s ease;
+    }
+
+    .related-article:last-child {
+        border-bottom: none;
+    }
+
+    .related-article:hover {
+        color: var(--philata-red);
+    }
+
+    .related-article-title {
+        font-weight: 500;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .related-article-meta {
+        font-size: 0.8rem;
+        color: #888;
+        margin-top: 0.25rem;
+    }
+
+    .share-buttons {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .share-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-decoration: none;
+        transition: transform 0.3s ease;
+    }
+
+    .share-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .share-btn.facebook { background: #1877f2; }
+    .share-btn.twitter { background: #1da1f2; }
+    .share-btn.linkedin { background: #0a66c2; }
+    .share-btn.copy { background: #666; cursor: pointer; }
+
+    .cta-box {
+        background: linear-gradient(135deg, #E31837 0%, #c01530 100%);
+        color: white;
+        text-align: center;
+    }
+
+    .cta-box h3 {
+        color: white;
+    }
+
+    .cta-box p {
+        opacity: 0.9;
+        margin-bottom: 1rem;
+    }
+
+    .cta-btn {
+        display: inline-block;
+        background: white;
+        color: var(--philata-red);
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: transform 0.3s ease;
+    }
+
+    .cta-btn:hover {
+        transform: scale(1.05);
+    }
+</style>
+
+<section class="article-header">
+    <div class="container">
+        <div class="article-header-inner">
+            <div class="article-breadcrumb">
+                <a href="/">Home</a> / <a href="/articles">Articles</a> / {{ article.category | replace('_', ' ') | title }}
+            </div>
+            <span class="article-category">{{ article.category | replace('_', ' ') | title }}</span>
+            <h1 class="article-title">{{ article.title }}</h1>
+            <div class="article-meta">
+                <span><i class="bi bi-calendar3"></i> {{ article.created_at[:10] if article.created_at else 'Recent' }}</span>
+                <span><i class="bi bi-clock"></i> {{ article.reading_time }} min read</span>
+                <span><i class="bi bi-building"></i> {{ article.source }}</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="article-content-section">
+    <div class="container">
+        <div class="article-container">
+            <main class="article-main">
+                {% if article.image_url %}
+                <img src="{{ article.image_url }}" alt="{{ article.title }}" class="article-featured-image">
+                {% endif %}
+
+                <article class="article-body">
+                    {{ article.full_article | safe | replace('\n\n', '</p><p>') | replace('\n', '<br>') }}
+                </article>
+
+                {% if article.source_url %}
+                <div class="article-source-box">
+                    <h4>Source</h4>
+                    <a href="{{ article.source_url }}" target="_blank" rel="noopener">{{ article.source }} <i class="bi bi-box-arrow-up-right"></i></a>
+                </div>
+                {% endif %}
+            </main>
+
+            <aside class="article-sidebar">
+                <div class="sidebar-card">
+                    <h3>Share Article</h3>
+                    <div class="share-buttons">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" target="_blank" class="share-btn facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="https://twitter.com/intent/tweet?url={{ request.url }}&text={{ article.title }}" target="_blank" class="share-btn twitter"><i class="bi bi-twitter-x"></i></a>
+                        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.url }}&title={{ article.title }}" target="_blank" class="share-btn linkedin"><i class="bi bi-linkedin"></i></a>
+                        <div class="share-btn copy" onclick="navigator.clipboard.writeText(window.location.href); this.innerHTML='<i class=\'bi bi-check\'></i>'"><i class="bi bi-link-45deg"></i></div>
+                    </div>
+                </div>
+
+                {% if related %}
+                <div class="sidebar-card">
+                    <h3>Related Articles</h3>
+                    {% for rel in related %}
+                    <a href="/articles/{{ rel.slug or rel.id }}" class="related-article">
+                        <div class="related-article-title">{{ rel.title }}</div>
+                        <div class="related-article-meta">{{ rel.reading_time }} min read</div>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="sidebar-card cta-box">
+                    <h3>Calculate Your CRS Score</h3>
+                    <p>Find out your Express Entry ranking</p>
+                    <a href="/tools/crs-calculator" class="cta-btn">CRS Calculator</a>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+{% endblock %}

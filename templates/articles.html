@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}Immigration Articles - Philata{% endblock %}
+
+{% block content %}
+<style>
+    .articles-hero {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        padding: 4rem 0;
+        color: white;
+        text-align: center;
+    }
+
+    .articles-hero h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .articles-hero p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .articles-section {
+        padding: 3rem 0;
+        background: #f8f9fa;
+        min-height: 60vh;
+    }
+
+    .category-filters {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+        justify-content: center;
+    }
+
+    .category-btn {
+        padding: 0.5rem 1.25rem;
+        border-radius: 25px;
+        border: 2px solid #e5e5e5;
+        background: white;
+        color: #666;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .category-btn:hover, .category-btn.active {
+        background: var(--philata-red);
+        border-color: var(--philata-red);
+        color: white;
+    }
+
+    .articles-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+
+    .article-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .article-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+
+    .article-card-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .article-card-body {
+        padding: 1.5rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .article-card-meta {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+        font-size: 0.85rem;
+        color: #888;
+    }
+
+    .article-card-category {
+        background: #E31837;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .article-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .article-card-excerpt {
+        color: #666;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        flex: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .article-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+
+    .article-card-source {
+        font-size: 0.85rem;
+        color: #888;
+    }
+
+    .article-card-read {
+        color: var(--philata-red);
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .no-articles {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #888;
+    }
+
+    .no-articles i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+</style>
+
+<section class="articles-hero">
+    <div class="container">
+        <h1>Immigration Articles</h1>
+        <p>In-depth analysis and comprehensive guides on Canadian immigration news, policies, and updates.</p>
+    </div>
+</section>
+
+<section class="articles-section">
+    <div class="container">
+        <div class="category-filters">
+            <a href="/articles" class="category-btn {% if not category %}active{% endif %}">All</a>
+            <a href="/articles?category=express_entry" class="category-btn {% if category == 'express_entry' %}active{% endif %}">Express Entry</a>
+            <a href="/articles?category=pnp" class="category-btn {% if category == 'pnp' %}active{% endif %}">PNP</a>
+            <a href="/articles?category=study_permit" class="category-btn {% if category == 'study_permit' %}active{% endif %}">Study</a>
+            <a href="/articles?category=work_permit" class="category-btn {% if category == 'work_permit' %}active{% endif %}">Work</a>
+            <a href="/articles?category=policy" class="category-btn {% if category == 'policy' %}active{% endif %}">Policy</a>
+        </div>
+
+        {% if articles %}
+        <div class="articles-grid">
+            {% for article in articles %}
+            <a href="/articles/{{ article.slug or article.id }}" class="article-card">
+                {% if article.image_url %}
+                <img src="{{ article.image_url }}" alt="{{ article.title }}" class="article-card-image">
+                {% else %}
+                <div class="article-card-image"></div>
+                {% endif %}
+                <div class="article-card-body">
+                    <div class="article-card-meta">
+                        <span class="article-card-category">{{ article.category | replace('_', ' ') | title }}</span>
+                        <span><i class="bi bi-clock"></i> {{ article.reading_time }} min read</span>
+                    </div>
+                    <h2 class="article-card-title">{{ article.title }}</h2>
+                    <p class="article-card-excerpt">{{ article.full_article[:200] }}...</p>
+                    <div class="article-card-footer">
+                        <span class="article-card-source">{{ article.source }}</span>
+                        <span class="article-card-read">Read More <i class="bi bi-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-articles">
+            <i class="bi bi-newspaper"></i>
+            <h3>No Articles Yet</h3>
+            <p>New articles are being generated. Check back soon!</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

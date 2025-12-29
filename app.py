@@ -26,6 +26,7 @@ os.makedirs(IMAGES_DIR, exist_ok=True)
 RESULTS_FILE = os.path.join(DATA_DIR, 'results.json')
 APPROVED_FILE = os.path.join(DATA_DIR, 'approved.json')
 GUIDES_FILE = os.path.join(DATA_DIR, 'guides.json')
+ARTICLES_FILE = os.path.join(DATA_DIR, 'articles.json')
 
 # Cloudinary settings for URL conversion
 CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME', 'dg7yw1j18')
@@ -58,6 +59,50 @@ def load_guides():
         with open(GUIDES_FILE, 'r') as f:
             return json.load(f)
     return {"categories": {}}
+
+
+def load_articles():
+    """Load articles from Post API"""
+    try:
+        response = requests.get(f"{POST_API_URL}/results/list", timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            raw_results = data if isinstance(data, list) else data.get('results', [])
+
+            # Filter only items with full_article content
+            articles = []
+            for r in raw_results:
+                if r.get('full_article') and len(r.get('full_article', '')) > 200:
+                    article = {
+                        'id': r.get('id', ''),
+                        'slug': create_slug(r.get('title', '')),
+                        'title': r.get('title', ''),
+                        'track': r.get('track', 'regular'),
+                        'category': r.get('category', ''),
+                        'created_at': r.get('timestamp', r.get('date', '')),
+                        'image_url': convert_to_cloudinary_url(r.get('image_url', '')),
+                        'full_article': r.get('full_article', ''),
+                        'source': r.get('source', ''),
+                        'source_url': r.get('source_url', ''),
+                        'reading_time': max(1, len(r.get('full_article', '').split()) // 200)
+                    }
+                    articles.append(article)
+
+            articles.sort(key=lambda x: x.get('created_at', ''), reverse=True)
+            return articles
+    except Exception as e:
+        print(f"Error fetching articles: {e}")
+    return []
+
+
+def create_slug(title):
+    """Create URL-friendly slug from title"""
+    import re
+    slug = title.lower()
+    slug = re.sub(r'[^a-z0-9\s-]', '', slug)
+    slug = re.sub(r'[\s_]+', '-', slug)
+    slug = re.sub(r'-+', '-', slug)
+    return slug[:80].strip('-')
 
 
 def load_results():
@@ -209,6 +254,43 @@ def dashboard():
     """Content dashboard"""
     results = load_results()
     return render_template('dashboard.html', results=results)
+
+
+# =============================================================================
+# ARTICLES SECTION
+# =============================================================================
+
+@app.route('/articles')
+def articles():
+    """Articles listing page"""
+    all_articles = load_articles()
+    category = request.args.get('category')
+
+    if category:
+        all_articles = [a for a in all_articles if a.get('category') == category]
+
+    return render_template('articles.html', articles=all_articles, category=category)
+
+
+@app.route('/articles/<slug>')
+def article_detail(slug):
+    """Individual article page"""
+    all_articles = load_articles()
+
+    # Find article by slug or ID
+    article = None
+    for a in all_articles:
+        if a.get('slug') == slug or a.get('id') == slug:
+            article = a
+            break
+
+    if not article:
+        return "Article not found", 404
+
+    # Get related articles (same category)
+    related = [a for a in all_articles if a.get('category') == article.get('category') and a.get('id') != article.get('id')][:3]
+
+    return render_template('article_detail.html', article=article, related=related)
 
 
 # =============================================================================
