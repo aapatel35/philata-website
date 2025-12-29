@@ -266,6 +266,52 @@
         border-radius: 0 12px 12px 0;
     }
 
+    .article-source-box.official-source {
+        background: linear-gradient(135deg, rgba(220, 38, 38, 0.08) 0%, rgba(64, 145, 108, 0.12) 100%);
+        border-left: 4px solid #dc2626;
+        border: 2px solid rgba(220, 38, 38, 0.2);
+        border-left: 4px solid #dc2626;
+        border-radius: 12px;
+        padding: 1.5rem;
+    }
+
+    .article-source-box.official-source h4 {
+        font-size: 1rem;
+        color: #dc2626;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+
+    .article-source-box.official-source h4 i {
+        color: #dc2626;
+        margin-right: 0.5rem;
+    }
+
+    .article-source-box.official-source p {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 0.75rem;
+    }
+
+    .article-source-box.official-source a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, #dc2626, #b91c1c);
+        color: white;
+        padding: 0.75rem 1.25rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .article-source-box.official-source a:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    }
+
     .article-source-box h4 {
         font-size: 0.9rem;
         color: #888;
@@ -458,7 +504,16 @@
                     {% endif %}
                 </article>
 
-                {% if article.source_url %}
+                {% if article.official_source_url %}
+                <div class="article-source-box official-source">
+                    <h4><i class="bi bi-patch-check-fill"></i> Official Government Source</h4>
+                    <p>This article is based on official information from:</p>
+                    <a href="{{ article.official_source_url }}" target="_blank" rel="noopener">
+                        <i class="bi bi-building"></i> {{ article.official_source_url | replace('https://', '') | replace('http://', '') | truncate(60) }}
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+                </div>
+                {% elif article.source_url %}
                 <div class="article-source-box">
                     <h4>Source</h4>
                     <a href="{{ article.source_url }}" target="_blank" rel="noopener">{{ article.source }} <i class="bi bi-box-arrow-up-right"></i></a>
