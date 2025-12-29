@@ -2,31 +2,63 @@
 
 {% block title %}Immigration Articles - Philata{% endblock %}
 
-{% block content %}
+{% block extra_css %}
 <style>
     .articles-hero {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        padding: 4rem 0;
-        color: white;
+        min-height: 40vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        padding: 8rem 0 4rem;
+        background: linear-gradient(135deg, #0f172a 0%, #14532d 50%, #0f172a 100%);
+    }
+
+    .articles-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+            radial-gradient(circle at 20% 80%, rgba(74, 222, 128, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%);
+        z-index: 1;
+    }
+
+    .articles-hero-content {
+        position: relative;
+        z-index: 10;
         text-align: center;
     }
 
     .articles-hero h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 3rem;
+        font-weight: 800;
+        color: #ffffff;
         margin-bottom: 1rem;
+        letter-spacing: -0.03em;
+    }
+
+    .articles-hero h1 span {
+        background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #86efac 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
     .articles-hero p {
-        font-size: 1.1rem;
-        opacity: 0.9;
+        font-size: 1.15rem;
+        color: rgba(255, 255, 255, 0.85);
         max-width: 600px;
         margin: 0 auto;
     }
 
     .articles-section {
-        padding: 3rem 0;
-        background: #f8f9fa;
+        padding: 4rem 0 6rem;
+        background: transparent;
         min-height: 60vh;
     }
 
@@ -34,25 +66,33 @@
         display: flex;
         gap: 0.75rem;
         flex-wrap: wrap;
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem;
         justify-content: center;
     }
 
     .category-btn {
-        padding: 0.5rem 1.25rem;
+        padding: 0.6rem 1.5rem;
         border-radius: 25px;
-        border: 2px solid #e5e5e5;
-        background: white;
-        color: #666;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        color: rgba(255, 255, 255, 0.8);
         font-weight: 500;
         text-decoration: none;
         transition: all 0.3s ease;
     }
 
-    .category-btn:hover, .category-btn.active {
-        background: var(--philata-red);
-        border-color: var(--philata-red);
+    .category-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.4);
         color: white;
+    }
+
+    .category-btn.active {
+        background: var(--gradient-accent);
+        border-color: transparent;
+        color: white;
+        box-shadow: 0 4px 15px rgba(64, 145, 108, 0.4);
     }
 
     .articles-grid {
@@ -62,11 +102,14 @@
     }
 
     .article-card {
-        background: white;
-        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        transition: all 0.3s ease;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         text-decoration: none;
         color: inherit;
         display: flex;
@@ -74,15 +117,17 @@
     }
 
     .article-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        transform: translateY(-8px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.95);
     }
 
     .article-card-image {
         width: 100%;
         height: 200px;
         object-fit: cover;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #1B4332 0%, #2D6A4F 100%);
     }
 
     .article-card-body {
@@ -90,6 +135,7 @@
         flex: 1;
         display: flex;
         flex-direction: column;
+        background: rgba(255, 255, 255, 0.9);
     }
 
     .article-card-meta {
@@ -97,13 +143,14 @@
         gap: 1rem;
         margin-bottom: 0.75rem;
         font-size: 0.85rem;
-        color: #888;
+        color: #666;
+        align-items: center;
     }
 
     .article-card-category {
-        background: #E31837;
+        background: var(--gradient-accent);
         color: white;
-        padding: 0.25rem 0.75rem;
+        padding: 0.3rem 0.85rem;
         border-radius: 15px;
         font-size: 0.75rem;
         font-weight: 600;
@@ -111,8 +158,8 @@
     }
 
     .article-card-title {
-        font-size: 1.25rem;
-        font-weight: 600;
+        font-size: 1.2rem;
+        font-weight: 700;
         color: #1a1a1a;
         margin-bottom: 0.75rem;
         line-height: 1.4;
@@ -123,7 +170,7 @@
     }
 
     .article-card-excerpt {
-        color: #666;
+        color: #333;
         font-size: 0.95rem;
         line-height: 1.6;
         flex: 1;
@@ -148,28 +195,77 @@
     }
 
     .article-card-read {
-        color: var(--philata-red);
+        color: var(--philata-accent);
         font-weight: 600;
         font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: gap 0.3s ease;
+    }
+
+    .article-card:hover .article-card-read {
+        gap: 0.75rem;
+        color: var(--philata-primary);
     }
 
     .no-articles {
         text-align: center;
         padding: 4rem 2rem;
-        color: #888;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
     .no-articles i {
         font-size: 4rem;
         margin-bottom: 1rem;
+        color: var(--philata-accent);
         opacity: 0.5;
     }
-</style>
 
+    .no-articles h3 {
+        color: #1a1a1a;
+        margin-bottom: 0.5rem;
+    }
+
+    .no-articles p {
+        color: #666;
+    }
+
+    @media (max-width: 768px) {
+        .articles-hero {
+            padding: 6rem 0 3rem;
+            min-height: auto;
+        }
+
+        .articles-hero h1 {
+            font-size: 2rem;
+        }
+
+        .articles-section {
+            padding: 2rem 0 4rem;
+        }
+
+        .articles-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .article-card {
+            background: rgba(255, 255, 255, 0.92);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
 <section class="articles-hero">
     <div class="container">
-        <h1>Immigration Articles</h1>
-        <p>In-depth analysis and comprehensive guides on Canadian immigration news, policies, and updates.</p>
+        <div class="articles-hero-content">
+            <h1>Immigration <span>Articles</span></h1>
+            <p>In-depth analysis and comprehensive guides on Canadian immigration news, policies, and updates.</p>
+        </div>
     </div>
 </section>
 

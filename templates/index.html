@@ -1128,6 +1128,131 @@
         }
     }
 
+    /* Articles Home Section */
+    .articles-home-section {
+        padding: 8rem 0;
+        background: transparent;
+    }
+
+    .article-home-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .article-home-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    .article-home-image {
+        height: 180px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        background-color: linear-gradient(135deg, #1B4332, #2D6A4F);
+    }
+
+    .article-home-image::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60%;
+        background: linear-gradient(transparent, rgba(0,0,0,0.4));
+    }
+
+    .article-home-category {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        z-index: 2;
+        background: var(--gradient-accent);
+        color: white;
+        padding: 0.4rem 1rem;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .article-home-body {
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.9);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .article-home-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: #1a1a1a;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .article-home-excerpt {
+        color: #333;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+        flex: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .article-home-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: #666;
+    }
+
+    .article-home-link {
+        color: var(--philata-accent);
+        font-weight: 600;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: gap 0.3s ease;
+    }
+
+    .article-home-card:hover .article-home-link {
+        gap: 0.75rem;
+        color: var(--philata-primary);
+    }
+
+    @media (max-width: 768px) {
+        .articles-home-section {
+            padding: 4rem 0;
+        }
+
+        .article-home-card {
+            background: rgba(255, 255, 255, 0.92);
+        }
+    }
+
     /* Smooth Scroll Reveal Animations */
     html {
         scroll-behavior: smooth;
@@ -1744,6 +1869,30 @@
     </div>
 </section>
 
+<!-- Latest Articles Section -->
+<section class="articles-home-section" id="articles-home">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="section-divider"></div>
+            <h2 class="section-title">Latest <span class="gradient-text">Articles</span></h2>
+            <p class="section-subtitle mx-auto">
+                In-depth analysis and comprehensive guides on Canadian immigration news and policies.
+            </p>
+        </div>
+        <div class="row g-4" id="articles-grid">
+            <!-- Articles will be loaded dynamically -->
+            <div class="col-12 text-center py-4">
+                <p style="color: rgba(255,255,255,0.7);">Loading latest articles...</p>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="/articles" class="btn btn-primary btn-lg">
+                <i class="bi bi-newspaper me-2"></i>View All Articles
+            </a>
+        </div>
+    </div>
+</section>
+
 <!-- CTA Section -->
 <section class="cta-section">
     <div class="container">
@@ -1811,5 +1960,59 @@
             hero.style.backgroundPositionY = scrolled * 0.3 + 'px';
         }
     });
+
+    // Load latest articles
+    fetch('/api/results')
+        .then(r => r.json())
+        .then(data => {
+            const articles = (data.results || [])
+                .filter(a => a.full_article && a.full_article.length > 200)
+                .slice(0, 3);
+
+            const grid = document.getElementById('articles-grid');
+            if (articles.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-12 text-center py-4">
+                        <p style="color: rgba(255,255,255,0.7);">No articles yet. Check back soon!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = articles.map(article => {
+                const slug = article.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/[\s_]+/g, '-').substring(0, 80);
+                const category = (article.category || 'news').replace(/_/g, ' ');
+                const excerpt = (article.full_article || '').substring(0, 120) + '...';
+                const readTime = Math.max(1, Math.floor((article.full_article || '').split(' ').length / 200));
+                const imageUrl = article.image_url || '';
+                const imageStyle = imageUrl ? `background-image: url('${imageUrl}')` : 'background: linear-gradient(135deg, #1B4332, #2D6A4F)';
+
+                return `
+                    <div class="col-md-6 col-lg-4">
+                        <a href="/articles/${slug || article.id}" class="article-home-card">
+                            <div class="article-home-image" style="${imageStyle}">
+                                <span class="article-home-category">${category}</span>
+                            </div>
+                            <div class="article-home-body">
+                                <h3 class="article-home-title">${article.title}</h3>
+                                <p class="article-home-excerpt">${excerpt}</p>
+                                <div class="article-home-meta">
+                                    <span><i class="bi bi-clock me-1"></i>${readTime} min read</span>
+                                    <span class="article-home-link">Read More <i class="bi bi-arrow-right"></i></span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                `;
+            }).join('');
+        })
+        .catch(e => {
+            console.error('Error loading articles:', e);
+            document.getElementById('articles-grid').innerHTML = `
+                <div class="col-12 text-center py-4">
+                    <p style="color: rgba(255,255,255,0.7);">Check back soon for articles!</p>
+                </div>
+            `;
+        });
 </script>
 {% endblock %}
