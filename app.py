@@ -181,9 +181,11 @@ def load_articles():
             for r in raw_results:
                 if r.get('full_article') and len(r.get('full_article', '')) > 200:
                     category = r.get('category', '')
+                    # Use provided slug or generate from title
+                    slug = r.get('slug') or create_slug(r.get('title', ''))
                     article = {
                         'id': r.get('id', ''),
-                        'slug': create_slug(r.get('title', '')),
+                        'slug': slug,
                         'title': r.get('title', ''),
                         'track': r.get('track', 'regular'),
                         'category': category,
@@ -192,7 +194,12 @@ def load_articles():
                         'source': r.get('source', ''),
                         'source_url': r.get('source_url', ''),
                         'official_source_url': r.get('official_source_url', ''),
-                        'reading_time': max(1, len(r.get('full_article', '').split()) // 200)
+                        'reading_time': max(1, len(r.get('full_article', '').split()) // 200),
+                        # Enhanced fields
+                        'key_takeaways': r.get('key_takeaways', []),
+                        'stat_cards': r.get('stat_cards', []),
+                        'verification': r.get('verification', {}),
+                        'sources': r.get('sources', {}),
                     }
                     articles.append(article)
 
@@ -637,6 +644,37 @@ def add_article():
 
         results.insert(0, article)
         save_results(results)
+
+        # Also send to Post API so it appears in /articles/ listing
+        try:
+            post_api_payload = {
+                "id": content_id,
+                "title": article.get('title', ''),
+                "track": article.get('track', 'regular'),
+                "category": article.get('category', 'general'),
+                "full_article": article.get('full_article', ''),
+                "source": article.get('source', ''),
+                "source_url": article.get('source_url', ''),
+                "official_source_url": article.get('official_source_url', ''),
+                "image_url": article.get('image_url', ''),
+                "filename": article.get('filename', ''),
+                "captions": article.get('captions', {}),
+                "verified": article.get('verification', {}).get('status') == 'verified',
+                # Enhanced fields
+                "slug": slug,
+                "key_takeaways": article.get('key_takeaways', []),
+                "stat_cards": article.get('stat_cards', []),
+                "verification": article.get('verification', {}),
+                "sources": article.get('sources', {}),
+            }
+            post_response = requests.post(
+                f"{POST_API_URL}/results/log",
+                json=post_api_payload,
+                timeout=10
+            )
+            print(f"   Post API response: {post_response.status_code}")
+        except Exception as post_err:
+            print(f"   ⚠️ Post API sync failed: {post_err}")
 
         print(f"✅ Article created: {slug}")
         print(f"   URL: {article_url}")
