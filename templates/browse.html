@@ -1,0 +1,317 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Categories - Philata{% endblock %}
+
+{% block extra_css %}
+<style>
+    .browse-hero {
+        padding: 6rem 0 4rem;
+        text-align: center;
+        background: linear-gradient(135deg, #0f172a 0%, #14532d 50%, #0f172a 100%);
+        position: relative;
+    }
+
+    .browse-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 20% 80%, rgba(74, 222, 128, 0.15) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%);
+    }
+
+    .browse-hero-content {
+        position: relative;
+        z-index: 10;
+    }
+
+    .browse-hero h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .browse-hero p {
+        color: rgba(255,255,255,0.85);
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .browse-section {
+        padding: 4rem 0;
+        background: #f8fafc;
+    }
+
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+
+    .category-card {
+        background: #ffffff;
+        border-radius: 20px;
+        border: 1px solid rgba(0,0,0,0.08);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+
+    .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    }
+
+    .category-header {
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .category-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .category-info h3 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin: 0;
+        color: #1a1a1a;
+    }
+
+    .category-info p {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin: 0.25rem 0 0;
+    }
+
+    .category-count {
+        margin-left: auto;
+        background: rgba(0,0,0,0.05);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .subcategories-list {
+        padding: 1rem 1.5rem;
+    }
+
+    .subcategory-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(0,0,0,0.04);
+        text-decoration: none;
+        color: #374151;
+        transition: all 0.2s ease;
+    }
+
+    .subcategory-item:last-child {
+        border-bottom: none;
+    }
+
+    .subcategory-item:hover {
+        color: var(--philata-accent);
+    }
+
+    .subcategory-item:hover .subcategory-count {
+        background: var(--philata-accent);
+        color: white;
+    }
+
+    .subcategory-name {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .subcategory-name i {
+        font-size: 0.9rem;
+        opacity: 0.6;
+    }
+
+    .subcategory-count {
+        background: rgba(0,0,0,0.05);
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+    .category-footer {
+        padding: 1rem 1.5rem;
+        background: rgba(0,0,0,0.02);
+        border-top: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .view-all-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--philata-accent);
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .view-all-btn:hover {
+        color: var(--philata-primary);
+        gap: 0.75rem;
+    }
+
+    /* Quick Stats */
+    .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .quick-stat {
+        background: rgba(255,255,255,0.1);
+        padding: 1.25rem;
+        border-radius: 16px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+    }
+
+    .quick-stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #4ade80;
+        line-height: 1.2;
+    }
+
+    .quick-stat-label {
+        font-size: 0.85rem;
+        color: rgba(255,255,255,0.7);
+        margin-top: 0.25rem;
+    }
+
+    /* Breadcrumb */
+    .browse-breadcrumb {
+        margin-bottom: 1.5rem;
+        color: rgba(255,255,255,0.7);
+    }
+
+    .browse-breadcrumb a {
+        color: rgba(255,255,255,0.85);
+        text-decoration: none;
+    }
+
+    .browse-breadcrumb a:hover {
+        color: #fff;
+    }
+
+    @media (max-width: 768px) {
+        .browse-hero {
+            padding: 4rem 0 3rem;
+        }
+
+        .browse-hero h1 {
+            font-size: 2rem;
+        }
+
+        .category-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .quick-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="browse-hero">
+    <div class="container">
+        <div class="browse-hero-content">
+            <nav class="browse-breadcrumb">
+                <a href="/">Home</a> / Browse Categories
+            </nav>
+            <h1>Browse by Category</h1>
+            <p>Find immigration articles organized by topic, province, and content type</p>
+
+            {% set total_articles = 0 %}
+            {% for cat_id, cat in categories.items() %}
+                {% set total_articles = total_articles + cat.total_count %}
+            {% endfor %}
+
+            <div class="quick-stats">
+                <div class="quick-stat">
+                    <div class="quick-stat-value">{{ categories|length }}</div>
+                    <div class="quick-stat-label">Categories</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value">{{ categories.pnp.subcategories|length }}</div>
+                    <div class="quick-stat-label">Provinces</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value">{{ categories.educational.subcategories|length }}</div>
+                    <div class="quick-stat-label">Topics</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="browse-section">
+    <div class="container">
+        <div class="category-grid">
+            {% for cat_id, cat in categories.items() %}
+            <div class="category-card">
+                <div class="category-header">
+                    <div class="category-icon" style="background: {{ cat.color }};">
+                        <i class="bi {{ cat.icon }}"></i>
+                    </div>
+                    <div class="category-info">
+                        <h3>{{ cat.name }}</h3>
+                        <p>{{ cat.description }}</p>
+                    </div>
+                    <div class="category-count">{{ cat.total_count }} articles</div>
+                </div>
+
+                <div class="subcategories-list">
+                    {% for sub in cat.subcategories %}
+                    <a href="/browse/{{ cat_id }}?sub={{ sub.id }}" class="subcategory-item">
+                        <span class="subcategory-name">
+                            <i class="bi {{ sub.icon }}"></i>
+                            {{ sub.name }}
+                        </span>
+                        <span class="subcategory-count">{{ sub.count }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+
+                <div class="category-footer">
+                    <a href="/browse/{{ cat_id }}" class="view-all-btn">
+                        View All {{ cat.name }} <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

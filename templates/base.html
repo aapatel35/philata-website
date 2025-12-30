@@ -876,6 +876,9 @@
                         <a class="nav-link {% if '/articles' in request.path %}active{% endif %}" href="/articles">Articles</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {% if '/browse' in request.path %}active{% endif %}" href="/browse">Browse</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {% if '/tools/crs-calculator' in request.path %}active{% endif %}" href="/tools/crs-calculator">CRS Calculator</a>
                     </li>
                     <li class="nav-item">
@@ -915,11 +918,11 @@
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-6 footer-links">
-                    <h6>News</h6>
-                    <a href="/dashboard">Breaking News</a>
-                    <a href="/dashboard">Express Entry</a>
-                    <a href="/dashboard">PNP Updates</a>
-                    <a href="/dashboard">Policy Changes</a>
+                    <h6>Browse</h6>
+                    <a href="/browse/news">Breaking News</a>
+                    <a href="/browse/express_entry">Express Entry</a>
+                    <a href="/browse/pnp">Provincial Programs</a>
+                    <a href="/browse/educational">Educational</a>
                 </div>
                 <div class="col-lg-2 col-md-6 footer-links">
                     <h6>Guides</h6>

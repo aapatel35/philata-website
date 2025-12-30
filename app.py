@@ -385,6 +385,305 @@ def dashboard():
 # ARTICLES SECTION
 # =============================================================================
 
+# =============================================================================
+# BROWSE BY CATEGORY
+# =============================================================================
+
+# Province keywords for PNP filtering
+PROVINCE_KEYWORDS = {
+    'ontario': ['ontario', 'oinp', 'toronto', 'ottawa'],
+    'british_columbia': ['british columbia', 'bc', 'bc pnp', 'vancouver', 'victoria'],
+    'alberta': ['alberta', 'ainp', 'aaip', 'calgary', 'edmonton'],
+    'saskatchewan': ['saskatchewan', 'sinp', 'saskatoon', 'regina'],
+    'manitoba': ['manitoba', 'mpnp', 'winnipeg'],
+    'nova_scotia': ['nova scotia', 'nsnp', 'halifax'],
+    'new_brunswick': ['new brunswick', 'nbpnp', 'fredericton', 'moncton'],
+    'pei': ['prince edward island', 'pei', 'pei pnp', 'charlottetown'],
+    'newfoundland': ['newfoundland', 'labrador', 'nlpnp', "st. john's"],
+    'yukon': ['yukon', 'ynp', 'whitehorse'],
+    'nwt': ['northwest territories', 'nwt', 'yellowknife'],
+    'nunavut': ['nunavut', 'iqaluit'],
+}
+
+def detect_province(title):
+    """Detect province from article title"""
+    title_lower = title.lower()
+    for province, keywords in PROVINCE_KEYWORDS.items():
+        for keyword in keywords:
+            if keyword in title_lower:
+                return province
+    return None
+
+
+@app.route('/browse')
+def browse_categories():
+    """Browse articles by category with subcategories"""
+    all_articles = load_articles()
+    all_content = load_results()
+
+    # Define category structure with filters
+    categories = {
+        'news': {
+            'name': 'News & Updates',
+            'icon': 'bi-newspaper',
+            'description': 'Latest immigration news and policy updates',
+            'color': '#EF4444',
+            'subcategories': [
+                {'id': 'breaking', 'name': 'Breaking News', 'icon': 'bi-lightning-charge'},
+                {'id': 'policy', 'name': 'Policy Updates', 'icon': 'bi-file-earmark-text'},
+                {'id': 'program', 'name': 'Program Updates', 'icon': 'bi-megaphone'},
+            ]
+        },
+        'express_entry': {
+            'name': 'Express Entry',
+            'icon': 'bi-lightning',
+            'description': 'Federal skilled worker and CRS updates',
+            'color': '#14B8A6',
+            'subcategories': [
+                {'id': 'draw_results', 'name': 'Draw Results', 'icon': 'bi-trophy'},
+                {'id': 'crs_updates', 'name': 'CRS Updates', 'icon': 'bi-graph-up'},
+                {'id': 'fsw', 'name': 'Federal Skilled Worker', 'icon': 'bi-briefcase'},
+            ]
+        },
+        'pnp': {
+            'name': 'Provincial Programs (PNP)',
+            'icon': 'bi-map',
+            'description': 'Provincial Nominee Programs by province',
+            'color': '#8B5CF6',
+            'subcategories': [
+                {'id': 'ontario', 'name': 'Ontario (OINP)', 'icon': 'bi-geo-alt'},
+                {'id': 'british_columbia', 'name': 'British Columbia', 'icon': 'bi-geo-alt'},
+                {'id': 'alberta', 'name': 'Alberta (AAIP)', 'icon': 'bi-geo-alt'},
+                {'id': 'saskatchewan', 'name': 'Saskatchewan (SINP)', 'icon': 'bi-geo-alt'},
+                {'id': 'manitoba', 'name': 'Manitoba (MPNP)', 'icon': 'bi-geo-alt'},
+                {'id': 'nova_scotia', 'name': 'Nova Scotia', 'icon': 'bi-geo-alt'},
+                {'id': 'new_brunswick', 'name': 'New Brunswick', 'icon': 'bi-geo-alt'},
+                {'id': 'pei', 'name': 'Prince Edward Island', 'icon': 'bi-geo-alt'},
+                {'id': 'newfoundland', 'name': 'Newfoundland', 'icon': 'bi-geo-alt'},
+                {'id': 'territories', 'name': 'Territories (YT/NWT/NU)', 'icon': 'bi-geo-alt'},
+            ]
+        },
+        'educational': {
+            'name': 'Educational',
+            'icon': 'bi-book',
+            'description': 'Guides and tutorials for immigration process',
+            'color': '#3B82F6',
+            'subcategories': [
+                {'id': 'application_process', 'name': 'Application Process', 'icon': 'bi-clipboard-check'},
+                {'id': 'language_tests', 'name': 'Language Tests', 'icon': 'bi-translate'},
+                {'id': 'crs_optimization', 'name': 'CRS Optimization', 'icon': 'bi-sliders'},
+                {'id': 'settlement', 'name': 'Settlement Tips', 'icon': 'bi-house-heart'},
+            ]
+        },
+        'forms': {
+            'name': 'Forms & Guides',
+            'icon': 'bi-file-earmark-ruled',
+            'description': 'Official forms and how to fill them',
+            'color': '#F59E0B',
+            'subcategories': [
+                {'id': 'express_entry_forms', 'name': 'Express Entry Forms', 'icon': 'bi-file-text'},
+                {'id': 'pnp_forms', 'name': 'PNP Forms', 'icon': 'bi-file-text'},
+                {'id': 'study_forms', 'name': 'Study Permit Forms', 'icon': 'bi-file-text'},
+                {'id': 'work_forms', 'name': 'Work Permit Forms', 'icon': 'bi-file-text'},
+            ]
+        },
+        'permits': {
+            'name': 'Permits',
+            'icon': 'bi-card-checklist',
+            'description': 'Study and work permit information',
+            'color': '#22C55E',
+            'subcategories': [
+                {'id': 'study_permit', 'name': 'Study Permits', 'icon': 'bi-mortarboard'},
+                {'id': 'work_permit', 'name': 'Work Permits', 'icon': 'bi-briefcase'},
+                {'id': 'pgwp', 'name': 'PGWP', 'icon': 'bi-award'},
+            ]
+        },
+    }
+
+    # Count articles per category and subcategory
+    for cat_id, cat in categories.items():
+        cat['total_count'] = 0
+        for sub in cat['subcategories']:
+            sub_id = sub['id']
+            count = 0
+
+            # Filter logic based on category and subcategory
+            for article in all_articles:
+                article_cat = article.get('category', '')
+                article_track = article.get('track', '')
+                article_title = article.get('title', '')
+
+                matches = False
+
+                # News category
+                if cat_id == 'news':
+                    if sub_id == 'breaking' and article_track == 'breaking':
+                        matches = True
+                    elif sub_id == 'policy' and article_cat == 'policy':
+                        matches = True
+                    elif sub_id == 'program' and article_cat in ['program', 'general']:
+                        matches = True
+
+                # Express Entry
+                elif cat_id == 'express_entry':
+                    if article_cat == 'express_entry':
+                        if sub_id == 'draw_results' and ('draw' in article_title.lower() or 'ita' in article_title.lower()):
+                            matches = True
+                        elif sub_id == 'crs_updates' and 'crs' in article_title.lower():
+                            matches = True
+                        elif sub_id == 'fsw':
+                            matches = True
+
+                # PNP by province
+                elif cat_id == 'pnp':
+                    if article_cat == 'pnp':
+                        province = detect_province(article_title)
+                        if sub_id == 'territories' and province in ['yukon', 'nwt', 'nunavut']:
+                            matches = True
+                        elif province == sub_id:
+                            matches = True
+
+                # Educational
+                elif cat_id == 'educational':
+                    if article_cat == 'educational':
+                        title_lower = article_title.lower()
+                        if sub_id == 'application_process' and any(kw in title_lower for kw in ['application', 'process', 'submit', 'apply']):
+                            matches = True
+                        elif sub_id == 'language_tests' and any(kw in title_lower for kw in ['ielts', 'celpip', 'tef', 'language', 'english', 'french']):
+                            matches = True
+                        elif sub_id == 'crs_optimization' and any(kw in title_lower for kw in ['crs', 'score', 'points', 'boost', 'improve']):
+                            matches = True
+                        elif sub_id == 'settlement' and any(kw in title_lower for kw in ['settle', 'housing', 'bank', 'job search']):
+                            matches = True
+                        else:
+                            matches = True  # Default educational
+
+                # Forms
+                elif cat_id == 'forms':
+                    if article_cat == 'forms':
+                        title_lower = article_title.lower()
+                        if sub_id == 'express_entry_forms' and any(kw in title_lower for kw in ['imm 0008', 'ee', 'express entry']):
+                            matches = True
+                        elif sub_id == 'pnp_forms' and 'pnp' in title_lower:
+                            matches = True
+                        elif sub_id == 'study_forms' and any(kw in title_lower for kw in ['study', 'student', 'imm 1294']):
+                            matches = True
+                        elif sub_id == 'work_forms' and any(kw in title_lower for kw in ['work', 'lmia', 'imm 1295']):
+                            matches = True
+                        else:
+                            matches = True  # Default forms
+
+                # Permits
+                elif cat_id == 'permits':
+                    if sub_id == 'study_permit' and article_cat == 'study_permit':
+                        matches = True
+                    elif sub_id == 'work_permit' and article_cat == 'work_permit':
+                        matches = True
+                    elif sub_id == 'pgwp' and 'pgwp' in article_title.lower():
+                        matches = True
+
+                if matches:
+                    count += 1
+
+            sub['count'] = count
+            cat['total_count'] += count
+
+        # Get latest articles for this category
+        cat_articles = [a for a in all_articles if a.get('category') == cat_id or
+                       (cat_id == 'news' and a.get('track') == 'breaking') or
+                       (cat_id == 'pnp' and a.get('category') == 'pnp')]
+        cat['latest'] = cat_articles[:3]
+
+    return render_template('browse.html', categories=categories)
+
+
+@app.route('/browse/<category>')
+def browse_category(category):
+    """Browse articles in a specific category"""
+    all_articles = load_articles()
+    subcategory = request.args.get('sub')
+
+    filtered_articles = []
+    category_name = category.replace('_', ' ').title()
+    subcategory_name = None
+
+    for article in all_articles:
+        article_cat = article.get('category', '')
+        article_track = article.get('track', '')
+        article_title = article.get('title', '')
+
+        matches = False
+
+        # Filter by main category
+        if category == 'news':
+            if subcategory == 'breaking' and article_track == 'breaking':
+                matches = True
+                subcategory_name = 'Breaking News'
+            elif subcategory == 'policy' and article_cat == 'policy':
+                matches = True
+                subcategory_name = 'Policy Updates'
+            elif subcategory == 'program' and article_cat in ['program', 'general']:
+                matches = True
+                subcategory_name = 'Program Updates'
+            elif not subcategory and (article_track == 'breaking' or article_cat in ['policy', 'program', 'general']):
+                matches = True
+
+        elif category == 'express_entry':
+            if article_cat == 'express_entry':
+                if subcategory == 'draw_results' and ('draw' in article_title.lower() or 'ita' in article_title.lower()):
+                    matches = True
+                    subcategory_name = 'Draw Results'
+                elif subcategory == 'crs_updates' and 'crs' in article_title.lower():
+                    matches = True
+                    subcategory_name = 'CRS Updates'
+                elif not subcategory:
+                    matches = True
+
+        elif category == 'pnp':
+            if article_cat == 'pnp':
+                province = detect_province(article_title)
+                if subcategory and province == subcategory:
+                    matches = True
+                    subcategory_name = subcategory.replace('_', ' ').title()
+                elif subcategory == 'territories' and province in ['yukon', 'nwt', 'nunavut']:
+                    matches = True
+                    subcategory_name = 'Territories'
+                elif not subcategory:
+                    matches = True
+
+        elif category == 'educational':
+            if article_cat == 'educational':
+                if subcategory:
+                    subcategory_name = subcategory.replace('_', ' ').title()
+                matches = True
+
+        elif category == 'forms':
+            if article_cat == 'forms':
+                if subcategory:
+                    subcategory_name = subcategory.replace('_', ' ').title()
+                matches = True
+
+        elif category == 'permits':
+            if subcategory == 'study_permit' and article_cat == 'study_permit':
+                matches = True
+                subcategory_name = 'Study Permits'
+            elif subcategory == 'work_permit' and article_cat == 'work_permit':
+                matches = True
+                subcategory_name = 'Work Permits'
+            elif not subcategory and article_cat in ['study_permit', 'work_permit']:
+                matches = True
+
+        if matches:
+            filtered_articles.append(article)
+
+    return render_template('browse_category.html',
+                          articles=filtered_articles,
+                          category=category,
+                          category_name=category_name,
+                          subcategory=subcategory,
+                          subcategory_name=subcategory_name)
+
+
 @app.route('/articles')
 def articles():
     """Articles listing page"""

@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block title %}{{ subcategory_name or category_name }} - Browse - Philata{% endblock %}
+
+{% block extra_css %}
+<style>
+    .category-hero {
+        padding: 6rem 0 3rem;
+        text-align: center;
+        background: linear-gradient(135deg, #0f172a 0%, #14532d 50%, #0f172a 100%);
+        position: relative;
+    }
+
+    .category-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 20% 80%, rgba(74, 222, 128, 0.15) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%);
+    }
+
+    .category-hero-content {
+        position: relative;
+        z-index: 10;
+    }
+
+    .category-breadcrumb {
+        margin-bottom: 1.5rem;
+        color: rgba(255,255,255,0.7);
+    }
+
+    .category-breadcrumb a {
+        color: rgba(255,255,255,0.85);
+        text-decoration: none;
+    }
+
+    .category-breadcrumb a:hover {
+        color: #fff;
+    }
+
+    .category-hero h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .category-hero .article-count {
+        display: inline-block;
+        background: rgba(255,255,255,0.1);
+        padding: 0.5rem 1.25rem;
+        border-radius: 25px;
+        color: rgba(255,255,255,0.9);
+        font-size: 0.95rem;
+        backdrop-filter: blur(10px);
+    }
+
+    .articles-section {
+        padding: 3rem 0 5rem;
+        background: #f8fafc;
+    }
+
+    .articles-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 2rem;
+    }
+
+    .article-card {
+        background: #ffffff;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(0,0,0,0.06);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+    }
+
+    .article-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    .article-card-image {
+        height: 180px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+
+    .article-card-image::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60%;
+        background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+    }
+
+    .article-category-badge {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        background: var(--philata-accent);
+        color: white;
+        padding: 0.35rem 0.85rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        z-index: 2;
+    }
+
+    .article-card-content {
+        padding: 1.5rem;
+    }
+
+    .article-card-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .article-card-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+
+    .article-card-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 20px;
+        border: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .empty-state-icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(64, 145, 108, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2rem;
+        color: var(--philata-accent);
+    }
+
+    .empty-state h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+        color: #1a1a1a;
+    }
+
+    .empty-state p {
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Back link */
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--philata-accent);
+        text-decoration: none;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        transition: all 0.2s ease;
+    }
+
+    .back-link:hover {
+        color: var(--philata-primary);
+        gap: 0.75rem;
+    }
+
+    /* Filter Pills */
+    .filter-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+    }
+
+    .filter-pill {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background: white;
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 25px;
+        text-decoration: none;
+        color: #374151;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+
+    .filter-pill:hover,
+    .filter-pill.active {
+        background: var(--philata-accent);
+        border-color: var(--philata-accent);
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .category-hero {
+            padding: 4rem 0 2rem;
+        }
+
+        .category-hero h1 {
+            font-size: 1.75rem;
+        }
+
+        .articles-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="category-hero">
+    <div class="container">
+        <div class="category-hero-content">
+            <nav class="category-breadcrumb">
+                <a href="/">Home</a> / <a href="/browse">Browse</a> / {{ category_name }}{% if subcategory_name %} / {{ subcategory_name }}{% endif %}
+            </nav>
+            <h1>{% if subcategory_name %}{{ subcategory_name }}{% else %}{{ category_name }}{% endif %}</h1>
+            <span class="article-count">
+                <i class="bi bi-file-text me-1"></i>
+                {{ articles|length }} article{% if articles|length != 1 %}s{% endif %}
+            </span>
+        </div>
+    </div>
+</section>
+
+<section class="articles-section">
+    <div class="container">
+        <a href="/browse" class="back-link">
+            <i class="bi bi-arrow-left"></i> Back to Categories
+        </a>
+
+        {% if articles %}
+        <div class="articles-grid">
+            {% for article in articles %}
+            <a href="/articles/{{ article.slug or article.id }}" class="article-card">
+                <div class="article-card-image" style="background-image: url('{{ article.image_url or 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=600&q=80' }}');">
+                    <span class="article-category-badge">{{ article.category | replace('_', ' ') }}</span>
+                </div>
+                <div class="article-card-content">
+                    <h3 class="article-card-title">{{ article.title }}</h3>
+                    <div class="article-card-meta">
+                        <span><i class="bi bi-calendar3"></i> {{ article.created_at[:10] if article.created_at else 'Recent' }}</span>
+                        <span><i class="bi bi-clock"></i> {{ article.reading_time }} min read</span>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="bi bi-inbox"></i>
+            </div>
+            <h3>No Articles Yet</h3>
+            <p>There are no articles in this category yet. Check back soon for new content!</p>
+            <a href="/browse" class="btn btn-primary">
+                <i class="bi bi-grid me-2"></i>Browse Other Categories
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
