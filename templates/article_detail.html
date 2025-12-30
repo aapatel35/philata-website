@@ -446,6 +446,166 @@
         margin-top: 0.25rem;
     }
 
+    /* Verification Badge */
+    .verification-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .verification-badge.verified {
+        background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.1) 100%);
+        color: #16a34a;
+        border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .verification-badge.partially-verified {
+        background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.1) 100%);
+        color: #d97706;
+        border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+
+    .verification-badge.unverified {
+        background: linear-gradient(135deg, rgba(156, 163, 175, 0.15) 0%, rgba(107, 114, 128, 0.1) 100%);
+        color: #6b7280;
+        border: 1px solid rgba(156, 163, 175, 0.3);
+    }
+
+    /* Key Takeaways Box */
+    .key-takeaways-box {
+        background: linear-gradient(135deg, rgba(64, 145, 108, 0.1) 0%, rgba(64, 145, 108, 0.05) 100%);
+        border: 2px solid rgba(64, 145, 108, 0.2);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .key-takeaways-box h4 {
+        color: var(--philata-accent);
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .key-takeaways-box ul {
+        margin: 0;
+        padding-left: 0;
+        list-style: none;
+    }
+
+    .key-takeaways-box li {
+        padding: 0.5rem 0;
+        padding-left: 1.5rem;
+        position: relative;
+    }
+
+    .key-takeaways-box li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: var(--philata-accent);
+        font-weight: bold;
+    }
+
+    /* Stat Cards Grid */
+    .article-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1rem;
+        margin: 2rem 0;
+    }
+
+    .article-stat-card {
+        background: linear-gradient(135deg, rgba(64, 145, 108, 0.08) 0%, rgba(64, 145, 108, 0.03) 100%);
+        border: 1px solid rgba(64, 145, 108, 0.2);
+        border-radius: 12px;
+        padding: 1.25rem;
+        text-align: center;
+    }
+
+    .article-stat-card .value {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: var(--philata-accent);
+        line-height: 1.2;
+    }
+
+    .article-stat-card .label {
+        font-size: 0.8rem;
+        color: #666;
+        margin-top: 0.25rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Sources Section */
+    .sources-section {
+        background: rgba(248, 250, 252, 0.8);
+        border: 1px solid rgba(0,0,0,0.08);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .sources-section h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    .sources-section ul {
+        margin: 0;
+        padding-left: 0;
+        list-style: none;
+    }
+
+    .sources-section li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .sources-section li:last-child {
+        border-bottom: none;
+    }
+
+    .sources-section a {
+        color: var(--philata-accent);
+        text-decoration: none;
+    }
+
+    .sources-section a:hover {
+        text-decoration: underline;
+    }
+
+    .source-badge {
+        display: inline-block;
+        padding: 0.15rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin-right: 0.5rem;
+        text-transform: uppercase;
+    }
+
+    .source-badge.official {
+        background: rgba(220, 38, 38, 0.1);
+        color: #dc2626;
+    }
+
+    .source-badge.secondary {
+        background: rgba(107, 114, 128, 0.1);
+        color: #6b7280;
+    }
+
     .article-source-box {
         background: rgba(64, 145, 108, 0.1);
         border-left: 4px solid var(--philata-accent);
@@ -673,6 +833,43 @@
     <div class="container">
         <div class="article-container">
             <main class="article-main">
+                <!-- Verification Badge -->
+                {% if article.verification and article.verification.status %}
+                <div class="verification-badge {{ article.verification.status }}">
+                    {% if article.verification.status == 'verified' %}
+                    <i class="bi bi-patch-check-fill"></i> Verified ({{ article.verification.confidence }}% confidence)
+                    {% elif article.verification.status == 'partially_verified' %}
+                    <i class="bi bi-exclamation-circle-fill"></i> Partially Verified ({{ article.verification.confidence }}%)
+                    {% else %}
+                    <i class="bi bi-question-circle-fill"></i> Unverified
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Key Takeaways -->
+                {% if article.key_takeaways and article.key_takeaways|length > 0 %}
+                <div class="key-takeaways-box">
+                    <h4><i class="bi bi-lightbulb-fill"></i> Key Takeaways</h4>
+                    <ul>
+                        {% for takeaway in article.key_takeaways %}
+                        <li>{{ takeaway }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- Stat Cards -->
+                {% if article.stat_cards and article.stat_cards|length > 0 %}
+                <div class="article-stats-grid">
+                    {% for stat in article.stat_cards %}
+                    <div class="article-stat-card">
+                        <div class="value">{{ stat.value }}</div>
+                        <div class="label">{{ stat.label }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
                 <article class="article-body">
                     {% if '<h2>' in article.full_article or '<p>' in article.full_article or '<ul>' in article.full_article %}
                         {{ article.full_article | safe }}
@@ -680,6 +877,27 @@
                         <p>{{ article.full_article | replace('\n\n', '</p><p>') | replace('\n', '<br>') | safe }}</p>
                     {% endif %}
                 </article>
+
+                <!-- Sources Section -->
+                {% if article.sources and (article.sources.official or article.sources.secondary) %}
+                <div class="sources-section">
+                    <h4><i class="bi bi-journal-text me-2"></i>Sources & References</h4>
+                    <ul>
+                        {% for source in article.sources.official %}
+                        <li>
+                            <span class="source-badge official">Official</span>
+                            <a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.name or source.url }}</a>
+                        </li>
+                        {% endfor %}
+                        {% for source in article.sources.secondary %}
+                        <li>
+                            <span class="source-badge secondary">Secondary</span>
+                            <a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.name or source.url }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
 
                 {% if article.official_source_url %}
                 <div class="article-source-box official-source">

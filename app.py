@@ -552,9 +552,111 @@ def get_results():
     })
 
 
+@app.route('/api/articles', methods=['POST'])
+def add_article():
+    """
+    Add a new article from n8n workflow (enhanced endpoint).
+    Supports: slug, charts, verification, sources, SEO metadata.
+    """
+    try:
+        data = request.get_json()
+        results = load_results()
+
+        # Use provided slug or generate from title
+        slug = data.get('slug') or create_slug(data.get('title', ''))
+
+        # Generate unique ID
+        content_id = f"{data.get('track', 'unknown')}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{len(results)}"
+
+        # Build article URL
+        article_url = data.get('article_url') or f"https://www.philata.com/articles/{slug}"
+
+        article = {
+            "id": content_id,
+            "slug": slug,
+            "article_url": article_url,
+
+            # Content
+            "title": data.get('title', ''),
+            "subheadline": data.get('subheadline', ''),
+            "hook": data.get('hook', ''),
+            "full_article": data.get('full_article', ''),
+            "key_takeaways": data.get('key_takeaways', []),
+            "reading_time": data.get('reading_time', '3 min read'),
+
+            # Visualizations
+            "charts": data.get('charts', []),
+            "stat_cards": data.get('stat_cards', []),
+            "comparison_tables": data.get('comparison_tables', []),
+
+            # Image
+            "image_url": convert_image_url(data.get('image_url', '')),
+            "filename": data.get('filename', ''),
+            "image_credit": data.get('image_credit'),
+
+            # Social media captions
+            "captions": data.get('captions', {}),
+
+            # Verification
+            "verification": data.get('verification', {
+                "status": "unverified",
+                "confidence": 0,
+                "reasoning": ""
+            }),
+
+            # Sources
+            "sources": data.get('sources', {
+                "official": [],
+                "secondary": [],
+                "verified_facts": []
+            }),
+            "disclaimer": data.get('disclaimer'),
+
+            # SEO
+            "seo": data.get('seo', {}),
+
+            # Metadata
+            "track": data.get('track', 'regular'),
+            "category": data.get('category', 'general'),
+            "content_type": data.get('content_type', 'news'),
+            "is_breaking": data.get('is_breaking', False),
+
+            # Legacy fields (backward compatibility)
+            "source": data.get('source', ''),
+            "source_url": data.get('source_url', ''),
+            "official_source_url": data.get('official_source_url') or (
+                data.get('sources', {}).get('official', [{}])[0].get('url') if data.get('sources', {}).get('official') else None
+            ),
+
+            # Status
+            "status": "pending",
+            "created_at": datetime.now().isoformat(),
+            "approved_at": None,
+            "posted_at": None
+        }
+
+        results.insert(0, article)
+        save_results(results)
+
+        print(f"✅ Article created: {slug}")
+        print(f"   URL: {article_url}")
+        print(f"   Verification: {article.get('verification', {}).get('confidence', 0)}%")
+
+        return jsonify({
+            "success": True,
+            "id": content_id,
+            "slug": slug,
+            "article_url": article_url,
+            "message": "Article created successfully"
+        })
+    except Exception as e:
+        print(f"❌ Article creation failed: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 @app.route('/api/results', methods=['POST'])
 def add_result():
-    """Add a new result from n8n workflow"""
+    """Add a new result from n8n workflow (legacy endpoint)"""
     try:
         data = request.get_json()
         results = load_results()
