@@ -191,6 +191,7 @@ def load_articles():
                         'full_article': r.get('full_article', ''),
                         'source': r.get('source', ''),
                         'source_url': r.get('source_url', ''),
+                        'official_source_url': r.get('official_source_url', ''),
                         'reading_time': max(1, len(r.get('full_article', '').split()) // 200)
                     }
                     articles.append(article)
