@@ -8,7 +8,7 @@ import os
 import json
 import requests
 from datetime import datetime
-from flask import Flask, render_template, jsonify, request, send_from_directory
+from flask import Flask, render_template, jsonify, request, send_from_directory, redirect
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -694,6 +694,40 @@ def articles():
         all_articles = [a for a in all_articles if a.get('category') == category]
 
     return render_template('articles.html', articles=all_articles, category=category)
+
+
+def generate_short_id(title):
+    """Generate short ID from title (matching n8n workflow)"""
+    if not title:
+        return 'news'
+    hash_val = 0
+    for char in title:
+        hash_val = ((hash_val << 5) - hash_val) + ord(char)
+        hash_val = hash_val & 0xFFFFFFFF  # Keep as 32-bit
+    # Convert to base36 and take first 6 chars
+    import string
+    chars = string.digits + string.ascii_lowercase
+    result = ''
+    val = abs(hash_val)
+    while val > 0:
+        result = chars[val % 36] + result
+        val //= 36
+    return result[:6] if result else 'news'
+
+
+@app.route('/a/<short_id>')
+def short_url_redirect(short_id):
+    """Short URL redirect - finds article by short_id and redirects to full URL"""
+    all_articles = load_articles()
+
+    # Find article by matching short_id
+    for article in all_articles:
+        if generate_short_id(article.get('title', '')) == short_id:
+            slug = article.get('slug') or create_slug(article.get('title', ''))
+            return redirect(f'/articles/{slug}', code=301)
+
+    # If not found, redirect to articles listing
+    return redirect('/articles', code=302)
 
 
 @app.route('/articles/<slug>')
