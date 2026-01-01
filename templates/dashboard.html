@@ -1,204 +1,112 @@
 {% extends "base.html" %}
 
-{% block title %}Content Hub{% endblock %}
+{% block title %}News{% endblock %}
 
 {% block extra_css %}
 <style>
-    /* Dashboard - Professional Forest Green Theme */
-    .dashboard-hero {
-        padding: 10rem 0 4rem;
-    }
-
-    .dashboard-hero-content {
-        background: rgba(255, 255, 255, 0.92);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-radius: 24px;
-        padding: 2.5rem;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        margin-bottom: 2rem;
-    }
-
-    .dashboard-title {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        color: #1a1a1a;
-    }
-
-    .dashboard-subtitle {
-        color: #555;
-        font-size: 1.1rem;
-    }
-
-    .stats-bar {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        margin-bottom: 2rem;
-    }
-
-    .stat-chip {
-        background: white;
-        border: 1px solid var(--philata-border);
-        border-radius: 12px;
-        padding: 1rem 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-
-    .stat-chip:hover {
-        border-color: var(--philata-accent);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    }
-
-    .stat-chip-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-    }
-
-    .stat-chip-value {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--philata-gray-900);
-    }
-
-    .stat-chip-label {
-        font-size: 0.8rem;
-        color: var(--philata-text-muted);
-    }
-
+    /* Filters Bar */
     .filters-bar {
-        background: white;
-        border: 1px solid var(--philata-border);
-        border-radius: 16px;
-        padding: 1.25rem;
-        margin-bottom: 2rem;
         display: flex;
-        gap: 1rem;
+        gap: 12px;
         flex-wrap: wrap;
         align-items: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        margin-bottom: 24px;
+        padding: 16px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
     }
 
     .filter-group {
         display: flex;
-        gap: 0.5rem;
+        gap: 8px;
+        flex-wrap: wrap;
     }
 
     .filter-btn {
-        background: var(--philata-gray-50);
-        border: 1px solid transparent;
-        border-radius: 10px;
-        padding: 0.6rem 1.25rem;
-        color: var(--philata-text-muted);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px 16px;
+        color: var(--text-muted);
         font-weight: 500;
-        font-size: 0.9rem;
+        font-size: 13px;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
     }
 
     .filter-btn:hover {
-        background: var(--philata-gray-100);
-        color: var(--philata-gray-800);
+        background: var(--border);
+        color: var(--text);
     }
 
     .filter-btn.active {
-        background: var(--philata-accent);
+        background: var(--primary);
         color: white;
-        border-color: var(--philata-accent);
+        border-color: var(--primary);
     }
 
-    .search-box {
+    .filter-search {
         flex: 1;
-        min-width: 250px;
+        min-width: 200px;
         position: relative;
     }
 
-    .search-box input {
+    .filter-search input {
         width: 100%;
-        background: var(--philata-gray-50);
-        border: 1px solid var(--philata-border);
-        border-radius: 10px;
-        padding: 0.6rem 1rem 0.6rem 2.5rem;
-        color: var(--philata-text);
-        font-size: 0.9rem;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px 12px 8px 36px;
+        color: var(--text);
+        font-size: 13px;
     }
 
-    .search-box input:focus {
+    .filter-search input:focus {
         outline: none;
-        border-color: var(--philata-accent);
-        background: white;
+        border-color: var(--primary);
+        background: var(--card);
     }
 
-    .search-box i {
+    .filter-search i {
         position: absolute;
-        left: 1rem;
+        left: 12px;
         top: 50%;
         transform: translateY(-50%);
-        color: var(--philata-text-muted);
+        color: var(--text-muted);
+        font-size: 14px;
     }
 
-    .view-toggle {
-        display: flex;
-        gap: 0.5rem;
+    .results-count {
+        color: var(--text-muted);
+        font-size: 13px;
+        margin-left: auto;
     }
 
-    .view-btn {
-        background: var(--philata-gray-50);
-        border: 1px solid var(--philata-border);
-        border-radius: 8px;
-        padding: 0.5rem 0.75rem;
-        color: var(--philata-text-muted);
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .view-btn:hover, .view-btn.active {
-        background: var(--philata-accent);
-        border-color: var(--philata-accent);
-        color: white;
-    }
-
+    /* Content Grid */
     .content-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 1.5rem;
+        gap: 20px;
     }
 
     .content-card {
-        background: white;
-        border: 1px solid var(--philata-border);
-        border-radius: 20px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
         overflow: hidden;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.2s ease;
         cursor: pointer;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .content-card:hover {
-        transform: translateY(-8px);
-        border-color: var(--philata-accent);
-        box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        border-color: var(--primary);
     }
 
     .content-card-image {
         aspect-ratio: 1;
-        background: linear-gradient(135deg, rgba(64, 145, 108, 0.2), rgba(27, 67, 50, 0.2));
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
         position: relative;
         overflow: hidden;
     }
@@ -209,27 +117,31 @@
         object-fit: cover;
     }
 
-    .content-card-image .placeholder-icon {
-        font-size: 4rem;
-        color: rgba(249,115,22,0.3);
-    }
-
     .content-card-badge {
         position: absolute;
-        top: 1rem;
-        left: 1rem;
-        z-index: 2;
+        top: 12px;
+        left: 12px;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 6px;
+        text-transform: uppercase;
     }
 
+    .badge-breaking { background: #FEE2E2; color: #B91C1C; }
+    .badge-regular { background: #EEF2FF; color: #4F46E5; }
+    .badge-educational { background: #DCFCE7; color: #166534; }
+    .badge-forms { background: #FEF3C7; color: #92400E; }
+
     .content-card-body {
-        padding: 1.5rem;
+        padding: 16px;
     }
 
     .content-card-title {
-        font-size: 1rem;
+        font-size: 14px;
         font-weight: 600;
-        color: var(--philata-gray-900);
-        margin-bottom: 0.75rem;
+        color: var(--text);
+        margin-bottom: 8px;
         line-height: 1.4;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -240,20 +152,20 @@
     .content-card-meta {
         display: flex;
         align-items: center;
-        gap: 1rem;
-        font-size: 0.85rem;
-        color: var(--philata-text-muted);
+        gap: 12px;
+        font-size: 12px;
+        color: var(--text-light);
     }
 
     .content-card-meta span {
         display: flex;
         align-items: center;
-        gap: 0.4rem;
+        gap: 4px;
     }
 
     .content-card-footer {
-        padding: 1rem 1.5rem;
-        border-top: 1px solid var(--philata-border);
+        padding: 12px 16px;
+        border-top: 1px solid var(--border);
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -261,93 +173,52 @@
 
     .content-card-platforms {
         display: flex;
-        gap: 0.5rem;
+        gap: 8px;
     }
 
     .content-card-platforms i {
-        font-size: 1rem;
-        color: var(--philata-text-muted);
-    }
-
-    .content-card-arrow {
-        color: var(--philata-orange);
-        font-size: 1.25rem;
-        transition: transform 0.3s ease;
+        font-size: 14px;
+        color: var(--text-light);
     }
 
     .content-card-link {
-        color: var(--philata-orange);
-        font-size: 1.1rem;
-        padding: 0.25rem 0.5rem;
-        border-radius: 6px;
-        transition: all 0.3s ease;
-        text-decoration: none;
-    }
-
-    .content-card-link:hover {
-        background: var(--philata-orange);
-        color: white;
+        color: var(--accent);
+        font-size: 14px;
     }
 
     .empty-state {
         grid-column: 1 / -1;
         text-align: center;
-        padding: 6rem 2rem;
+        padding: 60px 20px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
     }
 
-    .empty-state-icon {
-        font-size: 5rem;
-        color: rgba(249,115,22,0.2);
-        margin-bottom: 1.5rem;
+    .empty-state i {
+        font-size: 48px;
+        color: var(--text-light);
+        margin-bottom: 16px;
     }
 
     .empty-state h3 {
-        font-size: 1.5rem;
-        margin-bottom: 0.75rem;
-        color: var(--philata-gray-900);
+        font-size: 18px;
+        color: var(--text);
+        margin-bottom: 8px;
     }
 
     .empty-state p {
-        color: var(--philata-text-muted);
-        max-width: 400px;
-        margin: 0 auto;
-    }
-
-    .refresh-btn {
-        background: white;
-        border: 1px solid var(--philata-border);
-        border-radius: 10px;
-        padding: 0.6rem 1rem;
-        color: var(--philata-text-muted);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .refresh-btn:hover {
-        background: var(--philata-gray-50);
-        color: var(--philata-gray-800);
-        border-color: var(--philata-orange);
-    }
-
-    .results-count {
-        color: var(--philata-text-muted);
-        font-size: 0.9rem;
+        color: var(--text-muted);
+        font-size: 14px;
     }
 
     /* Slideshow Modal */
     .slideshow-modal {
         display: none;
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.95);
+        inset: 0;
+        background: rgba(0,0,0,0.9);
         z-index: 9999;
-        overflow: hidden;
     }
 
     .slideshow-modal.active {
@@ -360,20 +231,68 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        position: relative;
     }
+
+    .slideshow-close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 44px;
+        height: 44px;
+        background: rgba(255,255,255,0.1);
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        font-size: 20px;
+        transition: all 0.2s;
+        z-index: 10;
+    }
+
+    .slideshow-close:hover {
+        background: var(--accent);
+    }
+
+    .slideshow-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 50px;
+        height: 50px;
+        background: rgba(255,255,255,0.1);
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        font-size: 20px;
+        transition: all 0.2s;
+        z-index: 10;
+    }
+
+    .slideshow-nav:hover {
+        background: var(--accent);
+    }
+
+    .slideshow-prev { left: 16px; }
+    .slideshow-next { right: 16px; }
 
     .slideshow-content {
         display: flex;
         width: 100%;
         height: 100%;
-        max-width: 1400px;
-        padding: 2rem;
-        gap: 2rem;
+        max-width: 1200px;
+        padding: 60px 80px;
+        gap: 32px;
     }
 
     .slideshow-image-section {
-        flex: 0 0 45%;
+        flex: 0 0 40%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -381,412 +300,130 @@
 
     .slideshow-image {
         max-width: 100%;
-        max-height: 80vh;
-        border-radius: 16px;
+        max-height: 70vh;
+        border-radius: 12px;
         box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     }
 
     .slideshow-details {
         flex: 1;
         overflow-y: auto;
-        padding: 2rem;
-        background: #ffffff;
-        border-radius: 16px;
-        color: #1a1a1a;
-        max-height: calc(100vh - 4rem);
-    }
-
-    .slideshow-details::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    .slideshow-details::-webkit-scrollbar-track {
-        background: #f0f0f0;
-        border-radius: 4px;
-    }
-
-    .slideshow-details::-webkit-scrollbar-thumb {
-        background: #E31837;
-        border-radius: 4px;
-    }
-
-    .slideshow-details::-webkit-scrollbar-thumb:hover {
-        background: #c01530;
+        background: var(--card);
+        border-radius: 12px;
+        padding: 24px;
+        max-height: calc(100vh - 120px);
     }
 
     .slideshow-badge {
         display: inline-block;
-        padding: 0.5rem 1rem;
-        border-radius: 8px;
-        font-size: 0.8rem;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 11px;
         font-weight: 600;
         text-transform: uppercase;
-        margin-bottom: 1rem;
+        margin-bottom: 12px;
     }
 
     .slideshow-title {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 1.75rem;
+        font-size: 20px;
         font-weight: 700;
-        color: #1a1a1a;
-        margin-bottom: 1rem;
+        color: var(--text);
+        margin-bottom: 12px;
         line-height: 1.3;
-    }
-
-    .slideshow-post-id {
-        font-size: 0.75rem;
-        color: #666;
-        background: #f0f0f0;
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        font-family: monospace;
-        margin-left: 0.5rem;
     }
 
     .slideshow-meta {
         display: flex;
-        gap: 1.5rem;
-        margin-bottom: 1.5rem;
-        color: #666;
-        font-size: 0.9rem;
-    }
-
-    .slideshow-meta span {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+        gap: 16px;
+        margin-bottom: 20px;
+        color: var(--text-muted);
+        font-size: 13px;
     }
 
     .slideshow-section {
-        margin-bottom: 1.5rem;
+        margin-bottom: 20px;
     }
 
     .slideshow-section-title {
-        font-size: 0.9rem;
+        font-size: 13px;
         font-weight: 600;
-        color: #E31837;
-        margin-bottom: 0.75rem;
+        color: var(--accent);
+        margin-bottom: 10px;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 8px;
     }
 
     .slideshow-article {
-        background: #f8f9fa;
-        border-radius: 12px;
-        padding: 1.5rem;
-        color: #333;
-        line-height: 1.8;
-        font-size: 0.95rem;
-        border: 1px solid #e5e5e5;
-    }
-
-    /* Rich Article Styling */
-    .slideshow-article h2 {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: #1a1a1a;
-        margin: 1.5rem 0 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #E31837;
-    }
-
-    .slideshow-article h3 {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #E31837;
-        margin: 1.25rem 0 0.75rem;
-    }
-
-    .slideshow-article p {
-        margin-bottom: 1rem;
-        color: #333;
-    }
-
-    .slideshow-article ul, .slideshow-article ol {
-        margin: 1rem 0;
-        padding-left: 1.5rem;
-    }
-
-    .slideshow-article li {
-        margin-bottom: 0.5rem;
-        color: #333;
-    }
-
-    .slideshow-article table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 1.5rem 0;
-        background: #fff;
-        border-radius: 12px;
-        overflow: hidden;
-        border: 1px solid #e5e5e5;
-    }
-
-    .slideshow-article thead {
-        background: linear-gradient(135deg, #E31837, #ff6b6b);
-    }
-
-    .slideshow-article th {
-        padding: 1rem;
-        text-align: left;
-        font-weight: 600;
-        color: #fff;
-        font-size: 0.9rem;
-    }
-
-    .slideshow-article td {
-        padding: 0.875rem 1rem;
-        border-bottom: 1px solid #e5e5e5;
-        color: #333;
-        font-size: 0.9rem;
-    }
-
-    .slideshow-article tbody tr:hover {
-        background: #f8f9fa;
-    }
-
-    .slideshow-article blockquote {
-        margin: 1.5rem 0;
-        padding: 1rem 1.5rem;
-        border-left: 4px solid #E31837;
-        background: rgba(227,24,55,0.1);
-        border-radius: 0 12px 12px 0;
-        font-style: italic;
-        color: #333;
-    }
-
-    .slideshow-article .tip-box {
-        margin: 1.5rem 0;
-        padding: 1.25rem;
-        background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(52,211,153,0.1));
-        border: 1px solid rgba(16,185,129,0.3);
-        border-radius: 12px;
-        position: relative;
-    }
-
-    .slideshow-article .tip-box::before {
-        content: '💡 Pro Tip';
-        display: block;
-        font-weight: 700;
-        color: #34D399;
-        margin-bottom: 0.5rem;
-        font-size: 0.9rem;
-    }
-
-    .slideshow-article .warning-box {
-        margin: 1.5rem 0;
-        padding: 1.25rem;
-        background: linear-gradient(135deg, rgba(239,68,68,0.15), rgba(248,113,113,0.1));
-        border: 1px solid rgba(239,68,68,0.3);
-        border-radius: 12px;
-        position: relative;
-    }
-
-    .slideshow-article .warning-box::before {
-        content: '⚠️ Important';
-        display: block;
-        font-weight: 700;
-        color: #F87171;
-        margin-bottom: 0.5rem;
-        font-size: 0.9rem;
-    }
-
-    .slideshow-article .info-box {
-        margin: 1.5rem 0;
-        padding: 1.25rem;
-        background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.1));
-        border: 1px solid rgba(99,102,241,0.3);
-        border-radius: 12px;
-        position: relative;
-    }
-
-    .slideshow-article .info-box::before {
-        content: 'ℹ️ Key Information';
-        display: block;
-        font-weight: 700;
-        color: #A5B4FC;
-        margin-bottom: 0.5rem;
-        font-size: 0.9rem;
-    }
-
-    .slideshow-article strong {
-        color: #1a1a1a;
-        font-weight: 600;
-    }
-
-    .slideshow-article em {
-        color: #E31837;
-    }
-
-    .slideshow-article a {
-        color: #E31837;
-        text-decoration: underline;
-    }
-
-    .slideshow-article a:hover {
-        color: #c01530;
-    }
-
-    .slideshow-article img {
-        max-width: 100%;
-        border-radius: 12px;
-        margin: 1rem 0;
-    }
-
-    .article-images {
-        display: flex;
-        gap: 1rem;
-        margin-top: 1rem;
-        overflow-x: auto;
-        padding-bottom: 0.5rem;
-    }
-
-    .article-images img {
-        height: 120px;
-        width: auto;
+        background: var(--bg);
         border-radius: 8px;
-        object-fit: cover;
-        cursor: pointer;
-        transition: transform 0.3s ease;
+        padding: 16px;
+        color: var(--text);
+        line-height: 1.7;
+        font-size: 14px;
     }
 
-    .article-images img:hover {
-        transform: scale(1.05);
+    .slideshow-article h2, .slideshow-article h3 {
+        color: var(--text);
+        margin: 16px 0 8px;
     }
+
+    .slideshow-article h2 { font-size: 16px; border-bottom: 2px solid var(--accent); padding-bottom: 6px; }
+    .slideshow-article h3 { font-size: 14px; color: var(--accent); }
 
     .slideshow-caption {
-        background: #ffffff;
-        border-radius: 12px;
-        padding: 1.25rem;
-        color: #1a1a1a;
-        line-height: 1.8;
+        background: var(--bg);
+        border-radius: 8px;
+        padding: 16px;
+        color: var(--text);
+        line-height: 1.6;
+        font-size: 14px;
         white-space: pre-wrap;
-        font-size: 0.95rem;
-        border: 1px solid #e5e5e5;
     }
 
     .platform-tabs {
         display: flex;
-        gap: 0.5rem;
-        margin-bottom: 1rem;
+        gap: 8px;
+        margin-bottom: 12px;
     }
 
     .platform-tab {
-        background: #f0f0f0;
-        border: 1px solid #e5e5e5;
-        border-radius: 8px;
-        padding: 0.5rem 1rem;
-        color: #666;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 6px 12px;
+        color: var(--text-muted);
         cursor: pointer;
-        font-size: 0.85rem;
+        font-size: 12px;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        transition: all 0.3s ease;
+        gap: 6px;
+        transition: all 0.2s;
     }
 
     .platform-tab:hover, .platform-tab.active {
-        background: #E31837;
-        border-color: #E31837;
+        background: var(--accent);
+        border-color: var(--accent);
         color: white;
     }
 
-    /* Navigation Arrows */
-    .slideshow-nav {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 60px;
-        height: 60px;
-        background: rgba(255,255,255,0.1);
-        border: 1px solid rgba(255,255,255,0.2);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        z-index: 10;
-    }
-
-    .slideshow-nav:hover {
-        background: var(--philata-red);
-        border-color: var(--philata-red);
-        transform: translateY(-50%) scale(1.1);
-    }
-
-    .slideshow-nav i {
-        font-size: 1.5rem;
-        color: #fff;
-    }
-
-    .slideshow-prev {
-        left: 1rem;
-    }
-
-    .slideshow-next {
-        right: 1rem;
-    }
-
-    .slideshow-close {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        width: 50px;
-        height: 50px;
-        background: rgba(255,255,255,0.1);
-        border: 1px solid rgba(255,255,255,0.2);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        z-index: 10;
-    }
-
-    .slideshow-close:hover {
-        background: var(--philata-red);
-        border-color: var(--philata-red);
-    }
-
-    .slideshow-close i {
-        font-size: 1.25rem;
-        color: #fff;
-    }
-
-    .slideshow-counter {
-        position: absolute;
-        bottom: 1.5rem;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0,0,0,0.6);
-        padding: 0.5rem 1.5rem;
-        border-radius: 20px;
-        color: #fff;
-        font-size: 0.9rem;
-        font-weight: 500;
-    }
-
     .copy-btn {
-        background: #f0f0f0;
-        border: 1px solid #e5e5e5;
-        border-radius: 8px;
-        padding: 0.5rem 1rem;
-        color: #666;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 6px 12px;
+        color: var(--text-muted);
         cursor: pointer;
-        font-size: 0.8rem;
+        font-size: 12px;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        transition: all 0.3s ease;
+        gap: 6px;
+        transition: all 0.2s;
     }
 
     .copy-btn:hover {
-        background: #E31837;
-        border-color: #E31837;
+        background: var(--accent);
+        border-color: var(--accent);
         color: white;
     }
 
@@ -796,10 +433,22 @@
         color: white;
     }
 
-    @media (max-width: 992px) {
+    .slideshow-counter {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.6);
+        padding: 8px 20px;
+        border-radius: 20px;
+        color: white;
+        font-size: 13px;
+    }
+
+    @media (max-width: 991px) {
         .slideshow-content {
             flex-direction: column;
-            padding: 4rem 1rem 2rem;
+            padding: 60px 20px;
         }
 
         .slideshow-image-section {
@@ -807,181 +456,120 @@
         }
 
         .slideshow-image {
-            max-height: 40vh;
-        }
-
-        .slideshow-nav {
-            width: 45px;
-            height: 45px;
+            max-height: 35vh;
         }
     }
 
-    @media (max-width: 768px) {
-        .dashboard-title {
-            font-size: 2rem;
-        }
-
-        .stats-bar {
-            flex-direction: column;
-        }
-
-        .stat-chip {
-            width: 100%;
+    @media (max-width: 576px) {
+        .content-grid {
+            grid-template-columns: 1fr;
         }
 
         .filter-group {
-            flex-wrap: wrap;
+            width: 100%;
         }
 
-        .content-grid {
-            grid-template-columns: 1fr;
+        .filter-btn {
+            flex: 1;
+            text-align: center;
         }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Dashboard Hero -->
-<section class="dashboard-hero">
-    <div class="container">
-        <div class="dashboard-hero-content">
-            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
-                <div>
-                    <h1 class="dashboard-title">Content <span class="gradient-text">Hub</span></h1>
-                    <p class="dashboard-subtitle">Preview and manage all generated immigration content</p>
-                </div>
-            <div class="d-flex gap-2">
-                <div class="view-toggle">
-                    <button class="view-btn active" id="gridViewBtn" title="Grid View">
-                        <i class="bi bi-grid-3x3-gap-fill"></i>
-                    </button>
-                    <button class="view-btn" id="slideViewBtn" title="Slideshow View">
-                        <i class="bi bi-collection-play"></i>
-                    </button>
-                </div>
-                <button class="refresh-btn" onclick="location.reload()">
-                    <i class="bi bi-arrow-clockwise"></i>
-                    Refresh
-                </button>
-            </div>
-            </div>
-        </div>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">News Feed</h1>
+    <p class="page-subtitle">Latest immigration content and updates</p>
+</div>
 
-        <!-- Stats Bar -->
-        <div class="stats-bar">
-            <div class="stat-chip">
-                <div class="stat-chip-icon" style="background: linear-gradient(135deg, #E31837, #FF6B6B);">
-                    <i class="bi bi-megaphone-fill text-white"></i>
-                </div>
-                <div>
-                    <div class="stat-chip-value" id="stat-breaking">-</div>
-                    <div class="stat-chip-label">Breaking News</div>
-                </div>
-            </div>
-            <div class="stat-chip">
-                <div class="stat-chip-icon" style="background: linear-gradient(135deg, #6366F1, #8B5CF6);">
-                    <i class="bi bi-newspaper text-white"></i>
-                </div>
-                <div>
-                    <div class="stat-chip-value" id="stat-regular">-</div>
-                    <div class="stat-chip-label">Regular News</div>
-                </div>
-            </div>
-            <div class="stat-chip">
-                <div class="stat-chip-icon" style="background: linear-gradient(135deg, #10B981, #34D399);">
-                    <i class="bi bi-lightbulb-fill text-white"></i>
-                </div>
-                <div>
-                    <div class="stat-chip-value" id="stat-educational">-</div>
-                    <div class="stat-chip-label">Educational</div>
-                </div>
-            </div>
-            <div class="stat-chip">
-                <div class="stat-chip-icon" style="background: linear-gradient(135deg, #F59E0B, #FBBF24);">
-                    <i class="bi bi-file-earmark-text-fill text-white"></i>
-                </div>
-                <div>
-                    <div class="stat-chip-value" id="stat-forms">-</div>
-                    <div class="stat-chip-label">Forms Guides</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Filters Bar -->
-        <div class="filters-bar">
-            <div class="filter-group">
-                <button class="filter-btn active" data-track="all">All</button>
-                <button class="filter-btn" data-track="breaking">Breaking</button>
-                <button class="filter-btn" data-track="regular">Regular</button>
-                <button class="filter-btn" data-track="educational">Educational</button>
-                <button class="filter-btn" data-track="forms">Forms</button>
-            </div>
-            <div class="search-box">
-                <i class="bi bi-search"></i>
-                <input type="text" placeholder="Search content..." id="searchInput">
-            </div>
-            <div class="results-count">
-                <span id="resultsCount">{{ results|length }}</span> items
-            </div>
-        </div>
+<!-- Stats Row -->
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-value" id="stat-breaking">-</div>
+        <div class="stat-label">Breaking News</div>
     </div>
-</section>
+    <div class="stat-card">
+        <div class="stat-value" id="stat-regular">-</div>
+        <div class="stat-label">Regular News</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value" id="stat-educational">-</div>
+        <div class="stat-label">Educational</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value" id="stat-forms">-</div>
+        <div class="stat-label">Forms Guides</div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="filters-bar">
+    <div class="filter-group">
+        <button class="filter-btn active" data-track="all">All</button>
+        <button class="filter-btn" data-track="breaking">Breaking</button>
+        <button class="filter-btn" data-track="regular">Regular</button>
+        <button class="filter-btn" data-track="educational">Educational</button>
+        <button class="filter-btn" data-track="forms">Forms</button>
+    </div>
+    <div class="filter-search">
+        <i class="bi bi-search"></i>
+        <input type="text" placeholder="Search content..." id="searchInput">
+    </div>
+    <div class="results-count">
+        <span id="resultsCount">{{ results|length }}</span> items
+    </div>
+</div>
 
 <!-- Content Grid -->
-<section class="pb-5">
-    <div class="container">
-        <div class="content-grid" id="contentGrid">
-            {# Stock images for different tracks (Unsplash - copyright free) #}
-            {% set stock_images = {
-                'breaking': 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=600&q=80',
-                'regular': 'https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=600&q=80',
-                'educational': 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80',
-                'forms': 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&q=80',
-                'default': 'https://images.unsplash.com/photo-1569974507005-6dc61f97fb5c?w=600&q=80'
-            } %}
-            {% for result in results %}
-            <div class="content-card" data-index="{{ loop.index0 }}" data-track="{{ result.track }}" data-title="{{ result.title|lower }}" data-id="{{ result.id }}">
-                <div class="content-card-image">
-                    <span class="content-card-badge badge-{{ result.track }}">{{ result.track|upper }}</span>
-                    {# Use Instagram post image, fallback to stock #}
-                    {% if result.filename %}
-                    <img src="https://web-production-35219.up.railway.app/images/{{ result.filename }}" alt="{{ result.title }}" onerror="this.src='{{ stock_images.get(result.track, stock_images.default) }}'">
-                    {% elif result.image_url and 'localhost' not in result.image_url %}
-                    <img src="{{ result.image_url }}" alt="{{ result.title }}" onerror="this.src='{{ stock_images.get(result.track, stock_images.default) }}'">
-                    {% else %}
-                    <img src="{{ stock_images.get(result.track, stock_images.default) }}" alt="{{ result.title }}">
-                    {% endif %}
-                </div>
-                <div class="content-card-body">
-                    <h3 class="content-card-title">{{ result.title }}</h3>
-                    <div class="content-card-meta">
-                        <span><i class="bi bi-hash"></i> {{ result.id[:8] if result.id else 'N/A' }}</span>
-                        <span><i class="bi bi-calendar3"></i> {{ result.created_at[:10] if result.created_at else 'Recent' }}</span>
-                        <span><i class="bi bi-clock"></i> {{ result.created_at[11:16] if result.created_at and result.created_at|length > 16 else '' }}</span>
-                    </div>
-                </div>
-                <div class="content-card-footer">
-                    <div class="content-card-platforms">
-                        <i class="bi bi-instagram"></i>
-                        <i class="bi bi-facebook"></i>
-                        <i class="bi bi-linkedin"></i>
-                        <i class="bi bi-twitter-x"></i>
-                    </div>
-                    <a href="/content/{{ result.id }}" class="content-card-link" onclick="event.stopPropagation();" title="Open post page">
-                        <i class="bi bi-box-arrow-up-right"></i>
-                    </a>
-                </div>
-            </div>
+<div class="content-grid" id="contentGrid">
+    {% set stock_images = {
+        'breaking': 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=600&q=80',
+        'regular': 'https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=600&q=80',
+        'educational': 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80',
+        'forms': 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&q=80',
+        'default': 'https://images.unsplash.com/photo-1569974507005-6dc61f97fb5c?w=600&q=80'
+    } %}
+    {% for result in results %}
+    <div class="content-card" data-index="{{ loop.index0 }}" data-track="{{ result.track }}" data-title="{{ result.title|lower }}" data-id="{{ result.id }}">
+        <div class="content-card-image">
+            <span class="content-card-badge badge-{{ result.track }}">{{ result.track|upper }}</span>
+            {% if result.filename %}
+            <img src="https://web-production-35219.up.railway.app/images/{{ result.filename }}" alt="{{ result.title }}" onerror="this.src='{{ stock_images.get(result.track, stock_images.default) }}'">
+            {% elif result.image_url and 'localhost' not in result.image_url %}
+            <img src="{{ result.image_url }}" alt="{{ result.title }}" onerror="this.src='{{ stock_images.get(result.track, stock_images.default) }}'">
             {% else %}
-            <div class="empty-state">
-                <i class="bi bi-inbox empty-state-icon"></i>
-                <h3>No content yet</h3>
-                <p>Content from the automation workflow will appear here. Run the n8n workflow to generate your first posts.</p>
+            <img src="{{ stock_images.get(result.track, stock_images.default) }}" alt="{{ result.title }}">
+            {% endif %}
+        </div>
+        <div class="content-card-body">
+            <h3 class="content-card-title">{{ result.title }}</h3>
+            <div class="content-card-meta">
+                <span><i class="bi bi-hash"></i>{{ result.id[:8] if result.id else 'N/A' }}</span>
+                <span><i class="bi bi-calendar3"></i>{{ result.created_at[:10] if result.created_at else 'Recent' }}</span>
             </div>
-            {% endfor %}
+        </div>
+        <div class="content-card-footer">
+            <div class="content-card-platforms">
+                <i class="bi bi-instagram"></i>
+                <i class="bi bi-facebook"></i>
+                <i class="bi bi-linkedin"></i>
+                <i class="bi bi-twitter-x"></i>
+            </div>
+            <a href="/content/{{ result.id }}" class="content-card-link" onclick="event.stopPropagation();">
+                <i class="bi bi-box-arrow-up-right"></i>
+            </a>
         </div>
     </div>
-</section>
+    {% else %}
+    <div class="empty-state">
+        <i class="bi bi-inbox"></i>
+        <h3>No content yet</h3>
+        <p>Content from the automation workflow will appear here.</p>
+    </div>
+    {% endfor %}
+</div>
 
 <!-- Slideshow Modal -->
 <div class="slideshow-modal" id="slideshowModal">
@@ -1001,19 +589,11 @@
                 <img id="slideImage" class="slideshow-image" src="" alt="">
             </div>
             <div class="slideshow-details">
-                <div class="d-flex align-items-center justify-content-between mb-2">
-                    <div class="d-flex align-items-center gap-2">
-                        <span id="slideBadge" class="slideshow-badge"></span>
-                        <span id="slidePostId" class="slideshow-post-id"></span>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <button class="copy-btn" onclick="copyPostLink()" title="Copy link">
-                            <i class="bi bi-link-45deg"></i> Copy Link
-                        </button>
-                        <a id="slideOpenPage" href="#" class="copy-btn" target="_blank" style="text-decoration: none;" title="Open full page">
-                            <i class="bi bi-box-arrow-up-right"></i> Open Page
-                        </a>
-                    </div>
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                    <span id="slideBadge" class="slideshow-badge"></span>
+                    <button class="copy-btn" onclick="copyPostLink()">
+                        <i class="bi bi-link-45deg"></i> Copy Link
+                    </button>
                 </div>
                 <h2 id="slideTitle" class="slideshow-title"></h2>
                 <div class="slideshow-meta">
@@ -1029,8 +609,8 @@
                 </div>
 
                 <div class="slideshow-section">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <div class="slideshow-section-title mb-0">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <div class="slideshow-section-title" style="margin-bottom: 0;">
                             <i class="bi bi-chat-square-text"></i> Caption
                         </div>
                         <button class="copy-btn" onclick="copyCaption()">
@@ -1054,7 +634,6 @@
     </div>
 </div>
 
-<!-- Store data for slideshow -->
 <script>
     const contentData = {{ results | tojson | safe }};
 </script>
@@ -1069,62 +648,19 @@
     // Markdown to HTML converter
     function markdownToHtml(markdown) {
         if (!markdown) return '';
-
         let html = markdown;
-
-        // Escape any existing HTML entities for safety
-        html = html.replace(/&/g, '&amp;');
-
-        // Headers (## and ###)
         html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
         html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
-        html = html.replace(/^# (.*$)/gim, '<h2>$1</h2>');
-
-        // Bold and italic
-        html = html.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
         html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-
-        // Bullet lists - handle nested bullets
-        html = html.replace(/^\s*\* (.*$)/gim, '<li>$1</li>');
-        html = html.replace(/^\s*- (.*$)/gim, '<li>$1</li>');
-
-        // Numbered lists
-        html = html.replace(/^\d+\. (.*$)/gim, '<li>$1</li>');
-
-        // Wrap consecutive <li> in <ul>
-        html = html.replace(/(<li>.*<\/li>\n?)+/g, function(match) {
-            return '<ul>' + match + '</ul>';
-        });
-
-        // Blockquotes
-        html = html.replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>');
-
-        // Paragraphs - split by double newlines
+        html = html.replace(/^\s*[-*] (.*$)/gim, '<li>$1</li>');
+        html = html.replace(/(<li>.*<\/li>\n?)+/g, match => '<ul>' + match + '</ul>');
         const blocks = html.split(/\n\n+/);
         html = blocks.map(block => {
             block = block.trim();
-            // Don't wrap if already wrapped in a tag
-            if (block.startsWith('<h') || block.startsWith('<ul') || block.startsWith('<ol') ||
-                block.startsWith('<blockquote') || block.startsWith('<div') || block.startsWith('<table')) {
-                return block;
-            }
-            // Don't wrap empty blocks
-            if (!block) return '';
-            // Wrap in paragraph
+            if (block.startsWith('<h') || block.startsWith('<ul') || !block) return block;
             return '<p>' + block.replace(/\n/g, '<br>') + '</p>';
         }).join('\n');
-
-        // Clean up any double-wrapped paragraphs
-        html = html.replace(/<p><p>/g, '<p>');
-        html = html.replace(/<\/p><\/p>/g, '</p>');
-
-        // Clean up lists inside paragraphs
-        html = html.replace(/<p>(<ul>)/g, '$1');
-        html = html.replace(/(<\/ul>)<\/p>/g, '$1');
-        html = html.replace(/<p>(<ol>)/g, '$1');
-        html = html.replace(/(<\/ol>)<\/p>/g, '$1');
-
         return html;
     }
 
@@ -1153,10 +689,8 @@
         btn.addEventListener('click', function() {
             filterBtns.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
-
             const track = this.dataset.track;
             let visible = 0;
-
             cards.forEach(card => {
                 if (track === 'all' || card.dataset.track === track) {
                     card.style.display = '';
@@ -1165,18 +699,15 @@
                     card.style.display = 'none';
                 }
             });
-
             resultsCount.textContent = visible;
             updateVisibleCards();
         });
     });
 
     // Search functionality
-    const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', function() {
+    document.getElementById('searchInput').addEventListener('input', function() {
         const query = this.value.toLowerCase();
         let visible = 0;
-
         cards.forEach(card => {
             if (card.dataset.title.includes(query)) {
                 card.style.display = '';
@@ -1185,7 +716,6 @@
                 card.style.display = 'none';
             }
         });
-
         resultsCount.textContent = visible;
         updateVisibleCards();
     });
@@ -1195,13 +725,10 @@
         card.addEventListener('click', function() {
             updateVisibleCards();
             const cardIndex = visibleCards.indexOf(this);
-            if (cardIndex !== -1) {
-                openSlideshow(cardIndex);
-            }
+            if (cardIndex !== -1) openSlideshow(cardIndex);
         });
     });
 
-    // Slideshow functions
     function openSlideshow(index) {
         currentSlide = index;
         updateSlide();
@@ -1223,46 +750,32 @@
 
     function updateSlide() {
         if (visibleCards.length === 0) return;
-
         const card = visibleCards[currentSlide];
         const dataId = card.dataset.id;
         const data = contentData.find(d => d.id === dataId) || {};
 
-        // Update image
         const imgEl = card.querySelector('img');
         document.getElementById('slideImage').src = imgEl ? imgEl.src : '';
 
-        // Update badge
         const badge = document.getElementById('slideBadge');
         badge.textContent = (data.track || 'unknown').toUpperCase();
         badge.className = 'slideshow-badge badge-' + (data.track || 'unknown');
 
-        // Update post ID and link
-        document.getElementById('slidePostId').textContent = 'ID: ' + (data.id || 'N/A');
-        document.getElementById('slideOpenPage').href = '/content/' + (data.id || '');
-
-        // Update text
         document.getElementById('slideTitle').textContent = data.title || 'Untitled';
-        document.getElementById('slideDate').textContent = data.created_at ? data.created_at.substring(0, 10) + ' at ' + data.created_at.substring(11, 16) : 'Recent';
+        document.getElementById('slideDate').textContent = data.created_at ? data.created_at.substring(0, 10) : 'Recent';
         document.getElementById('slideCategory').textContent = data.category || data.track || 'General';
-        // Render article - convert markdown to HTML if needed
+
         const articleEl = document.getElementById('slideArticle');
         const articleContent = data.full_article || 'No article available.';
-        if (articleContent.includes('<h2>') || articleContent.includes('<p>') || articleContent.includes('<div')) {
-            // Already HTML formatted
+        if (articleContent.includes('<h2>') || articleContent.includes('<p>')) {
             articleEl.innerHTML = articleContent;
-        } else if (articleContent.includes('##') || articleContent.includes('**') || articleContent.includes('* ')) {
-            // Markdown format - convert to HTML
+        } else if (articleContent.includes('##') || articleContent.includes('**')) {
             articleEl.innerHTML = markdownToHtml(articleContent);
         } else {
-            // Plain text - wrap in paragraphs
             articleEl.innerHTML = '<p>' + articleContent.split('\n\n').join('</p><p>') + '</p>';
         }
 
-        // Update caption
         updateCaption();
-
-        // Update counter
         document.getElementById('slideCounter').textContent = `${currentSlide + 1} / ${visibleCards.length}`;
     }
 
@@ -1274,7 +787,6 @@
         document.getElementById('slideCaption').textContent = captions[currentPlatform] || captions.instagram || 'No caption available.';
     }
 
-    // Platform tabs
     document.querySelectorAll('.platform-tab').forEach(tab => {
         tab.addEventListener('click', function() {
             document.querySelectorAll('.platform-tab').forEach(t => t.classList.remove('active'));
@@ -1284,7 +796,6 @@
         });
     });
 
-    // Copy post link
     function copyPostLink() {
         const card = visibleCards[currentSlide];
         const dataId = card.dataset.id;
@@ -1300,7 +811,6 @@
         });
     }
 
-    // Copy caption
     function copyCaption() {
         const caption = document.getElementById('slideCaption').textContent;
         navigator.clipboard.writeText(caption).then(() => {
@@ -1314,47 +824,13 @@
         });
     }
 
-    // Keyboard navigation
     document.addEventListener('keydown', function(e) {
         if (!document.getElementById('slideshowModal').classList.contains('active')) return;
-
         if (e.key === 'ArrowLeft') navigateSlide(-1);
         if (e.key === 'ArrowRight') navigateSlide(1);
         if (e.key === 'Escape') closeSlideshow();
     });
 
-    // Touch swipe support
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    document.getElementById('slideshowModal').addEventListener('touchstart', e => {
-        touchStartX = e.changedTouches[0].screenX;
-    });
-
-    document.getElementById('slideshowModal').addEventListener('touchend', e => {
-        touchEndX = e.changedTouches[0].screenX;
-        const diff = touchStartX - touchEndX;
-        if (Math.abs(diff) > 50) {
-            if (diff > 0) navigateSlide(1);
-            else navigateSlide(-1);
-        }
-    });
-
-    // View toggle buttons
-    document.getElementById('slideViewBtn').addEventListener('click', function() {
-        document.getElementById('gridViewBtn').classList.remove('active');
-        this.classList.add('active');
-        updateVisibleCards();
-        if (visibleCards.length > 0) openSlideshow(0);
-    });
-
-    document.getElementById('gridViewBtn').addEventListener('click', function() {
-        document.getElementById('slideViewBtn').classList.remove('active');
-        this.classList.add('active');
-        closeSlideshow();
-    });
-
-    // Initialize
     updateVisibleCards();
 </script>
 {% endblock %}

@@ -4,629 +4,362 @@
 
 {% block extra_css %}
 <style>
-    /* Hero Section */
-    .guides-hero {
-        padding: 10rem 0 5rem;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .guides-hero-content {
-        background: rgba(255, 255, 255, 0.92);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-radius: 24px;
-        padding: 3rem;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .guides-hero-content .hero-title,
-    .guides-hero-content .hero-subtitle {
-        color: #1a1a1a;
-        text-shadow: none;
-    }
-
-    .guides-hero-content .hero-subtitle {
-        color: #555;
-    }
-
-    .guides-hero-content .hero-badge {
-        background: rgba(64, 145, 108, 0.15);
-        border-color: rgba(64, 145, 108, 0.3);
-        color: #1a1a1a;
-    }
-
-    .hero-badge {
-        display: inline-flex;
+    /* Breadcrumb */
+    .breadcrumb-nav {
+        display: flex;
         align-items: center;
         gap: 8px;
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        padding: 0.5rem 1rem;
-        border-radius: 50px;
-        font-size: 0.85rem;
-        color: #ffffff;
-        margin-bottom: 1.5rem;
-        animation: fadeInDown 0.6s ease;
+        margin-bottom: 8px;
+        font-size: 13px;
+        color: var(--text-muted);
     }
 
-    @keyframes fadeInDown {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
+    .breadcrumb-nav a {
+        color: var(--text-muted);
+        text-decoration: none;
     }
 
-    .hero-title {
-        font-size: 3.5rem;
-        font-weight: 800;
-        line-height: 1.1;
-        margin-bottom: 1.5rem;
-        animation: fadeInUp 0.8s ease 0.2s both;
-        color: #ffffff;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    .breadcrumb-nav a:hover {
+        color: var(--primary);
     }
 
-    .hero-subtitle {
-        font-size: 1.25rem;
-        color: #ffffff;
-        text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-        max-width: 600px;
-        animation: fadeInUp 0.8s ease 0.4s both;
-    }
-
-    /* Search Box */
-    .search-box {
-        position: relative;
-        max-width: 500px;
-        margin: 2rem 0;
-        animation: fadeInUp 0.8s ease 0.6s both;
-    }
-
-    .search-box input {
-        width: 100%;
-        padding: 1rem 1.5rem 1rem 3.5rem;
-        background: rgba(255,255,255,0.05);
-        border: 1px solid var(--philata-border);
-        border-radius: 16px;
-        color: white;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-    }
-
-    .search-box input:focus {
-        outline: none;
-        border-color: var(--philata-red);
-        box-shadow: 0 0 0 4px rgba(227, 24, 55, 0.1);
-    }
-
-    .search-box i {
-        position: absolute;
-        left: 1.25rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--philata-text-muted);
-    }
-
-    /* Stats Bar */
-    .stats-bar {
-        display: flex;
-        gap: 3rem;
-        margin-top: 3rem;
-        animation: fadeInUp 0.8s ease 0.8s both;
-    }
-
-    .stat-item {
-        text-align: center;
-    }
-
-    .stat-number {
-        font-size: 2.5rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, #4ade80, #22c55e);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-    }
-
-    .stat-label {
-        font-size: 0.9rem;
-        color: #ffffff;
-        text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-        margin-top: 0.25rem;
-    }
-
-    /* Category Cards */
-    .category-section {
-        padding: 4rem 0;
-    }
-
-    .category-card {
-        position: relative;
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 24px;
-        padding: 2rem;
+    /* Category Card */
+    .cat-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px;
         height: 100%;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
         overflow: hidden;
-        cursor: pointer;
         text-decoration: none;
         display: block;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        transition: all 0.2s ease;
     }
 
-    .category-card::before {
+    .cat-card::before {
         content: '';
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
-        height: 4px;
-        background: var(--card-accent);
+        height: 3px;
+        background: var(--cat-color, var(--primary));
         opacity: 0;
-        transition: opacity 0.3s ease;
+        transition: opacity 0.2s ease;
     }
 
-    .category-card:hover {
-        transform: translateY(-8px);
-        border-color: rgba(255,255,255,0.5);
-        box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-        background: rgba(255, 255, 255, 0.95);
+    .cat-card:hover {
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        border-color: var(--cat-color, var(--primary));
     }
 
-    .category-card:hover::before {
+    .cat-card:hover::before {
         opacity: 1;
     }
 
-    .category-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 16px;
+    .cat-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-        transition: transform 0.3s ease;
+        font-size: 22px;
+        margin-bottom: 16px;
     }
 
-    .category-card:hover .category-icon {
-        transform: scale(1.1) rotate(-5deg);
+    .cat-title {
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 8px;
     }
 
-    .category-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #1a1a1a;
-        margin-bottom: 0.75rem;
+    .cat-desc {
+        color: var(--text-muted);
+        font-size: 13px;
+        margin-bottom: 16px;
+        line-height: 1.6;
     }
 
-    .category-description {
-        color: #444;
-        font-size: 0.95rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .category-count {
-        display: inline-flex;
+    .cat-count {
+        font-size: 12px;
+        color: var(--text-light);
+        display: flex;
         align-items: center;
         gap: 6px;
-        font-size: 0.85rem;
-        color: #555;
     }
 
-    .category-arrow {
+    .cat-arrow {
         position: absolute;
-        bottom: 2rem;
-        right: 2rem;
-        width: 40px;
-        height: 40px;
+        bottom: 24px;
+        right: 24px;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
-        background: rgba(0,0,0,0.05);
+        background: var(--bg);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #666;
-        transition: all 0.3s ease;
+        color: var(--text-muted);
+        transition: all 0.2s ease;
     }
 
-    .category-card:hover .category-arrow {
-        background: var(--philata-red);
+    .cat-card:hover .cat-arrow {
+        background: var(--accent);
         color: white;
-        transform: translateX(5px);
     }
 
     /* Province Grid */
     .province-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
     }
 
     .province-card {
-        position: relative;
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 20px;
-        padding: 1.5rem;
-        transition: all 0.4s ease;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
         text-decoration: none;
         display: block;
-        overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    }
-
-    .province-card::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, var(--province-color, rgba(227, 24, 55, 0.1)) 0%, transparent 60%);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        pointer-events: none;
+        transition: all 0.2s ease;
     }
 
     .province-card:hover {
-        transform: translateY(-5px);
-        border-color: rgba(255,255,255,0.5);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        background: rgba(255, 255, 255, 0.95);
-    }
-
-    .province-card:hover::after {
-        opacity: 1;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        border-color: var(--primary);
     }
 
     .province-header {
         display: flex;
         align-items: center;
-        gap: 1rem;
-        margin-bottom: 1rem;
-        position: relative;
-        z-index: 1;
+        gap: 12px;
+        margin-bottom: 12px;
     }
 
     .province-flag {
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, var(--province-color, #E31837) 0%, rgba(255,255,255,0.2) 100%);
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.5rem;
+        font-size: 14px;
         font-weight: 700;
         color: white;
     }
 
     .province-name {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #1a1a1a;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text);
     }
 
     .province-code {
-        font-size: 0.8rem;
-        color: #555;
+        font-size: 12px;
+        color: var(--text-muted);
     }
 
     .province-stats {
         display: flex;
-        gap: 1.5rem;
-        margin-top: 1rem;
-        position: relative;
-        z-index: 1;
+        gap: 16px;
+        font-size: 12px;
+        color: var(--text-muted);
     }
 
-    .province-stat {
-        font-size: 0.85rem;
-        color: #666;
+    .province-stats strong {
+        color: var(--text);
     }
 
-    .province-stat strong {
-        color: #1a1a1a;
-    }
-
-    /* Featured Guides */
-    .featured-section {
-        padding: 4rem 0;
-        background: linear-gradient(180deg, transparent 0%, rgba(227, 24, 55, 0.03) 50%, transparent 100%);
-    }
-
+    /* Featured Cards */
     .featured-card {
-        position: relative;
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 24px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
         overflow: hidden;
-        transition: all 0.4s ease;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        text-decoration: none;
+        display: block;
+        height: 100%;
+        transition: all 0.2s ease;
     }
 
     .featured-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
     }
 
     .featured-image {
-        height: 200px;
-        background: linear-gradient(135deg, var(--philata-red) 0%, #FF6B6B 100%);
+        height: 120px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 4rem;
+        font-size: 48px;
     }
 
     .featured-content {
-        padding: 1.5rem;
+        padding: 20px;
     }
 
     .featured-badge {
         display: inline-block;
-        background: rgba(227, 24, 55, 0.2);
-        color: var(--philata-red-light);
-        padding: 0.25rem 0.75rem;
-        border-radius: 50px;
-        font-size: 0.75rem;
+        background: var(--bg);
+        color: var(--text-muted);
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 11px;
         font-weight: 600;
-        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+        margin-bottom: 8px;
     }
 
     .featured-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #1a1a1a;
-        margin-bottom: 0.5rem;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 6px;
     }
 
     .featured-desc {
-        color: #555;
-        font-size: 0.9rem;
+        font-size: 13px;
+        color: var(--text-muted);
+        margin: 0;
     }
 
-    /* Animation Classes */
-    .animate-on-scroll {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: all 0.8s ease;
-    }
-
-    .animate-on-scroll.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    .stagger-1 { transition-delay: 0.1s; }
-    .stagger-2 { transition-delay: 0.2s; }
-    .stagger-3 { transition-delay: 0.3s; }
-    .stagger-4 { transition-delay: 0.4s; }
-    .stagger-5 { transition-delay: 0.5s; }
-    .stagger-6 { transition-delay: 0.6s; }
-
-    /* Floating Elements */
-    .floating-element {
-        position: absolute;
-        opacity: 0.1;
-        pointer-events: none;
-    }
-
-    .float-1 {
-        top: 10%;
-        right: 10%;
-        font-size: 8rem;
-        animation: float 6s ease-in-out infinite;
-    }
-
-    .float-2 {
-        bottom: 20%;
-        left: 5%;
-        font-size: 6rem;
-        animation: float 8s ease-in-out infinite 1s;
-    }
-
-    @keyframes float {
-        0%, 100% { transform: translateY(0) rotate(0deg); }
-        50% { transform: translateY(-20px) rotate(5deg); }
-    }
-
-    /* Quick Links */
-    .quick-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        margin-top: 1.5rem;
-    }
-
-    .quick-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 0.5rem 1rem;
-        background: rgba(255,255,255,0.15);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.3);
-        border-radius: 50px;
-        color: #ffffff;
-        font-size: 0.85rem;
-        transition: all 0.3s ease;
+    /* Guide Card */
+    .guide-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
         text-decoration: none;
+        display: block;
+        height: 100%;
+        transition: all 0.2s ease;
     }
 
-    .quick-link:hover {
-        background: var(--philata-red);
-        border-color: var(--philata-red);
+    .guide-card:hover {
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        border-color: var(--primary);
+    }
+
+    .guide-image {
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+    }
+
+    .guide-content {
+        padding: 16px;
+    }
+
+    .guide-difficulty {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    .guide-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 4px;
+    }
+
+    .guide-desc {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+    }
+
+    .guide-meta {
+        font-size: 11px;
+        color: var(--text-light);
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+    }
+
+    .empty-state i {
+        font-size: 48px;
+        color: var(--text-light);
+        margin-bottom: 16px;
+    }
+
+    /* CTA Card */
+    .cta-card {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        border-radius: 16px;
+        padding: 40px;
+        text-align: center;
         color: white;
-        transform: translateY(-2px);
     }
 
-    /* iPad / Tablet Responsive (768px - 1024px) */
-    @media (max-width: 1024px) {
-        .hero-title {
-            font-size: 2.8rem;
-        }
-
-        .category-card,
-        .province-card,
-        .featured-card {
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-        }
-
-        .province-grid {
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        }
+    .cta-title {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 12px;
     }
 
-    /* Mobile Responsive (up to 768px) */
-    @media (max-width: 768px) {
-        .guides-hero {
-            padding: 5rem 0 2rem;
-        }
-
-        .hero-title {
-            font-size: 2.2rem;
-        }
-
-        .hero-subtitle {
-            font-size: 1rem;
-        }
-
-        .stats-bar {
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            justify-content: center;
-        }
-
-        .stat-item {
-            flex: 0 0 auto;
-        }
-
-        .stat-number {
-            font-size: 1.8rem;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-        }
-
-        /* Glass cards more opaque on mobile */
-        .category-card,
-        .province-card,
-        .featured-card {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        .category-card {
-            padding: 1.5rem;
-        }
-
-        .category-title {
-            font-size: 1.25rem;
-        }
-
-        .category-description {
-            font-size: 0.9rem;
-        }
-
-        .province-grid {
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 1rem;
-        }
-
-        .province-card {
-            padding: 1rem;
-        }
-
-        .province-name {
-            font-size: 1.1rem;
-        }
-
-        .quick-links {
-            justify-content: center;
-        }
-
-        .quick-link {
-            font-size: 0.8rem;
-            padding: 0.4rem 0.8rem;
-        }
-
-        .search-box {
-            max-width: 100%;
-        }
-
-        .section-title {
-            font-size: 1.8rem;
-        }
-
-        .section-subtitle {
-            font-size: 0.95rem;
-        }
+    .cta-desc {
+        opacity: 0.9;
+        max-width: 500px;
+        margin: 0 auto 24px;
+        font-size: 14px;
     }
 
-    /* Small Mobile (up to 480px) */
-    @media (max-width: 480px) {
-        .guides-hero {
-            padding: 4rem 0 1.5rem;
-        }
+    .cta-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
 
-        .hero-title {
-            font-size: 1.8rem;
-        }
+    /* Search Box (for guides page) */
+    .guide-search {
+        max-width: 400px;
+        position: relative;
+        margin-bottom: 24px;
+    }
 
-        .hero-subtitle {
-            font-size: 0.9rem;
-        }
+    .guide-search input {
+        width: 100%;
+        padding: 12px 16px 12px 44px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 14px;
+    }
 
-        .hero-badge {
-            font-size: 0.75rem;
-            padding: 0.4rem 0.8rem;
-        }
+    .guide-search input:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
 
-        .stat-number {
-            font-size: 1.5rem;
-        }
+    .guide-search i {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+    }
 
-        /* Even more opaque on small screens */
-        .category-card,
-        .province-card,
-        .featured-card {
-            background: rgba(255, 255, 255, 0.95);
-        }
-
-        .category-card {
-            padding: 1.25rem;
-        }
-
-        .category-title {
-            font-size: 1.1rem;
-        }
-
+    @media (max-width: 576px) {
         .province-grid {
             grid-template-columns: 1fr;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-        }
-
-        .featured-title {
-            font-size: 1.1rem;
-        }
-
-        .featured-desc {
-            font-size: 0.85rem;
         }
     }
 </style>
@@ -635,339 +368,246 @@
 {% block content %}
 {% if selected_category %}
 <!-- Category Detail View -->
-<section class="guides-hero">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <nav aria-label="breadcrumb" class="mb-3">
-                    <ol class="breadcrumb" style="background: none; padding: 0;">
-                        <li class="breadcrumb-item"><a href="/guides" style="color: var(--philata-text-muted);">Guides</a></li>
-                        <li class="breadcrumb-item active" style="color: {{ selected_category.color }};">{{ selected_category.title }}</li>
-                    </ol>
-                </nav>
-                <div class="hero-badge" style="background: {{ selected_category.color }}22; border-color: {{ selected_category.color }}44;">
-                    <i class="{{ selected_category.icon }}" style="color: {{ selected_category.color }};"></i>
-                    <span style="color: {{ selected_category.color }};">{{ selected_category.guides|length if selected_category.guides else 0 }} Guides Available</span>
-                </div>
-                <h1 class="hero-title">
-                    <span class="gradient-text" style="background: linear-gradient(135deg, {{ selected_category.color }} 0%, #fff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ selected_category.title }}</span> Guides
-                </h1>
-                <p class="hero-subtitle">
-                    {{ selected_category.description }}
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
+<nav class="breadcrumb-nav">
+    <a href="/guides">Guides</a>
+    <i class="bi bi-chevron-right" style="font-size: 10px;"></i>
+    <span style="color: {{ selected_category.color }};">{{ selected_category.title }}</span>
+</nav>
 
-<!-- Guides List for Selected Category -->
-<section class="section">
-    <div class="container">
-        <div class="row g-4">
-            {% if selected_category.guides %}
-            {% for guide in selected_category.guides %}
-            <div class="col-md-6 col-lg-4 animate-on-scroll stagger-{{ loop.index }}">
-                <a href="/guides/{{ selected_category.id }}/{{ guide.id }}" class="featured-card d-block text-decoration-none h-100">
-                    <div class="featured-image" style="background: linear-gradient(135deg, {{ selected_category.color }} 0%, {{ selected_category.color }}99 100%);">
-                        {{ guide.icon }}
-                    </div>
-                    <div class="featured-content">
-                        {% if guide.difficulty %}
-                        <span class="featured-badge" style="background: {{ selected_category.color }}33; color: {{ selected_category.color }};">{{ guide.difficulty }}</span>
-                        {% endif %}
-                        <h4 class="featured-title">{{ guide.title }}</h4>
-                        <p class="featured-desc">{{ guide.subtitle or guide.overview[:100] ~ '...' if guide.overview else '' }}</p>
-                        {% if guide.reading_time %}
-                        <p class="text-muted small mb-0"><i class="bi bi-clock me-1"></i> {{ guide.reading_time }}</p>
-                        {% endif %}
-                    </div>
-                </a>
-            </div>
-            {% endfor %}
-            {% else %}
-            <div class="col-12 text-center py-5">
-                <i class="bi bi-inbox" style="font-size: 3rem; color: var(--philata-text-muted);"></i>
-                <h3 class="mt-3">No guides available yet</h3>
-                <p class="text-muted">We're working on adding guides for this category.</p>
-                <a href="/guides" class="btn btn-primary mt-3"><i class="bi bi-arrow-left me-2"></i>Back to All Guides</a>
-            </div>
-            {% endif %}
-        </div>
-    </div>
-</section>
+<div class="page-header">
+    <h1 class="page-title">{{ selected_category.title }} Guides</h1>
+    <p class="page-subtitle">{{ selected_category.description }}</p>
+</div>
 
-<!-- Related Categories -->
-<section class="section" style="background: rgba(255,255,255,0.02);">
-    <div class="container">
-        <h3 class="section-title mb-4">Explore Other Categories</h3>
-        <div class="row g-3">
-            {% for cat_id, category in categories.items() %}
-            {% if category.id != selected_category.id %}
-            <div class="col-md-4 col-lg-3">
-                <a href="/guides/{{ category.id }}" class="category-card h-100" style="--card-accent: {{ category.color }}">
-                    <div class="category-icon" style="background: linear-gradient(135deg, {{ category.color }}33 0%, {{ category.color }}11 100%); width: 45px; height: 45px;">
-                        <i class="{{ category.icon }}" style="color: {{ category.color }}; font-size: 1rem;"></i>
-                    </div>
-                    <h5 class="category-title" style="font-size: 1.1rem;">{{ category.title }}</h5>
-                    <span class="category-count">
-                        <i class="bi bi-book"></i>
-                        {% if category.guides %}{{ category.guides|length }} guides{% elif category.provinces %}{{ category.provinces|length }} provinces{% endif %}
-                    </span>
-                </a>
+<!-- Guides List -->
+{% if selected_category.guides %}
+<div class="row g-4">
+    {% for guide in selected_category.guides %}
+    <div class="col-md-6 col-lg-4">
+        <a href="/guides/{{ selected_category.id }}/{{ guide.id }}" class="guide-card">
+            <div class="guide-image" style="background: linear-gradient(135deg, {{ selected_category.color }}, {{ selected_category.color }}99);">
+                {{ guide.icon }}
             </div>
-            {% endif %}
-            {% endfor %}
-        </div>
+            <div class="guide-content">
+                {% if guide.difficulty %}
+                <span class="guide-difficulty" style="background: {{ selected_category.color }}22; color: {{ selected_category.color }};">{{ guide.difficulty }}</span>
+                {% endif %}
+                <h4 class="guide-title">{{ guide.title }}</h4>
+                <p class="guide-desc">{{ guide.subtitle or guide.overview[:80] ~ '...' if guide.overview else '' }}</p>
+                {% if guide.reading_time %}
+                <p class="guide-meta"><i class="bi bi-clock me-1"></i>{{ guide.reading_time }}</p>
+                {% endif %}
+            </div>
+        </a>
     </div>
-</section>
-
+    {% endfor %}
+</div>
 {% else %}
-<!-- Main Guides Page - Hero Section -->
-<section class="guides-hero">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <div class="guides-hero-content">
-                    <div class="hero-badge">
-                        <i class="bi bi-book"></i>
-                        <span>Comprehensive Immigration Guides</span>
-                    </div>
-                    <h1 class="hero-title">
-                    Your Complete Guide to <span class="gradient-text">Canadian Immigration</span>
-                </h1>
-                <p class="hero-subtitle">
-                    From Express Entry to provincial programs, everything you need to successfully immigrate to Canada. Beginner to advanced level guides.
-                </p>
-
-                <div class="search-box">
-                    <i class="bi bi-search"></i>
-                    <input type="text" id="guideSearch" placeholder="Search guides (e.g., Ontario PNP, Express Entry, Study Permit...)">
-                </div>
-
-                <div class="quick-links">
-                    <a href="/guides/express-entry" class="quick-link"><i class="bi bi-lightning"></i> Express Entry</a>
-                    <a href="#pnp" class="quick-link"><i class="bi bi-map"></i> Provincial Programs</a>
-                    <a href="/guides/study-permit" class="quick-link"><i class="bi bi-mortarboard"></i> Study Permits</a>
-                    <a href="/guides/credentials" class="quick-link"><i class="bi bi-award"></i> WES/ECA</a>
-                </div>
-
-                    <div class="stats-bar">
-                        <div class="stat-item">
-                            <div class="stat-number">50+</div>
-                            <div class="stat-label">Guides</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">13</div>
-                            <div class="stat-label">Provinces</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">10+</div>
-                            <div class="stat-label">Forms Guides</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 d-none d-lg-block position-relative">
-                <div class="floating-element float-1">🍁</div>
-                <div class="floating-element float-2">📚</div>
-            </div>
-        </div>
-    </div>
-</section>
+<div class="empty-state">
+    <i class="bi bi-inbox"></i>
+    <h3>No guides available yet</h3>
+    <p class="text-muted">We're working on adding guides for this category.</p>
+    <a href="/guides" class="btn btn-primary mt-3"><i class="bi bi-arrow-left me-2"></i>Back to All Guides</a>
+</div>
 {% endif %}
 
-{% if not selected_category %}
-<!-- Main Categories -->
-<section class="category-section" id="categories">
-    <div class="container">
-        <div class="row mb-5">
-            <div class="col-12 text-center">
-                <h2 class="section-title">Explore by Category</h2>
-                <p class="section-subtitle mx-auto">Choose a category to start your immigration journey</p>
-            </div>
-        </div>
-
-        <div class="row g-4">
-            {% for cat_id, category in categories.items() %}
-            <div class="col-md-6 col-lg-4 animate-on-scroll stagger-{{ loop.index }}">
-                <a href="/guides/{{ category.id }}" class="category-card" style="--card-accent: {{ category.color }}">
-                    <div class="category-icon" style="background: linear-gradient(135deg, {{ category.color }}33 0%, {{ category.color }}11 100%);">
-                        <i class="{{ category.icon }}" style="color: {{ category.color }}"></i>
-                    </div>
-                    <h3 class="category-title">{{ category.title }}</h3>
-                    <p class="category-description">{{ category.description }}</p>
-                    <span class="category-count">
-                        <i class="bi bi-book"></i>
-                        {% if category.guides %}{{ category.guides|length }} guides{% elif category.provinces %}{{ category.provinces|length }} provinces{% endif %}
-                    </span>
-                    <div class="category-arrow">
-                        <i class="bi bi-arrow-right"></i>
-                    </div>
-                </a>
-            </div>
-            {% endfor %}
-        </div>
+<!-- Other Categories -->
+<div class="section" style="margin-top: 48px;">
+    <div class="section-header">
+        <h2 class="section-title">Explore Other Categories</h2>
     </div>
-</section>
-
-<!-- Provincial Programs Quick Access -->
-<section class="section" id="pnp">
-    <div class="container">
-        <div class="row mb-5">
-            <div class="col-12">
-                <h2 class="section-title">Provincial Nominee Programs</h2>
-                <p class="section-subtitle">Each province has unique pathways to permanent residence</p>
-            </div>
-        </div>
-
-        <div class="province-grid">
-            {% if categories.provincial_programs and categories.provincial_programs.provinces %}
-            {% for province in categories.provincial_programs.provinces %}
-            <a href="/guides/pnp/{{ province.id }}" class="province-card animate-on-scroll" style="--province-color: {{ ['#E31837', '#F59E0B', '#10B981', '#6366F1', '#0EA5E9', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316'][loop.index0 % 9] }}">
-                <div class="province-header">
-                    <div class="province-flag">{{ province.code }}</div>
-                    <div>
-                        <div class="province-name">{{ province.name }}</div>
-                        <div class="province-code">{{ province.program_name }}</div>
-                    </div>
+    <div class="row g-3">
+        {% for cat_id, category in categories.items() %}
+        {% if category.id != selected_category.id %}
+        <div class="col-md-4 col-lg-3">
+            <a href="/guides/{{ category.id }}" class="cat-card" style="--cat-color: {{ category.color }}; padding: 16px;">
+                <div class="cat-icon" style="background: {{ category.color }}22; color: {{ category.color }}; width: 40px; height: 40px; font-size: 16px;">
+                    <i class="{{ category.icon }}"></i>
                 </div>
-                <p class="text-muted small mb-2">{{ province.description[:100] }}...</p>
-                <div class="province-stats">
-                    <div class="province-stat">
-                        <strong>{{ province.streams|length }}</strong> streams
-                    </div>
-                    <div class="province-stat">
-                        Capital: <strong>{{ province.capital }}</strong>
-                    </div>
+                <h5 class="cat-title" style="font-size: 14px;">{{ category.title }}</h5>
+                <span class="cat-count">
+                    <i class="bi bi-book"></i>
+                    {% if category.guides %}{{ category.guides|length }} guides{% elif category.provinces %}{{ category.provinces|length }} provinces{% endif %}
+                </span>
+            </a>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+{% else %}
+<!-- Main Guides Page -->
+<div class="page-header">
+    <h1 class="page-title">Immigration Guides</h1>
+    <p class="page-subtitle">Comprehensive guides covering every pathway to Canadian immigration</p>
+</div>
+
+<!-- Stats Row -->
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-value">50+</div>
+        <div class="stat-label">Guides</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">13</div>
+        <div class="stat-label">Provinces</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">10+</div>
+        <div class="stat-label">Forms Guides</div>
+    </div>
+</div>
+
+<!-- Search Box -->
+<div class="guide-search">
+    <i class="bi bi-search"></i>
+    <input type="text" id="guideSearch" placeholder="Search guides...">
+</div>
+
+<!-- Main Categories -->
+<div class="section">
+    <div class="section-header">
+        <h2 class="section-title">Explore by Category</h2>
+    </div>
+    <div class="row g-4">
+        {% for cat_id, category in categories.items() %}
+        <div class="col-md-6 col-lg-4">
+            <a href="/guides/{{ category.id }}" class="cat-card" style="--cat-color: {{ category.color }}">
+                <div class="cat-icon" style="background: {{ category.color }}22; color: {{ category.color }};">
+                    <i class="{{ category.icon }}"></i>
+                </div>
+                <h3 class="cat-title">{{ category.title }}</h3>
+                <p class="cat-desc">{{ category.description }}</p>
+                <span class="cat-count">
+                    <i class="bi bi-book"></i>
+                    {% if category.guides %}{{ category.guides|length }} guides{% elif category.provinces %}{{ category.provinces|length }} provinces{% endif %}
+                </span>
+                <div class="cat-arrow">
+                    <i class="bi bi-arrow-right"></i>
                 </div>
             </a>
-            {% endfor %}
-            {% endif %}
         </div>
+        {% endfor %}
     </div>
-</section>
+</div>
 
-<!-- Featured Guides -->
-<section class="featured-section">
-    <div class="container">
-        <div class="row mb-5">
-            <div class="col-12">
-                <h2 class="section-title">Most Popular Guides</h2>
-                <p class="section-subtitle">Start with these essential resources</p>
-            </div>
-        </div>
-
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-3 animate-on-scroll stagger-1">
-                <a href="/guides/study-permit" class="featured-card d-block text-decoration-none">
-                    <div class="featured-image" style="background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);">
-                        🎓
-                    </div>
-                    <div class="featured-content">
-                        <span class="featured-badge">Study</span>
-                        <h4 class="featured-title">Study Permit Guide</h4>
-                        <p class="featured-desc">Complete guide to studying in Canada</p>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-md-6 col-lg-3 animate-on-scroll stagger-2">
-                <a href="/guides/express-entry/express-entry-overview" class="featured-card d-block text-decoration-none">
-                    <div class="featured-image" style="background: linear-gradient(135deg, #E31837 0%, #FF6B6B 100%);">
-                        🚀
-                    </div>
-                    <div class="featured-content">
-                        <span class="featured-badge">Immigration</span>
-                        <h4 class="featured-title">Express Entry Guide</h4>
-                        <p class="featured-desc">Complete guide to Canada's fastest PR pathway</p>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-md-6 col-lg-3 animate-on-scroll stagger-3">
-                <a href="/guides/credentials/wes" class="featured-card d-block text-decoration-none">
-                    <div class="featured-image" style="background: linear-gradient(135deg, #10B981 0%, #34D399 100%);">
-                        📜
-                    </div>
-                    <div class="featured-content">
-                        <span class="featured-badge">Credentials</span>
-                        <h4 class="featured-title">WES ECA Guide</h4>
-                        <p class="featured-desc">Step-by-step credential evaluation process</p>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-md-6 col-lg-3 animate-on-scroll stagger-4">
-                <a href="/guides/pnp/ontario" class="featured-card d-block text-decoration-none">
-                    <div class="featured-image" style="background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);">
-                        🍁
-                    </div>
-                    <div class="featured-content">
-                        <span class="featured-badge">PNP</span>
-                        <h4 class="featured-title">Ontario OINP Guide</h4>
-                        <p class="featured-desc">Canada's largest provincial program explained</p>
-                    </div>
-                </a>
-            </div>
-        </div>
+<!-- Provincial Programs -->
+<div class="section" id="pnp">
+    <div class="section-header">
+        <h2 class="section-title">Provincial Nominee Programs</h2>
+        <a href="/guides/pnp" class="section-link">View All <i class="bi bi-chevron-right"></i></a>
     </div>
-</section>
-
-<!-- CTA Section -->
-<section class="section">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 text-center">
-                <div class="card p-5" style="background: linear-gradient(135deg, rgba(227, 24, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);">
-                    <h2 class="section-title mb-3">Need Help Choosing Your Path?</h2>
-                    <p class="text-muted mb-4">Our guides cover every immigration pathway. Start with Express Entry if you're unsure, or explore provincial programs for more options.</p>
-                    <div class="d-flex flex-wrap justify-content-center gap-3">
-                        <a href="/guides/express-entry/express-entry-overview" class="btn btn-primary">
-                            <i class="bi bi-lightning-charge me-2"></i>Start with Express Entry
-                        </a>
-                        <a href="#categories" class="btn btn-outline-light">
-                            <i class="bi bi-grid me-2"></i>Browse All Categories
-                        </a>
-                    </div>
+    <div class="province-grid">
+        {% if categories.provincial_programs and categories.provincial_programs.provinces %}
+        {% for province in categories.provincial_programs.provinces[:6] %}
+        <a href="/guides/pnp/{{ province.id }}" class="province-card" style="--province-color: {{ ['#C41E3A', '#F59E0B', '#10B981', '#6366F1', '#0EA5E9', '#8B5CF6'][loop.index0 % 6] }}">
+            <div class="province-header">
+                <div class="province-flag" style="background: {{ ['#C41E3A', '#F59E0B', '#10B981', '#6366F1', '#0EA5E9', '#8B5CF6'][loop.index0 % 6] }};">{{ province.code }}</div>
+                <div>
+                    <div class="province-name">{{ province.name }}</div>
+                    <div class="province-code">{{ province.program_name }}</div>
                 </div>
             </div>
+            <div class="province-stats">
+                <span><strong>{{ province.streams|length }}</strong> streams</span>
+                <span>Capital: <strong>{{ province.capital }}</strong></span>
+            </div>
+        </a>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+<!-- Featured Guides -->
+<div class="section">
+    <div class="section-header">
+        <h2 class="section-title">Most Popular Guides</h2>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+            <a href="/guides/study-permit" class="featured-card">
+                <div class="featured-image" style="background: linear-gradient(135deg, #6366F1, #8B5CF6);">
+                    <span>🎓</span>
+                </div>
+                <div class="featured-content">
+                    <span class="featured-badge">Study</span>
+                    <h4 class="featured-title">Study Permit Guide</h4>
+                    <p class="featured-desc">Complete guide to studying in Canada</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <a href="/guides/express-entry" class="featured-card">
+                <div class="featured-image" style="background: linear-gradient(135deg, #C41E3A, #FF6B6B);">
+                    <span>🚀</span>
+                </div>
+                <div class="featured-content">
+                    <span class="featured-badge">Immigration</span>
+                    <h4 class="featured-title">Express Entry Guide</h4>
+                    <p class="featured-desc">Canada's fastest PR pathway</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <a href="/guides/credentials/wes" class="featured-card">
+                <div class="featured-image" style="background: linear-gradient(135deg, #10B981, #34D399);">
+                    <span>📜</span>
+                </div>
+                <div class="featured-content">
+                    <span class="featured-badge">Credentials</span>
+                    <h4 class="featured-title">WES ECA Guide</h4>
+                    <p class="featured-desc">Credential evaluation process</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <a href="/guides/pnp/ontario" class="featured-card">
+                <div class="featured-image" style="background: linear-gradient(135deg, #F59E0B, #FBBF24);">
+                    <span>🍁</span>
+                </div>
+                <div class="featured-content">
+                    <span class="featured-badge">PNP</span>
+                    <h4 class="featured-title">Ontario OINP Guide</h4>
+                    <p class="featured-desc">Canada's largest provincial program</p>
+                </div>
+            </a>
         </div>
     </div>
-</section>
+</div>
+
+<!-- CTA -->
+<div class="section">
+    <div class="cta-card">
+        <h2 class="cta-title">Need Help Choosing Your Path?</h2>
+        <p class="cta-desc">Start with Express Entry if you're unsure, or explore provincial programs for more options.</p>
+        <div class="cta-buttons">
+            <a href="/guides/express-entry" class="btn btn-white">
+                <i class="bi bi-lightning-charge me-2"></i>Start with Express Entry
+            </a>
+            <a href="/tools/crs-calculator" class="btn btn-outline-white">
+                <i class="bi bi-calculator me-2"></i>Calculate CRS Score
+            </a>
+        </div>
+    </div>
+</div>
 {% endif %}
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    // Scroll animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, observerOptions);
-
-    document.querySelectorAll('.animate-on-scroll').forEach(el => {
-        observer.observe(el);
-    });
-
-    // Search functionality
     const searchInput = document.getElementById('guideSearch');
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
-            // Add search filtering logic here
-            document.querySelectorAll('.category-card, .province-card, .featured-card').forEach(card => {
+            document.querySelectorAll('.cat-card, .province-card, .featured-card').forEach(card => {
                 const text = card.textContent.toLowerCase();
-                card.closest('.col-md-6, .col-lg-3, .col-lg-4') ?
-                    card.closest('.col-md-6, .col-lg-3, .col-lg-4').style.display = text.includes(query) ? '' : 'none' :
+                const parent = card.closest('.col-md-6, .col-lg-3, .col-lg-4');
+                if (parent) {
+                    parent.style.display = text.includes(query) ? '' : 'none';
+                } else {
                     card.style.display = text.includes(query) ? '' : 'none';
+                }
             });
         });
     }

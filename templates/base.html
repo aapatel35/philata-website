@@ -3,1040 +3,559 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <meta name="version" content="2.2.0-splash-fix-20251227">
-    <script>
-        // Immediately hide splash if already shown this session
-        if (sessionStorage.getItem('philataSplashShown')) {
-            document.write('<style>#splashScreen{display:none!important}</style>');
-        }
-    </script>
-    <title>{% block title %}Philata{% endblock %} | Canadian Immigration News</title>
-    <meta name="description" content="Your trusted source for Canadian immigration news, Express Entry updates, and immigration guides. Stay informed with the latest IRCC announcements.">
+    <title>{% block title %}Philata{% endblock %} | Canadian Immigration</title>
+    <meta name="description" content="Your trusted source for Canadian immigration news, Express Entry updates, and immigration guides.">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Premium Font Combination: Plus Jakarta Sans (headings) + Inter (body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Professional Blue & White Theme */
-            --philata-primary: #1E3A5F;
-            --philata-primary-dark: #152942;
-            --philata-primary-light: #2E5A8F;
-            --philata-accent: #C41E3A;
-            --philata-accent-light: #E63950;
-            --philata-accent-dark: #9A1830;
-            --philata-cream: #FFFFFF;
-            --philata-cream-dark: #F8FAFC;
-            --philata-maple: #C41E3A;
-            --philata-gold: #B8860B;
-            --philata-white: #FFFFFF;
-            --philata-light: #F8FAFC;
-            --philata-gray-50: #F8FAFC;
-            --philata-gray-100: #F1F5F9;
-            --philata-gray-200: #E2E8F0;
-            --philata-gray-300: #CBD5E1;
-            --philata-gray-400: #94A3B8;
-            --philata-gray-500: #64748B;
-            --philata-gray-600: #475569;
-            --philata-gray-700: #334155;
-            --philata-gray-800: #1E293B;
-            --philata-gray-900: #0F172A;
-            --philata-card: #FFFFFF;
-            --philata-card-hover: #F8FAFC;
-            --philata-border: #E2E8F0;
-            --philata-text: #1E293B;
-            --philata-text-muted: #64748B;
-            --gradient-primary: linear-gradient(135deg, #1E3A5F 0%, #2E5A8F 100%);
-            --gradient-accent: linear-gradient(135deg, #C41E3A 0%, #E63950 100%);
-            --gradient-maple: linear-gradient(135deg, #C41E3A 0%, #E63950 100%);
-            --gradient-gold: linear-gradient(135deg, #B8860B 0%, #DAA520 100%);
-            --gradient-hero: linear-gradient(135deg, #1E3A5F 0%, #2E5A8F 100%);
-            --glass-bg: rgba(255,255,255,0.98);
-            --glass-border: rgba(30, 58, 95, 0.1);
-            /* Compatibility aliases */
-            --philata-teal: #1E3A5F;
-            --philata-teal-light: #2E5A8F;
-            --philata-teal-dark: #152942;
-            --philata-red: #C41E3A;
-            --philata-red-light: #E63950;
-            --philata-orange: #B8860B;
-            --philata-orange-light: #DAA520;
+            --sidebar-width: 240px;
+            --topbar-height: 56px;
+            --primary: #1E3A5F;
+            --primary-dark: #152942;
+            --accent: #C41E3A;
+            --bg: #F8FAFC;
+            --card: #FFFFFF;
+            --border: #E2E8F0;
+            --text: #1E293B;
+            --text-muted: #64748B;
+            --text-light: #94A3B8;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--philata-light);
-            color: #000000;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-            overflow-x: hidden;
-            line-height: 1.7;
-            font-size: 16px;
-            font-weight: 400;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            font-size: 14px;
+            line-height: 1.6;
         }
 
-        /* Clean Professional Background */
-        .bg-animation {
+        /* App Layout */
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--primary-dark);
+            color: white;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            background: #F8FAFC;
-        }
-
-        /* Grid Pattern Overlay */
-        .grid-overlay {
-            display: none;
-        }
-
-        /* Navigation */
-        .navbar {
-            background: rgba(255, 255, 255, 0.95) !important;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--philata-border);
-            padding: 1rem 0;
-            transition: all 0.3s ease;
-        }
-
-        .navbar.scrolled {
-            background: rgba(255, 255, 255, 0.98) !important;
-            padding: 0.5rem 0;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        }
-
-        .navbar-brand {
+            height: 100vh;
             display: flex;
-            align-items: center;
-            gap: 12px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 800;
-            font-size: 1.5rem;
-            color: var(--philata-gray-900) !important;
-            text-decoration: none;
-            letter-spacing: -0.02em;
-        }
-
-        .navbar-brand .logo-icon {
-            width: 42px;
-            height: 42px;
-            background: transparent;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
+            flex-direction: column;
+            z-index: 1000;
             transition: transform 0.3s ease;
         }
 
-        .navbar-brand .logo-icon img {
-            width: 100%;
-            height: 100%;
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-logo {
+            width: 32px;
+            height: 32px;
             object-fit: contain;
         }
 
-        .navbar-brand:hover .logo-icon {
-            transform: scale(1.05) rotate(-5deg);
+        .sidebar-brand {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
         }
 
-        .nav-link {
-            color: var(--philata-gray-600) !important;
-            font-weight: 500;
-            font-size: 0.95rem;
-            padding: 0.5rem 1rem !important;
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 12px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            color: var(--text-light);
+            text-decoration: none;
             border-radius: 8px;
-            transition: all 0.3s ease;
+            margin-bottom: 2px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.08);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: rgba(255,255,255,0.12);
+            color: white;
+        }
+
+        .nav-item i {
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 16px 12px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            height: var(--topbar-height);
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            gap: 16px;
+        }
+
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 400px;
             position: relative;
         }
 
-        .nav-link:hover, .nav-link.active {
-            color: var(--philata-primary) !important;
-            background: rgba(30, 64, 175, 0.06);
-        }
-
-        .nav-link.active::after {
-            content: '';
+        .search-box i {
             position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 2px;
-            background: var(--philata-primary);
-            border-radius: 2px;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
         }
 
-        .btn-nav-cta {
-            background: var(--gradient-primary);
-            color: white !important;
-            font-weight: 600;
-            padding: 0.6rem 1.5rem !important;
-            border-radius: 10px;
-            border: none;
-            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.25);
-            transition: all 0.3s ease;
-        }
-
-        .btn-nav-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(30, 64, 175, 0.35);
-        }
-
-        /* Mobile Menu Toggle */
-        .navbar-toggler {
-            border: none !important;
-            padding: 0.5rem;
-            background: rgba(27, 67, 50, 0.1);
+        .search-box input {
+            width: 100%;
+            padding: 8px 12px 8px 36px;
+            border: 1px solid var(--border);
             border-radius: 8px;
+            font-size: 14px;
+            background: var(--bg);
+            transition: all 0.2s;
         }
 
-        .navbar-toggler:focus {
-            box-shadow: none;
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: var(--card);
         }
 
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(27, 67, 50, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+        .top-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        /* Mobile Offcanvas Menu */
-        .offcanvas {
-            background: var(--philata-white);
-            border-left: 1px solid var(--philata-border);
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 24px;
         }
 
-        .offcanvas-header {
-            background: var(--philata-gray-50);
-            border-bottom: 1px solid var(--philata-border);
-            padding: 1.25rem 1.5rem;
+        .content-container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .offcanvas-title {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+        /* Page Header */
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-title {
+            font-size: 24px;
             font-weight: 700;
-            color: var(--philata-gray-900);
-            display: flex;
-            align-items: center;
+            color: var(--text);
+            margin-bottom: 4px;
         }
 
-        .offcanvas-body {
-            padding: 1.5rem;
-        }
-
-        .mobile-nav-list .nav-item {
-            margin-bottom: 0.25rem;
-        }
-
-        .mobile-nav-list .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 0.875rem 1rem !important;
-            color: var(--philata-gray-700) !important;
-            font-weight: 500;
-            font-size: 1rem;
-            border-radius: 10px;
-            transition: all 0.2s ease;
-        }
-
-        .mobile-nav-list .nav-link:hover {
-            background: var(--philata-gray-50);
-            color: var(--philata-primary) !important;
-        }
-
-        .mobile-nav-list .nav-link.active {
-            background: rgba(27, 67, 50, 0.1);
-            color: var(--philata-primary) !important;
-            font-weight: 600;
-        }
-
-        .mobile-nav-list .nav-link i {
-            font-size: 1.1rem;
-            width: 24px;
+        .page-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
         }
 
         /* Cards */
         .card {
-            background: var(--philata-card);
-            border: 1px solid var(--philata-border);
-            border-radius: 20px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: box-shadow 0.2s ease;
         }
 
         .card:hover {
-            background: var(--philata-card-hover);
-            border-color: rgba(30, 64, 175, 0.2);
-            transform: translateY(-5px);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
-        }
-
-        .card-header {
-            background: var(--philata-gray-50);
-            border-bottom: 1px solid var(--philata-border);
-            padding: 1.25rem 1.5rem;
-            font-weight: 600;
-            color: var(--philata-gray-800);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
         .card-body {
-            padding: 1.5rem;
+            padding: 20px;
+        }
+
+        /* Grid */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .section-link {
+            font-size: 13px;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .section-link:hover {
+            text-decoration: underline;
         }
 
         /* Buttons */
         .btn-primary {
-            background: var(--gradient-primary);
+            background: var(--primary);
             border: none;
-            font-weight: 600;
-            padding: 0.75rem 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.25);
-            transition: all 0.3s ease;
             color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.35);
-            background: var(--gradient-primary);
+            background: var(--primary-dark);
         }
 
         .btn-secondary {
-            background: var(--gradient-accent);
-            border: none;
-            font-weight: 600;
-            padding: 0.75rem 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(64, 145, 108, 0.25);
-            transition: all 0.3s ease;
-            color: white;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s;
         }
 
         .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(64, 145, 108, 0.35);
-        }
-
-        .btn-outline-light {
-            border: 1px solid var(--philata-gray-300);
-            color: var(--philata-gray-700);
-            font-weight: 500;
-            padding: 0.75rem 2rem;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-outline-light:hover {
-            background: var(--philata-gray-100);
-            border-color: var(--philata-gray-400);
-            color: var(--philata-gray-800);
-            transform: translateY(-2px);
-        }
-
-        .btn-outline-primary {
-            border: 2px solid var(--philata-primary);
-            color: var(--philata-primary);
-            font-weight: 600;
-            padding: 0.75rem 2rem;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            background: transparent;
-        }
-
-        .btn-outline-primary:hover {
-            background: var(--philata-primary);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+            background: var(--border);
         }
 
         /* Badges */
-        .badge-breaking {
-            background: linear-gradient(135deg, #F97316, #FB923C);
-            color: white;
+        .badge {
+            font-size: 11px;
             font-weight: 600;
-            padding: 0.5em 1em;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
-        }
-
-        .badge-regular {
-            background: linear-gradient(135deg, #6366F1, #8B5CF6);
-            color: white;
-            font-weight: 600;
-            padding: 0.5em 1em;
-            border-radius: 8px;
-        }
-
-        .badge-educational {
-            background: linear-gradient(135deg, #10B981, #34D399);
-            color: white;
-            font-weight: 600;
-            padding: 0.5em 1em;
-            border-radius: 8px;
-        }
-
-        .badge-forms {
-            background: linear-gradient(135deg, #F59E0B, #FBBF24);
-            color: #1a1a1a;
-            font-weight: 600;
-            padding: 0.5em 1em;
-            border-radius: 8px;
-        }
-
-        /* Section Styles */
-        .section {
-            padding: 6rem 0;
-            position: relative;
-        }
-
-        .section-title {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 3rem;
-            font-weight: 800;
-            color: var(--philata-gray-900);
-            margin-bottom: 1rem;
-            line-height: 1.15;
-            letter-spacing: -0.03em;
-        }
-
-        .section-subtitle {
-            font-size: 1.25rem;
-            color: var(--philata-gray-600);
-            max-width: 600px;
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, #C41E3A, #E63950);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .gold-text {
-            background: var(--gradient-gold);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-        }
-
-        /* Glow Effects */
-        .glow-red, .glow-orange {
-            box-shadow: 0 0 60px rgba(249, 115, 22, 0.2);
-        }
-
-        /* Text utilities */
-        .text-muted {
-            color: #000000 !important;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            color: #000000;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        h1 { font-size: 2.5rem; font-weight: 800; }
-        h2 { font-size: 2rem; }
-        h3 { font-size: 1.5rem; }
-        h4 { font-size: 1.25rem; }
-        h5 { font-size: 1.1rem; }
-        h6 { font-size: 1rem; }
-
-        a {
-            color: var(--philata-primary);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        a:hover {
-            color: var(--philata-primary-dark);
-        }
-
-        /* Form Controls */
-        .form-control, .form-select {
-            background: var(--philata-white);
-            border: 1px solid var(--philata-border);
-            color: var(--philata-text);
-            border-radius: 12px;
-            padding: 0.75rem 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus, .form-select:focus {
-            background: var(--philata-white);
-            border-color: var(--philata-primary);
-            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
-            color: var(--philata-text);
-        }
-
-        .form-control::placeholder {
-            color: var(--philata-text-muted);
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--philata-gray-900);
-            border-top: 1px solid var(--philata-border);
-            padding: 4rem 0 2rem;
-            margin-top: 4rem;
-        }
-
-        .footer-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 800;
-            font-size: 1.5rem;
-            color: #fff;
-            margin-bottom: 1rem;
-            letter-spacing: -0.02em;
-        }
-
-        .footer-links h6 {
-            color: #fff;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .footer-links a {
-            display: block;
-            color: #FFFFFF;
-            padding: 0.3rem 0;
-            font-size: 0.95rem;
-        }
-
-        .footer-links a:hover {
-            color: var(--philata-accent-light);
-        }
-
-        .footer-bottom {
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--philata-gray-700);
-            text-align: center;
-            color: #FFFFFF;
-            font-size: 0.9rem;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .social-links a {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #FFFFFF;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background: var(--philata-primary);
-            color: #fff;
-            transform: translateY(-3px);
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-fadeInUp {
-            animation: fadeInUp 0.8s ease forwards;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--philata-gray-100);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--philata-gray-300);
+            padding: 4px 8px;
             border-radius: 4px;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--philata-gray-400);
+        .badge-news { background: #FEE2E2; color: #B91C1C; }
+        .badge-educational { background: #DCFCE7; color: #166534; }
+        .badge-forms { background: #FEF3C7; color: #92400E; }
+
+        /* Article Card */
+        .article-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .article-card-image {
+            height: 160px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .article-card-content {
+            padding: 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .article-card-excerpt {
+            font-size: 13px;
+            color: var(--text-muted);
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .article-card-meta {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 12px;
+        }
+
+        /* Mobile Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            .section {
-                padding: 4rem 0;
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
             }
 
-            .section-title {
-                font-size: 2rem;
+            .sidebar.open {
+                transform: translateX(0);
             }
 
-            .navbar-brand .logo-icon {
-                width: 36px;
-                height: 36px;
+            .sidebar-overlay.open {
+                display: block;
             }
-        }
 
-        /* Caption box */
-        .caption-box {
-            background: var(--philata-gray-50);
-            border-radius: 12px;
-            padding: 1.25rem;
-            font-family: 'SF Mono', Monaco, monospace;
-            font-size: 0.85rem;
-            white-space: pre-wrap;
-            max-height: 200px;
-            overflow-y: auto;
-            color: var(--philata-text);
-            border: 1px solid var(--philata-border);
-        }
-
-        /* Accent utilities */
-        .bg-primary-50 { background-color: #EFF6FF; }
-        .bg-primary-100 { background-color: #DBEAFE; }
-        .bg-teal-50 { background-color: #F0FDFA; }
-        .bg-teal-100 { background-color: #CCFBF1; }
-        .text-primary-custom { color: var(--philata-primary) !important; }
-        .text-teal { color: var(--philata-teal) !important; }
-        .border-primary-custom { border-color: var(--philata-primary) !important; }
-        .border-teal { border-color: var(--philata-teal) !important; }
-
-        /* Accent text gradient */
-        .teal-text, .accent-text {
-            background: linear-gradient(135deg, #1E3A5F, #2E5A8F);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* ========================================
-           ANIMATED SPLASH SCREEN
-           ======================================== */
-        .splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #0f172a 0%, #1E3A5F 50%, #0f172a 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
-        }
-
-        .splash-screen.fade-out {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .splash-logo-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .splash-logo {
-            width: 120px;
-            height: 120px;
-            animation: logoAppear 1s ease forwards, logoPulse 2s ease-in-out infinite 1s;
-            opacity: 0;
-            transform: scale(0.5);
-        }
-
-        @keyframes logoAppear {
-            0% {
-                opacity: 0;
-                transform: scale(0.5) rotate(-10deg);
+            .main-wrapper {
+                margin-left: 0;
             }
-            50% {
-                transform: scale(1.1) rotate(5deg);
+
+            .sidebar-toggle {
+                display: block;
             }
-            100% {
-                opacity: 1;
-                transform: scale(1) rotate(0deg);
+
+            .search-box {
+                display: none;
             }
         }
 
-        @keyframes logoPulse {
-            0%, 100% {
-                filter: drop-shadow(0 0 20px rgba(196, 30, 58, 0.5));
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 16px;
             }
-            50% {
-                filter: drop-shadow(0 0 40px rgba(196, 30, 58, 0.8));
+
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
             }
-        }
 
-        .splash-text {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 3rem;
-            font-weight: 800;
-            color: #ffffff;
-            letter-spacing: -0.02em;
-            opacity: 0;
-            animation: textAppear 0.8s ease forwards 0.5s;
-        }
-
-        .splash-text span {
-            background: linear-gradient(135deg, #C41E3A, #E63950);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        @keyframes textAppear {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
+            .card-grid {
+                grid-template-columns: 1fr;
             }
         }
 
-        .splash-tagline {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.7);
-            opacity: 0;
-            animation: textAppear 0.6s ease forwards 0.9s;
-        }
-
-        .splash-loader {
-            margin-top: 2rem;
-            width: 200px;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-            overflow: hidden;
-            opacity: 0;
-            animation: textAppear 0.5s ease forwards 1.2s;
-        }
-
-        .splash-loader-bar {
-            height: 100%;
-            width: 0;
-            background: linear-gradient(90deg, #C41E3A, #E63950, #C41E3A);
-            border-radius: 3px;
-            animation: loadProgress 1.5s ease forwards 1.4s;
-        }
-
-        @keyframes loadProgress {
-            0% { width: 0; }
-            100% { width: 100%; }
-        }
-
-        /* Floating particles in splash */
-        .splash-particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .splash-particle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: rgba(196, 30, 58, 0.3);
-            border-radius: 50%;
-            animation: particleFloat 4s ease-in-out infinite;
-        }
-
-        .splash-particle:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
-        .splash-particle:nth-child(2) { left: 20%; top: 80%; animation-delay: 0.5s; }
-        .splash-particle:nth-child(3) { left: 80%; top: 30%; animation-delay: 1s; }
-        .splash-particle:nth-child(4) { left: 70%; top: 70%; animation-delay: 1.5s; }
-        .splash-particle:nth-child(5) { left: 50%; top: 10%; animation-delay: 2s; }
-        .splash-particle:nth-child(6) { left: 90%; top: 50%; animation-delay: 0.3s; }
-        .splash-particle:nth-child(7) { left: 30%; top: 60%; animation-delay: 0.8s; }
-        .splash-particle:nth-child(8) { left: 60%; top: 90%; animation-delay: 1.3s; }
-
-        @keyframes particleFloat {
-            0%, 100% {
-                transform: translateY(0) scale(1);
-                opacity: 0.3;
-            }
-            50% {
-                transform: translateY(-30px) scale(1.5);
-                opacity: 0.6;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .splash-logo {
-                width: 80px;
-                height: 80px;
-            }
-            .splash-text {
-                font-size: 2rem;
-            }
-            .splash-tagline {
-                font-size: 0.85rem;
-            }
-        }
+        /* Utility Classes */
+        .text-muted { color: var(--text-muted) !important; }
+        .gradient-text { color: var(--accent); }
 
         {% block extra_css %}{% endblock %}
     </style>
     {% block meta %}{% endblock %}
 </head>
 <body>
-    <!-- Animated Splash Screen -->
-    <div class="splash-screen" id="splashScreen">
-        <div class="splash-particles">
-            <div class="splash-particle"></div>
-            <div class="splash-particle"></div>
-            <div class="splash-particle"></div>
-            <div class="splash-particle"></div>
-            <div class="splash-particle"></div>
-            <div class="splash-particle"></div>
-            <div class="splash-particle"></div>
-            <div class="splash-particle"></div>
-        </div>
-        <div class="splash-logo-container">
-            <img src="{{ url_for('static', filename='images/philata-logo.png') }}" alt="Philata" class="splash-logo">
-            <div class="splash-text">Philata<span>.</span></div>
-            <div class="splash-tagline">Your Canadian Immigration Journey</div>
-            <div class="splash-loader">
-                <div class="splash-loader-bar"></div>
+    <div class="app-layout">
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="{{ url_for('static', filename='images/philata-logo.png') }}" alt="Philata" class="sidebar-logo">
+                <span class="sidebar-brand">Philata</span>
             </div>
-        </div>
-    </div>
 
-    <div class="bg-animation"></div>
-    <div class="grid-overlay"></div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <a href="/" class="nav-item {% if request.path == '/' %}active{% endif %}">
+                        <i class="bi bi-house"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="/dashboard" class="nav-item {% if '/dashboard' in request.path %}active{% endif %}">
+                        <i class="bi bi-newspaper"></i>
+                        <span>News</span>
+                    </a>
+                    <a href="/articles" class="nav-item {% if '/articles' in request.path %}active{% endif %}">
+                        <i class="bi bi-file-text"></i>
+                        <span>Articles</span>
+                    </a>
+                </div>
 
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" id="mainNav">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="{{ url_for('static', filename='images/philata-logo.png') }}" alt="Philata" class="logo-icon" style="width: 40px; height: 40px; object-fit: contain;">
-                <span>Philata</span>
-            </a>
+                <div class="nav-section">
+                    <div class="nav-section-title">Explore</div>
+                    <a href="/browse" class="nav-item {% if '/browse' in request.path %}active{% endif %}">
+                        <i class="bi bi-grid"></i>
+                        <span>Browse</span>
+                    </a>
+                    <a href="/learn" class="nav-item {% if '/learn' in request.path or '/guides' in request.path %}active{% endif %}">
+                        <i class="bi bi-book"></i>
+                        <span>Guides</span>
+                    </a>
+                </div>
 
-            <!-- Desktop Navigation -->
-            <div class="collapse navbar-collapse d-none d-lg-flex" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if '/learn' in request.path or '/guides' in request.path %}active{% endif %}" href="/learn">Learn</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if '/dashboard' in request.path %}active{% endif %}" href="/dashboard">News</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if '/articles' in request.path %}active{% endif %}" href="/articles">Articles</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if '/browse' in request.path %}active{% endif %}" href="/browse">Browse</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if '/tools/crs-calculator' in request.path %}active{% endif %}" href="/tools/crs-calculator">CRS Calculator</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/about' %}active{% endif %}" href="/about">About</a>
-                    </li>
-                </ul>
-                <a href="/dashboard" class="btn btn-nav-cta">
-                    <i class="bi bi-newspaper me-2"></i>Latest News
+                <div class="nav-section">
+                    <div class="nav-section-title">Tools</div>
+                    <a href="/tools/crs-calculator" class="nav-item {% if '/tools/crs-calculator' in request.path %}active{% endif %}">
+                        <i class="bi bi-calculator"></i>
+                        <span>CRS Calculator</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="/about" class="nav-item {% if request.path == '/about' %}active{% endif %}">
+                    <i class="bi bi-info-circle"></i>
+                    <span>About</span>
+                </a>
+                <a href="/contact" class="nav-item {% if request.path == '/contact' %}active{% endif %}">
+                    <i class="bi bi-envelope"></i>
+                    <span>Contact</span>
                 </a>
             </div>
+        </aside>
 
-            <!-- Mobile Menu Toggle Button -->
-            <button class="navbar-toggler border-0 d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </div>
-    </nav>
+        <!-- Main Content Area -->
+        <div class="main-wrapper">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="bi bi-list"></i>
+                </button>
+                <div class="search-box">
+                    <i class="bi bi-search"></i>
+                    <input type="text" placeholder="Search articles, guides...">
+                </div>
+                <div class="top-bar-actions">
+                    <a href="/dashboard" class="btn btn-primary" style="padding: 8px 16px; font-size: 13px;">
+                        <i class="bi bi-lightning me-1"></i>Latest
+                    </a>
+                </div>
+            </header>
 
-    <!-- Mobile Offcanvas Menu (Right Side) -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="mobileMenuLabel">
-                <img src="{{ url_for('static', filename='images/philata-logo.png') }}" alt="Philata" style="width: 32px; height: 32px; object-fit: contain; margin-right: 8px;">
-                Philata
-            </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <ul class="nav flex-column mobile-nav-list">
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">
-                        <i class="bi bi-house me-2"></i>Home
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if '/learn' in request.path or '/guides' in request.path %}active{% endif %}" href="/learn">
-                        <i class="bi bi-book me-2"></i>Learn
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if '/dashboard' in request.path %}active{% endif %}" href="/dashboard">
-                        <i class="bi bi-newspaper me-2"></i>News
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if '/articles' in request.path %}active{% endif %}" href="/articles">
-                        <i class="bi bi-file-text me-2"></i>Articles
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if '/browse' in request.path %}active{% endif %}" href="/browse">
-                        <i class="bi bi-grid me-2"></i>Browse
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if '/tools/crs-calculator' in request.path %}active{% endif %}" href="/tools/crs-calculator">
-                        <i class="bi bi-calculator me-2"></i>CRS Calculator
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/about' %}active{% endif %}" href="/about">
-                        <i class="bi bi-info-circle me-2"></i>About
-                    </a>
-                </li>
-            </ul>
-            <hr class="my-4">
-            <a href="/dashboard" class="btn btn-primary w-100">
-                <i class="bi bi-newspaper me-2"></i>Latest News
-            </a>
+            <!-- Main Content -->
+            <main class="main-content">
+                <div class="content-container">
+                    {% block content %}{% endblock %}
+                </div>
+            </main>
         </div>
     </div>
-
-    <main>
-        {% block content %}{% endblock %}
-    </main>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6">
-                    <div class="footer-logo">
-                        <img src="{{ url_for('static', filename='images/philata-logo.png') }}" alt="Philata" style="width: 36px; height: 36px; object-fit: contain;">
-                        <span>Philata</span>
-                    </div>
-                    <p class="text-muted mb-4" style="max-width: 300px;">
-                        Your trusted source for Canadian immigration news, Express Entry updates, policy changes, and comprehensive immigration guides.
-                    </p>
-                    <div class="social-links">
-                        <a href="#"><i class="bi bi-instagram"></i></a>
-                        <a href="#"><i class="bi bi-facebook"></i></a>
-                        <a href="#"><i class="bi bi-linkedin"></i></a>
-                        <a href="#"><i class="bi bi-twitter-x"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6 footer-links">
-                    <h6>Browse</h6>
-                    <a href="/browse/news">Breaking News</a>
-                    <a href="/browse/express_entry">Express Entry</a>
-                    <a href="/browse/pnp">Provincial Programs</a>
-                    <a href="/browse/educational">Educational</a>
-                </div>
-                <div class="col-lg-2 col-md-6 footer-links">
-                    <h6>Guides</h6>
-                    <a href="/guides/express-entry">Express Entry</a>
-                    <a href="/guides/pnp">Provincial Programs</a>
-                    <a href="/guides/study-permit">Study Permits</a>
-                    <a href="/guides/credentials">WES/ECA</a>
-                </div>
-                <div class="col-lg-2 col-md-6 footer-links">
-                    <h6>Tools</h6>
-                    <a href="/tools/crs-calculator">CRS Calculator</a>
-                    <a href="/about">About Us</a>
-                    <a href="/contact">Contact</a>
-                </div>
-                <div class="col-lg-2 col-md-6 footer-links">
-                    <h6>Legal</h6>
-                    <a href="/privacy-policy">Privacy Policy</a>
-                    <a href="/terms">Terms of Service</a>
-                    <a href="/disclaimer">Disclaimer</a>
-                    <a href="/cookie-policy">Cookie Policy</a>
-                    <a href="/refund-policy">Refund Policy</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Philata.ca - Canadian Immigration News</p>
-                <p class="small mt-2">Made with 🍁 in Canada</p>
-            </div>
-        </div>
-    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Navbar scroll effect
-        window.addEventListener('scroll', function() {
-            const nav = document.getElementById('mainNav');
-            if (window.scrollY > 50) {
-                nav.classList.add('scrolled');
-            } else {
-                nav.classList.remove('scrolled');
-            }
+        // Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('open');
+            sidebarOverlay.classList.toggle('open');
         });
-    </script>
 
-    <!-- Splash Screen Script -->
-    <script>
-        // Only show splash screen on first visit (per session)
-        (function() {
-            const splash = document.getElementById('splashScreen');
-            if (!splash) return;
-
-            // Check if splash has been shown this session
-            if (sessionStorage.getItem('philataSplashShown')) {
-                // Already hidden by inline style in head
-                return;
-            }
-
-            // First visit - show splash and mark as shown
-            sessionStorage.setItem('philataSplashShown', 'true');
-            window.addEventListener('load', function() {
-                setTimeout(function() {
-                    splash.classList.add('fade-out');
-                    setTimeout(function() {
-                        splash.style.display = 'none';
-                    }, 800);
-                }, 3000);
-            });
-        })();
+        sidebarOverlay.addEventListener('click', function() {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('open');
+        });
     </script>
     {% block extra_js %}{% endblock %}
 </body>

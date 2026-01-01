@@ -1,194 +1,104 @@
 {% extends "base.html" %}
 
-{% block title %}Immigration Articles - Philata{% endblock %}
+{% block title %}Articles{% endblock %}
 
 {% block meta %}
-<!-- SEO Meta Tags -->
 <meta name="description" content="Latest Canadian immigration articles, news, and in-depth guides on Express Entry, PNP, Study Permits, Work Permits, and IRCC policy updates.">
-<meta name="keywords" content="Canadian immigration articles, Express Entry news, PNP updates, IRCC news, Canada visa guides, immigration policy">
-<meta name="author" content="Philata">
+<meta name="keywords" content="Canadian immigration articles, Express Entry news, PNP updates, IRCC news, Canada visa guides">
 <link rel="canonical" href="https://www.philata.com/articles">
-
-<!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.philata.com/articles">
 <meta property="og:title" content="Immigration Articles - Philata">
-<meta property="og:description" content="Latest Canadian immigration articles, news, and in-depth guides on Express Entry, PNP, and IRCC policy updates.">
-<meta property="og:image" content="https://www.philata.com/static/images/og-articles.png">
-<meta property="og:site_name" content="Philata - Canadian Immigration">
-
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Immigration Articles - Philata">
-<meta name="twitter:description" content="Latest Canadian immigration articles, news, and in-depth guides.">
+<meta property="og:description" content="Latest Canadian immigration articles, news, and in-depth guides.">
 {% endblock %}
 
 {% block extra_css %}
 <style>
-    .articles-hero {
-        min-height: 40vh;
-        display: flex;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
-        padding: 8rem 0 4rem;
-        background: linear-gradient(135deg, #0f172a 0%, #14532d 50%, #0f172a 100%);
-    }
-
-    .articles-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background:
-            radial-gradient(circle at 20% 80%, rgba(74, 222, 128, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%);
-        z-index: 1;
-    }
-
-    .articles-hero-content {
-        position: relative;
-        z-index: 10;
-        text-align: center;
-    }
-
-    .articles-hero h1 {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 3rem;
-        font-weight: 800;
-        color: #ffffff;
-        margin-bottom: 1rem;
-        letter-spacing: -0.03em;
-    }
-
-    .articles-hero h1 span {
-        background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #86efac 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .articles-hero p {
-        font-size: 1.15rem;
-        color: rgba(255, 255, 255, 0.85);
-        max-width: 600px;
-        margin: 0 auto;
-    }
-
-    .articles-section {
-        padding: 4rem 0 6rem;
-        background: transparent;
-        min-height: 60vh;
-        position: relative;
-        z-index: 10;
-    }
-
+    /* Category Filters */
     .category-filters {
         display: flex;
-        gap: 0.75rem;
+        gap: 8px;
         flex-wrap: wrap;
-        margin-bottom: 2.5rem;
-        justify-content: center;
-        position: relative;
-        z-index: 100;
+        margin-bottom: 24px;
     }
 
     .category-btn {
-        padding: 0.6rem 1.5rem;
-        border-radius: 25px;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        background: rgba(30, 30, 50, 0.8);
-        backdrop-filter: blur(10px);
-        color: #fff;
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--text-muted);
         font-weight: 500;
+        font-size: 13px;
         text-decoration: none;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        position: relative;
-        z-index: 101;
+        transition: all 0.2s ease;
     }
 
     .category-btn:hover {
-        background: rgba(255, 255, 255, 0.2);
-        border-color: rgba(255, 255, 255, 0.4);
-        color: white;
+        border-color: var(--primary);
+        color: var(--text);
     }
 
     .category-btn.active {
-        background: var(--gradient-accent);
-        border-color: transparent;
+        background: var(--primary);
+        border-color: var(--primary);
         color: white;
-        box-shadow: 0 4px 15px rgba(64, 145, 108, 0.4);
     }
 
+    /* Articles Grid */
     .articles-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-        gap: 2rem;
-        position: relative;
-        z-index: 50;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 20px;
     }
 
     .article-card {
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 20px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         text-decoration: none;
-        color: inherit;
+        transition: all 0.2s ease;
         display: flex;
         flex-direction: column;
-        position: relative;
-        z-index: 51;
-        cursor: pointer;
     }
 
     .article-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-        border-color: rgba(255, 255, 255, 0.5);
-        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        border-color: var(--primary);
     }
 
     .article-card-body {
-        padding: 1.75rem;
+        padding: 20px;
         flex: 1;
         display: flex;
         flex-direction: column;
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 20px;
     }
 
     .article-card-meta {
         display: flex;
-        gap: 1rem;
-        margin-bottom: 0.75rem;
-        font-size: 0.85rem;
-        color: #666;
+        gap: 12px;
+        margin-bottom: 12px;
+        font-size: 12px;
+        color: var(--text-muted);
         align-items: center;
     }
 
     .article-card-category {
-        background: var(--gradient-accent);
+        background: var(--accent);
         color: white;
-        padding: 0.3rem 0.85rem;
-        border-radius: 15px;
-        font-size: 0.75rem;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 11px;
         font-weight: 600;
         text-transform: uppercase;
     }
 
     .article-card-title {
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: #1a1a1a;
-        margin-bottom: 0.75rem;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 8px;
         line-height: 1.4;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -197,8 +107,8 @@
     }
 
     .article-card-excerpt {
-        color: #333;
-        font-size: 0.95rem;
+        color: var(--text-muted);
+        font-size: 14px;
         line-height: 1.6;
         flex: 1;
         display: -webkit-box;
@@ -211,129 +121,102 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 1rem;
-        padding-top: 1rem;
-        border-top: 1px solid #eee;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
     }
 
     .article-card-source {
-        font-size: 0.85rem;
-        color: #888;
+        font-size: 12px;
+        color: var(--text-light);
     }
 
     .article-card-read {
-        color: var(--philata-accent);
+        color: var(--primary);
         font-weight: 600;
-        font-size: 0.9rem;
+        font-size: 13px;
         display: inline-flex;
         align-items: center;
-        gap: 0.5rem;
-        transition: gap 0.3s ease;
+        gap: 6px;
     }
 
     .article-card:hover .article-card-read {
-        gap: 0.75rem;
-        color: var(--philata-primary);
+        color: var(--accent);
     }
 
     .no-articles {
         text-align: center;
-        padding: 4rem 2rem;
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(20px);
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 60px 20px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
     }
 
     .no-articles i {
-        font-size: 4rem;
-        margin-bottom: 1rem;
-        color: var(--philata-accent);
-        opacity: 0.5;
+        font-size: 48px;
+        margin-bottom: 16px;
+        color: var(--text-light);
     }
 
     .no-articles h3 {
-        color: #1a1a1a;
-        margin-bottom: 0.5rem;
+        color: var(--text);
+        margin-bottom: 8px;
     }
 
     .no-articles p {
-        color: #666;
+        color: var(--text-muted);
     }
 
-    @media (max-width: 768px) {
-        .articles-hero {
-            padding: 6rem 0 3rem;
-            min-height: auto;
-        }
-
-        .articles-hero h1 {
-            font-size: 2rem;
-        }
-
-        .articles-section {
-            padding: 2rem 0 4rem;
-        }
-
+    @media (max-width: 576px) {
         .articles-grid {
             grid-template-columns: 1fr;
-        }
-
-        .article-card {
-            background: rgba(255, 255, 255, 0.92);
         }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<section class="articles-hero">
-    <div class="container">
-        <div class="articles-hero-content">
-            <h1>Immigration <span>Articles</span></h1>
-            <p>In-depth analysis and comprehensive guides on Canadian immigration news, policies, and updates.</p>
-        </div>
-    </div>
-</section>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Immigration Articles</h1>
+    <p class="page-subtitle">In-depth analysis and comprehensive guides on Canadian immigration</p>
+</div>
 
-<section class="articles-section">
-    <div class="container">
-        <div class="category-filters">
-            <a href="/articles" class="category-btn {% if not category %}active{% endif %}">All</a>
-            <a href="/articles?category=express_entry" class="category-btn {% if category == 'express_entry' %}active{% endif %}">Express Entry</a>
-            <a href="/articles?category=pnp" class="category-btn {% if category == 'pnp' %}active{% endif %}">PNP</a>
-            <a href="/articles?category=policy" class="category-btn {% if category == 'policy' %}active{% endif %}">Policy</a>
-            <a href="/articles?category=forms" class="category-btn {% if category == 'forms' %}active{% endif %}">Forms</a>
-            <a href="/articles?category=study_permit" class="category-btn {% if category == 'study_permit' %}active{% endif %}">Study</a>
-            <a href="/articles?category=work_permit" class="category-btn {% if category == 'work_permit' %}active{% endif %}">Work</a>
-        </div>
+<!-- Category Filters -->
+<div class="category-filters">
+    <a href="/articles" class="category-btn {% if not category %}active{% endif %}">All</a>
+    <a href="/articles?category=express_entry" class="category-btn {% if category == 'express_entry' %}active{% endif %}">Express Entry</a>
+    <a href="/articles?category=pnp" class="category-btn {% if category == 'pnp' %}active{% endif %}">PNP</a>
+    <a href="/articles?category=policy" class="category-btn {% if category == 'policy' %}active{% endif %}">Policy</a>
+    <a href="/articles?category=forms" class="category-btn {% if category == 'forms' %}active{% endif %}">Forms</a>
+    <a href="/articles?category=study_permit" class="category-btn {% if category == 'study_permit' %}active{% endif %}">Study</a>
+    <a href="/articles?category=work_permit" class="category-btn {% if category == 'work_permit' %}active{% endif %}">Work</a>
+</div>
 
-        {% if articles %}
-        <div class="articles-grid">
-            {% for article in articles %}
-            <a href="/articles/{{ article.slug or article.id }}" class="article-card">
-                <div class="article-card-body">
-                    <div class="article-card-meta">
-                        <span class="article-card-category">{{ article.category | replace('_', ' ') | title }}</span>
-                        <span><i class="bi bi-clock"></i> {{ article.reading_time }} min read</span>
-                    </div>
-                    <h2 class="article-card-title">{{ article.title }}</h2>
-                    <p class="article-card-excerpt">{{ article.full_article | striptags | truncate(200) }}</p>
-                    <div class="article-card-footer">
-                        <span class="article-card-source">{{ article.source }}</span>
-                        <span class="article-card-read">Read More <i class="bi bi-arrow-right"></i></span>
-                    </div>
-                </div>
-            </a>
-            {% endfor %}
+{% if articles %}
+<div class="articles-grid">
+    {% for article in articles %}
+    <a href="/articles/{{ article.slug or article.id }}" class="article-card">
+        <div class="article-card-body">
+            <div class="article-card-meta">
+                <span class="article-card-category">{{ article.category | replace('_', ' ') | title }}</span>
+                <span><i class="bi bi-clock me-1"></i>{{ article.reading_time }} min read</span>
+            </div>
+            <h2 class="article-card-title">{{ article.title }}</h2>
+            <p class="article-card-excerpt">{{ article.full_article | striptags | truncate(200) }}</p>
+            <div class="article-card-footer">
+                <span class="article-card-source">{{ article.source }}</span>
+                <span class="article-card-read">Read More <i class="bi bi-arrow-right"></i></span>
+            </div>
         </div>
-        {% else %}
-        <div class="no-articles">
-            <i class="bi bi-newspaper"></i>
-            <h3>No Articles Yet</h3>
-            <p>New articles are being generated. Check back soon!</p>
-        </div>
-        {% endif %}
-    </div>
-</section>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="no-articles">
+    <i class="bi bi-newspaper"></i>
+    <h3>No Articles Yet</h3>
+    <p>New articles are being generated. Check back soon!</p>
+</div>
+{% endif %}
 {% endblock %}
