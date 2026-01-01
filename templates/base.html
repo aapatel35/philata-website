@@ -23,49 +23,49 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Forest Green & Cream Theme - Natural & Professional */
-            --philata-primary: #1B4332;
-            --philata-primary-dark: #14532D;
-            --philata-primary-light: #2D6A4F;
-            --philata-accent: #40916C;
-            --philata-accent-light: #52B788;
-            --philata-accent-dark: #2D6A4F;
-            --philata-cream: #FFFBEB;
-            --philata-cream-dark: #FEF3C7;
-            --philata-maple: #B91C1C;
-            --philata-gold: #D97706;
+            /* Professional Blue & White Theme */
+            --philata-primary: #1E3A5F;
+            --philata-primary-dark: #152942;
+            --philata-primary-light: #2E5A8F;
+            --philata-accent: #C41E3A;
+            --philata-accent-light: #E63950;
+            --philata-accent-dark: #9A1830;
+            --philata-cream: #FFFFFF;
+            --philata-cream-dark: #F8FAFC;
+            --philata-maple: #C41E3A;
+            --philata-gold: #B8860B;
             --philata-white: #FFFFFF;
-            --philata-light: #FEFCE8;
-            --philata-gray-50: #FEFCE8;
-            --philata-gray-100: #FEF9C3;
-            --philata-gray-200: #E5E7EB;
-            --philata-gray-300: #D1D5DB;
-            --philata-gray-400: #9CA3AF;
-            --philata-gray-500: #6B7280;
-            --philata-gray-600: #4B5563;
-            --philata-gray-700: #000000;
-            --philata-gray-800: #000000;
-            --philata-gray-900: #000000;
+            --philata-light: #F8FAFC;
+            --philata-gray-50: #F8FAFC;
+            --philata-gray-100: #F1F5F9;
+            --philata-gray-200: #E2E8F0;
+            --philata-gray-300: #CBD5E1;
+            --philata-gray-400: #94A3B8;
+            --philata-gray-500: #64748B;
+            --philata-gray-600: #475569;
+            --philata-gray-700: #334155;
+            --philata-gray-800: #1E293B;
+            --philata-gray-900: #0F172A;
             --philata-card: #FFFFFF;
-            --philata-card-hover: #FEFCE8;
-            --philata-border: #D1D5DB;
-            --philata-text: #000000;
-            --philata-text-muted: #000000;
-            --gradient-primary: linear-gradient(135deg, #1B4332 0%, #2D6A4F 100%);
-            --gradient-accent: linear-gradient(135deg, #40916C 0%, #52B788 100%);
-            --gradient-maple: linear-gradient(135deg, #B91C1C 0%, #DC2626 100%);
-            --gradient-gold: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
-            --gradient-hero: linear-gradient(135deg, #1B4332 0%, #2D6A4F 50%, #40916C 100%);
+            --philata-card-hover: #F8FAFC;
+            --philata-border: #E2E8F0;
+            --philata-text: #1E293B;
+            --philata-text-muted: #64748B;
+            --gradient-primary: linear-gradient(135deg, #1E3A5F 0%, #2E5A8F 100%);
+            --gradient-accent: linear-gradient(135deg, #C41E3A 0%, #E63950 100%);
+            --gradient-maple: linear-gradient(135deg, #C41E3A 0%, #E63950 100%);
+            --gradient-gold: linear-gradient(135deg, #B8860B 0%, #DAA520 100%);
+            --gradient-hero: linear-gradient(135deg, #1E3A5F 0%, #2E5A8F 100%);
             --glass-bg: rgba(255,255,255,0.98);
-            --glass-border: rgba(27, 67, 50, 0.1);
+            --glass-border: rgba(30, 58, 95, 0.1);
             /* Compatibility aliases */
-            --philata-teal: #40916C;
-            --philata-teal-light: #52B788;
-            --philata-teal-dark: #2D6A4F;
-            --philata-red: #B91C1C;
-            --philata-red-light: #DC2626;
-            --philata-orange: #D97706;
-            --philata-orange-light: #F59E0B;
+            --philata-teal: #1E3A5F;
+            --philata-teal-light: #2E5A8F;
+            --philata-teal-dark: #152942;
+            --philata-red: #C41E3A;
+            --philata-red-light: #E63950;
+            --philata-orange: #B8860B;
+            --philata-orange-light: #DAA520;
         }
 
         * {
@@ -87,7 +87,7 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Static Canadian Background - HIGHLY VISIBLE */
+        /* Clean Professional Background */
         .bg-animation {
             position: fixed;
             top: 0;
@@ -95,73 +95,7 @@
             width: 100%;
             height: 100%;
             z-index: -2;
-            overflow: hidden;
-        }
-
-        .bg-animation::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1920&q=80') center/cover no-repeat fixed;
-            opacity: 1;
-        }
-
-        .bg-animation::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, rgba(15, 23, 42, 0.3) 0%, rgba(20, 83, 45, 0.2) 50%, rgba(15, 23, 42, 0.4) 100%);
-        }
-
-        /* iPad / Tablet Background (768px - 1024px) */
-        @media (max-width: 1024px) {
-            .bg-animation::before {
-                background: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1200&q=80') center/cover no-repeat;
-                background-attachment: scroll;
-                opacity: 1;
-            }
-
-            .bg-animation::after {
-                background: linear-gradient(180deg, rgba(15, 23, 42, 0.35) 0%, rgba(20, 83, 45, 0.25) 50%, rgba(15, 23, 42, 0.45) 100%);
-            }
-        }
-
-        /* Mobile Background (up to 768px) */
-        @media (max-width: 768px) {
-            .bg-animation {
-                position: fixed;
-                height: 100vh;
-                height: 100dvh;
-            }
-
-            .bg-animation::before {
-                background: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=800&q=70') center/cover no-repeat;
-                background-attachment: scroll;
-                opacity: 1;
-            }
-
-            .bg-animation::after {
-                background: linear-gradient(180deg, rgba(15, 23, 42, 0.4) 0%, rgba(20, 83, 45, 0.3) 50%, rgba(15, 23, 42, 0.5) 100%);
-            }
-        }
-
-        /* Small Mobile (up to 480px) */
-        @media (max-width: 480px) {
-            .bg-animation::before {
-                background: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=600&q=60') center/cover no-repeat;
-                background-attachment: scroll;
-                opacity: 1;
-            }
-
-            .bg-animation::after {
-                background: linear-gradient(180deg, rgba(15, 23, 42, 0.45) 0%, rgba(20, 83, 45, 0.35) 50%, rgba(15, 23, 42, 0.55) 100%);
-            }
+            background: #F8FAFC;
         }
 
         /* Grid Pattern Overlay */
@@ -473,26 +407,23 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 3rem;
             font-weight: 800;
-            color: #ffffff;
+            color: var(--philata-gray-900);
             margin-bottom: 1rem;
             line-height: 1.15;
             letter-spacing: -0.03em;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
         .section-subtitle {
             font-size: 1.25rem;
-            color: #ffffff;
+            color: var(--philata-gray-600);
             max-width: 600px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
         .gradient-text {
-            background: linear-gradient(135deg, #4ade80, #22c55e);
+            background: linear-gradient(135deg, #C41E3A, #E63950);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
 
         .gold-text {
@@ -706,11 +637,10 @@
 
         /* Accent text gradient */
         .teal-text, .accent-text {
-            background: linear-gradient(135deg, #4ade80, #22c55e);
+            background: linear-gradient(135deg, #1E3A5F, #2E5A8F);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
 
         /* ========================================
@@ -722,7 +652,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #0f172a 0%, #14532d 50%, #0f172a 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1E3A5F 50%, #0f172a 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -767,10 +697,10 @@
 
         @keyframes logoPulse {
             0%, 100% {
-                filter: drop-shadow(0 0 20px rgba(74, 222, 128, 0.5));
+                filter: drop-shadow(0 0 20px rgba(196, 30, 58, 0.5));
             }
             50% {
-                filter: drop-shadow(0 0 40px rgba(74, 222, 128, 0.8));
+                filter: drop-shadow(0 0 40px rgba(196, 30, 58, 0.8));
             }
         }
 
@@ -785,7 +715,7 @@
         }
 
         .splash-text span {
-            background: linear-gradient(135deg, #4ade80, #22c55e);
+            background: linear-gradient(135deg, #C41E3A, #E63950);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -823,7 +753,7 @@
         .splash-loader-bar {
             height: 100%;
             width: 0;
-            background: linear-gradient(90deg, #22c55e, #4ade80, #22c55e);
+            background: linear-gradient(90deg, #C41E3A, #E63950, #C41E3A);
             border-radius: 3px;
             animation: loadProgress 1.5s ease forwards 1.4s;
         }
@@ -846,7 +776,7 @@
             position: absolute;
             width: 6px;
             height: 6px;
-            background: rgba(74, 222, 128, 0.3);
+            background: rgba(196, 30, 58, 0.3);
             border-radius: 50%;
             animation: particleFloat 4s ease-in-out infinite;
         }

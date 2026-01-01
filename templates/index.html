@@ -14,7 +14,7 @@
         position: relative;
         overflow: hidden;
         padding: 8rem 0 6rem;
-        background: linear-gradient(135deg, #0f172a 0%, #14532d 50%, #0f172a 100%);
+        background: linear-gradient(135deg, #0f172a 0%, #1E3A5F 50%, #0f172a 100%);
         z-index: 1;
     }
 
@@ -28,7 +28,7 @@
         bottom: 0;
         background:
             radial-gradient(circle at 20% 80%, rgba(74, 222, 128, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(196, 30, 58, 0.1) 0%, transparent 50%),
             radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
         z-index: 1;
         animation: gradientPulse 8s ease-in-out infinite;
@@ -45,19 +45,12 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=1920&q=80') center/cover no-repeat;
-        opacity: 0.3;
+        background: linear-gradient(135deg, #0f172a 0%, #1E3A5F 50%, #0f172a 100%);
         z-index: 1;
     }
 
     .hero-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(20, 83, 45, 0.75) 50%, rgba(15, 23, 42, 0.85) 100%);
-        z-index: 2;
+        display: none;
     }
 
     /* Floating particles */
@@ -79,14 +72,14 @@
         opacity: 0;
     }
 
-    .particle-1 { width: 4px; height: 4px; background: #4ade80; left: 10%; animation-delay: 0s; }
-    .particle-2 { width: 6px; height: 6px; background: #22c55e; left: 20%; animation-delay: 2s; }
-    .particle-3 { width: 3px; height: 3px; background: #86efac; left: 30%; animation-delay: 4s; }
-    .particle-4 { width: 5px; height: 5px; background: #4ade80; left: 50%; animation-delay: 1s; }
+    .particle-1 { width: 4px; height: 4px; background: #C41E3A; left: 10%; animation-delay: 0s; }
+    .particle-2 { width: 6px; height: 6px; background: #E63950; left: 20%; animation-delay: 2s; }
+    .particle-3 { width: 3px; height: 3px; background: #F87171; left: 30%; animation-delay: 4s; }
+    .particle-4 { width: 5px; height: 5px; background: #C41E3A; left: 50%; animation-delay: 1s; }
     .particle-5 { width: 4px; height: 4px; background: #10b981; left: 70%; animation-delay: 3s; }
-    .particle-6 { width: 6px; height: 6px; background: #22c55e; left: 85%; animation-delay: 5s; }
-    .particle-7 { width: 3px; height: 3px; background: #86efac; left: 95%; animation-delay: 2.5s; }
-    .particle-8 { width: 5px; height: 5px; background: #4ade80; left: 40%; animation-delay: 6s; }
+    .particle-6 { width: 6px; height: 6px; background: #E63950; left: 85%; animation-delay: 5s; }
+    .particle-7 { width: 3px; height: 3px; background: #F87171; left: 95%; animation-delay: 2.5s; }
+    .particle-8 { width: 5px; height: 5px; background: #C41E3A; left: 40%; animation-delay: 6s; }
 
     @keyframes particleRise {
         0% {
@@ -124,20 +117,20 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        background: linear-gradient(135deg, #22c55e, #16a34a);
+        background: linear-gradient(135deg, #E63950, #9A1830);
         padding: 0.6rem 1.25rem;
         border-radius: 50px;
         font-size: 0.85rem;
         color: #ffffff;
         font-weight: 600;
         margin-bottom: 2rem;
-        box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+        box-shadow: 0 4px 20px rgba(196, 30, 58, 0.4);
         animation: badgeGlow 3s ease-in-out infinite;
     }
 
     @keyframes badgeGlow {
-        0%, 100% { box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4); }
-        50% { box-shadow: 0 4px 30px rgba(34, 197, 94, 0.6), 0 0 40px rgba(74, 222, 128, 0.3); }
+        0%, 100% { box-shadow: 0 4px 20px rgba(196, 30, 58, 0.4); }
+        50% { box-shadow: 0 4px 30px rgba(196, 30, 58, 0.6), 0 0 40px rgba(74, 222, 128, 0.3); }
     }
 
     .hero-badge .pulse {
@@ -165,7 +158,7 @@
     }
 
     .hero-title .highlight {
-        background: linear-gradient(135deg, #4ade80 0%, #22c55e 50%, #86efac 100%);
+        background: linear-gradient(135deg, #C41E3A 0%, #E63950 50%, #F87171 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -195,13 +188,13 @@
     }
 
     .hero-cta .btn-primary {
-        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        background: linear-gradient(135deg, #E63950 0%, #9A1830 100%);
         border: none;
         padding: 1rem 2rem;
         font-weight: 600;
         font-size: 1rem;
         border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+        box-shadow: 0 4px 20px rgba(196, 30, 58, 0.4);
         transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
@@ -224,7 +217,7 @@
 
     .hero-cta .btn-primary:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 30px rgba(34, 197, 94, 0.5);
+        box-shadow: 0 8px 30px rgba(196, 30, 58, 0.5);
     }
 
     .hero-cta .btn-outline-light {
@@ -240,8 +233,8 @@
 
     .hero-cta .btn-outline-light:hover {
         background: rgba(255, 255, 255, 0.1);
-        border-color: #4ade80;
-        color: #4ade80;
+        border-color: #C41E3A;
+        color: #C41E3A;
         transform: translateY(-3px);
     }
 
@@ -250,7 +243,7 @@
         gap: 2rem;
         margin-top: 3rem;
         padding: 1.5rem 2rem;
-        background: rgba(20, 83, 45, 0.85);
+        background: rgba(30, 58, 95, 0.85);
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
         border-radius: 16px;
@@ -267,7 +260,7 @@
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 2.5rem;
         font-weight: 800;
-        background: linear-gradient(135deg, #4ade80, #22c55e);
+        background: linear-gradient(135deg, #C41E3A, #E63950);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -315,7 +308,7 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, #22c55e, #4ade80, #86efac, #4ade80, #22c55e);
+        background: linear-gradient(90deg, #E63950, #C41E3A, #F87171, #C41E3A, #E63950);
         background-size: 200% 100%;
         animation: gradientMove 3s ease infinite;
     }
@@ -395,7 +388,7 @@
     .glow-orb-2 {
         width: 200px;
         height: 200px;
-        background: rgba(34, 197, 94, 0.1);
+        background: rgba(196, 30, 58, 0.1);
         bottom: -50px;
         left: -50px;
         animation: orbFloat 10s ease-in-out infinite reverse;
@@ -463,7 +456,7 @@
     .section-divider {
         width: 80px;
         height: 4px;
-        background: linear-gradient(135deg, #4ade80, #22c55e);
+        background: linear-gradient(135deg, #C41E3A, #E63950);
         border-radius: 4px;
         margin: 0 auto 1.5rem;
         box-shadow: 0 2px 10px rgba(74, 222, 128, 0.5);
@@ -718,7 +711,7 @@
     }
 
     .tool-card {
-        background: rgba(20, 83, 45, 0.85);
+        background: rgba(30, 58, 95, 0.85);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.2);
@@ -730,7 +723,7 @@
     }
 
     .tool-card:hover {
-        background: rgba(20, 83, 45, 0.95);
+        background: rgba(30, 58, 95, 0.95);
         border-color: rgba(255, 255, 255, 0.4);
         transform: translateY(-5px);
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
@@ -991,12 +984,7 @@
         }
 
         .hero-bg {
-            background: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=800&q=70') center/cover no-repeat;
-            opacity: 0.2;
-        }
-
-        .hero-overlay {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(20, 83, 45, 0.88) 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1E3A5F 50%, #0f172a 100%);
         }
 
         .hero-title {
@@ -1031,7 +1019,7 @@
         }
 
         .tool-card {
-            background: rgba(20, 83, 45, 0.92);
+            background: rgba(30, 58, 95, 0.92);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
         }
@@ -1078,8 +1066,7 @@
         }
 
         .hero-bg {
-            background: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=600&q=60') center/cover no-repeat;
-            opacity: 0.15;
+            background: linear-gradient(135deg, #0f172a 0%, #1E3A5F 50%, #0f172a 100%);
         }
 
         .hero-title {
@@ -1104,7 +1091,7 @@
         }
 
         .tool-card {
-            background: rgba(20, 83, 45, 0.95);
+            background: rgba(30, 58, 95, 0.95);
         }
 
         .section-title {
@@ -1162,7 +1149,7 @@
         background-size: cover;
         background-position: center;
         position: relative;
-        background-color: linear-gradient(135deg, #1B4332, #2D6A4F);
+        background-color: linear-gradient(135deg, #1E3A5F, #2E5A8F);
     }
 
     .article-home-image::after {
@@ -1351,13 +1338,13 @@
                     <div class="hero-card">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h5 class="mb-0" style="font-size: 1rem; color: #ffffff;">
-                                <i class="bi bi-lightning-charge-fill me-2" style="color: #4ade80;"></i>Live Updates
+                                <i class="bi bi-lightning-charge-fill me-2" style="color: #C41E3A;"></i>Live Updates
                             </h5>
                             <span class="badge bg-success">Active</span>
                         </div>
                         <div class="live-feed">
                             <div class="feed-item">
-                                <div class="feed-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                                <div class="feed-icon" style="background: linear-gradient(135deg, #E63950, #9A1830);">
                                     <i class="bi bi-megaphone-fill text-white"></i>
                                 </div>
                                 <div class="feed-content flex-grow-1">
@@ -1367,7 +1354,7 @@
                                 <span class="feed-time" style="color: #d1d5db !important;">2m ago</span>
                             </div>
                             <div class="feed-item">
-                                <div class="feed-icon" style="background: linear-gradient(135deg, #1B4332, #2D6A4F);">
+                                <div class="feed-icon" style="background: linear-gradient(135deg, #1E3A5F, #2E5A8F);">
                                     <i class="bi bi-lightbulb-fill text-white"></i>
                                 </div>
                                 <div class="feed-content flex-grow-1">
@@ -1399,7 +1386,7 @@
 
                     <div class="floating-card floating-card-2">
                         <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-shield-check" style="color: #1B4332;"></i>
+                            <i class="bi bi-shield-check" style="color: #1E3A5F;"></i>
                             <span style="font-size: 0.85rem; color: var(--philata-gray-700);">Official IRCC Data</span>
                         </div>
                     </div>
@@ -1467,7 +1454,7 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="/guides/pnp/ontario" class="text-decoration-none">
                     <div class="province-card">
-                        <img src="https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=600&q=80" alt="Ontario - Toronto CN Tower" onerror="this.parentElement.style.background='linear-gradient(135deg, #1B4332, #14532D)'">
+                        <img src="https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=600&q=80" alt="Ontario - Toronto CN Tower" onerror="this.parentElement.style.background='linear-gradient(135deg, #1E3A5F, #2E5A8F)'">
                         <div class="province-info">
                             <h3 class="province-name">Ontario</h3>
                             <p class="province-program">OINP</p>
@@ -1482,7 +1469,7 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="/guides/pnp/british-columbia" class="text-decoration-none">
                     <div class="province-card">
-                        <img src="https://images.unsplash.com/photo-1559511260-66a654ae982a?w=600&q=80" alt="British Columbia - Vancouver Mountains" onerror="this.parentElement.style.background='linear-gradient(135deg, #1B4332, #14532D)'">
+                        <img src="https://images.unsplash.com/photo-1559511260-66a654ae982a?w=600&q=80" alt="British Columbia - Vancouver Mountains" onerror="this.parentElement.style.background='linear-gradient(135deg, #1E3A5F, #2E5A8F)'">
                         <div class="province-info">
                             <h3 class="province-name">British Columbia</h3>
                             <p class="province-program">BC PNP</p>
@@ -1497,7 +1484,7 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="/guides/pnp/alberta" class="text-decoration-none">
                     <div class="province-card">
-                        <img src="https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=600&q=80" alt="Alberta - Banff Rocky Mountains" onerror="this.parentElement.style.background='linear-gradient(135deg, #1B4332, #14532D)'">
+                        <img src="https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=600&q=80" alt="Alberta - Banff Rocky Mountains" onerror="this.parentElement.style.background='linear-gradient(135deg, #1E3A5F, #2E5A8F)'">
                         <div class="province-info">
                             <h3 class="province-name">Alberta</h3>
                             <p class="province-program">AINP</p>
@@ -1512,7 +1499,7 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="/guides/pnp/quebec" class="text-decoration-none">
                     <div class="province-card">
-                        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Quebec - Montreal" onerror="this.parentElement.style.background='linear-gradient(135deg, #1B4332, #14532D)'">
+                        <img src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=600&q=80" alt="Quebec - Quebec City Chateau Frontenac" onerror="this.parentElement.style.background='linear-gradient(135deg, #1E3A5F, #2E5A8F)'">
                         <div class="province-info">
                             <h3 class="province-name">Quebec</h3>
                             <p class="province-program">QSWP</p>
@@ -1527,7 +1514,7 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="/guides/pnp/manitoba" class="text-decoration-none">
                     <div class="province-card">
-                        <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80" alt="Manitoba - Prairies" onerror="this.parentElement.style.background='linear-gradient(135deg, #1B4332, #14532D)'">
+                        <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80" alt="Manitoba - Prairies" onerror="this.parentElement.style.background='linear-gradient(135deg, #1E3A5F, #2E5A8F)'">
                         <div class="province-info">
                             <h3 class="province-name">Manitoba</h3>
                             <p class="province-program">MPNP</p>
@@ -1542,7 +1529,7 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="/guides/pnp/saskatchewan" class="text-decoration-none">
                     <div class="province-card">
-                        <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80" alt="Saskatchewan - Wheat Fields" onerror="this.parentElement.style.background='linear-gradient(135deg, #1B4332, #14532D)'">
+                        <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80" alt="Saskatchewan - Wheat Fields" onerror="this.parentElement.style.background='linear-gradient(135deg, #1E3A5F, #2E5A8F)'">
                         <div class="province-info">
                             <h3 class="province-name">Saskatchewan</h3>
                             <p class="province-program">SINP</p>
@@ -1557,7 +1544,7 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="/guides/pnp/nova-scotia" class="text-decoration-none">
                     <div class="province-card">
-                        <img src="https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=600&q=80" alt="Nova Scotia - Lighthouse" onerror="this.parentElement.style.background='linear-gradient(135deg, #1B4332, #14532D)'">
+                        <img src="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=600&q=80" alt="Nova Scotia - Cape Breton" onerror="this.parentElement.style.background='linear-gradient(135deg, #1E3A5F, #2E5A8F)'">
                         <div class="province-info">
                             <h3 class="province-name">Nova Scotia</h3>
                             <p class="province-program">NSNP</p>
@@ -1572,7 +1559,7 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="/guides/pnp/new-brunswick" class="text-decoration-none">
                     <div class="province-card">
-                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" alt="New Brunswick - Bay of Fundy" onerror="this.parentElement.style.background='linear-gradient(135deg, #1B4332, #14532D)'">
+                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" alt="New Brunswick - Bay of Fundy" onerror="this.parentElement.style.background='linear-gradient(135deg, #1E3A5F, #2E5A8F)'">
                         <div class="province-info">
                             <h3 class="province-name">New Brunswick</h3>
                             <p class="province-program">NBPNP</p>
@@ -1587,7 +1574,7 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="/guides/pnp/pei" class="text-decoration-none">
                     <div class="province-card">
-                        <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600&q=80" alt="Prince Edward Island - Red Cliffs" onerror="this.parentElement.style.background='linear-gradient(135deg, #1B4332, #14532D)'">
+                        <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600&q=80" alt="Prince Edward Island - Red Cliffs" onerror="this.parentElement.style.background='linear-gradient(135deg, #1E3A5F, #2E5A8F)'">
                         <div class="province-info">
                             <h3 class="province-name">Prince Edward Island</h3>
                             <p class="province-program">PEI PNP</p>
@@ -1602,7 +1589,7 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="/guides/pnp/newfoundland" class="text-decoration-none">
                     <div class="province-card">
-                        <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&q=80" alt="Newfoundland - St. John's" onerror="this.parentElement.style.background='linear-gradient(135deg, #1B4332, #14532D)'">
+                        <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&q=80" alt="Newfoundland - St. John's" onerror="this.parentElement.style.background='linear-gradient(135deg, #1E3A5F, #2E5A8F)'">
                         <div class="province-info">
                             <h3 class="province-name">Newfoundland</h3>
                             <p class="province-program">NLPNP</p>
@@ -1617,7 +1604,7 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="/guides/pnp/yukon" class="text-decoration-none">
                     <div class="province-card">
-                        <img src="https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=600&q=80" alt="Yukon - Northern Lights" onerror="this.parentElement.style.background='linear-gradient(135deg, #1B4332, #14532D)'">
+                        <img src="https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=600&q=80" alt="Yukon - Northern Lights" onerror="this.parentElement.style.background='linear-gradient(135deg, #1E3A5F, #2E5A8F)'">
                         <div class="province-info">
                             <h3 class="province-name">Yukon</h3>
                             <p class="province-program">YNP</p>
@@ -1632,7 +1619,7 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="/guides/pnp/nwt" class="text-decoration-none">
                     <div class="province-card">
-                        <img src="https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=600&q=80" alt="Northwest Territories - Aurora" onerror="this.parentElement.style.background='linear-gradient(135deg, #1B4332, #14532D)'">
+                        <img src="https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=600&q=80" alt="Northwest Territories - Aurora" onerror="this.parentElement.style.background='linear-gradient(135deg, #1E3A5F, #2E5A8F)'">
                         <div class="province-info">
                             <h3 class="province-name">Northwest Territories</h3>
                             <p class="province-program">NTNP</p>
@@ -1647,7 +1634,7 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <a href="/guides/pnp/nunavut" class="text-decoration-none">
                     <div class="province-card">
-                        <img src="https://images.unsplash.com/photo-1489644484856-f3ddc0adc923?w=600&q=80" alt="Nunavut - Arctic" onerror="this.parentElement.style.background='linear-gradient(135deg, #1B4332, #14532D)'">
+                        <img src="https://images.unsplash.com/photo-1489644484856-f3ddc0adc923?w=600&q=80" alt="Nunavut - Arctic" onerror="this.parentElement.style.background='linear-gradient(135deg, #1E3A5F, #2E5A8F)'">
                         <div class="province-info">
                             <h3 class="province-name">Nunavut</h3>
                             <p class="province-program">Employer Driven</p>
@@ -1677,7 +1664,7 @@
                 <a href="/guides/express-entry" class="text-decoration-none">
                     <div class="federal-card">
                         <div class="federal-icon" style="background: linear-gradient(135deg, rgba(64, 145, 108, 0.15), rgba(64, 145, 108, 0.05));">
-                            <i class="bi bi-lightning-charge-fill" style="color: #40916C;"></i>
+                            <i class="bi bi-lightning-charge-fill" style="color: #1E3A5F;"></i>
                         </div>
                         <h3 class="federal-title">Express Entry</h3>
                         <p class="federal-desc">Fast-track immigration for skilled workers. FSW, CEC, and FSTP programs.</p>
@@ -1732,7 +1719,7 @@
                 <a href="/guides/visitor-visa" class="text-decoration-none">
                     <div class="federal-card">
                         <div class="federal-icon" style="background: linear-gradient(135deg, rgba(27, 67, 50, 0.15), rgba(27, 67, 50, 0.05));">
-                            <i class="bi bi-globe" style="color: #1B4332;"></i>
+                            <i class="bi bi-globe" style="color: #1E3A5F;"></i>
                         </div>
                         <h3 class="federal-title">Visitor Visa</h3>
                         <p class="federal-desc">Tourist visas, super visas, and temporary resident permits.</p>
@@ -1747,8 +1734,8 @@
 <section class="tools-section" id="tools">
     <div class="container">
         <div class="text-center mb-5">
-            <div class="section-divider" style="background: linear-gradient(135deg, #40916C, #52B788);"></div>
-            <h2 class="section-title">Immigration <span style="color: #52B788;">Tools</span></h2>
+            <div class="section-divider" style="background: linear-gradient(135deg, #1E3A5F, #2E5A8F);"></div>
+            <h2 class="section-title">Immigration <span style="color: #2E5A8F;">Tools</span></h2>
             <p class="section-subtitle mx-auto">
                 Free tools to help you plan and prepare for your Canadian immigration journey.
             </p>
@@ -1959,7 +1946,7 @@
                 const excerpt = (article.full_article || '').substring(0, 120) + '...';
                 const readTime = Math.max(1, Math.floor((article.full_article || '').split(' ').length / 200));
                 const imageUrl = article.image_url || '';
-                const imageStyle = imageUrl ? `background-image: url('${imageUrl}')` : 'background: linear-gradient(135deg, #1B4332, #2D6A4F)';
+                const imageStyle = imageUrl ? `background-image: url('${imageUrl}')` : 'background: linear-gradient(135deg, #1E3A5F, #2E5A8F)';
 
                 return `
                     <div class="col-md-6 col-lg-4">
