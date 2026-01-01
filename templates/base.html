@@ -264,11 +264,73 @@
 
         /* Mobile Menu Toggle */
         .navbar-toggler {
-            border-color: var(--philata-gray-300) !important;
+            border: none !important;
+            padding: 0.5rem;
+            background: rgba(27, 67, 50, 0.1);
+            border-radius: 8px;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
         }
 
         .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(75, 85, 99, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(27, 67, 50, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+        }
+
+        /* Mobile Offcanvas Menu */
+        .offcanvas {
+            background: var(--philata-white);
+            border-left: 1px solid var(--philata-border);
+        }
+
+        .offcanvas-header {
+            background: var(--philata-gray-50);
+            border-bottom: 1px solid var(--philata-border);
+            padding: 1.25rem 1.5rem;
+        }
+
+        .offcanvas-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-weight: 700;
+            color: var(--philata-gray-900);
+            display: flex;
+            align-items: center;
+        }
+
+        .offcanvas-body {
+            padding: 1.5rem;
+        }
+
+        .mobile-nav-list .nav-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .mobile-nav-list .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.875rem 1rem !important;
+            color: var(--philata-gray-700) !important;
+            font-weight: 500;
+            font-size: 1rem;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-nav-list .nav-link:hover {
+            background: var(--philata-gray-50);
+            color: var(--philata-primary) !important;
+        }
+
+        .mobile-nav-list .nav-link.active {
+            background: rgba(27, 67, 50, 0.1);
+            color: var(--philata-primary) !important;
+            font-weight: 600;
+        }
+
+        .mobile-nav-list .nav-link i {
+            font-size: 1.1rem;
+            width: 24px;
         }
 
         /* Cards */
@@ -858,16 +920,15 @@
                 <img src="{{ url_for('static', filename='images/philata-logo.png') }}" alt="Philata" class="logo-icon" style="width: 40px; height: 40px; object-fit: contain;">
                 <span>Philata</span>
             </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+
+            <!-- Desktop Navigation -->
+            <div class="collapse navbar-collapse d-none d-lg-flex" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if '/learn' in request.path or '/guides' in request.path or '/practice' in request.path %}active{% endif %}" href="/learn">Learn</a>
+                        <a class="nav-link {% if '/learn' in request.path or '/guides' in request.path %}active{% endif %}" href="/learn">Learn</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if '/dashboard' in request.path %}active{% endif %}" href="/dashboard">News</a>
@@ -882,18 +943,74 @@
                         <a class="nav-link {% if '/tools/crs-calculator' in request.path %}active{% endif %}" href="/tools/crs-calculator">CRS Calculator</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if '/practice-tests' in request.path %}active{% endif %}" href="/practice-tests">Practice Tests</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link {% if request.path == '/about' %}active{% endif %}" href="/about">About</a>
                     </li>
                 </ul>
-                <a href="/dashboard" class="btn btn-nav-cta d-none d-lg-block">
+                <a href="/dashboard" class="btn btn-nav-cta">
                     <i class="bi bi-newspaper me-2"></i>Latest News
                 </a>
             </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button class="navbar-toggler border-0 d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
     </nav>
+
+    <!-- Mobile Offcanvas Menu (Right Side) -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="mobileMenuLabel">
+                <img src="{{ url_for('static', filename='images/philata-logo.png') }}" alt="Philata" style="width: 32px; height: 32px; object-fit: contain; margin-right: 8px;">
+                Philata
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="nav flex-column mobile-nav-list">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">
+                        <i class="bi bi-house me-2"></i>Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if '/learn' in request.path or '/guides' in request.path %}active{% endif %}" href="/learn">
+                        <i class="bi bi-book me-2"></i>Learn
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if '/dashboard' in request.path %}active{% endif %}" href="/dashboard">
+                        <i class="bi bi-newspaper me-2"></i>News
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if '/articles' in request.path %}active{% endif %}" href="/articles">
+                        <i class="bi bi-file-text me-2"></i>Articles
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if '/browse' in request.path %}active{% endif %}" href="/browse">
+                        <i class="bi bi-grid me-2"></i>Browse
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if '/tools/crs-calculator' in request.path %}active{% endif %}" href="/tools/crs-calculator">
+                        <i class="bi bi-calculator me-2"></i>CRS Calculator
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/about' %}active{% endif %}" href="/about">
+                        <i class="bi bi-info-circle me-2"></i>About
+                    </a>
+                </li>
+            </ul>
+            <hr class="my-4">
+            <a href="/dashboard" class="btn btn-primary w-100">
+                <i class="bi bi-newspaper me-2"></i>Latest News
+            </a>
+        </div>
+    </div>
 
     <main>
         {% block content %}{% endblock %}
@@ -926,9 +1043,9 @@
                 </div>
                 <div class="col-lg-2 col-md-6 footer-links">
                     <h6>Guides</h6>
-                    <a href="/guides/language-tests">Language Tests</a>
                     <a href="/guides/express-entry">Express Entry</a>
                     <a href="/guides/pnp">Provincial Programs</a>
+                    <a href="/guides/study-permit">Study Permits</a>
                     <a href="/guides/credentials">WES/ECA</a>
                 </div>
                 <div class="col-lg-2 col-md-6 footer-links">
