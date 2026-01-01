@@ -512,8 +512,23 @@
                             <span class="section-points" id="language1Points">0 pts</span>
                         </div>
                         <div class="calc-section-body">
-                            <p class="calc-sublabel mb-3">Enter your CLB/NCLC level for each ability (4-10+)</p>
-                            <div class="language-grid">
+                            <!-- Test Type Selector -->
+                            <div class="calc-field mb-4">
+                                <label class="calc-label">Which test did you take?</label>
+                                <select class="calc-select" id="lang1TestType" onchange="updateTestInputs('lang1')">
+                                    <option value="clb">I know my CLB level</option>
+                                    <option value="ielts">IELTS General Training</option>
+                                    <option value="celpip">CELPIP General</option>
+                                    <option value="pte">PTE Core</option>
+                                    <option value="tef">TEF Canada (French)</option>
+                                    <option value="tcf">TCF Canada (French)</option>
+                                </select>
+                            </div>
+
+                            <!-- CLB Direct Input (default) -->
+                            <div id="lang1ClbInputs">
+                                <p class="calc-sublabel mb-3">Enter your CLB/NCLC level for each ability (4-10+)</p>
+                                <div class="language-grid">
                                 <div class="language-ability">
                                     <label>Speaking</label>
                                     <select class="calc-select" id="lang1Speaking" onchange="updateScore()">
@@ -566,6 +581,258 @@
                                         <option value="10">CLB 10+</option>
                                     </select>
                                 </div>
+                                </div>
+                            </div>
+
+                            <!-- IELTS Score Inputs (hidden by default) -->
+                            <div id="lang1IeltsInputs" style="display: none;">
+                                <p class="calc-sublabel mb-3">Enter your IELTS General Training band scores (0-9)</p>
+                                <div class="language-grid">
+                                    <div class="language-ability">
+                                        <label>Speaking</label>
+                                        <select class="calc-select" id="lang1IeltsSpeaking" onchange="convertToClb('lang1', 'ielts')">
+                                            <option value="">Select</option>
+                                            <option value="4.0">4.0</option><option value="4.5">4.5</option>
+                                            <option value="5.0">5.0</option><option value="5.5">5.5</option>
+                                            <option value="6.0">6.0</option><option value="6.5">6.5</option>
+                                            <option value="7.0">7.0</option><option value="7.5">7.5</option>
+                                            <option value="8.0">8.0</option><option value="8.5">8.5</option>
+                                            <option value="9.0">9.0</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Listening</label>
+                                        <select class="calc-select" id="lang1IeltsListening" onchange="convertToClb('lang1', 'ielts')">
+                                            <option value="">Select</option>
+                                            <option value="4.5">4.5</option><option value="5.0">5.0</option>
+                                            <option value="5.5">5.5</option><option value="6.0">6.0</option>
+                                            <option value="6.5">6.5</option><option value="7.0">7.0</option>
+                                            <option value="7.5">7.5</option><option value="8.0">8.0</option>
+                                            <option value="8.5">8.5</option><option value="9.0">9.0</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Reading</label>
+                                        <select class="calc-select" id="lang1IeltsReading" onchange="convertToClb('lang1', 'ielts')">
+                                            <option value="">Select</option>
+                                            <option value="3.5">3.5</option><option value="4.0">4.0</option>
+                                            <option value="4.5">4.5</option><option value="5.0">5.0</option>
+                                            <option value="5.5">5.5</option><option value="6.0">6.0</option>
+                                            <option value="6.5">6.5</option><option value="7.0">7.0</option>
+                                            <option value="7.5">7.5</option><option value="8.0">8.0</option>
+                                            <option value="8.5">8.5</option><option value="9.0">9.0</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Writing</label>
+                                        <select class="calc-select" id="lang1IeltsWriting" onchange="convertToClb('lang1', 'ielts')">
+                                            <option value="">Select</option>
+                                            <option value="4.0">4.0</option><option value="4.5">4.5</option>
+                                            <option value="5.0">5.0</option><option value="5.5">5.5</option>
+                                            <option value="6.0">6.0</option><option value="6.5">6.5</option>
+                                            <option value="7.0">7.0</option><option value="7.5">7.5</option>
+                                            <option value="8.0">8.0</option><option value="8.5">8.5</option>
+                                            <option value="9.0">9.0</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="clb-result mt-3" id="lang1IeltsClbResult"></div>
+                            </div>
+
+                            <!-- CELPIP Score Inputs (hidden by default) -->
+                            <div id="lang1CelpipInputs" style="display: none;">
+                                <p class="calc-sublabel mb-3">Enter your CELPIP General scores (4-12)</p>
+                                <div class="language-grid">
+                                    <div class="language-ability">
+                                        <label>Speaking</label>
+                                        <select class="calc-select" id="lang1CelpipSpeaking" onchange="convertToClb('lang1', 'celpip')">
+                                            <option value="">Select</option>
+                                            <option value="4">4</option><option value="5">5</option>
+                                            <option value="6">6</option><option value="7">7</option>
+                                            <option value="8">8</option><option value="9">9</option>
+                                            <option value="10">10</option><option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Listening</label>
+                                        <select class="calc-select" id="lang1CelpipListening" onchange="convertToClb('lang1', 'celpip')">
+                                            <option value="">Select</option>
+                                            <option value="4">4</option><option value="5">5</option>
+                                            <option value="6">6</option><option value="7">7</option>
+                                            <option value="8">8</option><option value="9">9</option>
+                                            <option value="10">10</option><option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Reading</label>
+                                        <select class="calc-select" id="lang1CelpipReading" onchange="convertToClb('lang1', 'celpip')">
+                                            <option value="">Select</option>
+                                            <option value="4">4</option><option value="5">5</option>
+                                            <option value="6">6</option><option value="7">7</option>
+                                            <option value="8">8</option><option value="9">9</option>
+                                            <option value="10">10</option><option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Writing</label>
+                                        <select class="calc-select" id="lang1CelpipWriting" onchange="convertToClb('lang1', 'celpip')">
+                                            <option value="">Select</option>
+                                            <option value="4">4</option><option value="5">5</option>
+                                            <option value="6">6</option><option value="7">7</option>
+                                            <option value="8">8</option><option value="9">9</option>
+                                            <option value="10">10</option><option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="clb-result mt-3" id="lang1CelpipClbResult"></div>
+                            </div>
+
+                            <!-- PTE Core Score Inputs (hidden by default) -->
+                            <div id="lang1PteInputs" style="display: none;">
+                                <p class="calc-sublabel mb-3">Enter your PTE Core scores (10-90)</p>
+                                <div class="language-grid">
+                                    <div class="language-ability">
+                                        <label>Speaking</label>
+                                        <select class="calc-select" id="lang1PteSpeaking" onchange="convertToClb('lang1', 'pte')">
+                                            <option value="">Select</option>
+                                            <option value="42">42-50</option><option value="51">51-58</option>
+                                            <option value="59">59-67</option><option value="68">68-75</option>
+                                            <option value="76">76-83</option><option value="84">84-88</option>
+                                            <option value="89">89-90</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Listening</label>
+                                        <select class="calc-select" id="lang1PteListening" onchange="convertToClb('lang1', 'pte')">
+                                            <option value="">Select</option>
+                                            <option value="28">28-32</option><option value="33">33-38</option>
+                                            <option value="39">39-49</option><option value="50">50-59</option>
+                                            <option value="60">60-70</option><option value="71">71-81</option>
+                                            <option value="82">82-90</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Reading</label>
+                                        <select class="calc-select" id="lang1PteReading" onchange="convertToClb('lang1', 'pte')">
+                                            <option value="">Select</option>
+                                            <option value="33">33-40</option><option value="41">41-50</option>
+                                            <option value="51">51-59</option><option value="60">60-68</option>
+                                            <option value="69">69-77</option><option value="78">78-87</option>
+                                            <option value="88">88-90</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Writing</label>
+                                        <select class="calc-select" id="lang1PteWriting" onchange="convertToClb('lang1', 'pte')">
+                                            <option value="">Select</option>
+                                            <option value="41">41-50</option><option value="51">51-59</option>
+                                            <option value="60">60-68</option><option value="69">69-78</option>
+                                            <option value="79">79-87</option><option value="88">88-89</option>
+                                            <option value="90">90</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="clb-result mt-3" id="lang1PteClbResult"></div>
+                            </div>
+
+                            <!-- TEF Canada Score Inputs (hidden by default) -->
+                            <div id="lang1TefInputs" style="display: none;">
+                                <p class="calc-sublabel mb-3">Enter your TEF Canada scores</p>
+                                <div class="language-grid">
+                                    <div class="language-ability">
+                                        <label>Speaking (0-450)</label>
+                                        <select class="calc-select" id="lang1TefSpeaking" onchange="convertToClb('lang1', 'tef')">
+                                            <option value="">Select</option>
+                                            <option value="181">181-225</option><option value="226">226-270</option>
+                                            <option value="271">271-309</option><option value="310">310-348</option>
+                                            <option value="349">349-370</option><option value="371">371-392</option>
+                                            <option value="393">393-450</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Listening (0-360)</label>
+                                        <select class="calc-select" id="lang1TefListening" onchange="convertToClb('lang1', 'tef')">
+                                            <option value="">Select</option>
+                                            <option value="145">145-180</option><option value="181">181-216</option>
+                                            <option value="217">217-248</option><option value="249">249-279</option>
+                                            <option value="280">280-297</option><option value="298">298-315</option>
+                                            <option value="316">316-360</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Reading (0-300)</label>
+                                        <select class="calc-select" id="lang1TefReading" onchange="convertToClb('lang1', 'tef')">
+                                            <option value="">Select</option>
+                                            <option value="121">121-150</option><option value="151">151-180</option>
+                                            <option value="181">181-206</option><option value="207">207-232</option>
+                                            <option value="233">233-247</option><option value="248">248-262</option>
+                                            <option value="263">263-300</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Writing (0-450)</label>
+                                        <select class="calc-select" id="lang1TefWriting" onchange="convertToClb('lang1', 'tef')">
+                                            <option value="">Select</option>
+                                            <option value="181">181-225</option><option value="226">226-270</option>
+                                            <option value="271">271-309</option><option value="310">310-348</option>
+                                            <option value="349">349-370</option><option value="371">371-392</option>
+                                            <option value="393">393-450</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="clb-result mt-3" id="lang1TefClbResult"></div>
+                            </div>
+
+                            <!-- TCF Canada Score Inputs (hidden by default) -->
+                            <div id="lang1TcfInputs" style="display: none;">
+                                <p class="calc-sublabel mb-3">Enter your TCF Canada scores</p>
+                                <div class="language-grid">
+                                    <div class="language-ability">
+                                        <label>Speaking (0-20)</label>
+                                        <select class="calc-select" id="lang1TcfSpeaking" onchange="convertToClb('lang1', 'tcf')">
+                                            <option value="">Select</option>
+                                            <option value="4">4-5</option><option value="6">6-7</option>
+                                            <option value="8">8-9</option><option value="10">10-11</option>
+                                            <option value="12">12-13</option><option value="14">14-15</option>
+                                            <option value="16">16-20</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Listening (331-699)</label>
+                                        <select class="calc-select" id="lang1TcfListening" onchange="convertToClb('lang1', 'tcf')">
+                                            <option value="">Select</option>
+                                            <option value="331">331-368</option><option value="369">369-397</option>
+                                            <option value="398">398-457</option><option value="458">458-502</option>
+                                            <option value="503">503-522</option><option value="523">523-548</option>
+                                            <option value="549">549-699</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Reading (331-699)</label>
+                                        <select class="calc-select" id="lang1TcfReading" onchange="convertToClb('lang1', 'tcf')">
+                                            <option value="">Select</option>
+                                            <option value="342">342-374</option><option value="375">375-405</option>
+                                            <option value="406">406-452</option><option value="453">453-498</option>
+                                            <option value="499">499-523</option><option value="524">524-548</option>
+                                            <option value="549">549-699</option>
+                                        </select>
+                                    </div>
+                                    <div class="language-ability">
+                                        <label>Writing (0-20)</label>
+                                        <select class="calc-select" id="lang1TcfWriting" onchange="convertToClb('lang1', 'tcf')">
+                                            <option value="">Select</option>
+                                            <option value="4">4-5</option><option value="6">6-7</option>
+                                            <option value="8">8-9</option><option value="10">10-11</option>
+                                            <option value="12">12-13</option><option value="14">14-15</option>
+                                            <option value="16">16-20</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="clb-result mt-3" id="lang1TcfClbResult"></div>
                             </div>
                         </div>
                     </div>
@@ -926,6 +1193,99 @@ function toggleSection(header) {
         if (icon) icon.className = 'bi bi-chevron-up';
     } else {
         body.style.display = 'block';
+    }
+}
+
+// CLB Conversion Tables
+const ieltsToClb = {
+    speaking: { 4.0: 4, 4.5: 5, 5.0: 5, 5.5: 6, 6.0: 6, 6.5: 7, 7.0: 7, 7.5: 8, 8.0: 9, 8.5: 9, 9.0: 10 },
+    listening: { 4.5: 4, 5.0: 5, 5.5: 5, 6.0: 6, 6.5: 7, 7.0: 7, 7.5: 8, 8.0: 8, 8.5: 9, 9.0: 10 },
+    reading: { 3.5: 4, 4.0: 5, 4.5: 5, 5.0: 6, 5.5: 6, 6.0: 7, 6.5: 7, 7.0: 8, 7.5: 8, 8.0: 9, 8.5: 9, 9.0: 10 },
+    writing: { 4.0: 4, 4.5: 5, 5.0: 5, 5.5: 6, 6.0: 6, 6.5: 7, 7.0: 7, 7.5: 8, 8.0: 9, 8.5: 9, 9.0: 10 }
+};
+
+const celpipToClb = {
+    speaking: { 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 10, 12: 10 },
+    listening: { 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 10, 12: 10 },
+    reading: { 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 10, 12: 10 },
+    writing: { 4: 4, 5: 5, 6: 6, 7: 7, 8: 8, 9: 9, 10: 10, 11: 10, 12: 10 }
+};
+
+const pteToClb = {
+    speaking: { 42: 4, 51: 5, 59: 6, 68: 7, 76: 8, 84: 9, 89: 10 },
+    listening: { 28: 4, 33: 5, 39: 6, 50: 7, 60: 8, 71: 9, 82: 10 },
+    reading: { 33: 4, 41: 5, 51: 6, 60: 7, 69: 8, 78: 9, 88: 10 },
+    writing: { 41: 4, 51: 5, 60: 6, 69: 7, 79: 8, 88: 9, 90: 10 }
+};
+
+const tefToClb = {
+    speaking: { 181: 4, 226: 5, 271: 6, 310: 7, 349: 8, 371: 9, 393: 10 },
+    listening: { 145: 4, 181: 5, 217: 6, 249: 7, 280: 8, 298: 9, 316: 10 },
+    reading: { 121: 4, 151: 5, 181: 6, 207: 7, 233: 8, 248: 9, 263: 10 },
+    writing: { 181: 4, 226: 5, 271: 6, 310: 7, 349: 8, 371: 9, 393: 10 }
+};
+
+const tcfToClb = {
+    speaking: { 4: 4, 6: 5, 8: 6, 10: 7, 12: 8, 14: 9, 16: 10 },
+    listening: { 331: 4, 369: 5, 398: 6, 458: 7, 503: 8, 523: 9, 549: 10 },
+    reading: { 342: 4, 375: 5, 406: 6, 453: 7, 499: 8, 524: 9, 549: 10 },
+    writing: { 4: 4, 6: 5, 8: 6, 10: 7, 12: 8, 14: 9, 16: 10 }
+};
+
+function updateTestInputs(langPrefix) {
+    const testType = document.getElementById(langPrefix + 'TestType').value;
+    const inputTypes = ['Clb', 'Ielts', 'Celpip', 'Pte', 'Tef', 'Tcf'];
+
+    inputTypes.forEach(type => {
+        const el = document.getElementById(langPrefix + type + 'Inputs');
+        if (el) el.style.display = 'none';
+    });
+
+    if (testType === 'clb') {
+        document.getElementById(langPrefix + 'ClbInputs').style.display = 'block';
+    } else if (testType === 'ielts') {
+        document.getElementById(langPrefix + 'IeltsInputs').style.display = 'block';
+    } else if (testType === 'celpip') {
+        document.getElementById(langPrefix + 'CelpipInputs').style.display = 'block';
+    } else if (testType === 'pte') {
+        document.getElementById(langPrefix + 'PteInputs').style.display = 'block';
+    } else if (testType === 'tef') {
+        document.getElementById(langPrefix + 'TefInputs').style.display = 'block';
+    } else if (testType === 'tcf') {
+        document.getElementById(langPrefix + 'TcfInputs').style.display = 'block';
+    }
+}
+
+function convertToClb(langPrefix, testType) {
+    const abilities = ['Speaking', 'Listening', 'Reading', 'Writing'];
+    const testPrefix = testType.charAt(0).toUpperCase() + testType.slice(1);
+    let conversionTable;
+
+    if (testType === 'ielts') conversionTable = ieltsToClb;
+    else if (testType === 'celpip') conversionTable = celpipToClb;
+    else if (testType === 'pte') conversionTable = pteToClb;
+    else if (testType === 'tef') conversionTable = tefToClb;
+    else if (testType === 'tcf') conversionTable = tcfToClb;
+
+    let resultHtml = '<div class="alert alert-info p-2"><strong>CLB Conversion:</strong> ';
+    let allFilled = true;
+
+    abilities.forEach(ability => {
+        const score = parseFloat(document.getElementById(langPrefix + testPrefix + ability).value);
+        if (!score) {
+            allFilled = false;
+            return;
+        }
+        const clb = conversionTable[ability.toLowerCase()][score] || 0;
+        document.getElementById(langPrefix + ability).value = clb;
+        resultHtml += ability + ': CLB ' + clb + ' | ';
+    });
+
+    resultHtml = resultHtml.slice(0, -3) + '</div>';
+
+    if (allFilled) {
+        document.getElementById(langPrefix + testPrefix + 'ClbResult').innerHTML = resultHtml;
+        updateScore();
     }
 }
 
