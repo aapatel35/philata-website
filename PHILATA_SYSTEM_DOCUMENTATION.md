@@ -125,27 +125,51 @@ Philata is a Canadian immigration news and content platform that:
 
 ## Automation Workflow (n8n)
 
-### Workflow Steps
+### Content Tracks
 
-| # | Step | Description | Status |
-|---|------|-------------|--------|
-| 1 | Source Monitoring | Check IRCC/Canada.ca for updates | ⬜ Verify |
-| 2 | Content Detection | Identify new/changed content (hash comparison) | ⬜ Verify |
-| 3 | Content Scraping | Extract data from source pages | ⬜ Verify |
-| 4 | AI Processing | Generate article with Gemini/GPT | ⬜ Verify |
-| 5 | Caption Generation | Create platform-specific captions | ⬜ Verify |
-| 6 | Image Generation | Create social media graphics | ⬜ Verify |
-| 7 | Post to Website | Send to Flask API `/results/log` | ⬜ Verify |
-| 8 | Social Media Posting | Post to Instagram/Facebook/etc | ⬜ Verify |
-| 9 | Completion Logging | Log success/failure | ⬜ Verify |
+| Track | Trigger Interval | Source | Description |
+|-------|------------------|--------|-------------|
+| Breaking | Every 20 min | Perplexity AI (IRCC search) | Express Entry draws, urgent news |
+| Regular | Every 2 hours | Perplexity AI (news search) | General immigration news |
+| Educational | Every 30 min | Post API `/educational/daily` | 365-day calendar topics |
+| Forms | Every 30 min | Post API `/forms/daily` | IRCC forms guides |
+
+### Workflow Steps (Per Track)
+
+| # | Step | Node Type | Description | Status |
+|---|------|-----------|-------------|--------|
+| 1 | Fetch Content | HTTP Request | Query Perplexity AI or Post API | ✅ |
+| 2 | Parse Response | Code | Extract JSON, validate content | ✅ |
+| 3 | Filter | Filter | Check if has valid news/topic | ✅ |
+| 4 | Caption Check | Code | Prepare captions for platforms | ✅ |
+| 4.5 | Verify Content | Code | (Edu/Forms) Verify accuracy | ✅ |
+| 5 | Art Director | Code | Generate image prompt | ✅ |
+| 5.5 | Gemini Image | Code | Generate image with Gemini Imagen | ✅ |
+| 6 | Generate Image | HTTP Request | Create social media graphic | ✅ |
+| 7 | Result | Code | Prepare final payload | ✅ |
+| 8 | Discord | Code | Send notification to Discord | ✅ |
+| 9 | Log Results | HTTP Request | POST to `/results/log` | ✅ |
+| 10 | Send to Website | Code | POST to `philata.com/api/results` | ✅ |
+
+### API Integrations
+
+| Service | Purpose | Endpoint |
+|---------|---------|----------|
+| Perplexity AI | News search/research | `api.perplexity.ai/chat/completions` |
+| Claude (Anthropic) | Article writing (Breaking) | `api.anthropic.com/v1/messages` |
+| Gemini Imagen | AI image generation | `generativelanguage.googleapis.com` |
+| Unsplash | Stock photos | `api.unsplash.com/search/photos` |
+| Discord Webhook | Notifications | `discord.com/api/webhooks/...` |
+| Post API | Image generation, logging | `web-production-35219.up.railway.app` |
+| Philata Website | Article storage | `philata.com/api/results` |
 
 ### n8n Workflow Files
 
 | # | File | Description | Status |
 |---|------|-------------|--------|
-| 1 | `philata_v2.5_export.json` | Main workflow export | ⬜ Verify |
-| 2 | `philata_v2.6_gemini.json` | Gemini-based workflow | ⬜ Verify |
-| 3 | `philata_import.json` | Import workflow | ⬜ Verify |
+| 1 | `philata_v2.5_export.json` | Main workflow (original) | ✅ Verified |
+| 2 | `philata_v2.6_gemini.json` | Gemini-based workflow (current) | ✅ Verified |
+| 3 | `philata_import.json` | Import workflow | ⬜ Review |
 
 ---
 
@@ -211,12 +235,12 @@ Philata is a Canadian immigration news and content platform that:
 - [x] Image serving configured
 - [x] CORS enabled
 
-### Phase 3: Automation (n8n)
-- [ ] Review n8n workflow structure
-- [ ] Test source monitoring
-- [ ] Test content generation
-- [ ] Verify API integration
-- [ ] Test social media posting
+### Phase 3: Automation (n8n) ✅ VERIFIED
+- [x] Review n8n workflow structure (4 tracks: Breaking, Regular, Educational, Forms)
+- [x] Verify source monitoring (Perplexity AI + Post API endpoints)
+- [x] Verify content generation (Claude + Gemini Imagen)
+- [x] Verify API integration (Discord, Post API, Philata Website)
+- [ ] Test live execution (pending)
 
 ### Phase 4: Content
 - [ ] Review existing articles
