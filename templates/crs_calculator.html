@@ -4,32 +4,28 @@
 
 {% block extra_css %}
 <style>
-    .calc-hero {
-        padding: 10rem 0 5rem;
-        position: relative;
+    /* Page Header Enhanced */
+    .page-header-calc {
+        margin-bottom: 32px;
     }
 
-    .calc-hero-content {
-        background: rgba(255, 255, 255, 0.92);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-radius: 24px;
-        padding: 3rem;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .calc-hero-title {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 3rem;
+    .page-header-calc .page-title {
+        font-family: 'Plus Jakarta Sans', var(--font-family);
+        font-size: 32px;
         font-weight: 800;
-        margin-bottom: 1rem;
-        color: #1a1a1a;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
     }
 
-    .calc-hero-subtitle {
-        font-size: 1.15rem;
-        color: #555;
-        max-width: 600px;
+    .page-header-calc .page-title i {
+        font-size: 28px;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
     /* Calculator Container */
@@ -40,26 +36,31 @@
 
     /* Section Cards */
     .calc-section {
-        background: var(--philata-card);
-        border: 1px solid var(--philata-border);
-        border-radius: 20px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
         margin-bottom: 1.5rem;
         overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .calc-section:hover {
+        box-shadow: var(--shadow-md);
     }
 
     .calc-section-header {
-        background: rgba(255,255,255,0.03);
+        background: var(--bg);
         padding: 1.25rem 1.5rem;
-        border-bottom: 1px solid var(--philata-border);
+        border-bottom: 1px solid var(--border);
         display: flex;
         align-items: center;
         justify-content: space-between;
         cursor: pointer;
-        transition: background 0.3s ease;
+        transition: background 0.2s ease;
     }
 
     .calc-section-header:hover {
-        background: rgba(255,255,255,0.05);
+        background: linear-gradient(135deg, rgba(30,58,138,0.03), rgba(8,145,178,0.03));
     }
 
     .calc-section-title {
@@ -68,7 +69,7 @@
         gap: 12px;
         font-weight: 600;
         font-size: 1.1rem;
-        color: var(--philata-gray-900);
+        color: var(--text);
     }
 
     .calc-section-title i {
@@ -82,7 +83,7 @@
     }
 
     .section-points {
-        background: var(--philata-accent);
+        background: var(--gradient-accent);
         color: white;
         padding: 6px 16px;
         border-radius: 20px;
@@ -106,36 +107,36 @@
     .calc-label {
         display: block;
         font-weight: 500;
-        color: var(--philata-text);
+        color: var(--text);
         margin-bottom: 0.5rem;
     }
 
     .calc-sublabel {
         font-size: 0.85rem;
-        color: var(--philata-text-muted);
+        color: var(--text-muted);
         margin-bottom: 0.5rem;
     }
 
     .calc-select, .calc-input {
         width: 100%;
         padding: 0.875rem 1rem;
-        background: var(--philata-gray-50);
-        border: 1px solid var(--philata-border);
+        background: var(--bg);
+        border: 1px solid var(--border);
         border-radius: 12px;
-        color: var(--philata-gray-900);
+        color: var(--text);
         font-size: 1rem;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
     }
 
     .calc-select:focus, .calc-input:focus {
         outline: none;
-        border-color: var(--philata-accent);
-        box-shadow: 0 0 0 3px rgba(64, 145, 108, 0.15);
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.15);
     }
 
     .calc-select option {
         background: white;
-        color: var(--philata-gray-900);
+        color: var(--text);
     }
 
     /* Radio/Checkbox Groups */
@@ -150,33 +151,45 @@
         align-items: center;
         gap: 8px;
         cursor: pointer;
+        color: var(--text);
     }
 
     .calc-radio input {
         width: 18px;
         height: 18px;
-        accent-color: var(--philata-red);
+        accent-color: var(--accent);
     }
 
     /* Score Display */
     .score-display {
         position: sticky;
         top: 80px;
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 24px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
         padding: 2rem;
         text-align: center;
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+    }
+
+    .score-display::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
     }
 
     .score-label {
-        font-size: 0.9rem;
-        color: var(--philata-text-muted);
+        font-size: 0.85rem;
+        color: var(--text-muted);
         text-transform: uppercase;
         letter-spacing: 2px;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
     }
 
     .score-value {
@@ -186,13 +199,15 @@
         background: var(--gradient-primary);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        background-clip: text;
         line-height: 1;
     }
 
     .score-max {
-        color: var(--philata-text-muted);
-        font-size: 1.25rem;
+        color: var(--text-muted);
+        font-size: 1.1rem;
         margin-top: 0.5rem;
+        font-weight: 500;
     }
 
     .score-breakdown {
@@ -204,7 +219,7 @@
         display: flex;
         justify-content: space-between;
         padding: 0.75rem 0;
-        border-bottom: 1px solid var(--philata-border);
+        border-bottom: 1px solid var(--border);
         font-size: 0.9rem;
     }
 
@@ -213,11 +228,11 @@
     }
 
     .breakdown-label {
-        color: var(--philata-text-muted);
+        color: var(--text-muted);
     }
 
     .breakdown-value {
-        color: var(--philata-gray-900);
+        color: var(--text);
         font-weight: 600;
     }
 
@@ -232,19 +247,19 @@
     .score-status.excellent {
         background: rgba(16, 185, 129, 0.15);
         border: 1px solid rgba(16, 185, 129, 0.3);
-        color: #10B981;
+        color: #059669;
     }
 
     .score-status.good {
         background: rgba(245, 158, 11, 0.15);
         border: 1px solid rgba(245, 158, 11, 0.3);
-        color: #F59E0B;
+        color: #D97706;
     }
 
     .score-status.needs-improvement {
         background: rgba(239, 68, 68, 0.15);
         border: 1px solid rgba(239, 68, 68, 0.3);
-        color: #EF4444;
+        color: #DC2626;
     }
 
     .score-status i {
@@ -272,10 +287,6 @@
         .score-value {
             font-size: 3.5rem;
         }
-
-        .calc-hero-title {
-            font-size: 2rem;
-        }
     }
 
     /* Info tooltip */
@@ -286,8 +297,8 @@
         width: 18px;
         height: 18px;
         border-radius: 50%;
-        background: rgba(255,255,255,0.1);
-        color: var(--philata-text-muted);
+        background: var(--bg);
+        color: var(--text-muted);
         font-size: 0.7rem;
         cursor: help;
         margin-left: 6px;
@@ -295,19 +306,19 @@
 
     /* Reset Button */
     .btn-reset {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid var(--philata-border);
-        color: var(--philata-text-muted);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        color: var(--text-muted);
         padding: 0.75rem 1.5rem;
         border-radius: 10px;
         font-weight: 500;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
     }
 
     .btn-reset:hover {
-        background: rgba(255,255,255,0.1);
-        color: white;
+        background: var(--border);
+        color: var(--text);
     }
 
     /* Language Section */
@@ -324,7 +335,7 @@
     .language-ability label {
         display: block;
         font-size: 0.8rem;
-        color: var(--philata-text-muted);
+        color: var(--text-muted);
         margin-bottom: 0.5rem;
     }
 
@@ -342,42 +353,30 @@
         padding: 1rem 1.25rem;
         margin-top: 2rem;
         font-size: 0.9rem;
-        color: var(--philata-text);
+        color: var(--text);
     }
 
     .calc-disclaimer i {
-        color: #F59E0B;
+        color: #D97706;
         margin-right: 8px;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="calc-hero">
-    <div class="container">
-        <div class="row justify-content-center text-center">
-            <div class="col-lg-8">
-                <div class="calc-hero-content">
-                    <h1 class="calc-hero-title">
-                        <span class="gradient-text">CRS Score</span> Calculator
-                    </h1>
-                    <p class="calc-hero-subtitle mx-auto">
-                        Calculate your Comprehensive Ranking System (CRS) score for Express Entry.
-                        Get an estimate of your points and find out how to improve your score.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<!-- Page Header -->
+<div class="page-header-calc">
+    <h1 class="page-title">
+        <i class="bi bi-calculator-fill"></i>
+        CRS Score Calculator
+    </h1>
+    <p class="page-subtitle">Calculate your Comprehensive Ranking System (CRS) score for Express Entry</p>
+</div>
 
-<section class="section pt-0">
-    <div class="container">
-        <div class="row">
-            <!-- Calculator Form -->
-            <div class="col-lg-8">
-                <div class="calculator-container">
+<div class="row">
+    <!-- Calculator Form -->
+    <div class="col-lg-8">
+        <div class="calculator-container">
 
                     <!-- Marital Status -->
                     <div class="calc-section">
@@ -1124,7 +1123,7 @@
             </div>
         </div>
     </div>
-</section>
+</div>
 {% endblock %}
 
 {% block extra_js %}

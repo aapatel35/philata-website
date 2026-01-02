@@ -14,62 +14,142 @@
 
 {% block extra_css %}
 <style>
-    /* Category Filters */
+    /* Page Header Enhanced */
+    .page-header-articles {
+        margin-bottom: 32px;
+    }
+
+    .page-header-articles .page-title {
+        font-family: 'Plus Jakarta Sans', var(--font-family);
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .page-header-articles .page-title i {
+        font-size: 28px;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    /* Category Filters Enhanced */
     .category-filters {
         display: flex;
-        gap: 8px;
+        gap: 10px;
         flex-wrap: wrap;
-        margin-bottom: 24px;
+        margin-bottom: 32px;
+        padding: 16px 20px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
     }
 
     .category-btn {
-        padding: 8px 16px;
-        border-radius: 8px;
+        padding: 10px 20px;
+        border-radius: 10px;
         border: 1px solid var(--border);
-        background: var(--card);
+        background: var(--bg);
         color: var(--text-muted);
-        font-weight: 500;
+        font-weight: 600;
         font-size: 13px;
         text-decoration: none;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .category-btn::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity 0.3s ease;
     }
 
     .category-btn:hover {
-        border-color: var(--primary);
+        border-color: var(--primary-light);
         color: var(--text);
     }
 
     .category-btn.active {
-        background: var(--primary);
-        border-color: var(--primary);
+        border-color: transparent;
         color: white;
     }
 
-    /* Articles Grid */
+    .category-btn.active::before {
+        opacity: 1;
+    }
+
+    .category-btn[href="/articles"].active::before,
+    .category-btn[href*="express_entry"].active::before { background: var(--gradient-primary); }
+    .category-btn[href*="pnp"].active::before { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+    .category-btn[href*="policy"].active::before { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .category-btn[href*="forms"].active::before { background: linear-gradient(135deg, #10b981, #059669); }
+    .category-btn[href*="study"].active::before { background: linear-gradient(135deg, #ec4899, #db2777); }
+    .category-btn[href*="work"].active::before { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+
+    .category-btn span {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Articles Grid Enhanced */
     .articles-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 24px;
     }
 
     .article-card {
         background: var(--card);
         border: 1px solid var(--border);
-        border-radius: 12px;
+        border-radius: 16px;
         overflow: hidden;
         text-decoration: none;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
         display: flex;
         flex-direction: column;
+        position: relative;
+    }
+
+    .article-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
     }
 
     .article-card:hover {
-        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-        border-color: var(--primary);
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-xl);
     }
 
+    .article-card:hover::before {
+        opacity: 1;
+    }
+
+    /* Category-based top border colors */
+    .article-card[data-category="express_entry"]::before { background: var(--gradient-primary); }
+    .article-card[data-category="pnp"]::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+    .article-card[data-category="policy"]::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .article-card[data-category="forms"]::before { background: linear-gradient(90deg, #10b981, #34d399); }
+    .article-card[data-category="study_permit"]::before { background: linear-gradient(90deg, #ec4899, #f472b6); }
+    .article-card[data-category="work_permit"]::before { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
+    .article-card[data-category="news"]::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    .article-card[data-category="breaking_news"]::before { background: linear-gradient(90deg, #ef4444, #f87171); }
+
     .article-card-body {
-        padding: 20px;
+        padding: 24px;
         flex: 1;
         display: flex;
         flex-direction: column;
@@ -78,27 +158,39 @@
     .article-card-meta {
         display: flex;
         gap: 12px;
-        margin-bottom: 12px;
-        font-size: 12px;
+        margin-bottom: 16px;
+        font-size: 13px;
         color: var(--text-muted);
         align-items: center;
     }
 
     .article-card-category {
-        background: var(--accent);
-        color: white;
-        padding: 4px 10px;
-        border-radius: 6px;
+        padding: 6px 14px;
+        border-radius: 8px;
         font-size: 11px;
-        font-weight: 600;
+        font-weight: 700;
         text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: white;
     }
 
+    /* Category badge gradients */
+    .category-express_entry { background: linear-gradient(135deg, #1e3a8a, #3b82f6); }
+    .category-pnp { background: linear-gradient(135deg, #7c3aed, #8b5cf6); }
+    .category-policy { background: linear-gradient(135deg, #d97706, #f59e0b); }
+    .category-forms { background: linear-gradient(135deg, #059669, #10b981); }
+    .category-study_permit { background: linear-gradient(135deg, #db2777, #ec4899); }
+    .category-work_permit { background: linear-gradient(135deg, #0891b2, #06b6d4); }
+    .category-news { background: linear-gradient(135deg, #2563eb, #3b82f6); }
+    .category-breaking_news { background: linear-gradient(135deg, #dc2626, #ef4444); }
+    .category-educational { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+
     .article-card-title {
-        font-size: 16px;
-        font-weight: 600;
+        font-family: 'Plus Jakarta Sans', var(--font-family);
+        font-size: 18px;
+        font-weight: 700;
         color: var(--text);
-        margin-bottom: 8px;
+        margin-bottom: 12px;
         line-height: 1.4;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -109,7 +201,7 @@
     .article-card-excerpt {
         color: var(--text-muted);
         font-size: 14px;
-        line-height: 1.6;
+        line-height: 1.7;
         flex: 1;
         display: -webkit-box;
         -webkit-line-clamp: 3;
@@ -121,7 +213,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 16px;
+        margin-top: 20px;
         padding-top: 16px;
         border-top: 1px solid var(--border);
     }
@@ -129,47 +221,125 @@
     .article-card-source {
         font-size: 12px;
         color: var(--text-light);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .article-card-source i {
+        color: var(--primary-light);
     }
 
     .article-card-read {
+        background: var(--bg);
         color: var(--primary);
         font-weight: 600;
         font-size: 13px;
         display: inline-flex;
         align-items: center;
         gap: 6px;
+        padding: 8px 16px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
     }
 
     .article-card:hover .article-card-read {
-        color: var(--accent);
+        background: var(--primary);
+        color: white;
     }
 
+    .article-card:hover .article-card-read i {
+        transform: translateX(4px);
+    }
+
+    .article-card-read i {
+        transition: transform 0.3s ease;
+    }
+
+    /* Empty State */
     .no-articles {
         text-align: center;
-        padding: 60px 20px;
+        padding: 80px 20px;
         background: var(--card);
         border: 1px solid var(--border);
-        border-radius: 12px;
+        border-radius: 16px;
     }
 
-    .no-articles i {
-        font-size: 48px;
-        margin-bottom: 16px;
-        color: var(--text-light);
+    .no-articles-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, rgba(30,58,138,0.1), rgba(8,145,178,0.1));
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+    }
+
+    .no-articles-icon i {
+        font-size: 36px;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
     .no-articles h3 {
+        font-size: 20px;
+        font-weight: 700;
         color: var(--text);
         margin-bottom: 8px;
     }
 
     .no-articles p {
         color: var(--text-muted);
+        font-size: 14px;
+    }
+
+    /* Article Count */
+    .article-count {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        padding: 12px 20px;
+        background: var(--bg);
+        border-radius: 12px;
+    }
+
+    .article-count-text {
+        font-size: 14px;
+        color: var(--text-muted);
+    }
+
+    .article-count-text strong {
+        color: var(--text);
+        font-weight: 700;
+    }
+
+    @media (max-width: 768px) {
+        .articles-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .category-filters {
+            padding: 12px 16px;
+        }
+
+        .category-btn {
+            flex: 1;
+            text-align: center;
+            min-width: calc(33% - 10px);
+        }
     }
 
     @media (max-width: 576px) {
-        .articles-grid {
-            grid-template-columns: 1fr;
+        .article-card-body {
+            padding: 20px;
+        }
+
+        .article-card-title {
+            font-size: 16px;
         }
     }
 </style>
@@ -177,35 +347,46 @@
 
 {% block content %}
 <!-- Page Header -->
-<div class="page-header">
-    <h1 class="page-title">Immigration Articles</h1>
+<div class="page-header-articles">
+    <h1 class="page-title">
+        <i class="bi bi-newspaper"></i>
+        Immigration Articles
+    </h1>
     <p class="page-subtitle">In-depth analysis and comprehensive guides on Canadian immigration</p>
 </div>
 
 <!-- Category Filters -->
 <div class="category-filters">
-    <a href="/articles" class="category-btn {% if not category %}active{% endif %}">All</a>
-    <a href="/articles?category=express_entry" class="category-btn {% if category == 'express_entry' %}active{% endif %}">Express Entry</a>
-    <a href="/articles?category=pnp" class="category-btn {% if category == 'pnp' %}active{% endif %}">PNP</a>
-    <a href="/articles?category=policy" class="category-btn {% if category == 'policy' %}active{% endif %}">Policy</a>
-    <a href="/articles?category=forms" class="category-btn {% if category == 'forms' %}active{% endif %}">Forms</a>
-    <a href="/articles?category=study_permit" class="category-btn {% if category == 'study_permit' %}active{% endif %}">Study</a>
-    <a href="/articles?category=work_permit" class="category-btn {% if category == 'work_permit' %}active{% endif %}">Work</a>
+    <a href="/articles" class="category-btn {% if not category %}active{% endif %}"><span>All</span></a>
+    <a href="/articles?category=express_entry" class="category-btn {% if category == 'express_entry' %}active{% endif %}"><span>Express Entry</span></a>
+    <a href="/articles?category=pnp" class="category-btn {% if category == 'pnp' %}active{% endif %}"><span>PNP</span></a>
+    <a href="/articles?category=policy" class="category-btn {% if category == 'policy' %}active{% endif %}"><span>Policy</span></a>
+    <a href="/articles?category=forms" class="category-btn {% if category == 'forms' %}active{% endif %}"><span>Forms</span></a>
+    <a href="/articles?category=study_permit" class="category-btn {% if category == 'study_permit' %}active{% endif %}"><span>Study</span></a>
+    <a href="/articles?category=work_permit" class="category-btn {% if category == 'work_permit' %}active{% endif %}"><span>Work</span></a>
 </div>
 
 {% if articles %}
+<!-- Article Count -->
+<div class="article-count">
+    <span class="article-count-text">Showing <strong>{{ articles|length }}</strong> article{% if articles|length != 1 %}s{% endif %}{% if category %} in <strong>{{ category | replace('_', ' ') | title }}</strong>{% endif %}</span>
+</div>
+
 <div class="articles-grid">
     {% for article in articles %}
-    <a href="/articles/{{ article.slug or article.id }}" class="article-card">
+    <a href="/articles/{{ article.slug or article.id }}" class="article-card scroll-animate" data-category="{{ article.category }}">
         <div class="article-card-body">
             <div class="article-card-meta">
-                <span class="article-card-category">{{ article.category | replace('_', ' ') | title }}</span>
-                <span><i class="bi bi-clock me-1"></i>{{ article.reading_time }} min read</span>
+                <span class="article-card-category category-{{ article.category }}">{{ article.category | replace('_', ' ') | title }}</span>
+                <span><i class="bi bi-clock"></i> {{ article.reading_time }} min read</span>
             </div>
             <h2 class="article-card-title">{{ article.title }}</h2>
             <p class="article-card-excerpt">{{ article.full_article | striptags | truncate(200) }}</p>
             <div class="article-card-footer">
-                <span class="article-card-source">{{ article.source }}</span>
+                <span class="article-card-source">
+                    <i class="bi bi-link-45deg"></i>
+                    {{ article.source }}
+                </span>
                 <span class="article-card-read">Read More <i class="bi bi-arrow-right"></i></span>
             </div>
         </div>
@@ -214,7 +395,9 @@
 </div>
 {% else %}
 <div class="no-articles">
-    <i class="bi bi-newspaper"></i>
+    <div class="no-articles-icon">
+        <i class="bi bi-newspaper"></i>
+    </div>
     <h3>No Articles Yet</h3>
     <p>New articles are being generated. Check back soon!</p>
 </div>
