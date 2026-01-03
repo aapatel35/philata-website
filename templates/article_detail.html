@@ -743,6 +743,158 @@
         text-decoration: underline;
     }
 
+    /* References Section - Academic Style */
+    .references-section {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, rgba(30, 58, 95, 0.04), rgba(30, 58, 95, 0.02));
+        border-radius: 12px;
+        border-left: 4px solid var(--primary);
+    }
+
+    .references-section h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--primary);
+    }
+
+    .references-section ol {
+        padding-left: 1.5rem;
+        margin: 0;
+    }
+
+    .references-section li {
+        margin-bottom: 0.75rem;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: var(--text-muted);
+    }
+
+    .references-section li::marker {
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    .references-section a {
+        color: var(--text);
+        text-decoration: none;
+        word-break: break-word;
+    }
+
+    .references-section a:hover {
+        color: var(--primary);
+        text-decoration: underline;
+    }
+
+    /* Callout Box */
+    .article-body .callout-box {
+        background: linear-gradient(135deg, rgba(30, 58, 95, 0.08), rgba(196, 30, 58, 0.04));
+        border-left: 4px solid var(--accent);
+        padding: 1.25rem 1.5rem;
+        border-radius: 0 12px 12px 0;
+        margin: 1.5rem 0;
+    }
+
+    .article-body .callout-box h3, .article-body .callout-box h4 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        color: var(--primary);
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    /* Data Table */
+    .article-body .data-table {
+        margin: 1.5rem 0;
+        overflow-x: auto;
+    }
+
+    .article-body .data-table table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--card);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .article-body .data-table th {
+        background: var(--primary);
+        color: white;
+        padding: 1rem 1.25rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .article-body .data-table td {
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.95rem;
+    }
+
+    .article-body .data-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .article-body .data-table tr:hover {
+        background: rgba(30, 58, 95, 0.03);
+    }
+
+    .article-body .data-table .positive {
+        color: #16a34a;
+        font-weight: 600;
+    }
+
+    .article-body .data-table .negative {
+        color: var(--accent);
+        font-weight: 600;
+    }
+
+    /* Comparison Table */
+    .article-body .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5rem 0;
+        background: var(--card);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .article-body .comparison-table th {
+        background: var(--primary);
+        color: white;
+        padding: 0.875rem 1rem;
+        text-align: left;
+        font-weight: 600;
+    }
+
+    .article-body .comparison-table td {
+        padding: 0.875rem 1rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .article-body .comparison-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* Highlighted text */
+    .article-body .highlight, .article-body strong.highlight {
+        background: linear-gradient(120deg, rgba(196, 30, 58, 0.15) 0%, rgba(196, 30, 58, 0.15) 100%);
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: var(--accent);
+        font-weight: 700;
+    }
+
+    .article-body .stat-big {
+        font-size: 1.3em;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
     .source-badge {
         display: inline-block;
         padding: 0.15rem 0.5rem;
@@ -1010,16 +1162,10 @@
 <section class="article-content-section">
         <div class="article-container">
             <main class="article-main">
-                <!-- Verification Badge -->
-                {% if article.verification and article.verification.status %}
-                <div class="verification-badge {{ article.verification.status }}">
-                    {% if article.verification.status == 'verified' %}
+                <!-- Verification Badge - only show if explicitly verified -->
+                {% if article.verification and article.verification.status == 'verified' %}
+                <div class="verification-badge verified">
                     <i class="bi bi-patch-check-fill"></i> Verified ({{ article.verification.confidence }}% confidence)
-                    {% elif article.verification.status == 'partially_verified' %}
-                    <i class="bi bi-exclamation-circle-fill"></i> Partially Verified ({{ article.verification.confidence }}%)
-                    {% else %}
-                    <i class="bi bi-question-circle-fill"></i> Unverified
-                    {% endif %}
                 </div>
                 {% endif %}
 
@@ -1073,6 +1219,26 @@
                         </li>
                         {% endfor %}
                     </ul>
+                </div>
+                {% endif %}
+
+                <!-- References Section -->
+                {% if article.references and article.references|length > 0 %}
+                <div class="references-section">
+                    <h4><i class="bi bi-journal-bookmark me-2"></i>References</h4>
+                    <ol>
+                        {% for ref in article.references %}
+                        <li>
+                            {% if ref.url %}
+                            <a href="{{ ref.url }}" target="_blank" rel="noopener">{{ ref.title or ref.name or ref.url }}</a>
+                            {% else %}
+                            {{ ref.title or ref.name or ref }}
+                            {% endif %}
+                            {% if ref.source %} - {{ ref.source }}{% endif %}
+                            {% if ref.date %} ({{ ref.date }}){% endif %}
+                        </li>
+                        {% endfor %}
+                    </ol>
                 </div>
                 {% endif %}
 
