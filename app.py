@@ -864,7 +864,7 @@ def health():
     return jsonify({
         "status": "ok",
         "service": "Philata Content Hub",
-        "version": "1.0",
+        "version": "1.1",
         "timestamp": datetime.now().isoformat()
     })
 
