@@ -58,6 +58,170 @@
 
 {% block extra_css %}
 <style>
+    /* ============================================
+       LAYOUT VARIANTS - 5 Different Article Styles
+       ============================================ */
+
+    /* Layout: MAGAZINE - Based on News style with primary color accent */
+    .layout-magazine .article-header-card {
+        background: var(--card);
+        border-left: 6px solid var(--primary);
+        border-radius: 0 16px 16px 0;
+        padding: 2rem;
+    }
+    .layout-magazine .article-header-card::before {
+        display: none;
+    }
+    .layout-magazine .article-header-card .article-category {
+        background: var(--primary);
+    }
+    .layout-magazine .article-stats-grid {
+        background: linear-gradient(135deg, var(--primary) 0%, #0f2744 100%);
+        padding: 1.5rem;
+        border-radius: 16px;
+        margin: -1rem 0 1.5rem 0;
+    }
+    .layout-magazine .article-stats-grid .article-stat-card {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    .layout-magazine .article-stats-grid .article-stat-card .value {
+        color: white;
+    }
+    .layout-magazine .article-stats-grid .article-stat-card .label {
+        color: rgba(255,255,255,0.8);
+    }
+    .layout-magazine .key-takeaways-box {
+        border-left: 4px solid var(--primary);
+        background: rgba(30, 58, 95, 0.08);
+    }
+    .layout-magazine .key-takeaways-box h4 {
+        color: var(--primary);
+    }
+
+    /* Layout: FEATURE - Large image focus with overlay */
+    .layout-feature .article-header-card {
+        background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%),
+                    linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 350px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 3rem;
+        margin: -2rem -2rem 2rem -2rem;
+        border-radius: 0;
+    }
+    .layout-feature .article-header-card::before {
+        display: none;
+    }
+    .layout-feature .article-header-card .article-category {
+        background: var(--accent);
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+    }
+    .layout-feature .article-header-card .article-title {
+        color: white;
+        font-size: 2.5rem;
+        text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    }
+    .layout-feature .article-header-card .article-meta {
+        color: rgba(255,255,255,0.9);
+    }
+    .layout-feature .article-header-card .article-meta i {
+        color: var(--accent);
+    }
+
+    /* Layout: MINIMAL - Clean, centered, typography-focused */
+    .layout-minimal .article-header-card {
+        background: transparent;
+        border: none;
+        text-align: center;
+        padding: 3rem 2rem;
+        max-width: 700px;
+        margin: 0 auto 2rem;
+    }
+    .layout-minimal .article-header-card::before {
+        display: none;
+    }
+    .layout-minimal .article-header-card .article-category {
+        background: transparent;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+        font-size: 10px;
+    }
+    .layout-minimal .article-header-card .article-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+    }
+    .layout-minimal .article-header-card .article-meta {
+        justify-content: center;
+    }
+    .layout-minimal .article-container {
+        grid-template-columns: 1fr;
+        max-width: 680px;
+        margin: 0 auto;
+    }
+    .layout-minimal .article-main {
+        border: none;
+        background: transparent;
+        padding: 0;
+    }
+    .layout-minimal .article-sidebar {
+        display: none;
+    }
+    .layout-minimal .article-body {
+        font-size: 1.15rem;
+        line-height: 1.9;
+    }
+
+    /* Layout: NEWS - Bold stats at top, news-style */
+    .layout-news .article-header-card {
+        background: var(--card);
+        border-left: 6px solid var(--accent);
+        border-radius: 0 16px 16px 0;
+        padding: 2rem;
+    }
+    .layout-news .article-header-card::before {
+        display: none;
+    }
+    .layout-news .article-header-card .article-category {
+        background: var(--accent);
+    }
+    .layout-news .article-stats-grid {
+        background: linear-gradient(135deg, var(--primary) 0%, #0f2744 100%);
+        padding: 1.5rem;
+        border-radius: 16px;
+        margin: -1rem 0 1.5rem 0;
+    }
+    .layout-news .article-stats-grid .article-stat-card {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    .layout-news .article-stats-grid .article-stat-card .value {
+        color: white;
+    }
+    .layout-news .article-stats-grid .article-stat-card .label {
+        color: rgba(255,255,255,0.8);
+    }
+    .layout-news .key-takeaways-box {
+        border-left: 4px solid var(--accent);
+        background: rgba(196, 30, 58, 0.08);
+    }
+    .layout-news .key-takeaways-box h4 {
+        color: var(--accent);
+    }
+
+    /* Layout: STANDARD - Default layout (no extra styles needed) */
+    .layout-standard .article-header-card {
+        /* Uses default styles */
+    }
+
+    /* ============================================
+       BASE STYLES (shared across layouts)
+       ============================================ */
+
     /* Breadcrumb Enhanced */
     .article-breadcrumb {
         margin-bottom: 1.5rem;
@@ -259,17 +423,6 @@
         margin-bottom: 1.5rem;
     }
 
-    /* Drop cap for first paragraph */
-    .article-body > p:first-of-type::first-letter {
-        float: left;
-        font-size: 3.5rem;
-        line-height: 1;
-        font-weight: 800;
-        margin-right: 0.75rem;
-        margin-top: 0.1rem;
-        color: var(--primary);
-        font-family: 'Plus Jakarta Sans', serif;
-    }
 
     .article-body strong {
         color: var(--text);
@@ -835,6 +988,9 @@
 {% endblock %}
 
 {% block content %}
+<!-- Article Layout Wrapper - applies layout-specific styles -->
+<div class="layout-{{ article.layout | default('standard') }}">
+
 <!-- Breadcrumb -->
 <div class="article-breadcrumb">
     <a href="/">Home</a> <i class="bi bi-chevron-right"></i> <a href="/articles">Articles</a> <i class="bi bi-chevron-right"></i> <span>{{ article.category | replace('_', ' ') | title }}</span>
@@ -972,4 +1128,6 @@
         </div>
     </div>
 </section>
+
+</div><!-- End layout wrapper -->
 {% endblock %}
