@@ -1214,6 +1214,374 @@ def serve_image(filename):
 
 
 # =============================================================================
+# SOCIAL MEDIA IMAGE GENERATION
+# =============================================================================
+
+IMAGE_SIZES = {
+    'universal': (1080, 1080),
+    'instagram_square': (1080, 1080),
+    'instagram_story': (1080, 1920),
+    'facebook': (1200, 630),
+    'twitter': (1200, 675),
+    'linkedin': (1200, 627)
+}
+
+THEME_COLORS = {
+    'express_entry': {'badge': '#14B8A6', 'accent': '#F97316'},
+    'pnp': {'badge': '#14B8A6', 'accent': '#F97316'},
+    'policy': {'badge': '#6366F1', 'accent': '#6366F1'},
+    'breaking': {'badge': '#EF4444', 'accent': '#EF4444'},
+    'educational': {'badge': '#8B5CF6', 'accent': '#8B5CF6'},
+    'study_permit': {'badge': '#3B82F6', 'accent': '#3B82F6'},
+    'work_permit': {'badge': '#22C55E', 'accent': '#22C55E'},
+    'news': {'badge': '#0EA5E9', 'accent': '#0EA5E9'},
+    'default': {'badge': '#14B8A6', 'accent': '#F97316'}
+}
+
+
+def generate_social_image_html(image_data: dict, size: str = 'universal') -> str:
+    """Generate HTML for social media image with modern design"""
+    headline = image_data.get('headline', 'Immigration Update')
+    subtext = image_data.get('subtext', '')
+    category = image_data.get('category', 'news')
+    stats = image_data.get('stats', [])
+
+    width, height = IMAGE_SIZES.get(size, (1080, 1080))
+    is_landscape = width > height
+    colors = THEME_COLORS.get(category, THEME_COLORS['default'])
+
+    # Calculate headline font size based on length
+    headline_len = len(headline)
+    if is_landscape:
+        if headline_len <= 40: font_size = "36px"
+        elif headline_len <= 60: font_size = "32px"
+        elif headline_len <= 80: font_size = "28px"
+        else: font_size = "24px"
+    else:
+        if headline_len <= 40: font_size = "52px"
+        elif headline_len <= 60: font_size = "46px"
+        elif headline_len <= 80: font_size = "40px"
+        elif headline_len <= 100: font_size = "36px"
+        else: font_size = "32px"
+
+    # Stats HTML
+    stats_html = ''
+    if stats and len(stats) > 0:
+        stats_cards = ''.join([
+            f'''<div class="stat-card">
+                <div class="stat-value">{s.get('value', '')}</div>
+                <div class="stat-label">{s.get('label', '')}</div>
+            </div>''' for s in stats[:3]
+        ])
+        stats_html = f'<div class="stats-row">{stats_cards}</div>'
+
+    badge_text = category.replace('_', ' ').upper()
+    subtext_html = f'<div class="divider"></div><p class="subtext">{subtext}</p>' if subtext else ''
+
+    html = f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width={width}, height={height}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        body {{
+            width: {width}px;
+            height: {height}px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            overflow: hidden;
+            background: linear-gradient(180deg, #FAFAFA 0%, #F5F5F7 100%);
+            position: relative;
+        }}
+        .orb {{
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+        }}
+        .orb-pink {{
+            width: {'300px' if is_landscape else '400px'};
+            height: {'300px' if is_landscape else '400px'};
+            background: radial-gradient(circle, rgba(255, 182, 193, 0.8) 0%, transparent 70%);
+            top: -100px;
+            left: -100px;
+        }}
+        .orb-teal {{
+            width: {'280px' if is_landscape else '350px'};
+            height: {'280px' if is_landscape else '350px'};
+            background: radial-gradient(circle, rgba(144, 224, 239, 0.7) 0%, transparent 70%);
+            top: -50px;
+            right: -80px;
+        }}
+        .orb-purple {{
+            width: {'300px' if is_landscape else '380px'};
+            height: {'300px' if is_landscape else '380px'};
+            background: radial-gradient(circle, rgba(196, 181, 253, 0.7) 0%, transparent 70%);
+            bottom: -80px;
+            left: -80px;
+        }}
+        .orb-orange {{
+            width: {'280px' if is_landscape else '350px'};
+            height: {'280px' if is_landscape else '350px'};
+            background: radial-gradient(circle, rgba(254, 215, 170, 0.8) 0%, transparent 70%);
+            bottom: -60px;
+            right: -60px;
+        }}
+        .slide {{
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+        }}
+        .header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            padding-top: {'20px' if is_landscape else '30px'};
+        }}
+        .logo {{
+            font-size: {'22px' if is_landscape else '28px'};
+            font-weight: 800;
+            color: #F97316;
+        }}
+        .badge {{
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: {colors['badge']};
+            color: white;
+            padding: {'14px 28px' if is_landscape else '20px 40px'};
+            border-radius: 50px;
+            font-size: {'20px' if is_landscape else '32px'};
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 6px 30px {colors['badge']}50;
+            margin: {'20px auto 0' if is_landscape else '30px auto'};
+        }}
+        .content {{
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px 15px;
+        }}
+        .headline {{
+            font-size: {font_size};
+            font-weight: 800;
+            color: #1F2937;
+            line-height: 1.2;
+            max-width: {'95%' if is_landscape else '98%'};
+            margin-bottom: {'15px' if is_landscape else '25px'};
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            display: -webkit-box;
+            -webkit-line-clamp: {'4' if is_landscape else '6'};
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }}
+        .divider {{
+            width: 100px;
+            height: 4px;
+            background: {colors['badge']};
+            border-radius: 2px;
+            margin: 20px 0;
+        }}
+        .subtext {{
+            font-size: 26px;
+            font-weight: 500;
+            color: #6B7280;
+        }}
+        .stats-row {{
+            display: flex;
+            gap: {'15px' if is_landscape else '20px'};
+            margin-top: {'15px' if is_landscape else '20px'};
+            width: 100%;
+            max-width: {'600px' if is_landscape else '800px'};
+        }}
+        .stat-card {{
+            flex: 1;
+            background: white;
+            border-radius: {'16px' if is_landscape else '20px'};
+            padding: {'15px' if is_landscape else '20px'};
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }}
+        .stat-value {{
+            font-size: {'32px' if is_landscape else '38px'};
+            font-weight: 800;
+            color: {colors['accent']};
+        }}
+        .stat-label {{
+            font-size: {'13px' if is_landscape else '15px'};
+            color: #6B7280;
+            margin-top: 5px;
+        }}
+        .footer {{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 15px;
+            margin-top: auto;
+        }}
+        .handle-container {{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }}
+        .handle-line {{
+            width: 60px;
+            height: 2px;
+            background: #D1D5DB;
+        }}
+        .handle {{
+            color: #374151;
+            font-size: 24px;
+            font-weight: 600;
+        }}
+    </style>
+</head>
+<body>
+    <div class="orb orb-pink"></div>
+    <div class="orb orb-teal"></div>
+    <div class="orb orb-purple"></div>
+    <div class="orb orb-orange"></div>
+    <div class="slide">
+        <div class="header">
+            <span class="logo">Philata</span>
+        </div>
+        <div class="badge">{badge_text}</div>
+        <div class="content">
+            <h1 class="headline">{headline}</h1>
+            {stats_html}
+            {subtext_html}
+        </div>
+        <div class="footer">
+            <div class="handle-container">
+                <span class="handle-line"></span>
+                <span class="handle">philata.com</span>
+                <span class="handle-line"></span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>'''
+    return html
+
+
+@app.route('/api/generate-image', methods=['POST'])
+def generate_image():
+    """
+    Generate social media image HTML from article data.
+
+    Request body:
+    {
+        "headline": "CRS Optimization 2026",
+        "subtext": "Beat 534 Cutoffs",
+        "category": "educational",
+        "stats": [{"value": "534", "label": "CRS Cutoff"}],
+        "size": "universal"
+    }
+
+    Returns HTML that can be rendered to an image.
+    """
+    try:
+        data = request.get_json()
+
+        image_data = {
+            'headline': data.get('headline', data.get('image_text', {}).get('headline', 'Immigration Update')),
+            'subtext': data.get('subtext', data.get('image_text', {}).get('subtext', '')),
+            'category': data.get('category', 'news'),
+            'stats': data.get('stats', data.get('stat_cards', []))
+        }
+
+        size = data.get('size', 'universal')
+        html = generate_social_image_html(image_data, size)
+
+        return jsonify({
+            "success": True,
+            "html": html,
+            "size": IMAGE_SIZES.get(size, (1080, 1080)),
+            "message": "Image HTML generated successfully"
+        })
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/api/render-image', methods=['POST'])
+def render_image():
+    """
+    Render social media image and return as base64 PNG.
+    Requires Playwright to be installed.
+
+    Request body: Same as /api/generate-image
+    Returns: {"success": true, "image_base64": "...", "url": "/images/..."}
+    """
+    try:
+        # Check if Playwright is available
+        try:
+            from playwright.sync_api import sync_playwright
+        except ImportError:
+            return jsonify({
+                "success": False,
+                "error": "Playwright not installed. Use /api/generate-image for HTML output.",
+                "fallback": "/api/generate-image"
+            }), 501
+
+        data = request.get_json()
+
+        image_data = {
+            'headline': data.get('headline', data.get('image_text', {}).get('headline', 'Immigration Update')),
+            'subtext': data.get('subtext', data.get('image_text', {}).get('subtext', '')),
+            'category': data.get('category', 'news'),
+            'stats': data.get('stats', data.get('stat_cards', []))
+        }
+
+        size = data.get('size', 'universal')
+        width, height = IMAGE_SIZES.get(size, (1080, 1080))
+        html = generate_social_image_html(image_data, size)
+
+        # Generate unique filename
+        import base64
+        import hashlib
+        content_hash = hashlib.md5(html.encode()).hexdigest()[:8]
+        filename = f"social_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{content_hash}.png"
+        filepath = os.path.join(IMAGES_DIR, filename)
+
+        # Render HTML to PNG using Playwright
+        with sync_playwright() as p:
+            browser = p.chromium.launch()
+            page = browser.new_page(viewport={'width': width, 'height': height})
+            page.set_content(html)
+            page.wait_for_load_state('networkidle')
+            page.screenshot(path=filepath, type='png')
+            browser.close()
+
+        # Read image as base64
+        with open(filepath, 'rb') as f:
+            image_base64 = base64.b64encode(f.read()).decode('utf-8')
+
+        return jsonify({
+            "success": True,
+            "filename": filename,
+            "url": f"/images/{filename}",
+            "image_base64": image_base64,
+            "size": [width, height],
+            "message": "Image rendered successfully"
+        })
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+# =============================================================================
 # RUN
 # =============================================================================
 
