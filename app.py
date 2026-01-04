@@ -169,54 +169,77 @@ def load_guides():
 
 
 def load_articles():
-    """Load articles from Post API"""
+    """Load articles from Post API or local fallback"""
+    raw_results = []
+
+    # Try external API first
     try:
-        response = requests.get(f"{POST_API_URL}/results/list", timeout=10)
+        response = requests.get(f"{POST_API_URL}/results/list", timeout=5)
         if response.status_code == 200:
             data = response.json()
             raw_results = data if isinstance(data, list) else data.get('results', [])
+    except:
+        pass
 
-            # Filter only items with full_article content
-            articles = []
-            for r in raw_results:
-                if r.get('full_article') and len(r.get('full_article', '')) > 200:
-                    category = r.get('category', '')
-                    # Use provided slug or generate from title
-                    slug = r.get('slug') or create_slug(r.get('title', ''))
-                    article = {
-                        'id': r.get('id', ''),
-                        'slug': slug,
-                        'title': r.get('title', ''),
-                        'track': r.get('track', 'regular'),
-                        'category': category,
-                        'created_at': r.get('timestamp', r.get('date', '')),
-                        'full_article': r.get('full_article', ''),
-                        'source': r.get('source', ''),
-                        'source_url': r.get('source_url', ''),
-                        'official_source_url': r.get('official_source_url', ''),
-                        'reading_time': max(1, len(r.get('full_article', '').split()) // 200),
-                        # Enhanced fields
-                        'key_takeaways': r.get('key_takeaways', []),
-                        'stat_cards': r.get('stat_cards', []),
-                        'verification': r.get('verification', {}),
-                        'sources': r.get('sources', {}),
-                    }
-                    articles.append(article)
+    # Fallback to local results.json
+    if not raw_results:
+        try:
+            with open('data/results.json', 'r') as f:
+                raw_results = json.load(f)
+        except:
+            pass
 
-            # Sort articles by date
-            articles.sort(key=lambda x: x.get('created_at', ''), reverse=True)
+    if raw_results:
+        # Filter only items with full_article content
+        articles = []
+        for r in raw_results:
+            if r.get('full_article') and len(r.get('full_article', '')) > 200:
+                category = r.get('category', '')
+                # Use provided slug or generate from title
+                slug = r.get('slug') or create_slug(r.get('title', ''))
+                article = {
+                    'id': r.get('id', ''),
+                    'slug': slug,
+                    'title': r.get('title', ''),
+                    'track': r.get('track', 'regular'),
+                    'category': category,
+                    'created_at': r.get('timestamp', r.get('date', '')),
+                    'full_article': r.get('full_article', ''),
+                    'source': r.get('source', ''),
+                    'source_url': r.get('source_url', ''),
+                    'official_source_url': r.get('official_source_url', ''),
+                    'reading_time': max(1, len(r.get('full_article', '').split()) // 200),
+                    # Enhanced fields
+                    'key_takeaways': r.get('key_takeaways', []),
+                    'stat_cards': r.get('stat_cards', []),
+                    'verification': r.get('verification', {}),
+                    'sources': r.get('sources', {}),
+                }
+                articles.append(article)
 
-            # Assign unique images to each article based on its ID, category, and title
-            for article in articles:
+        # Sort articles by date
+        articles.sort(key=lambda x: x.get('created_at', ''), reverse=True)
+
+        # Assign unique images to each article based on its ID, category, and title
+        # Only if article doesn't already have a valid image_url
+        for article in articles:
+            existing_image = article.get('image_url', '')
+            # Skip if article already has a Cloudinary or valid image URL
+            if existing_image and ('cloudinary.com' in existing_image or 'web-production' in existing_image):
+                # Keep existing image, just add thumbnail
+                article['image_thumb'] = existing_image.replace('/upload/', '/upload/w_400,h_300,c_fill/')
+                article['image_credit'] = 'Philata'
+                article['image_credit_link'] = 'https://philata.com'
+            else:
+                # Fall back to Unsplash for articles without custom images
                 unsplash = get_unique_unsplash_image(article['id'], article['category'], article['title'])
                 article['image_url'] = unsplash.get('url', '')
                 article['image_thumb'] = unsplash.get('thumb', '')
                 article['image_credit'] = unsplash.get('credit', '')
                 article['image_credit_link'] = unsplash.get('credit_link', '')
 
-            return articles
-    except Exception as e:
-        print(f"Error fetching articles: {e}")
+        return articles
+
     return []
 
 
@@ -231,43 +254,7 @@ def create_slug(title):
 
 
 def load_results():
-    """Load all results from Post API"""
-    try:
-        response = requests.get(f"{POST_API_URL}/results/list", timeout=10)
-        if response.status_code == 200:
-            data = response.json()
-            # The API returns a list of results
-            raw_results = data if isinstance(data, list) else data.get('results', [])
-
-            # Transform to expected format
-            results = []
-            for r in raw_results:
-                result = {
-                    'id': r.get('id', ''),
-                    'title': r.get('title', ''),
-                    'track': r.get('track', 'regular'),
-                    'category': r.get('category', ''),
-                    'created_at': r.get('timestamp', r.get('date', '')),
-                    'image_url': convert_image_url(r.get('image_url', '')),
-                    'full_article': r.get('full_article', r.get('title', '')),
-                    'source': r.get('source', ''),
-                    'source_url': r.get('source_url', ''),
-                    'captions': {
-                        'instagram': r.get('caption_instagram', r.get('captions', {}).get('instagram', '')),
-                        'facebook': r.get('caption_facebook', r.get('captions', {}).get('facebook', '')),
-                        'linkedin': r.get('caption_linkedin', r.get('captions', {}).get('linkedin', '')),
-                        'twitter': r.get('caption_twitter', r.get('captions', {}).get('twitter', ''))
-                    }
-                }
-                results.append(result)
-
-            # Sort by created_at (most recent first)
-            results.sort(key=lambda x: x.get('created_at', ''), reverse=True)
-            return results
-    except Exception as e:
-        print(f"Error fetching from Post API: {e}")
-
-    # Fallback to local file if API fails
+    """Load all results from local file"""
     if os.path.exists(RESULTS_FILE):
         with open(RESULTS_FILE, 'r') as f:
             return json.load(f)
@@ -918,9 +905,9 @@ def add_article():
 
             # Content
             "title": data.get('title', ''),
-            "subheadline": data.get('subheadline', ''),
+            "subheadline": data.get('subheadline', data.get('subtitle', '')),
             "hook": data.get('hook', ''),
-            "full_article": data.get('full_article', ''),
+            "full_article": data.get('full_article') or data.get('content_html', ''),
             "key_takeaways": data.get('key_takeaways', []),
             "reading_time": data.get('reading_time', '3 min read'),
 
