@@ -1132,47 +1132,71 @@ def check_article_duplicate():
             existing_stat_values = extract_stat_values(existing_stats)
             existing_all_numbers = existing_numbers | existing_stat_values
 
-            # 4. Key numbers match (if 3+ significant numbers match, likely same news)
+            # Determine if this is a cross-pipeline check (media vs news)
+            new_pipeline = data.get('pipeline', data.get('category', ''))
+            existing_pipeline = article.get('pipeline', article.get('category', ''))
+
+            # News and media pipelines cover the same stories from different sources
+            news_types = {'news', 'breaking', 'breaking_news'}
+            media_types = {'media', 'magazine'}
+            is_cross_pipeline = (
+                (new_pipeline in news_types and existing_pipeline in media_types) or
+                (new_pipeline in media_types and existing_pipeline in news_types)
+            )
+
+            # 4. Key numbers match - MORE AGGRESSIVE for cross-pipeline
             if len(new_all_numbers) >= 2 and len(existing_all_numbers) >= 2:
                 matching_numbers = new_all_numbers & existing_all_numbers
-                # Filter to only meaningful matches (exclude common years like 2024, 2025)
+                # Filter to only meaningful matches (exclude common years)
                 meaningful_matches = {n for n in matching_numbers if not (n.isdigit() and len(n) == 4 and 2020 <= int(n) <= 2030)}
 
-                if len(meaningful_matches) >= 3:
+                # Lower threshold for cross-pipeline (media reporting on same news)
+                # 2 matching numbers for cross-pipeline, 3 for same pipeline
+                min_matches = 2 if is_cross_pipeline else 3
+
+                if len(meaningful_matches) >= min_matches:
                     return jsonify({
                         "exists": True,
-                        "reason": "key_numbers_match",
+                        "reason": "cross_pipeline_match" if is_cross_pipeline else "key_numbers_match",
                         "matching_numbers": list(meaningful_matches)[:5],
                         "existing_id": existing_id,
                         "existing_title": existing_title,
+                        "existing_pipeline": existing_pipeline,
                         "created_at": article.get('created_at')
                     })
 
-            # 5. Title word similarity (70%+ with same category)
+            # 5. Title word similarity
             def normalize_text(t):
                 t = re.sub(r'[^\w\s]', '', t.lower())
-                return set(t.split())
+                # Remove common words that don't help identify duplicates
+                stopwords = {'the', 'a', 'an', 'in', 'on', 'at', 'to', 'for', 'of', 'and', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must', 'can'}
+                words = set(t.split()) - stopwords
+                return words
 
             new_words = normalize_text(title)
             existing_words = normalize_text(existing_title)
 
-            if len(new_words) >= 4 and len(existing_words) >= 4:
+            if len(new_words) >= 3 and len(existing_words) >= 3:
                 overlap = len(new_words & existing_words) / max(len(new_words), 1)
-                same_category = data.get('category') == article.get('category')
 
-                # Higher threshold if different category
-                threshold = 0.70 if same_category else 0.85
+                # Lower threshold for cross-pipeline (60%) vs same pipeline (70%)
+                threshold = 0.60 if is_cross_pipeline else 0.70
 
                 if overlap >= threshold:
-                    # Additional check: must share at least 1 key number
-                    if matching_numbers := (new_all_numbers & existing_all_numbers):
+                    # For cross-pipeline, require just 1 matching number
+                    # For same pipeline, require at least 1 matching number
+                    matching_nums = new_all_numbers & existing_all_numbers
+                    meaningful_nums = {n for n in matching_nums if not (n.isdigit() and len(n) == 4 and 2020 <= int(n) <= 2030)}
+
+                    if meaningful_nums:
                         return jsonify({
                             "exists": True,
-                            "reason": "title_and_numbers_match",
+                            "reason": "cross_pipeline_title_match" if is_cross_pipeline else "title_and_numbers_match",
                             "similarity": round(overlap * 100),
-                            "matching_numbers": list(matching_numbers)[:3],
+                            "matching_numbers": list(meaningful_nums)[:3],
                             "existing_id": existing_id,
                             "existing_title": existing_title,
+                            "existing_pipeline": existing_pipeline,
                             "created_at": article.get('created_at')
                         })
 
