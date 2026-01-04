@@ -209,6 +209,8 @@ def load_articles():
                     'source_url': r.get('source_url', ''),
                     'official_source_url': r.get('official_source_url', ''),
                     'reading_time': max(1, len(r.get('full_article', '').split()) // 200),
+                    # Image - preserve Cloudinary URLs from n8n pipeline
+                    'image_url': r.get('image_url', ''),
                     # Enhanced fields
                     'key_takeaways': r.get('key_takeaways', []),
                     'stat_cards': r.get('stat_cards', []),
