@@ -1014,6 +1014,80 @@ def add_article():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+@app.route('/api/articles/check', methods=['POST'])
+def check_article_duplicate():
+    """
+    Check if an article with similar title/slug already exists.
+    Used by n8n for deduplication before publishing.
+    """
+    try:
+        data = request.get_json()
+        title = data.get('title', '').lower().strip()
+        slug = data.get('slug', '')
+
+        if not title and not slug:
+            return jsonify({"exists": False, "reason": "No title or slug provided"})
+
+        results = load_results()
+
+        # Check by exact slug match
+        if slug:
+            for article in results:
+                if article.get('slug', '') == slug:
+                    return jsonify({
+                        "exists": True,
+                        "reason": "slug_match",
+                        "existing_id": article.get('id'),
+                        "existing_title": article.get('title'),
+                        "created_at": article.get('created_at')
+                    })
+
+        # Check by similar title (normalize and compare)
+        def normalize_title(t):
+            import re
+            # Remove special chars, lowercase, remove extra spaces
+            t = re.sub(r'[^\w\s]', '', t.lower())
+            return ' '.join(t.split())
+
+        normalized_new = normalize_title(title)
+
+        for article in results:
+            existing_title = article.get('title', '')
+            normalized_existing = normalize_title(existing_title)
+
+            # Exact match after normalization
+            if normalized_new == normalized_existing:
+                return jsonify({
+                    "exists": True,
+                    "reason": "title_exact_match",
+                    "existing_id": article.get('id'),
+                    "existing_title": existing_title,
+                    "created_at": article.get('created_at')
+                })
+
+            # High similarity check (80%+ overlap)
+            if len(normalized_new) > 10 and len(normalized_existing) > 10:
+                words_new = set(normalized_new.split())
+                words_existing = set(normalized_existing.split())
+                if len(words_new) > 0:
+                    overlap = len(words_new & words_existing) / len(words_new)
+                    if overlap >= 0.8:
+                        return jsonify({
+                            "exists": True,
+                            "reason": "title_similar",
+                            "similarity": round(overlap * 100),
+                            "existing_id": article.get('id'),
+                            "existing_title": existing_title,
+                            "created_at": article.get('created_at')
+                        })
+
+        return jsonify({"exists": False})
+
+    except Exception as e:
+        print(f"❌ Duplicate check failed: {e}")
+        return jsonify({"exists": False, "error": str(e)})
+
+
 @app.route('/api/results', methods=['POST'])
 def add_result():
     """Add a new result from n8n workflow (legacy endpoint)"""
