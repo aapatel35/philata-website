@@ -1017,66 +1017,161 @@ def add_article():
 @app.route('/api/articles/check', methods=['POST'])
 def check_article_duplicate():
     """
-    Check if an article with similar title/slug already exists.
-    Used by n8n for deduplication before publishing.
+    Comprehensive duplicate check using:
+    - Exact slug match
+    - Source URL match
+    - Key numbers extraction (CRS, ITAs, dates, amounts)
+    - Stat cards comparison
+    - Content fingerprinting
     """
+    import re
+    from datetime import datetime, timedelta
+
+    def extract_numbers(text):
+        """Extract all significant numbers from text (CRS scores, ITA counts, dates, etc.)"""
+        if not text:
+            return set()
+        # Find numbers with context (e.g., "500 CRS", "5,000 ITAs", "January 15")
+        patterns = [
+            r'\b(\d{3})\s*(?:CRS|points?|score)',  # CRS scores (3 digits)
+            r'\b(\d{1,3}(?:,\d{3})+|\d{4,})\s*(?:ITAs?|invitations?|applicants?|people|candidates?)',  # Large numbers
+            r'\b(\d{1,2}(?:st|nd|rd|th)?\s+(?:January|February|March|April|May|June|July|August|September|October|November|December))',  # Dates
+            r'\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}',  # Dates alt
+            r'\$\s*(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)',  # Dollar amounts
+            r'\b(\d+(?:\.\d+)?)\s*(?:percent|%)',  # Percentages
+            r'#\s*(\d+)',  # Draw numbers
+            r'\b(\d{4})\b',  # Years
+        ]
+        numbers = set()
+        text_lower = text.lower()
+        for pattern in patterns:
+            matches = re.findall(pattern, text_lower, re.IGNORECASE)
+            for m in matches:
+                # Normalize: remove commas, lowercase
+                normalized = str(m).replace(',', '').lower().strip()
+                if normalized and len(normalized) >= 2:
+                    numbers.add(normalized)
+        return numbers
+
+    def extract_stat_values(stat_cards):
+        """Extract values from stat cards"""
+        if not stat_cards:
+            return set()
+        values = set()
+        for card in stat_cards:
+            val = str(card.get('value', '')).replace(',', '').lower().strip()
+            if val:
+                values.add(val)
+        return values
+
+    def normalize_url(url):
+        """Normalize URL for comparison"""
+        if not url:
+            return ''
+        url = url.lower().strip()
+        # Remove protocol, www, trailing slashes
+        url = re.sub(r'^https?://', '', url)
+        url = re.sub(r'^www\.', '', url)
+        url = url.rstrip('/')
+        return url
+
     try:
         data = request.get_json()
-        title = data.get('title', '').lower().strip()
+        title = data.get('title', '').strip()
         slug = data.get('slug', '')
+        source_url = data.get('source_url', '')
+        full_article = data.get('full_article', '')
+        stat_cards = data.get('stat_cards', [])
+        summary = data.get('summary', '')
 
-        if not title and not slug:
-            return jsonify({"exists": False, "reason": "No title or slug provided"})
+        if not title:
+            return jsonify({"exists": False, "reason": "No title provided"})
 
         results = load_results()
 
-        # Check by exact slug match
-        if slug:
-            for article in results:
-                if article.get('slug', '') == slug:
-                    return jsonify({
-                        "exists": True,
-                        "reason": "slug_match",
-                        "existing_id": article.get('id'),
-                        "existing_title": article.get('title'),
-                        "created_at": article.get('created_at')
-                    })
+        # Extract key data from new article
+        new_numbers = extract_numbers(title + ' ' + summary + ' ' + full_article)
+        new_stats = extract_stat_values(stat_cards)
+        new_source = normalize_url(source_url)
+        new_all_numbers = new_numbers | new_stats
 
-        # Check by similar title (normalize and compare)
-        def normalize_title(t):
-            import re
-            # Remove special chars, lowercase, remove extra spaces
-            t = re.sub(r'[^\w\s]', '', t.lower())
-            return ' '.join(t.split())
-
-        normalized_new = normalize_title(title)
+        print(f"🔍 Checking duplicate for: {title[:50]}...")
+        print(f"   Key numbers: {new_all_numbers}")
 
         for article in results:
+            existing_id = article.get('id', '')
             existing_title = article.get('title', '')
-            normalized_existing = normalize_title(existing_title)
+            existing_slug = article.get('slug', '')
+            existing_source = normalize_url(article.get('source_url', ''))
+            existing_article = article.get('full_article', '')
+            existing_stats = article.get('stat_cards', [])
+            existing_summary = article.get('summary', '')
 
-            # Exact match after normalization
-            if normalized_new == normalized_existing:
+            # 1. Exact slug match
+            if slug and existing_slug == slug:
                 return jsonify({
                     "exists": True,
-                    "reason": "title_exact_match",
-                    "existing_id": article.get('id'),
+                    "reason": "slug_match",
+                    "existing_id": existing_id,
                     "existing_title": existing_title,
                     "created_at": article.get('created_at')
                 })
 
-            # High similarity check (80%+ overlap)
-            if len(normalized_new) > 10 and len(normalized_existing) > 10:
-                words_new = set(normalized_new.split())
-                words_existing = set(normalized_existing.split())
-                if len(words_new) > 0:
-                    overlap = len(words_new & words_existing) / len(words_new)
-                    if overlap >= 0.8:
+            # 2. Same source URL (same news article)
+            if new_source and existing_source and new_source == existing_source:
+                return jsonify({
+                    "exists": True,
+                    "reason": "source_url_match",
+                    "existing_id": existing_id,
+                    "existing_title": existing_title,
+                    "created_at": article.get('created_at')
+                })
+
+            # 3. Extract numbers from existing article
+            existing_numbers = extract_numbers(existing_title + ' ' + existing_summary + ' ' + existing_article)
+            existing_stat_values = extract_stat_values(existing_stats)
+            existing_all_numbers = existing_numbers | existing_stat_values
+
+            # 4. Key numbers match (if 3+ significant numbers match, likely same news)
+            if len(new_all_numbers) >= 2 and len(existing_all_numbers) >= 2:
+                matching_numbers = new_all_numbers & existing_all_numbers
+                # Filter to only meaningful matches (exclude common years like 2024, 2025)
+                meaningful_matches = {n for n in matching_numbers if not (n.isdigit() and len(n) == 4 and 2020 <= int(n) <= 2030)}
+
+                if len(meaningful_matches) >= 3:
+                    return jsonify({
+                        "exists": True,
+                        "reason": "key_numbers_match",
+                        "matching_numbers": list(meaningful_matches)[:5],
+                        "existing_id": existing_id,
+                        "existing_title": existing_title,
+                        "created_at": article.get('created_at')
+                    })
+
+            # 5. Title word similarity (70%+ with same category)
+            def normalize_text(t):
+                t = re.sub(r'[^\w\s]', '', t.lower())
+                return set(t.split())
+
+            new_words = normalize_text(title)
+            existing_words = normalize_text(existing_title)
+
+            if len(new_words) >= 4 and len(existing_words) >= 4:
+                overlap = len(new_words & existing_words) / max(len(new_words), 1)
+                same_category = data.get('category') == article.get('category')
+
+                # Higher threshold if different category
+                threshold = 0.70 if same_category else 0.85
+
+                if overlap >= threshold:
+                    # Additional check: must share at least 1 key number
+                    if matching_numbers := (new_all_numbers & existing_all_numbers):
                         return jsonify({
                             "exists": True,
-                            "reason": "title_similar",
+                            "reason": "title_and_numbers_match",
                             "similarity": round(overlap * 100),
-                            "existing_id": article.get('id'),
+                            "matching_numbers": list(matching_numbers)[:3],
+                            "existing_id": existing_id,
                             "existing_title": existing_title,
                             "created_at": article.get('created_at')
                         })
@@ -1085,6 +1180,8 @@ def check_article_duplicate():
 
     except Exception as e:
         print(f"❌ Duplicate check failed: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({"exists": False, "error": str(e)})
 
 
