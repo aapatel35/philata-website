@@ -1505,6 +1505,384 @@ def generate_image():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+# =============================================================================
+# CAPTION GENERATION (matching local caption_generator.py)
+# =============================================================================
+
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models"
+
+
+def fix_caption_formatting(data: dict, article_url: str) -> dict:
+    """Fix newline formatting in captions to ensure proper line breaks"""
+    import re
+    if 'captions' not in data:
+        return data
+
+    for platform, caption in data['captions'].items():
+        if not caption:
+            continue
+
+        # Convert escaped newlines to actual newlines
+        caption = caption.replace('\\n', '\n')
+
+        # Fix missing newlines after headline (before 📖)
+        caption = re.sub(r'([!?🇫🇷🇨🇦])\s*(📖)', r'\1\n\n\2', caption)
+
+        # Fix missing newline after article URL
+        caption = re.sub(r'(https://[^\s]+)([A-Z])', r'\1\n\n\2', caption)
+
+        # Fix missing newlines before Key Changes/Key Statistics
+        caption = re.sub(r'(\.)(\s*)(Key Changes:|Key Statistics:|Key statistics:)', r'\1\n\n\3', caption)
+
+        # Fix newline after "Key Changes:" before first bullet
+        caption = re.sub(r'(Key Changes:)\s*(📌)', r'\1\n\2', caption)
+        caption = re.sub(r'(Key Statistics:|Key statistics:)\s*(📌|\*)', r'\1\n\2', caption)
+
+        # Fix missing newlines before each 📌 bullet point
+        caption = re.sub(r'(\.)(\s*)(📌)', r'\1\n\2\3', caption)
+
+        # Fix missing newlines before "This means", "This affects", etc.
+        caption = re.sub(r'(\.)(\s*)(This means|This affects|These changes|This indicates|This expansion)', r'\1\n\n\3', caption)
+
+        # Fix missing newlines before timeline
+        caption = re.sub(r'(\.)(\s*)(Timeline:|Applications submitted|The new rules|Effective)', r'\1\n\n\3', caption)
+
+        # Fix missing newlines before 💡 Save
+        caption = re.sub(r'([.!])(\s*)(💡)', r'\1\n\n\3', caption)
+
+        # Fix missing newline between Save and Follow
+        caption = re.sub(r'(Save this post!)(\s*)(🔔)', r'\1\n\3', caption)
+
+        # Fix missing newlines before hashtags
+        caption = re.sub(r'(updates!)(\s*)(#)', r'\1\n\n\3', caption)
+        caption = re.sub(r'(@philata_ca)(\s*)(#)', r'\1\n\n\3', caption)
+        caption = re.sub(r'(@philata\.ca[^#]*)(#)', r'\1\n\n\2', caption)
+        caption = re.sub(r'([a-zA-Z0-9.!?)])(\s*)(#\w+)', r'\1\n\n\3', caption)
+
+        # Consolidate hashtags into paragraph form
+        def consolidate_hashtags(text):
+            parts = re.split(r'(\n\n)(#\w+)', text, maxsplit=1)
+            if len(parts) >= 3:
+                pre_hashtags = parts[0] + parts[1]
+                hashtag_section = parts[2] + ''.join(parts[3:]) if len(parts) > 3 else parts[2]
+                hashtags_clean = re.sub(r'\s*\n+\s*', ' ', hashtag_section)
+                hashtags_clean = re.sub(r'\s+', ' ', hashtags_clean)
+                return pre_hashtags + hashtags_clean.strip()
+            return text
+
+        caption = consolidate_hashtags(caption)
+
+        # Platform-specific formatting
+        if platform == 'twitter':
+            caption = re.sub(r'\s{2,}', '\n\n', caption)
+            caption = re.sub(r'(https://[^\s]+)\s*(📌)', r'\1\n\n\2', caption)
+
+        if platform == 'linkedin':
+            caption = re.sub(r'(\.)(\s*)(Implications:|Business/Economic Impact:|Action items for professionals:|Action Items:)', r'\1\n\n\3', caption)
+            caption = re.sub(r'(Implications:|Business/Economic Impact:|Action items for professionals:|Action Items:)\s*(\*|This)', r'\1\n\2', caption)
+            caption = re.sub(r'(\.)(\s*)(\*\s+)', r'\1\n\3', caption)
+            caption = re.sub(r'(\.)(\s*)(Save this post)', r'\1\n\n\3', caption)
+
+        # Clean up multiple consecutive newlines (max 2)
+        caption = re.sub(r'\n{3,}', '\n\n', caption)
+
+        data['captions'][platform] = caption.strip()
+
+    return data
+
+
+def fallback_captions(article: dict, article_url: str) -> dict:
+    """Generate detailed captions from article content if API fails"""
+    title = article.get('title', 'Canadian Immigration Update')
+    subtitle = article.get('subtitle', '')
+    category = article.get('category', 'immigration').replace('_', ' ').title()
+
+    instagram_caption = f"""🇨🇦 {title}
+
+📖 For detailed article: {article_url}
+
+{subtitle}
+
+This is an important update for anyone following Canadian immigration policy. The changes announced will affect how applications are processed and who is eligible.
+
+Key Changes:
+📌 New requirements and eligibility criteria
+📌 Updated processing timelines
+📌 Impact on current and future applicants
+
+Stay informed about how these changes may affect your immigration journey.
+
+💡 Save this post!
+🔔 Follow @philata.ca for updates!
+
+#CanadaImmigration #IRCC #ImmigrationNews #ExpressEntry #PNP #Canada #Immigration #PRCanada #MoveToCanada #CanadaVisa #ImmigrationCanada #WorkInCanada #StudyInCanada #CanadaDream #NewToCanada #ImmigrationUpdate"""
+
+    facebook_caption = f"""🇨🇦 {title}
+
+📖 For detailed article: {article_url}
+
+{subtitle}
+
+This is an important update for anyone following Canadian immigration policy. The changes announced will affect how applications are processed and who is eligible.
+
+Key Changes:
+📌 New requirements and eligibility criteria
+📌 Updated processing timelines
+📌 Impact on current and future applicants
+
+Stay informed about how these changes may affect your immigration journey.
+
+💡 Save this post!
+🔔 Follow @philata.ca for updates!
+
+#CanadaImmigration #IRCC #ImmigrationNews #PRCanada #MoveToCanada #CanadaVisa #Immigration #Canada #ExpressEntry #PNP #WorkPermit #StudyInCanada"""
+
+    linkedin_caption = f"""{title}
+
+📖 For detailed article: {article_url}
+
+{subtitle}
+
+This development represents a significant update to Canadian immigration policy. Professionals and organizations should take note of the new requirements and timelines.
+
+Key implications for the immigration sector and prospective applicants.
+
+💡 Save this post!
+🔔 Follow @philata.ca for updates!
+
+#CanadaImmigration #IRCC #Immigration #Canada #HRNews #TalentAcquisition #GlobalMobility #WorkforcePlanning #InternationalHiring #CanadianBusiness"""
+
+    twitter_caption = f"""🇨🇦 {title}
+
+📖 Full article: {article_url}
+
+📌 New policy changes announced
+📌 Updated requirements and criteria
+📌 Impact on applicants
+
+This affects how applications are processed.
+
+💡 Save & 🔔 Follow @philata_ca
+
+#CanadaImmigration #IRCC #ExpressEntry #PRCanada #ImmigrationNews"""
+
+    return {
+        'captions': {
+            'instagram': instagram_caption,
+            'facebook': facebook_caption,
+            'linkedin': linkedin_caption,
+            'twitter': twitter_caption
+        },
+        'image_statement': title[:60] if len(title) <= 60 else title[:57] + '...',
+        'image_subtext': category,
+        'hashtag_sets': {
+            'primary': ['#CanadaImmigration', '#ExpressEntry', '#IRCC', '#PRCanada', '#CanadaVisa'],
+            'secondary': ['#MoveToCanada', '#ImmigrationNews', '#WorkInCanada', '#StudyInCanada', '#CanadaDream', '#NewToCanada', '#ImmigrationUpdate', '#CanadaNews']
+        },
+        'article_url': article_url,
+        'generated_at': datetime.now().isoformat(),
+        'fallback': True
+    }
+
+
+@app.route('/generate/captions', methods=['POST'])
+def generate_captions():
+    """
+    Generate detailed social media captions matching local caption_generator.py.
+
+    Request body:
+    {
+        "title": "Article title",
+        "subtitle": "Article subtitle/summary",
+        "category": "express_entry",
+        "article_url": "https://philata.com/articles/...",
+        "content_html": "Full article content for context",
+        "key_stats": [{"value": "500", "label": "CRS Score"}]
+    }
+    """
+    try:
+        data = request.get_json()
+
+        title = data.get('title', '')
+        subtitle = data.get('subtitle', '')
+        category = data.get('category', 'news')
+        article_url = data.get('article_url', 'https://philata.com')
+        content_html = data.get('content_html', '')[:3000]  # Limit content
+        key_stats = data.get('key_stats', [])
+
+        if not title:
+            return jsonify({"success": False, "error": "Missing title"}), 400
+
+        # Build the detailed prompt (matching caption_generator.py)
+        prompt = f"""Generate detailed social media captions based on this immigration news article.
+
+ARTICLE TITLE: {title}
+SUBTITLE: {subtitle}
+CATEGORY: {category}
+ARTICLE URL: {article_url}
+
+KEY STATISTICS:
+{json.dumps(key_stats, indent=2)}
+
+ARTICLE CONTENT (use this to create informative captions):
+{content_html}
+
+REQUIREMENTS:
+1. Create DETAILED captions that explain the news - NOT generic messages
+2. Include specific numbers, dates, and key facts from the article
+3. Use relevant emojis throughout (Canadian flag sparingly)
+4. DO NOT use abbreviations (apps, docs, grads, temps, info)
+5. Write out full words always
+6. Make captions informative enough that readers understand the news
+
+CAPTION STRUCTURE FOR INSTAGRAM/FACEBOOK/LINKEDIN:
+[Emoji] [Attention-grabbing headline]
+
+(keep one empty line here)
+📖 For detailed article: {article_url}
+
+[2-3 sentences explaining the key news with specific numbers]
+
+Key Changes:
+📌 [Specific point 1 with numbers/dates]
+📌 [Specific point 2 with numbers/dates]
+📌 [Specific point 3 with numbers/dates]
+📌 [Specific point 4 if applicable]
+
+[What this means for applicants - 1-2 sentences]
+
+[Timeline or deadline if applicable]
+
+💡 Save this post!
+🔔 Follow @philata.ca for updates!
+
+[15-18 trending hashtags]
+
+Return ONLY valid JSON:
+{{
+  "captions": {{
+    "instagram": "1200-1800 characters. Follow the structure above. IMPORTANT: Keep one empty line after headline before the article link. Use 📌 emoji for each bullet point in Key Changes. End with 15-18 trending hashtags like #CanadaImmigration #ExpressEntry #IRCC #ImmigrationCanada #PRCanada #CanadaVisa #MoveToCanada #CanadianImmigration #ImmigrationNews #CanadaPR #WorkInCanada #StudyInCanada #CanadaDream #NewToCanada #ImmigrationUpdate #CanadaNews #VisaCanada #ImmigrantLife",
+
+    "facebook": "1200-1800 characters. Same detailed structure as Instagram. IMPORTANT: Keep one empty line after headline before the article link. Use 📌 emoji for each bullet point. End with 10-12 relevant hashtags like #CanadaImmigration #IRCC #ImmigrationNews #PRCanada #MoveToCanada #CanadaVisa #Immigration #Canada #ExpressEntry #PNP #WorkPermit #StudyInCanada",
+
+    "linkedin": "1000-1400 characters. Professional tone with:
+      - Clear headline
+      - One empty line then article link
+      - Key statistics and implications
+      - Business/economic impact
+      - Action items for professionals
+      - Save/Follow CTA at end
+      - End with 8-10 professional hashtags like #CanadaImmigration #IRCC #Immigration #Canada #HRNews #TalentAcquisition #GlobalMobility #WorkforcePlanning #InternationalHiring #CanadianBusiness",
+
+    "twitter": "DETAILED caption for Twitter/X Premium users. 500-800 characters. MUST be well-organized with bullet points:
+
+      [Emoji] [Short punchy headline]
+
+      📖 Full article: {article_url}
+
+      📌 [Key point 1 with number/date]
+      📌 [Key point 2 with number/date]
+      📌 [Key point 3 with number/date]
+      📌 [Key point 4 if applicable]
+
+      [What this means - 1 short sentence]
+
+      💡 Save & 🔔 Follow @philata_ca
+
+      [5-8 hashtags like #CanadaImmigration #ExpressEntry #IRCC #PRCanada #ImmigrationNews]"
+  }},
+
+  "image_statement": "One powerful headline (max 10 words) with the KEY number",
+
+  "image_subtext": "Secondary context line (max 6 words)",
+
+  "hashtag_sets": {{
+    "primary": ["#CanadaImmigration", "#IRCC", "#ExpressEntry", "#PRCanada", "#CanadaVisa"],
+    "secondary": ["#MoveToCanada", "#ImmigrationNews", "#WorkInCanada", "#StudyInCanada", "#CanadaDream", "#NewToCanada", "#ImmigrationUpdate", "#CanadaNews"]
+  }}
+}}"""
+
+        # Call Gemini API
+        gemini_url = f"{GEMINI_URL}/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
+
+        payload = {
+            'contents': [{
+                'parts': [{
+                    'text': prompt
+                }]
+            }],
+            'generationConfig': {
+                'temperature': 0.3,
+                'maxOutputTokens': 4000
+            }
+        }
+
+        response = requests.post(gemini_url, json=payload, timeout=60)
+        response.raise_for_status()
+
+        result = response.json()
+        content = result.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '')
+
+        # Parse JSON response
+        import re
+        content = content.replace('```json', '').replace('```', '').strip()
+        # Clean control characters
+        content = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f]', '', content)
+
+        start = content.find('{')
+        end = content.rfind('}') + 1
+
+        if start >= 0 and end > start:
+            try:
+                caption_data = json.loads(content[start:end])
+                caption_data['article_url'] = article_url
+                caption_data['generated_at'] = datetime.now().isoformat()
+                # Fix formatting
+                caption_data = fix_caption_formatting(caption_data, article_url)
+
+                return jsonify({
+                    "success": True,
+                    **caption_data
+                })
+            except json.JSONDecodeError:
+                # Try more aggressive cleaning
+                cleaned = re.sub(r'[\x00-\x1f\x7f-\x9f]', '', content[start:end])
+                cleaned = cleaned.replace('\n', '\\n').replace('\r', '').replace('\t', ' ')
+                caption_data = json.loads(cleaned)
+                caption_data['article_url'] = article_url
+                caption_data['generated_at'] = datetime.now().isoformat()
+                caption_data = fix_caption_formatting(caption_data, article_url)
+
+                return jsonify({
+                    "success": True,
+                    **caption_data
+                })
+
+        # Fallback if parsing fails
+        fallback_data = fallback_captions({'title': title, 'subtitle': subtitle, 'category': category}, article_url)
+        return jsonify({
+            "success": True,
+            **fallback_data
+        })
+
+    except Exception as e:
+        print(f"Caption generation error: {e}")
+        # Return fallback captions
+        data = request.get_json() or {}
+        fallback_data = fallback_captions({
+            'title': data.get('title', 'Immigration Update'),
+            'subtitle': data.get('subtitle', ''),
+            'category': data.get('category', 'news')
+        }, data.get('article_url', 'https://philata.com'))
+
+        return jsonify({
+            "success": True,
+            **fallback_data,
+            "error_info": str(e)
+        })
+
+
 @app.route('/api/render-image', methods=['POST'])
 def render_image():
     """
