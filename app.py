@@ -1079,6 +1079,27 @@ def check_article_duplicate():
         url = url.rstrip('/')
         return url
 
+    def is_generic_index_url(url):
+        """Check if URL is a generic index/listing page that shouldn't be used for duplicate matching"""
+        if not url:
+            return True
+        url_lower = url.lower()
+        # Generic patterns that indicate index/listing pages
+        generic_patterns = [
+            '/index.aspx', '/index.html', '/index.php', '/index.htm',
+            '/pages/index', '/decisions/pages/', '/newsroom', '/news-releases',
+            '/media-room', '/press-releases', '/announcements',
+            'canada.ca/en/immigration', 'canada.ca/fr/immigration',  # Generic IRCC pages
+            '/search?', '/results?', '/list?',  # Search/list pages
+        ]
+        for pattern in generic_patterns:
+            if pattern in url_lower:
+                return True
+        # Also check if URL ends with just a domain or section (no specific article ID)
+        if url_lower.endswith(('.gc.ca', '.ca/en', '.ca/fr', '/en', '/fr')):
+            return True
+        return False
+
     try:
         data = request.get_json()
         title = data.get('title', '').strip()
@@ -1121,15 +1142,17 @@ def check_article_duplicate():
                     "created_at": article.get('created_at')
                 })
 
-            # 2. Same source URL (same news article)
+            # 2. Same source URL (same news article) - but skip generic index pages
             if new_source and existing_source and new_source == existing_source:
-                return jsonify({
-                    "exists": True,
-                    "reason": "source_url_match",
-                    "existing_id": existing_id,
-                    "existing_title": existing_title,
-                    "created_at": article.get('created_at')
-                })
+                # Don't match on generic index/listing pages
+                if not is_generic_index_url(source_url):
+                    return jsonify({
+                        "exists": True,
+                        "reason": "source_url_match",
+                        "existing_id": existing_id,
+                        "existing_title": existing_title,
+                        "created_at": article.get('created_at')
+                    })
 
             # 3. Extract numbers from existing article
             existing_numbers = extract_numbers(existing_title + ' ' + existing_summary + ' ' + existing_article)
