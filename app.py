@@ -1018,6 +1018,38 @@ def add_article():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+@app.route('/api/articles/update-image', methods=['POST'])
+def update_article_image():
+    """Update an existing article's image_url"""
+    try:
+        data = request.get_json()
+        slug = data.get('slug', '')
+        image_url = data.get('image_url', '')
+
+        if not slug or not image_url:
+            return jsonify({"success": False, "error": "slug and image_url required"}), 400
+
+        results = load_results()
+        updated = False
+
+        for i, article in enumerate(results):
+            if article.get('slug') == slug:
+                results[i]['image_url'] = image_url
+                updated = True
+                print(f"✅ Updated image for article: {slug}")
+                break
+
+        if updated:
+            save_results(results)
+            return jsonify({"success": True, "slug": slug, "image_url": image_url})
+        else:
+            return jsonify({"success": False, "error": "Article not found"}), 404
+
+    except Exception as e:
+        print(f"❌ Update image failed: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 @app.route('/api/articles/check', methods=['POST'])
 def check_article_duplicate():
     """
