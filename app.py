@@ -27,6 +27,10 @@ RESULTS_FILE = os.path.join(DATA_DIR, 'results.json')
 APPROVED_FILE = os.path.join(DATA_DIR, 'approved.json')
 GUIDES_FILE = os.path.join(DATA_DIR, 'guides.json')
 ARTICLES_FILE = os.path.join(DATA_DIR, 'articles.json')
+LOGS_FILE = os.path.join(DATA_DIR, 'n8n_logs.json')
+
+# Admin settings
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'philata2025')
 
 # Cloudinary settings for URL conversion
 CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME', 'dg7yw1j18')
@@ -2141,6 +2145,226 @@ def render_image():
         })
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+
+
+# =============================================================================
+# ADMIN LOGS (Password Protected)
+# =============================================================================
+
+def load_logs():
+    """Load n8n logs from file"""
+    if os.path.exists(LOGS_FILE):
+        try:
+            with open(LOGS_FILE, 'r') as f:
+                return json.load(f)
+        except:
+            return []
+    return []
+
+def save_logs(logs):
+    """Save n8n logs to file"""
+    # Keep only last 500 logs
+    logs = logs[-500:]
+    with open(LOGS_FILE, 'w') as f:
+        json.dump(logs, f, indent=2)
+
+@app.route('/api/n8n/log', methods=['POST'])
+def receive_n8n_log():
+    """Receive logs from n8n workflow"""
+    try:
+        data = request.get_json()
+
+        log_entry = {
+            'timestamp': datetime.now().isoformat(),
+            'pipeline': data.get('pipeline', 'unknown'),
+            'action': data.get('action', 'unknown'),
+            'title': data.get('title', ''),
+            'status': data.get('status', 'info'),  # success, skipped, error, info
+            'reason': data.get('reason', ''),
+            'details': data.get('details', {}),
+            'social_results': data.get('social_results', {})
+        }
+
+        logs = load_logs()
+        logs.append(log_entry)
+        save_logs(logs)
+
+        return jsonify({'success': True, 'message': 'Log saved'})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/admin/logs')
+def admin_logs():
+    """Password-protected admin logs page"""
+    password = request.args.get('p', '')
+
+    if password != ADMIN_PASSWORD:
+        return '''
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Admin Access</title>
+            <style>
+                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                       display: flex; justify-content: center; align-items: center; height: 100vh;
+                       background: #1a1a2e; margin: 0; }
+                .login { background: #16213e; padding: 40px; border-radius: 12px; text-align: center; }
+                h1 { color: #e94560; margin-bottom: 20px; }
+                input { padding: 12px 20px; font-size: 16px; border: none; border-radius: 6px; margin-bottom: 15px; }
+                button { background: #e94560; color: white; padding: 12px 30px; font-size: 16px;
+                        border: none; border-radius: 6px; cursor: pointer; }
+                button:hover { background: #ff6b6b; }
+            </style>
+        </head>
+        <body>
+            <div class="login">
+                <h1>Admin Access</h1>
+                <form method="GET">
+                    <input type="password" name="p" placeholder="Password" required><br>
+                    <button type="submit">Access Logs</button>
+                </form>
+            </div>
+        </body>
+        </html>
+        ''', 401
+
+    logs = load_logs()
+    logs.reverse()  # Most recent first
+
+    # Generate HTML for logs
+    logs_html = ''
+    for log in logs[:100]:  # Show last 100
+        status_color = {
+            'success': '#4ade80',
+            'skipped': '#fbbf24',
+            'error': '#f87171',
+            'info': '#60a5fa'
+        }.get(log.get('status', 'info'), '#60a5fa')
+
+        social_html = ''
+        if log.get('social_results'):
+            for platform, result in log.get('social_results', {}).items():
+                icon = '✓' if result.get('success') else '✗'
+                social_html += f'<span class="social-badge" style="background: {"#4ade80" if result.get("success") else "#f87171"}">{platform}: {icon}</span> '
+
+        logs_html += f'''
+        <div class="log-entry" style="border-left: 4px solid {status_color}">
+            <div class="log-header">
+                <span class="timestamp">{log.get('timestamp', '')[:19]}</span>
+                <span class="pipeline">{log.get('pipeline', '')}</span>
+                <span class="status" style="background: {status_color}">{log.get('status', '').upper()}</span>
+            </div>
+            <div class="log-title">{log.get('title', 'No title')}</div>
+            <div class="log-action"><strong>Action:</strong> {log.get('action', '')}</div>
+            {f'<div class="log-reason"><strong>Reason:</strong> {log.get("reason", "")}</div>' if log.get('reason') else ''}
+            {f'<div class="social-results">{social_html}</div>' if social_html else ''}
+        </div>
+        '''
+
+    return f'''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>n8n Logs - Philata Admin</title>
+        <meta name="robots" content="noindex, nofollow">
+        <style>
+            * {{ box-sizing: border-box; }}
+            body {{
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background: #0f0f23; color: #e0e0e0; margin: 0; padding: 20px;
+            }}
+            .header {{
+                display: flex; justify-content: space-between; align-items: center;
+                margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #333;
+            }}
+            h1 {{ color: #e94560; margin: 0; }}
+            .stats {{ display: flex; gap: 20px; }}
+            .stat {{ background: #1a1a2e; padding: 15px 25px; border-radius: 8px; text-align: center; }}
+            .stat-value {{ font-size: 24px; font-weight: bold; color: #4ade80; }}
+            .stat-label {{ font-size: 12px; color: #888; margin-top: 5px; }}
+            .log-entry {{
+                background: #1a1a2e; margin-bottom: 15px; padding: 20px;
+                border-radius: 8px;
+            }}
+            .log-header {{
+                display: flex; gap: 15px; align-items: center; margin-bottom: 10px;
+            }}
+            .timestamp {{ color: #888; font-size: 14px; }}
+            .pipeline {{
+                background: #3b82f6; color: white; padding: 4px 12px;
+                border-radius: 4px; font-size: 12px; text-transform: uppercase;
+            }}
+            .status {{
+                color: #0f0f23; padding: 4px 12px; border-radius: 4px;
+                font-size: 12px; font-weight: bold;
+            }}
+            .log-title {{ font-size: 18px; font-weight: 600; margin-bottom: 10px; }}
+            .log-action, .log-reason {{ font-size: 14px; color: #aaa; margin-bottom: 5px; }}
+            .social-results {{ margin-top: 10px; }}
+            .social-badge {{
+                display: inline-block; padding: 4px 10px; border-radius: 4px;
+                font-size: 12px; color: #0f0f23; margin-right: 8px;
+            }}
+            .refresh {{
+                background: #3b82f6; color: white; padding: 10px 20px;
+                border: none; border-radius: 6px; cursor: pointer; font-size: 14px;
+            }}
+            .refresh:hover {{ background: #2563eb; }}
+            .empty {{ text-align: center; padding: 60px; color: #666; }}
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>n8n Workflow Logs</h1>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value">{len([l for l in logs if l.get('status') == 'success'])}</div>
+                        <div class="stat-label">Published</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" style="color: #fbbf24">{len([l for l in logs if l.get('status') == 'skipped'])}</div>
+                        <div class="stat-label">Skipped</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" style="color: #f87171">{len([l for l in logs if l.get('status') == 'error'])}</div>
+                        <div class="stat-label">Errors</div>
+                    </div>
+                </div>
+                <button class="refresh" onclick="location.reload()">Refresh</button>
+            </div>
+        </div>
+
+        {logs_html if logs_html else '<div class="empty"><h2>No logs yet</h2><p>Logs will appear here when n8n workflow runs</p></div>'}
+
+        <script>
+            // Auto-refresh every 30 seconds
+            setTimeout(() => location.reload(), 30000);
+        </script>
+    </body>
+    </html>
+    '''
+
+@app.route('/api/n8n/logs', methods=['GET'])
+def get_logs_api():
+    """API endpoint to get logs (requires password)"""
+    password = request.args.get('p', '')
+    if password != ADMIN_PASSWORD:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    logs = load_logs()
+    logs.reverse()
+    return jsonify({'logs': logs[:100]})
+
+@app.route('/api/n8n/logs/clear', methods=['POST'])
+def clear_logs():
+    """Clear all logs (requires password)"""
+    password = request.args.get('p', '')
+    if password != ADMIN_PASSWORD:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    save_logs([])
+    return jsonify({'success': True, 'message': 'Logs cleared'})
 
 
 # =============================================================================
