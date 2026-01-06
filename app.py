@@ -28,6 +28,7 @@ APPROVED_FILE = os.path.join(DATA_DIR, 'approved.json')
 GUIDES_FILE = os.path.join(DATA_DIR, 'guides.json')
 ARTICLES_FILE = os.path.join(DATA_DIR, 'articles.json')
 LOGS_FILE = os.path.join(DATA_DIR, 'n8n_logs.json')
+AI_DECISIONS_FILE = os.path.join(DATA_DIR, 'ai_decisions.json')
 
 # Admin settings
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'philata2025')
@@ -2420,6 +2421,273 @@ def clear_logs():
 
     save_logs([])
     return jsonify({'success': True, 'message': 'Logs cleared'})
+
+
+# =============================================================================
+# AI DECISION LOGGING (For Training)
+# =============================================================================
+
+def load_ai_decisions():
+    """Load AI decision logs from file"""
+    if os.path.exists(AI_DECISIONS_FILE):
+        try:
+            with open(AI_DECISIONS_FILE, 'r') as f:
+                return json.load(f)
+        except:
+            return []
+    return []
+
+def save_ai_decisions(decisions):
+    """Save AI decision logs to file"""
+    # Keep only last 1000 decisions for training data
+    decisions = decisions[-1000:]
+    with open(AI_DECISIONS_FILE, 'w') as f:
+        json.dump(decisions, f, indent=2)
+
+@app.route('/api/ai/log-decision', methods=['POST'])
+def log_ai_decision():
+    """Log AI approval/rejection decisions for training"""
+    try:
+        data = request.get_json()
+
+        decision_entry = {
+            'timestamp': datetime.now().isoformat(),
+            'date': datetime.now().strftime('%Y-%m-%d'),
+            'scraper_source': data.get('scraper_source', 'unknown'),
+            'total_scraped': data.get('total_scraped', 0),
+            'total_approved': data.get('total_approved', 0),
+            'total_rejected': data.get('total_rejected', 0),
+            'approved_items': data.get('approved_items', []),
+            'rejected_items': data.get('rejected_items', []),
+            'ai_raw_response': data.get('ai_raw_response', ''),
+            'fallback_used': data.get('fallback_used', False),
+            'fallback_source': data.get('fallback_source', ''),
+            'fallback_items': data.get('fallback_items', [])
+        }
+
+        decisions = load_ai_decisions()
+        decisions.append(decision_entry)
+        save_ai_decisions(decisions)
+
+        return jsonify({'success': True, 'message': 'AI decision logged'})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/admin/ai-decisions')
+def admin_ai_decisions():
+    """Password-protected AI decisions log page"""
+    password = request.args.get('p', '')
+
+    if password != ADMIN_PASSWORD:
+        return '''
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>AI Decisions - Admin</title>
+            <style>
+                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                       display: flex; justify-content: center; align-items: center; height: 100vh;
+                       background: #1a1a2e; margin: 0; }
+                .login { background: #16213e; padding: 40px; border-radius: 12px; text-align: center; }
+                h1 { color: #e94560; margin-bottom: 20px; }
+                input { padding: 12px 20px; font-size: 16px; border: none; border-radius: 6px; margin-bottom: 15px; }
+                button { background: #e94560; color: white; padding: 12px 30px; font-size: 16px;
+                        border: none; border-radius: 6px; cursor: pointer; }
+                button:hover { background: #ff6b6b; }
+            </style>
+        </head>
+        <body>
+            <div class="login">
+                <h1>AI Decisions Log</h1>
+                <form method="GET">
+                    <input type="password" name="p" placeholder="Password" required><br>
+                    <button type="submit">View Decisions</button>
+                </form>
+            </div>
+        </body>
+        </html>
+        ''', 401
+
+    decisions = load_ai_decisions()
+    decisions.reverse()  # Most recent first
+
+    # Calculate stats
+    total_approved = sum(d.get('total_approved', 0) for d in decisions)
+    total_rejected = sum(d.get('total_rejected', 0) for d in decisions)
+    total_scraped = sum(d.get('total_scraped', 0) for d in decisions)
+
+    # Generate HTML
+    decisions_html = ''
+    for d in decisions[:50]:  # Show last 50 decisions
+        approved_list = ''.join([
+            f'<li class="approved"><strong>{item.get("title", "No title")}</strong><br><small>{item.get("reason", "")}</small></li>'
+            for item in d.get('approved_items', [])
+        ]) or '<li class="none">None</li>'
+
+        rejected_list = ''.join([
+            f'<li class="rejected"><strong>{item.get("title", "No title")}</strong><br><small>{item.get("reason", "")}</small></li>'
+            for item in d.get('rejected_items', [])
+        ]) or '<li class="none">None</li>'
+
+        fallback_html = ''
+        if d.get('fallback_used'):
+            fallback_items = ''.join([
+                f'<li>{item.get("title", "No title")}</li>'
+                for item in d.get('fallback_items', [])
+            ]) or '<li>None</li>'
+            fallback_html = f'''
+                <div class="fallback-section">
+                    <h4>Fallback Used: {d.get('fallback_source', 'unknown')}</h4>
+                    <ul>{fallback_items}</ul>
+                </div>
+            '''
+
+        decisions_html += f'''
+            <div class="decision-card">
+                <div class="decision-header">
+                    <span class="timestamp">{d.get('timestamp', '')[:19]}</span>
+                    <span class="source">{d.get('scraper_source', 'unknown')}</span>
+                    <span class="stats">
+                        <span class="stat approved">{d.get('total_approved', 0)} approved</span>
+                        <span class="stat rejected">{d.get('total_rejected', 0)} rejected</span>
+                        <span class="stat total">/ {d.get('total_scraped', 0)} scraped</span>
+                    </span>
+                </div>
+                <div class="decision-content">
+                    <div class="column approved-column">
+                        <h4>Approved</h4>
+                        <ul>{approved_list}</ul>
+                    </div>
+                    <div class="column rejected-column">
+                        <h4>Rejected</h4>
+                        <ul>{rejected_list}</ul>
+                    </div>
+                </div>
+                {fallback_html}
+            </div>
+        '''
+
+    return f'''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>AI Decisions Log - Philata Admin</title>
+        <style>
+            * {{ box-sizing: border-box; }}
+            body {{
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background: #0f172a; color: #e2e8f0; margin: 0; padding: 20px;
+            }}
+            .header {{
+                display: flex; justify-content: space-between; align-items: center;
+                margin-bottom: 20px; padding: 20px; background: #1e293b; border-radius: 12px;
+            }}
+            h1 {{ margin: 0; color: #f8fafc; }}
+            .summary {{
+                display: flex; gap: 20px;
+            }}
+            .summary-stat {{
+                padding: 10px 20px; border-radius: 8px; text-align: center;
+            }}
+            .summary-stat.approved {{ background: rgba(34, 197, 94, 0.2); color: #4ade80; }}
+            .summary-stat.rejected {{ background: rgba(239, 68, 68, 0.2); color: #f87171; }}
+            .summary-stat.total {{ background: rgba(59, 130, 246, 0.2); color: #60a5fa; }}
+            .summary-stat .number {{ font-size: 24px; font-weight: bold; }}
+            .summary-stat .label {{ font-size: 12px; opacity: 0.8; }}
+
+            .decision-card {{
+                background: #1e293b; border-radius: 12px; margin-bottom: 16px;
+                overflow: hidden;
+            }}
+            .decision-header {{
+                display: flex; gap: 15px; align-items: center;
+                padding: 15px 20px; background: #334155; border-bottom: 1px solid #475569;
+            }}
+            .timestamp {{ color: #94a3b8; font-size: 14px; }}
+            .source {{
+                background: #3b82f6; color: white; padding: 4px 10px;
+                border-radius: 4px; font-size: 12px; font-weight: 500;
+            }}
+            .stats {{ margin-left: auto; display: flex; gap: 10px; }}
+            .stat {{ font-size: 13px; padding: 4px 8px; border-radius: 4px; }}
+            .stat.approved {{ background: rgba(34, 197, 94, 0.2); color: #4ade80; }}
+            .stat.rejected {{ background: rgba(239, 68, 68, 0.2); color: #f87171; }}
+            .stat.total {{ color: #94a3b8; }}
+
+            .decision-content {{
+                display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px;
+            }}
+            .column h4 {{ margin: 0 0 10px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }}
+            .approved-column h4 {{ color: #4ade80; }}
+            .rejected-column h4 {{ color: #f87171; }}
+            .column ul {{ list-style: none; padding: 0; margin: 0; }}
+            .column li {{
+                padding: 10px; margin-bottom: 8px; border-radius: 6px; font-size: 14px;
+            }}
+            .column li.approved {{ background: rgba(34, 197, 94, 0.1); border-left: 3px solid #4ade80; }}
+            .column li.rejected {{ background: rgba(239, 68, 68, 0.1); border-left: 3px solid #f87171; }}
+            .column li.none {{ color: #64748b; font-style: italic; }}
+            .column li small {{ color: #94a3b8; display: block; margin-top: 4px; }}
+
+            .fallback-section {{
+                padding: 15px 20px; background: rgba(147, 51, 234, 0.1);
+                border-top: 1px solid #475569;
+            }}
+            .fallback-section h4 {{ color: #a78bfa; margin: 0 0 10px 0; font-size: 13px; }}
+            .fallback-section ul {{ list-style: none; padding: 0; margin: 0; }}
+            .fallback-section li {{ color: #c4b5fd; font-size: 13px; padding: 4px 0; }}
+
+            .export-btn {{
+                background: #3b82f6; color: white; border: none; padding: 10px 20px;
+                border-radius: 6px; cursor: pointer; font-size: 14px;
+            }}
+            .export-btn:hover {{ background: #2563eb; }}
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>AI Decisions Log</h1>
+            <div class="summary">
+                <div class="summary-stat approved">
+                    <div class="number">{total_approved}</div>
+                    <div class="label">Total Approved</div>
+                </div>
+                <div class="summary-stat rejected">
+                    <div class="number">{total_rejected}</div>
+                    <div class="label">Total Rejected</div>
+                </div>
+                <div class="summary-stat total">
+                    <div class="number">{total_scraped}</div>
+                    <div class="label">Total Scraped</div>
+                </div>
+            </div>
+            <a href="/api/ai/decisions?p={password}" class="export-btn">Export JSON</a>
+        </div>
+        {decisions_html if decisions_html else '<p style="text-align:center;color:#64748b;">No decisions logged yet</p>'}
+    </body>
+    </html>
+    '''
+
+@app.route('/api/ai/decisions', methods=['GET'])
+def get_ai_decisions_api():
+    """API endpoint to get AI decisions (requires password)"""
+    password = request.args.get('p', '')
+    if password != ADMIN_PASSWORD:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    decisions = load_ai_decisions()
+    decisions.reverse()
+    return jsonify({'decisions': decisions})
+
+@app.route('/api/ai/decisions/clear', methods=['POST'])
+def clear_ai_decisions():
+    """Clear all AI decisions (requires password)"""
+    password = request.args.get('p', '')
+    if password != ADMIN_PASSWORD:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    save_ai_decisions([])
+    return jsonify({'success': True, 'message': 'AI decisions cleared'})
 
 
 # =============================================================================
