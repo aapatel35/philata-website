@@ -1349,6 +1349,25 @@ def reject_content(content_id):
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+@app.route('/api/results/<content_id>/delete', methods=['DELETE', 'POST'])
+def delete_content(content_id):
+    """Permanently delete content"""
+    try:
+        results = load_results()
+        original_count = len(results)
+
+        # Filter out the article to delete
+        results = [r for r in results if r.get('id') != content_id]
+
+        if len(results) == original_count:
+            return jsonify({"success": False, "error": "Article not found"}), 404
+
+        save_results(results)
+        return jsonify({"success": True, "message": f"Article {content_id} deleted"})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 @app.route('/api/results/<content_id>/posted', methods=['POST'])
 def mark_posted(content_id):
     """Mark content as posted"""
