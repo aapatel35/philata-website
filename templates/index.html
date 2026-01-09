@@ -4,696 +4,534 @@
 
 {% block extra_css %}
 <style>
-    /* Hero Section */
-    .hero-section {
-        background: var(--gradient-hero);
-        border-radius: 24px;
-        padding: 60px 48px;
-        color: white;
-        margin-bottom: 40px;
+    /* Hero Section - Premium Consulting Style */
+    .hero {
+        padding: 80px 0 60px;
         position: relative;
-        overflow: hidden;
     }
 
-    .hero-section::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='rgba(255,255,255,0.03)' d='M50 5 L55 25 L70 15 L60 30 L80 35 L60 40 L70 55 L55 45 L50 70 L45 45 L30 55 L40 40 L20 35 L40 30 L30 15 L45 25 Z'/%3E%3C/svg%3E") repeat;
-        background-size: 80px 80px;
-        pointer-events: none;
-    }
-
-    .hero-section::after {
-        content: '';
-        position: absolute;
-        top: -100px;
-        right: -100px;
-        width: 400px;
-        height: 400px;
-        background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
-        pointer-events: none;
-    }
-
-    .hero-content {
-        position: relative;
-        z-index: 1;
-        max-width: 600px;
-    }
-
-    .hero-badge {
+    .hero-eyebrow {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: rgba(255,255,255,0.15);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.2);
-        padding: 8px 16px;
-        border-radius: 100px;
-        font-size: 13px;
-        font-weight: 500;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--gold);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
         margin-bottom: 20px;
     }
 
-    .hero-badge i {
-        color: var(--accent);
+    .hero-eyebrow::before {
+        content: '';
+        width: 24px;
+        height: 1px;
+        background: var(--gold);
     }
 
     .hero-title {
-        font-family: 'Plus Jakarta Sans', var(--font-family);
-        font-size: 48px;
-        font-weight: 800;
+        font-family: 'Instrument Serif', Georgia, serif;
+        font-size: 3.5rem;
+        font-weight: 400;
+        color: var(--text-primary);
         line-height: 1.1;
-        margin-bottom: 16px;
         letter-spacing: -0.02em;
+        margin-bottom: 24px;
+        max-width: 700px;
     }
 
-    .hero-title .accent {
-        background: linear-gradient(135deg, #fbbf24, #f97316);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+    .hero-title em {
+        font-style: italic;
+        color: var(--gold);
     }
 
-    .hero-subtitle {
+    .hero-description {
         font-size: 18px;
-        opacity: 0.9;
-        margin-bottom: 32px;
-        line-height: 1.6;
+        color: var(--text-tertiary);
+        line-height: 1.7;
+        max-width: 540px;
+        margin-bottom: 40px;
     }
 
     .hero-actions {
         display: flex;
         gap: 16px;
-        flex-wrap: wrap;
-    }
-
-    .btn-hero-primary {
-        background: white;
-        color: var(--primary);
-        padding: 14px 28px;
-        font-weight: 600;
-        border-radius: 12px;
-        border: none;
-        display: inline-flex;
         align-items: center;
-        gap: 8px;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
-    .btn-hero-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-        color: var(--primary-dark);
-    }
-
-    .btn-hero-secondary {
-        background: rgba(255,255,255,0.1);
-        color: white;
-        padding: 14px 28px;
-        font-weight: 600;
-        border-radius: 12px;
-        border: 1px solid rgba(255,255,255,0.3);
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        transition: all 0.3s ease;
-        text-decoration: none;
-    }
-
-    .btn-hero-secondary:hover {
-        background: rgba(255,255,255,0.2);
-        border-color: rgba(255,255,255,0.5);
-        color: white;
-        transform: translateY(-2px);
-    }
-
-    /* Stats Section */
-    .stats-section {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-        margin-bottom: 48px;
-    }
-
-    .stat-card-new {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 24px;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        cursor: default;
-    }
-
-    .stat-card-new::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .stat-card-new:hover {
-        transform: translateY(-4px) rotateX(2deg);
-        box-shadow: var(--shadow-lg);
-    }
-
-    .stat-card-new:hover::before {
-        opacity: 1;
-    }
-
-    .stat-card-new:nth-child(1)::before { background: var(--gradient-primary); }
-    .stat-card-new:nth-child(2)::before { background: var(--gradient-accent); }
-    .stat-card-new:nth-child(3)::before { background: var(--gradient-purple); }
-    .stat-card-new:nth-child(4)::before { background: var(--gradient-teal); }
-
-    .stat-card-new:nth-child(1) .stat-icon-bg { background: linear-gradient(135deg, rgba(30,58,138,0.1), rgba(8,145,178,0.1)); }
-    .stat-card-new:nth-child(2) .stat-icon-bg { background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(239,68,68,0.1)); }
-    .stat-card-new:nth-child(3) .stat-icon-bg { background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(236,72,153,0.1)); }
-    .stat-card-new:nth-child(4) .stat-icon-bg { background: linear-gradient(135deg, rgba(6,182,212,0.1), rgba(34,197,94,0.1)); }
-
-    .stat-card-new:nth-child(1) .stat-icon { background: var(--gradient-primary); }
-    .stat-card-new:nth-child(2) .stat-icon { background: var(--gradient-accent); }
-    .stat-card-new:nth-child(3) .stat-icon { background: var(--gradient-purple); }
-    .stat-card-new:nth-child(4) .stat-icon { background: var(--gradient-teal); }
-
-    .stat-icon-bg {
-        width: 56px;
-        height: 56px;
-        border-radius: 16px;
+    .hero-stats {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 16px;
+        gap: 48px;
+        margin-top: 64px;
+        padding-top: 48px;
+        border-top: 1px solid var(--border-subtle);
     }
 
-    .stat-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 18px;
+    .hero-stat {
+        text-align: left;
     }
 
-    .stat-value-new {
-        font-family: 'Plus Jakarta Sans', var(--font-family);
-        font-size: 32px;
-        font-weight: 800;
-        color: var(--text);
-        margin-bottom: 4px;
+    .hero-stat-value {
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
         letter-spacing: -0.02em;
+        line-height: 1;
+        margin-bottom: 4px;
     }
 
-    .stat-label-new {
-        font-size: 14px;
-        color: var(--text-muted);
+    .hero-stat-label {
+        font-size: 13px;
+        color: var(--text-tertiary);
         font-weight: 500;
     }
 
-    /* Quick Links */
-    .section-header-new {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 24px;
+    /* Featured Section */
+    .featured-section {
+        margin-bottom: 64px;
     }
 
-    .section-title-new {
-        font-family: 'Plus Jakarta Sans', var(--font-family);
-        font-size: 24px;
-        font-weight: 700;
-        color: var(--text);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .section-title-new i {
-        font-size: 20px;
-        color: var(--primary);
-    }
-
-    .quick-links-grid {
+    .featured-grid {
         display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 16px;
-        margin-bottom: 48px;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 24px;
     }
 
-    .quick-link-new {
-        background: var(--card);
-        border: 1px solid var(--border);
+    .featured-main {
+        background: var(--obsidian);
         border-radius: 16px;
-        padding: 24px 16px;
-        text-align: center;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        position: relative;
         overflow: hidden;
+        position: relative;
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 40px;
+        text-decoration: none;
+        transition: transform var(--duration-normal) var(--ease-out);
     }
 
-    .quick-link-new::before {
-        content: '';
+    .featured-main:hover {
+        transform: scale(1.01);
+    }
+
+    .featured-main-bg {
         position: absolute;
         inset: 0;
-        opacity: 0;
-        transition: opacity 0.3s ease;
+        background-size: cover;
+        background-position: center;
+        opacity: 0.4;
     }
 
-    .quick-link-new:nth-child(1)::before { background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(139,92,246,0.05)); }
-    .quick-link-new:nth-child(2)::before { background: linear-gradient(135deg, rgba(34,197,94,0.05), rgba(16,185,129,0.05)); }
-    .quick-link-new:nth-child(3)::before { background: linear-gradient(135deg, rgba(245,158,11,0.05), rgba(251,191,36,0.05)); }
-    .quick-link-new:nth-child(4)::before { background: linear-gradient(135deg, rgba(239,68,68,0.05), rgba(248,113,113,0.05)); }
-    .quick-link-new:nth-child(5)::before { background: linear-gradient(135deg, rgba(236,72,153,0.05), rgba(244,114,182,0.05)); }
-    .quick-link-new:nth-child(6)::before { background: linear-gradient(135deg, rgba(6,182,212,0.05), rgba(34,211,238,0.05)); }
-
-    .quick-link-new:hover {
-        transform: translateY(-6px);
-        box-shadow: var(--shadow-xl);
-        border-color: transparent;
-    }
-
-    .quick-link-new:hover::before {
-        opacity: 1;
-    }
-
-    .quick-link-icon-new {
-        width: 60px;
-        height: 60px;
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 16px;
-        font-size: 26px;
+    .featured-main-content {
         position: relative;
         z-index: 1;
-        transition: transform 0.3s ease;
     }
 
-    .quick-link-new:hover .quick-link-icon-new {
-        transform: scale(1.1);
-    }
-
-    .quick-link-new:nth-child(1) .quick-link-icon-new { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
-    .quick-link-new:nth-child(2) .quick-link-icon-new { background: linear-gradient(135deg, #22c55e, #10b981); color: white; }
-    .quick-link-new:nth-child(3) .quick-link-icon-new { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; }
-    .quick-link-new:nth-child(4) .quick-link-icon-new { background: linear-gradient(135deg, #ef4444, #f87171); color: white; }
-    .quick-link-new:nth-child(5) .quick-link-icon-new { background: linear-gradient(135deg, #ec4899, #f472b6); color: white; }
-    .quick-link-new:nth-child(6) .quick-link-icon-new { background: linear-gradient(135deg, #06b6d4, #22d3ee); color: white; }
-
-    .quick-link-title-new {
+    .featured-main-badge {
+        display: inline-block;
+        font-size: 11px;
         font-weight: 600;
-        font-size: 15px;
-        color: var(--text);
-        margin-bottom: 6px;
-        position: relative;
-        z-index: 1;
-    }
-
-    .quick-link-desc-new {
-        font-size: 13px;
-        color: var(--text-muted);
-        position: relative;
-        z-index: 1;
-    }
-
-    /* Dashboard Grid */
-    .dashboard-grid-new {
-        display: grid;
-        grid-template-columns: 1fr 380px;
-        gap: 32px;
-    }
-
-    /* Article Cards */
-    .article-card-new {
-        display: flex;
-        gap: 20px;
-        padding: 20px;
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        text-decoration: none;
-        transition: all 0.3s ease;
+        color: var(--gold);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
         margin-bottom: 16px;
     }
 
-    .article-card-new:hover {
-        transform: translateX(8px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--primary-light);
+    .featured-main-title {
+        font-family: 'Instrument Serif', Georgia, serif;
+        font-size: 1.75rem;
+        font-weight: 400;
+        color: var(--snow);
+        line-height: 1.3;
+        margin-bottom: 12px;
     }
 
-    .article-thumb-new {
-        width: 120px;
-        height: 90px;
-        border-radius: 12px;
-        background-size: cover;
-        background-position: center;
-        flex-shrink: 0;
-        position: relative;
-        overflow: hidden;
+    .featured-main-excerpt {
+        font-size: 15px;
+        color: var(--pearl);
+        line-height: 1.6;
+        max-width: 480px;
     }
 
-    .article-thumb-new::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.1) 100%);
+    .featured-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
     }
 
-    .article-content-new {
+    .featured-item {
         flex: 1;
-        min-width: 0;
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+        padding: 24px;
+        text-decoration: none;
+        transition: all var(--duration-normal) var(--ease-out);
+        display: flex;
+        flex-direction: column;
     }
 
-    .article-category-new {
+    .featured-item:hover {
+        border-color: transparent;
+        box-shadow: var(--shadow-md);
+        transform: translateX(4px);
+    }
+
+    .featured-item-category {
         font-size: 11px;
-        font-weight: 700;
+        font-weight: 600;
+        color: var(--text-tertiary);
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 8px;
-        display: inline-block;
-        padding: 4px 10px;
-        border-radius: 6px;
+        letter-spacing: 0.06em;
+        margin-bottom: 12px;
     }
 
-    .article-title-new {
+    .featured-item-title {
         font-size: 16px;
         font-weight: 600;
-        color: var(--text);
-        margin-bottom: 8px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+        color: var(--text-primary);
         line-height: 1.4;
+        margin-bottom: 8px;
+        flex: 1;
     }
 
-    .article-meta-new {
-        font-size: 13px;
-        color: var(--text-light);
+    .featured-item:hover .featured-item-title {
+        color: var(--gold);
+    }
+
+    .featured-item-meta {
+        font-size: 12px;
+        color: var(--text-muted);
         display: flex;
         align-items: center;
         gap: 4px;
     }
 
-    /* Federal Programs */
-    .program-grid {
+    /* Services Grid */
+    .services-section {
+        margin-bottom: 64px;
+    }
+
+    .services-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 32px;
+    }
+
+    .services-header-text h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+
+    .services-header-text p {
+        font-size: 15px;
+        color: var(--text-tertiary);
+    }
+
+    .services-grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
     }
 
-    .program-card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 20px;
+    .service-card {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+        padding: 32px 28px;
         text-decoration: none;
-        transition: all 0.3s ease;
+        transition: all var(--duration-normal) var(--ease-out);
         position: relative;
-        overflow: hidden;
     }
 
-    .program-card::before {
+    .service-card::before {
         content: '';
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         height: 3px;
+        background: var(--obsidian);
         opacity: 0;
-        transition: opacity 0.3s ease;
+        transition: opacity var(--duration-fast);
+        border-radius: 12px 12px 0 0;
     }
 
-    .program-card:nth-child(1)::before { background: linear-gradient(90deg, #22c55e, #10b981); }
-    .program-card:nth-child(2)::before { background: linear-gradient(90deg, #ec4899, #f472b6); }
-    .program-card:nth-child(3)::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-    .program-card:nth-child(4)::before { background: linear-gradient(90deg, #6366f1, #8b5cf6); }
-
-    .program-card:hover {
-        transform: translateY(-4px);
+    .service-card:hover {
+        border-color: transparent;
         box-shadow: var(--shadow-lg);
+        transform: translateY(-4px);
     }
 
-    .program-card:hover::before {
+    .service-card:hover::before {
         opacity: 1;
     }
 
-    .program-header {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 10px;
-    }
-
-    .program-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
+    .service-icon {
+        width: 48px;
+        height: 48px;
+        background: var(--bg-secondary);
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 20px;
-        color: white;
+        color: var(--text-secondary);
+        margin-bottom: 20px;
+        transition: all var(--duration-fast);
     }
 
-    .program-card:nth-child(1) .program-icon { background: linear-gradient(135deg, #22c55e, #10b981); }
-    .program-card:nth-child(2) .program-icon { background: linear-gradient(135deg, #ec4899, #f472b6); }
-    .program-card:nth-child(3) .program-icon { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
-    .program-card:nth-child(4) .program-icon { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+    .service-card:hover .service-icon {
+        background: var(--obsidian);
+        color: var(--snow);
+    }
 
-    .program-title {
-        font-size: 15px;
+    .service-title {
+        font-size: 17px;
         font-weight: 600;
-        color: var(--text);
+        color: var(--text-primary);
+        margin-bottom: 8px;
     }
 
-    .program-desc {
-        font-size: 13px;
-        color: var(--text-muted);
-        line-height: 1.5;
+    .service-desc {
+        font-size: 14px;
+        color: var(--text-tertiary);
+        line-height: 1.6;
     }
 
-    /* Province Grid */
-    .province-grid-new {
+    /* Insights Section */
+    .insights-section {
+        margin-bottom: 64px;
+    }
+
+    .insights-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 32px;
+    }
+
+    .insights-header h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .insights-grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    /* Provinces Section */
+    .provinces-section {
+        background: var(--bg-secondary);
+        margin: 0 -40px 64px;
+        padding: 64px 40px;
+    }
+
+    .provinces-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .provinces-header h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+
+    .provinces-header p {
+        font-size: 15px;
+        color: var(--text-tertiary);
+    }
+
+    .provinces-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 16px;
+        max-width: 1000px;
+        margin: 0 auto;
     }
 
     .province-card {
-        background: var(--card);
-        border: 1px solid var(--border);
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-subtle);
         border-radius: 12px;
-        overflow: hidden;
+        padding: 20px 16px;
+        text-align: center;
         text-decoration: none;
-        transition: all 0.3s ease;
+        transition: all var(--duration-normal) var(--ease-out);
     }
 
     .province-card:hover {
+        border-color: transparent;
+        box-shadow: var(--shadow-md);
         transform: translateY(-4px);
-        box-shadow: var(--shadow-lg);
     }
 
-    .province-img-new {
-        height: 70px;
-        background-size: cover;
-        background-position: center;
-        position: relative;
+    .province-flag {
+        width: 48px;
+        height: 32px;
+        background: var(--bg-secondary);
+        border-radius: 4px;
+        margin: 0 auto 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        overflow: hidden;
     }
 
-    .province-img-new::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.4) 100%);
+    .province-flag img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
-    .province-info-new {
-        padding: 12px;
-    }
-
-    .province-name-new {
+    .province-name {
         font-size: 13px;
         font-weight: 600;
-        color: var(--text);
+        color: var(--text-primary);
         margin-bottom: 2px;
     }
 
-    .province-abbr-new {
+    .province-abbr {
         font-size: 11px;
         color: var(--text-muted);
     }
 
-    /* CRS Calculator CTA */
-    .crs-cta {
-        background: var(--gradient-primary);
-        border-radius: 20px;
-        padding: 32px;
-        color: white;
+    /* CTA Section */
+    .cta-section {
+        background: var(--obsidian);
+        border-radius: 16px;
+        padding: 64px;
         text-align: center;
+        margin-bottom: 40px;
         position: relative;
         overflow: hidden;
-        margin-top: 16px;
     }
 
-    .crs-cta::before {
+    .cta-section::before {
         content: '';
         position: absolute;
         top: -50%;
-        right: -30%;
-        width: 200px;
-        height: 200px;
-        background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+        left: -25%;
+        width: 150%;
+        height: 200%;
+        background: radial-gradient(ellipse at center, rgba(184, 134, 11, 0.1) 0%, transparent 60%);
+        pointer-events: none;
     }
 
-    .crs-cta-icon {
-        width: 64px;
-        height: 64px;
-        background: rgba(255,255,255,0.15);
-        border-radius: 16px;
+    .cta-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .cta-title {
+        font-family: 'Instrument Serif', Georgia, serif;
+        font-size: 2rem;
+        font-weight: 400;
+        color: var(--snow);
+        margin-bottom: 16px;
+    }
+
+    .cta-text {
+        font-size: 16px;
+        color: var(--pearl);
+        margin-bottom: 32px;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .cta-actions {
         display: flex;
-        align-items: center;
+        gap: 16px;
         justify-content: center;
-        margin: 0 auto 16px;
-        font-size: 28px;
-    }
-
-    .crs-cta h3 {
-        font-size: 18px;
-        font-weight: 700;
-        margin-bottom: 8px;
-    }
-
-    .crs-cta p {
-        font-size: 14px;
-        opacity: 0.9;
-        margin-bottom: 20px;
-    }
-
-    .crs-cta .btn {
-        background: white;
-        color: var(--primary);
-        padding: 12px 24px;
-        font-weight: 600;
-        border-radius: 10px;
-        border: none;
-        width: 100%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
-
-    .crs-cta .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
     }
 
     /* Responsive */
     @media (max-width: 1200px) {
-        .quick-links-grid {
-            grid-template-columns: repeat(3, 1fr);
+        .services-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .provinces-grid {
+            grid-template-columns: repeat(4, 1fr);
         }
     }
 
     @media (max-width: 991px) {
-        .hero-section {
-            padding: 40px 32px;
-        }
-
         .hero-title {
-            font-size: 36px;
+            font-size: 2.5rem;
         }
-
-        .stats-section {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .dashboard-grid-new {
+        .featured-grid {
             grid-template-columns: 1fr;
         }
+        .featured-main {
+            min-height: 300px;
+        }
+        .featured-sidebar {
+            flex-direction: row;
+        }
+        .insights-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .provinces-section {
+            margin: 0 -24px 64px;
+            padding: 48px 24px;
+        }
+    }
 
-        .quick-links-grid {
+    @media (max-width: 768px) {
+        .hero {
+            padding: 40px 0;
+        }
+        .hero-title {
+            font-size: 2rem;
+        }
+        .hero-stats {
+            flex-wrap: wrap;
+            gap: 32px;
+        }
+        .hero-stat {
+            min-width: 120px;
+        }
+        .services-grid,
+        .insights-grid {
+            grid-template-columns: 1fr;
+        }
+        .featured-sidebar {
+            flex-direction: column;
+        }
+        .provinces-grid {
             grid-template-columns: repeat(3, 1fr);
+        }
+        .cta-section {
+            padding: 40px 24px;
+        }
+        .cta-title {
+            font-size: 1.5rem;
         }
     }
 
     @media (max-width: 576px) {
-        .hero-section {
-            padding: 32px 24px;
+        .hero-stats {
+            gap: 24px;
         }
-
-        .hero-title {
-            font-size: 28px;
+        .hero-stat-value {
+            font-size: 2rem;
         }
-
-        .hero-subtitle {
-            font-size: 15px;
+        .provinces-grid {
+            grid-template-columns: repeat(2, 1fr);
         }
-
-        .hero-actions {
+        .cta-actions {
             flex-direction: column;
-        }
-
-        .hero-actions a {
-            width: 100%;
-            justify-content: center;
-        }
-
-        .stats-section {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .stat-card-new {
-            padding: 16px;
-        }
-
-        .stat-value-new {
-            font-size: 24px;
-        }
-
-        .quick-links-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .quick-link-new {
-            padding: 20px 12px;
-        }
-
-        .quick-link-icon-new {
-            width: 48px;
-            height: 48px;
-            font-size: 22px;
-        }
-
-        .program-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .article-thumb-new {
-            width: 80px;
-            height: 70px;
         }
     }
 </style>
@@ -701,378 +539,279 @@
 
 {% block content %}
 <!-- Hero Section -->
-<div class="hero-section scroll-animate">
-    <div class="hero-content">
-        <div class="hero-badge">
-            <i class="bi bi-stars"></i>
-            <span>Trusted by thousands of immigrants</span>
+<section class="hero" data-animate>
+    <div class="hero-eyebrow">Canadian Immigration Intelligence</div>
+    <h1 class="hero-title">Navigate your path to <em>Canada</em> with clarity</h1>
+    <p class="hero-description">
+        Expert analysis, real-time updates, and comprehensive resources for Express Entry,
+        Provincial Programs, and all Canadian immigration pathways.
+    </p>
+    <div class="hero-actions">
+        <a href="/articles" class="btn btn-primary btn-lg">
+            Explore Insights
+            <i class="bi bi-arrow-right"></i>
+        </a>
+        <a href="/tools/crs-calculator" class="btn btn-secondary btn-lg">
+            CRS Calculator
+        </a>
+    </div>
+    <div class="hero-stats">
+        <div class="hero-stat">
+            <div class="hero-stat-value" data-counter data-target="500">0</div>
+            <div class="hero-stat-label">Articles Published</div>
         </div>
-        <h1 class="hero-title">
-            Your Path to <span class="accent">Canada</span> Starts Here
-        </h1>
-        <p class="hero-subtitle">
-            Stay informed with the latest immigration news, comprehensive guides, and powerful tools to navigate your Canadian immigration journey.
-        </p>
-        <div class="hero-actions">
-            <a href="/learn" class="btn-hero-primary">
-                <i class="bi bi-book"></i>
-                Start Learning
-            </a>
-            <a href="/dashboard" class="btn-hero-secondary">
-                <i class="bi bi-newspaper"></i>
-                Latest News
-            </a>
+        <div class="hero-stat">
+            <div class="hero-stat-value" data-counter data-target="13">0</div>
+            <div class="hero-stat-label">Provinces Covered</div>
+        </div>
+        <div class="hero-stat">
+            <div class="hero-stat-value" data-counter data-target="24" data-suffix="/7">0</div>
+            <div class="hero-stat-label">News Monitoring</div>
+        </div>
+        <div class="hero-stat">
+            <div class="hero-stat-value" data-counter data-target="100" data-suffix="%">0</div>
+            <div class="hero-stat-label">Official Sources</div>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Stats Section -->
-<div class="stats-section">
-    <div class="stat-card-new scroll-animate">
-        <div class="stat-icon-bg">
-            <div class="stat-icon">
-                <i class="bi bi-file-earmark-text"></i>
+<div class="divider"></div>
+
+<!-- Featured Articles -->
+<section class="featured-section" data-animate>
+    <div class="featured-grid">
+        <a href="/articles" class="featured-main" id="featured-main">
+            <div class="featured-main-bg" style="background-image: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=800&q=80');"></div>
+            <div class="featured-main-content">
+                <span class="featured-main-badge">Featured</span>
+                <h2 class="featured-main-title" id="featured-title">Latest Immigration Insights</h2>
+                <p class="featured-main-excerpt" id="featured-excerpt">Stay informed with breaking news, policy updates, and expert analysis on Canadian immigration.</p>
+            </div>
+        </a>
+        <div class="featured-sidebar" id="featured-sidebar">
+            <div class="featured-item">
+                <span class="featured-item-category">Loading...</span>
+                <h3 class="featured-item-title">Fetching latest articles...</h3>
+                <span class="featured-item-meta"><i class="bi bi-clock"></i> --</span>
+            </div>
+            <div class="featured-item">
+                <span class="featured-item-category">Loading...</span>
+                <h3 class="featured-item-title">Please wait...</h3>
+                <span class="featured-item-meta"><i class="bi bi-clock"></i> --</span>
             </div>
         </div>
-        <div class="stat-value-new" data-count="150">0</div>
-        <div class="stat-label-new">Articles & Guides</div>
     </div>
-    <div class="stat-card-new scroll-animate">
-        <div class="stat-icon-bg">
-            <div class="stat-icon">
-                <i class="bi bi-map"></i>
-            </div>
-        </div>
-        <div class="stat-value-new" data-count="13">0</div>
-        <div class="stat-label-new">Province Guides</div>
-    </div>
-    <div class="stat-card-new scroll-animate">
-        <div class="stat-icon-bg">
-            <div class="stat-icon">
-                <i class="bi bi-lightning-charge"></i>
-            </div>
-        </div>
-        <div class="stat-value-new" data-count="6">0</div>
-        <div class="stat-label-new">Federal Programs</div>
-    </div>
-    <div class="stat-card-new scroll-animate">
-        <div class="stat-icon-bg">
-            <div class="stat-icon">
-                <i class="bi bi-clock-history"></i>
-            </div>
-        </div>
-        <div class="stat-value-new">24/7</div>
-        <div class="stat-label-new">News Coverage</div>
-    </div>
-</div>
+</section>
 
-<!-- Quick Links -->
-<div class="section-header-new">
-    <h2 class="section-title-new">
-        <i class="bi bi-grid-3x3-gap-fill"></i>
-        Quick Links
-    </h2>
-</div>
-<div class="quick-links-grid">
-    <a href="/tools/crs-calculator" class="quick-link-new scroll-animate">
-        <div class="quick-link-icon-new">
-            <i class="bi bi-calculator-fill"></i>
+<!-- Services/Programs -->
+<section class="services-section" data-animate>
+    <div class="services-header">
+        <div class="services-header-text">
+            <h2>Immigration Pathways</h2>
+            <p>Comprehensive guides for every Canadian immigration program</p>
         </div>
-        <div class="quick-link-title-new">CRS Calculator</div>
-        <div class="quick-link-desc-new">Calculate your score</div>
-    </a>
-    <a href="/guides/express-entry" class="quick-link-new scroll-animate">
-        <div class="quick-link-icon-new">
-            <i class="bi bi-lightning-charge-fill"></i>
-        </div>
-        <div class="quick-link-title-new">Express Entry</div>
-        <div class="quick-link-desc-new">Fast-track immigration</div>
-    </a>
-    <a href="/guides/work-permit" class="quick-link-new scroll-animate">
-        <div class="quick-link-icon-new">
-            <i class="bi bi-briefcase-fill"></i>
-        </div>
-        <div class="quick-link-title-new">Work Permits</div>
-        <div class="quick-link-desc-new">LMIA, PGWP, IEC</div>
-    </a>
-    <a href="/guides/study-permit" class="quick-link-new scroll-animate">
-        <div class="quick-link-icon-new">
-            <i class="bi bi-mortarboard-fill"></i>
-        </div>
-        <div class="quick-link-title-new">Study Permits</div>
-        <div class="quick-link-desc-new">Student pathways</div>
-    </a>
-    <a href="/guides/family-sponsorship" class="quick-link-new scroll-animate">
-        <div class="quick-link-icon-new">
-            <i class="bi bi-heart-fill"></i>
-        </div>
-        <div class="quick-link-title-new">Family Sponsorship</div>
-        <div class="quick-link-desc-new">Sponsor loved ones</div>
-    </a>
-    <a href="/browse" class="quick-link-new scroll-animate">
-        <div class="quick-link-icon-new">
-            <i class="bi bi-compass-fill"></i>
-        </div>
-        <div class="quick-link-title-new">Browse All</div>
-        <div class="quick-link-desc-new">Explore categories</div>
-    </a>
-</div>
+        <a href="/browse" class="section-link">View all programs <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="services-grid">
+        <a href="/browse/express-entry" class="service-card">
+            <div class="service-icon"><i class="bi bi-lightning"></i></div>
+            <h3 class="service-title">Express Entry</h3>
+            <p class="service-desc">Fast-track skilled worker immigration through FSW, CEC, and FST programs.</p>
+        </a>
+        <a href="/browse/pnp" class="service-card">
+            <div class="service-icon"><i class="bi bi-geo-alt"></i></div>
+            <h3 class="service-title">Provincial Programs</h3>
+            <p class="service-desc">Province-specific nomination programs with varied eligibility criteria.</p>
+        </a>
+        <a href="/browse/work-permits" class="service-card">
+            <div class="service-icon"><i class="bi bi-briefcase"></i></div>
+            <h3 class="service-title">Work Permits</h3>
+            <p class="service-desc">LMIA, open work permits, PGWP, and International Experience Canada.</p>
+        </a>
+        <a href="/browse/study" class="service-card">
+            <div class="service-icon"><i class="bi bi-mortarboard"></i></div>
+            <h3 class="service-title">Study Permits</h3>
+            <p class="service-desc">Student visa requirements and post-graduation pathways to PR.</p>
+        </a>
+        <a href="/browse/family" class="service-card">
+            <div class="service-icon"><i class="bi bi-people"></i></div>
+            <h3 class="service-title">Family Sponsorship</h3>
+            <p class="service-desc">Sponsor spouse, common-law partner, children, or parents.</p>
+        </a>
+        <a href="/tools/crs-calculator" class="service-card">
+            <div class="service-icon"><i class="bi bi-calculator"></i></div>
+            <h3 class="service-title">CRS Calculator</h3>
+            <p class="service-desc">Calculate your Comprehensive Ranking System score instantly.</p>
+        </a>
+    </div>
+</section>
 
-<!-- Dashboard Grid -->
-<div class="dashboard-grid-new">
-    <!-- Main Column -->
-    <div>
-        <!-- Latest Articles -->
-        <div class="section-header-new">
-            <h2 class="section-title-new">
-                <i class="bi bi-newspaper"></i>
-                Latest Articles
-            </h2>
-            <a href="/articles" class="section-link">View All <i class="bi bi-chevron-right"></i></a>
-        </div>
-        <div id="articles-container">
-            <div class="article-card-new">
-                <div class="article-content-new">
-                    <div class="article-meta-new">Loading articles...</div>
-                </div>
-            </div>
-        </div>
+<!-- Latest Insights -->
+<section class="insights-section" data-animate>
+    <div class="insights-header">
+        <h2>Latest Insights</h2>
+        <a href="/articles" class="section-link">View all <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="insights-grid" id="insights-grid">
+        <!-- Loaded via JS -->
+    </div>
+</section>
 
-        <!-- Federal Programs -->
-        <div class="section-header-new" style="margin-top: 40px;">
-            <h2 class="section-title-new">
-                <i class="bi bi-building"></i>
-                Federal Programs
-            </h2>
-            <a href="/learn" class="section-link">View All <i class="bi bi-chevron-right"></i></a>
-        </div>
-        <div class="program-grid">
-            <a href="/guides/express-entry" class="program-card scroll-animate">
-                <div class="program-header">
-                    <div class="program-icon">
-                        <i class="bi bi-lightning-charge-fill"></i>
-                    </div>
-                    <div class="program-title">Express Entry</div>
-                </div>
-                <p class="program-desc">Fast-track for skilled workers via FSW, CEC, and FSTP.</p>
+<!-- Provinces -->
+<section class="provinces-section" data-animate>
+    <div class="provinces-header">
+        <h2>Provincial Nominee Programs</h2>
+        <p>Each province has unique immigration streams tailored to regional needs</p>
+    </div>
+    <div class="provinces-grid">
+        <a href="/province/ontario" class="province-card">
+            <div class="province-flag"><span>ON</span></div>
+            <div class="province-name">Ontario</div>
+            <div class="province-abbr">OINP</div>
+        </a>
+        <a href="/province/british-columbia" class="province-card">
+            <div class="province-flag"><span>BC</span></div>
+            <div class="province-name">British Columbia</div>
+            <div class="province-abbr">BC PNP</div>
+        </a>
+        <a href="/province/alberta" class="province-card">
+            <div class="province-flag"><span>AB</span></div>
+            <div class="province-name">Alberta</div>
+            <div class="province-abbr">AAIP</div>
+        </a>
+        <a href="/province/manitoba" class="province-card">
+            <div class="province-flag"><span>MB</span></div>
+            <div class="province-name">Manitoba</div>
+            <div class="province-abbr">MPNP</div>
+        </a>
+        <a href="/province/saskatchewan" class="province-card">
+            <div class="province-flag"><span>SK</span></div>
+            <div class="province-name">Saskatchewan</div>
+            <div class="province-abbr">SINP</div>
+        </a>
+        <a href="/province/nova-scotia" class="province-card">
+            <div class="province-flag"><span>NS</span></div>
+            <div class="province-name">Nova Scotia</div>
+            <div class="province-abbr">NSNP</div>
+        </a>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" data-animate>
+    <div class="cta-content">
+        <h2 class="cta-title">Ready to start your journey?</h2>
+        <p class="cta-text">Use our CRS Calculator to assess your eligibility for Express Entry, or explore our comprehensive guides.</p>
+        <div class="cta-actions">
+            <a href="/tools/crs-calculator" class="btn btn-gold btn-lg">
+                <i class="bi bi-calculator"></i>
+                Calculate CRS Score
             </a>
-            <a href="/guides/family-sponsorship" class="program-card scroll-animate">
-                <div class="program-header">
-                    <div class="program-icon">
-                        <i class="bi bi-heart-fill"></i>
-                    </div>
-                    <div class="program-title">Family Sponsorship</div>
-                </div>
-                <p class="program-desc">Sponsor spouse, children, or parents to Canada.</p>
-            </a>
-            <a href="/guides/work-permit" class="program-card scroll-animate">
-                <div class="program-header">
-                    <div class="program-icon">
-                        <i class="bi bi-briefcase-fill"></i>
-                    </div>
-                    <div class="program-title">Work Permits</div>
-                </div>
-                <p class="program-desc">LMIA, open work permits, PGWP, and IEC.</p>
-            </a>
-            <a href="/guides/study-permit" class="program-card scroll-animate">
-                <div class="program-header">
-                    <div class="program-icon">
-                        <i class="bi bi-mortarboard-fill"></i>
-                    </div>
-                    <div class="program-title">Study Permits</div>
-                </div>
-                <p class="program-desc">Study in Canada and post-graduation options.</p>
+            <a href="/guides" class="btn btn-secondary btn-lg" style="border-color: var(--silver); color: var(--snow);">
+                Browse Guides
             </a>
         </div>
     </div>
-
-    <!-- Sidebar Column -->
-    <div>
-        <!-- Provincial Programs -->
-        <div class="section-header-new">
-            <h2 class="section-title-new" style="font-size: 18px;">
-                <i class="bi bi-pin-map-fill"></i>
-                Provinces
-            </h2>
-            <a href="/browse" class="section-link">All <i class="bi bi-chevron-right"></i></a>
-        </div>
-        <div class="province-grid-new">
-            <a href="/guides/pnp/ontario" class="province-card scroll-animate">
-                <div class="province-img-new" style="background-image: url('https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=400&q=70');"></div>
-                <div class="province-info-new">
-                    <div class="province-name-new">Ontario</div>
-                    <div class="province-abbr-new">OINP</div>
-                </div>
-            </a>
-            <a href="/guides/pnp/british-columbia" class="province-card scroll-animate">
-                <div class="province-img-new" style="background-image: url('https://images.unsplash.com/photo-1559511260-66a654ae982a?w=400&q=70');"></div>
-                <div class="province-info-new">
-                    <div class="province-name-new">British Columbia</div>
-                    <div class="province-abbr-new">BC PNP</div>
-                </div>
-            </a>
-            <a href="/guides/pnp/alberta" class="province-card scroll-animate">
-                <div class="province-img-new" style="background-image: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=400&q=70');"></div>
-                <div class="province-info-new">
-                    <div class="province-name-new">Alberta</div>
-                    <div class="province-abbr-new">AINP</div>
-                </div>
-            </a>
-            <a href="/guides/pnp/quebec" class="province-card scroll-animate">
-                <div class="province-img-new" style="background-image: url('https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=400&q=70');"></div>
-                <div class="province-info-new">
-                    <div class="province-name-new">Quebec</div>
-                    <div class="province-abbr-new">QSWP</div>
-                </div>
-            </a>
-            <a href="/guides/pnp/manitoba" class="province-card scroll-animate">
-                <div class="province-img-new" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=70');"></div>
-                <div class="province-info-new">
-                    <div class="province-name-new">Manitoba</div>
-                    <div class="province-abbr-new">MPNP</div>
-                </div>
-            </a>
-            <a href="/guides/pnp/nova-scotia" class="province-card scroll-animate">
-                <div class="province-img-new" style="background-image: url('https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=400&q=70');"></div>
-                <div class="province-info-new">
-                    <div class="province-name-new">Nova Scotia</div>
-                    <div class="province-abbr-new">NSNP</div>
-                </div>
-            </a>
-        </div>
-
-        <!-- CRS Calculator CTA -->
-        <div class="crs-cta scroll-animate">
-            <div class="crs-cta-icon">
-                <i class="bi bi-calculator-fill"></i>
-            </div>
-            <h3>CRS Score Calculator</h3>
-            <p>Calculate your Express Entry points instantly</p>
-            <a href="/tools/crs-calculator" class="btn">
-                Calculate Now
-                <i class="bi bi-arrow-right"></i>
-            </a>
-        </div>
-    </div>
-</div>
+</section>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    // Animate stat counters
-    function animateCounters() {
-        document.querySelectorAll('.stat-value-new[data-count]').forEach(counter => {
-            const target = parseInt(counter.getAttribute('data-count'));
-            const duration = 2000;
-            const start = performance.now();
-
-            function update(currentTime) {
-                const elapsed = currentTime - start;
-                const progress = Math.min(elapsed / duration, 1);
-                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-                const current = Math.floor(target * easeOutQuart);
-
-                counter.textContent = current + (target > 10 ? '+' : '');
-
-                if (progress < 1) {
-                    requestAnimationFrame(update);
-                } else {
-                    counter.textContent = target + (target > 10 ? '+' : '');
-                }
-            }
-
-            requestAnimationFrame(update);
-        });
-    }
-
-    // Start animation when stats section is visible
-    const statsObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateCounters();
-                statsObserver.disconnect();
-            }
-        });
-    }, { threshold: 0.5 });
-
-    const statsSection = document.querySelector('.stats-section');
-    if (statsSection) {
-        statsObserver.observe(statsSection);
-    }
-
-    // Fetch actual stats
-    fetch('/api/stats')
-        .then(r => r.json())
-        .then(stats => {
-            const total = (stats.by_track?.breaking || 0) + (stats.by_track?.regular || 0) +
-                         (stats.by_track?.educational || 0) + (stats.by_track?.forms || 0);
-            if (total > 0) {
-                const counter = document.querySelector('.stat-value-new[data-count]');
-                if (counter) {
-                    counter.setAttribute('data-count', total);
-                }
-            }
-        })
-        .catch(() => {});
-
-    // Load latest articles with category badges
+    // Load featured articles
     fetch('/api/results')
         .then(r => r.json())
         .then(data => {
             const articles = (data.results || [])
                 .filter(a => a.full_article && a.full_article.length > 200)
-                .slice(0, 4);
+                .slice(0, 5);
 
-            const container = document.getElementById('articles-container');
-            if (articles.length === 0) {
-                container.innerHTML = `
-                    <div class="article-card-new">
-                        <div class="article-content-new">
-                            <div class="article-meta-new">No articles yet. Check back soon!</div>
-                        </div>
+            if (articles.length > 0) {
+                // Update featured main
+                const main = articles[0];
+                const mainSlug = main.slug || main.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/[\s_]+/g, '-').substring(0, 80);
+                document.getElementById('featured-main').href = '/articles/' + mainSlug;
+                document.getElementById('featured-title').textContent = main.title;
+                document.getElementById('featured-excerpt').textContent = main.summary || main.title;
+                if (main.image_url) {
+                    document.querySelector('.featured-main-bg').style.backgroundImage = `url('${main.image_url}')`;
+                }
+
+                // Update sidebar
+                const sidebarArticles = articles.slice(1, 3);
+                const sidebar = document.getElementById('featured-sidebar');
+                sidebar.innerHTML = sidebarArticles.map(article => {
+                    const slug = article.slug || article.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/[\s_]+/g, '-').substring(0, 80);
+                    const category = (article.category || 'news').replace(/_/g, ' ');
+                    const readTime = Math.max(1, Math.floor((article.full_article || '').split(' ').length / 200));
+                    return `
+                        <a href="/articles/${slug}" class="featured-item">
+                            <span class="featured-item-category">${category}</span>
+                            <h3 class="featured-item-title">${article.title}</h3>
+                            <span class="featured-item-meta"><i class="bi bi-clock"></i> ${readTime} min read</span>
+                        </a>
+                    `;
+                }).join('');
+
+                // Update insights grid
+                const insightsArticles = articles.slice(0, 3);
+                const insightsGrid = document.getElementById('insights-grid');
+                insightsGrid.innerHTML = insightsArticles.map(article => {
+                    const slug = article.slug || article.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/[\s_]+/g, '-').substring(0, 80);
+                    const category = (article.category || 'news').replace(/_/g, ' ');
+                    const readTime = Math.max(1, Math.floor((article.full_article || '').split(' ').length / 200));
+                    const imageUrl = article.image_url || 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=400&q=70';
+                    const badgeClass = 'badge-' + (article.category || 'news').replace(/_/g, '-');
+                    return `
+                        <a href="/articles/${slug}" class="article-card">
+                            <div class="article-card-image" style="background-image: url('${imageUrl}');">
+                                <span class="article-card-badge badge ${badgeClass}">${category}</span>
+                            </div>
+                            <div class="article-card-content">
+                                <h3 class="article-card-title">${article.title}</h3>
+                                <p class="article-card-excerpt">${article.summary || ''}</p>
+                                <div class="article-card-meta">
+                                    <span><i class="bi bi-clock"></i> ${readTime} min</span>
+                                    <span><i class="bi bi-eye"></i> ${article.source || 'IRCC'}</span>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+            } else {
+                // No articles - show placeholder
+                document.getElementById('featured-sidebar').innerHTML = `
+                    <div class="featured-item">
+                        <span class="featured-item-category">Coming Soon</span>
+                        <h3 class="featured-item-title">Fresh content arriving shortly</h3>
+                        <span class="featured-item-meta">Check back soon</span>
                     </div>
                 `;
-                return;
-            }
-
-            const categoryStyles = {
-                'breaking_news': { bg: 'linear-gradient(135deg, #ef4444, #dc2626)', text: '#fff' },
-                'news': { bg: 'linear-gradient(135deg, #3b82f6, #2563eb)', text: '#fff' },
-                'educational': { bg: 'linear-gradient(135deg, #8b5cf6, #7c3aed)', text: '#fff' },
-                'forms': { bg: 'linear-gradient(135deg, #10b981, #059669)', text: '#fff' },
-                'policy': { bg: 'linear-gradient(135deg, #f59e0b, #d97706)', text: '#fff' }
-            };
-
-            container.innerHTML = articles.map(article => {
-                const slug = article.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/[\s_]+/g, '-').substring(0, 80);
-                const category = article.category || 'news';
-                const categoryLabel = category.replace(/_/g, ' ').toUpperCase();
-                const style = categoryStyles[category] || categoryStyles['news'];
-                const readTime = Math.max(1, Math.floor((article.full_article || '').split(' ').length / 200));
-                const imageUrl = article.image_url || '';
-                const imageStyle = imageUrl ? `background-image: url('${imageUrl}')` : 'background: var(--gradient-primary)';
-
-                return `
-                    <a href="/articles/${slug || article.id}" class="article-card-new scroll-animate">
-                        <div class="article-thumb-new" style="${imageStyle}"></div>
-                        <div class="article-content-new">
-                            <span class="article-category-new" style="background: ${style.bg}; color: ${style.text};">${categoryLabel}</span>
-                            <h3 class="article-title-new">${article.title}</h3>
-                            <div class="article-meta-new"><i class="bi bi-clock"></i> ${readTime} min read</div>
-                        </div>
-                    </a>
+                document.getElementById('insights-grid').innerHTML = `
+                    <div class="article-card" style="grid-column: span 3; text-align: center; padding: 48px;">
+                        <p style="color: var(--text-tertiary);">No articles yet. New content will appear here automatically.</p>
+                    </div>
                 `;
-            }).join('');
+            }
         })
         .catch(e => {
             console.error('Error loading articles:', e);
-            document.getElementById('articles-container').innerHTML = `
-                <div class="article-card-new">
-                    <div class="article-content-new">
-                        <div class="article-meta-new">Check back soon for articles!</div>
-                    </div>
+            document.getElementById('insights-grid').innerHTML = `
+                <div class="article-card" style="grid-column: span 3; text-align: center; padding: 48px;">
+                    <p style="color: var(--text-tertiary);">Content loading... Check back soon.</p>
                 </div>
             `;
         });
+
+    // Fetch real stats
+    fetch('/api/stats')
+        .then(r => r.json())
+        .then(stats => {
+            const total = Object.values(stats.by_track || {}).reduce((a, b) => a + b, 0);
+            if (total > 0) {
+                const counter = document.querySelector('[data-target="500"]');
+                if (counter) counter.setAttribute('data-target', total);
+            }
+        })
+        .catch(() => {});
 </script>
 {% endblock %}
