@@ -1,32 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}{{ article.title }} - Philata{% endblock %}
+{% block title %}{{ article.title }}{% endblock %}
 
 {% block meta %}
-<!-- SEO Meta Tags -->
 <meta name="description" content="{{ article.full_article[:160] | striptags }}">
-<meta name="keywords" content="Canadian immigration, {{ article.category | replace('_', ' ') }}, IRCC, Canada visa, {{ article.title | lower }}">
-<meta name="author" content="Philata">
+<meta name="keywords" content="Canadian immigration, {{ article.category | replace('_', ' ') }}, IRCC, Canada visa">
 <link rel="canonical" href="{{ request.url }}">
-
-<!-- Open Graph / Facebook -->
 <meta property="og:type" content="article">
 <meta property="og:url" content="{{ request.url }}">
 <meta property="og:title" content="{{ article.title }}">
 <meta property="og:description" content="{{ article.full_article[:200] | striptags }}">
 <meta property="og:image" content="{{ article.image_url }}">
-<meta property="og:site_name" content="Philata - Canadian Immigration">
-<meta property="article:published_time" content="{{ article.created_at }}">
-<meta property="article:section" content="{{ article.category | replace('_', ' ') | title }}">
-
-<!-- Twitter -->
+<meta property="og:site_name" content="Philata">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="{{ request.url }}">
 <meta name="twitter:title" content="{{ article.title }}">
 <meta name="twitter:description" content="{{ article.full_article[:200] | striptags }}">
-<meta name="twitter:image" content="{{ article.image_url }}">
 
-<!-- Structured Data / JSON-LD -->
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
@@ -34,279 +23,80 @@
     "headline": "{{ article.title }}",
     "description": "{{ article.full_article[:200] | striptags | replace('"', '\\"') }}",
     "image": "{{ article.image_url }}",
-    "datePublished": "{{ article.created_at }}",
-    "dateModified": "{{ article.created_at }}",
-    "author": {
-        "@type": "Organization",
-        "name": "Philata"
-    },
-    "publisher": {
-        "@type": "Organization",
-        "name": "Philata",
-        "logo": {
-            "@type": "ImageObject",
-            "url": "https://www.philata.com/static/images/logo.png"
-        }
-    },
-    "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "{{ request.url }}"
-    }
+    "author": {"@type": "Organization", "name": "Philata"},
+    "publisher": {"@type": "Organization", "name": "Philata"}
 }
 </script>
 {% endblock %}
 
 {% block extra_css %}
 <style>
-    /* ============================================
-       LAYOUT VARIANTS - 5 Different Article Styles
-       ============================================ */
-
-    /* Layout: MAGAZINE - Based on News style with primary color accent */
-    .layout-magazine .article-header-card {
-        background: var(--card);
-        border-left: 6px solid var(--primary);
-        border-radius: 0 16px 16px 0;
-        padding: 2rem;
-    }
-    .layout-magazine .article-header-card::before {
-        display: none;
-    }
-    .layout-magazine .article-header-card .article-category {
-        background: var(--primary);
-    }
-    .layout-magazine .article-stats-grid {
-        background: linear-gradient(135deg, var(--primary) 0%, #0f2744 100%);
-        padding: 1.5rem;
-        border-radius: 16px;
-        margin: -1rem 0 1.5rem 0;
-    }
-    .layout-magazine .article-stats-grid .article-stat-card {
-        background: rgba(255,255,255,0.1);
-        border: 1px solid rgba(255,255,255,0.2);
-    }
-    .layout-magazine .article-stats-grid .article-stat-card .value {
-        color: white;
-    }
-    .layout-magazine .article-stats-grid .article-stat-card .label {
-        color: rgba(255,255,255,0.8);
-    }
-    .layout-magazine .key-takeaways-box {
-        border-left: 4px solid var(--primary);
-        background: rgba(30, 58, 95, 0.08);
-    }
-    .layout-magazine .key-takeaways-box h4 {
-        color: var(--primary);
-    }
-
-    /* Layout: FEATURE - Large image focus with overlay */
-    .layout-feature .article-header-card {
-        background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%),
-                    linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 350px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 3rem;
-        margin: -2rem -2rem 2rem -2rem;
-        border-radius: 0;
-    }
-    .layout-feature .article-header-card::before {
-        display: none;
-    }
-    .layout-feature .article-header-card .article-category {
-        background: var(--accent);
-        position: absolute;
-        top: 2rem;
-        left: 2rem;
-    }
-    .layout-feature .article-header-card .article-title {
-        color: white;
-        font-size: 2.5rem;
-        text-shadow: 0 2px 20px rgba(0,0,0,0.3);
-    }
-    .layout-feature .article-header-card .article-meta {
-        color: rgba(255,255,255,0.9);
-    }
-    .layout-feature .article-header-card .article-meta i {
-        color: var(--accent);
-    }
-
-    /* Layout: MINIMAL - Clean, centered, typography-focused */
-    .layout-minimal .article-header-card {
-        background: transparent;
-        border: none;
-        text-align: center;
-        padding: 3rem 2rem;
-        max-width: 700px;
-        margin: 0 auto 2rem;
-    }
-    .layout-minimal .article-header-card::before {
-        display: none;
-    }
-    .layout-minimal .article-header-card .article-category {
-        background: transparent;
-        color: var(--primary);
-        border: 2px solid var(--primary);
-        font-size: 10px;
-    }
-    .layout-minimal .article-header-card .article-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        letter-spacing: -0.03em;
-    }
-    .layout-minimal .article-header-card .article-meta {
-        justify-content: center;
-    }
-    .layout-minimal .article-container {
-        grid-template-columns: 1fr;
-        max-width: 680px;
+    /* Article Layout */
+    .article-layout {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 48px;
+        max-width: 1100px;
         margin: 0 auto;
     }
-    .layout-minimal .article-main {
-        border: none;
-        background: transparent;
-        padding: 0;
-    }
-    .layout-minimal .article-sidebar {
-        display: none;
-    }
-    .layout-minimal .article-body {
-        font-size: 1.15rem;
-        line-height: 1.9;
-    }
 
-    /* Layout: NEWS - Bold stats at top, news-style */
-    .layout-news .article-header-card {
-        background: var(--card);
-        border-left: 6px solid var(--accent);
-        border-radius: 0 16px 16px 0;
-        padding: 2rem;
-    }
-    .layout-news .article-header-card::before {
-        display: none;
-    }
-    .layout-news .article-header-card .article-category {
-        background: var(--accent);
-    }
-    .layout-news .article-stats-grid {
-        background: linear-gradient(135deg, var(--primary) 0%, #0f2744 100%);
-        padding: 1.5rem;
-        border-radius: 16px;
-        margin: -1rem 0 1.5rem 0;
-    }
-    .layout-news .article-stats-grid .article-stat-card {
-        background: rgba(255,255,255,0.1);
-        border: 1px solid rgba(255,255,255,0.2);
-    }
-    .layout-news .article-stats-grid .article-stat-card .value {
-        color: white;
-    }
-    .layout-news .article-stats-grid .article-stat-card .label {
-        color: rgba(255,255,255,0.8);
-    }
-    .layout-news .key-takeaways-box {
-        border-left: 4px solid var(--accent);
-        background: rgba(196, 30, 58, 0.08);
-    }
-    .layout-news .key-takeaways-box h4 {
-        color: var(--accent);
-    }
-
-    /* Layout: STANDARD - Default layout (no extra styles needed) */
-    .layout-standard .article-header-card {
-        /* Uses default styles */
-    }
-
-    /* ============================================
-       BASE STYLES (shared across layouts)
-       ============================================ */
-
-    /* Breadcrumb Enhanced */
-    .article-breadcrumb {
-        margin-bottom: 1.5rem;
-        color: var(--text-muted);
-        font-size: 0.9rem;
+    /* Breadcrumb */
+    .breadcrumb-nav {
         display: flex;
         align-items: center;
         gap: 8px;
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 32px;
     }
 
-    .article-breadcrumb a {
+    .breadcrumb-nav a {
         color: var(--text-muted);
         text-decoration: none;
-        transition: color 0.2s ease;
+        transition: color var(--duration-fast);
     }
 
-    .article-breadcrumb a:hover {
-        color: var(--primary);
+    .breadcrumb-nav a:hover {
+        color: var(--text-primary);
     }
 
-    .article-breadcrumb i {
+    .breadcrumb-nav i {
         font-size: 10px;
-        color: var(--text-light);
     }
 
-    /* Article Header Enhanced */
-    .article-header-card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        padding: 2.5rem;
-        margin-bottom: 2rem;
-        position: relative;
-        overflow: hidden;
+    /* Article Header */
+    .article-header {
+        margin-bottom: 40px;
     }
 
-    .article-header-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: var(--gradient-primary);
-    }
-
-    .article-category {
+    .article-category-badge {
         display: inline-block;
-        padding: 8px 18px;
-        border-radius: 10px;
         font-size: 11px;
-        font-weight: 700;
+        font-weight: 600;
+        color: var(--gold);
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: white;
-        margin-bottom: 1.25rem;
+        letter-spacing: 0.08em;
+        margin-bottom: 16px;
     }
-
-    /* Category-specific gradient badges */
-    .category-express_entry { background: linear-gradient(135deg, #1e3a8a, #3b82f6); }
-    .category-pnp { background: linear-gradient(135deg, #7c3aed, #8b5cf6); }
-    .category-policy { background: linear-gradient(135deg, #d97706, #f59e0b); }
-    .category-forms { background: linear-gradient(135deg, #059669, #10b981); }
-    .category-study_permit { background: linear-gradient(135deg, #db2777, #ec4899); }
-    .category-work_permit { background: linear-gradient(135deg, #0891b2, #06b6d4); }
-    .category-news { background: linear-gradient(135deg, #2563eb, #3b82f6); }
-    .category-breaking_news { background: linear-gradient(135deg, #dc2626, #ef4444); }
-    .category-educational { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
 
     .article-title {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 2.25rem;
-        font-weight: 800;
-        line-height: 1.3;
-        margin-bottom: 1.25rem;
-        color: var(--text);
+        font-family: 'Instrument Serif', Georgia, serif;
+        font-size: 2.5rem;
+        font-weight: 400;
+        color: var(--text-primary);
+        line-height: 1.2;
         letter-spacing: -0.02em;
+        margin-bottom: 20px;
     }
 
     .article-meta {
         display: flex;
-        gap: 1.5rem;
-        font-size: 0.9rem;
+        align-items: center;
+        gap: 20px;
+        font-size: 13px;
         color: var(--text-muted);
-        flex-wrap: wrap;
+        padding-bottom: 24px;
+        border-bottom: 1px solid var(--border-subtle);
     }
 
     .article-meta span {
@@ -315,985 +105,457 @@
         gap: 6px;
     }
 
-    .article-meta i {
-        color: var(--primary-light);
-    }
-
-    .article-content-section {
-        padding: 0;
-    }
-
-    .article-container {
-        display: grid;
-        grid-template-columns: 1fr 280px;
-        gap: 2rem;
-    }
-
-    @media (max-width: 992px) {
-        .article-container {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .article-main {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 2rem;
-    }
-
+    /* Featured Image */
     .article-featured-image {
         width: 100%;
+        height: 400px;
+        background-size: cover;
+        background-position: center;
         border-radius: 12px;
-        margin-bottom: 0.5rem;
-    }
-
-    .image-credit {
-        font-size: 0.8rem;
-        color: var(--text-light);
-        margin-bottom: 1.5rem;
-    }
-
-    .image-credit a {
-        color: var(--text-muted);
-        text-decoration: none;
-    }
-
-    .image-credit a:hover {
-        color: var(--primary);
-        text-decoration: underline;
-    }
-
-    .article-body {
-        font-size: 1.05rem;
-        line-height: 1.8;
-        color: var(--text);
-    }
-
-    .article-body h2 {
-        margin-top: 2rem;
-        margin-bottom: 1rem;
-        color: var(--text);
-        font-size: 1.4rem;
-        font-weight: 700;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid var(--primary);
-    }
-
-    .article-body h3 {
-        margin-top: 1.5rem;
-        margin-bottom: 0.75rem;
-        color: var(--text);
-        font-size: 1.2rem;
-        font-weight: 600;
-    }
-
-    .article-body ul, .article-body ol {
-        margin: 1.5rem 0;
-        padding-left: 1.5rem;
-    }
-
-    .article-body ul {
-        list-style-type: none;
-        padding-left: 0;
-    }
-
-    .article-body ul li {
+        margin-bottom: 40px;
         position: relative;
-        padding-left: 1.5rem;
-        margin-bottom: 0.75rem;
     }
 
-    .article-body ul li::before {
+    .article-featured-image::after {
         content: '';
         position: absolute;
-        left: 0;
-        top: 0.6rem;
-        width: 8px;
-        height: 8px;
-        background: var(--primary);
-        border-radius: 50%;
-    }
-
-    .article-body ol li {
-        margin-bottom: 0.75rem;
-    }
-
-    .article-body p {
-        margin-bottom: 1.5rem;
-    }
-
-
-    .article-body strong {
-        color: var(--text);
-        font-weight: 600;
-    }
-
-    /* Info Tables */
-    .article-body .info-table {
-        margin: 1.5rem 0;
-        overflow: hidden;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.2) 100%);
         border-radius: 12px;
-        border: 1px solid var(--border);
     }
 
-    .article-body .info-table table {
-        width: 100%;
-        border-collapse: collapse;
-        background: var(--card);
-    }
-
-    .article-body .info-table thead {
-        background: var(--primary);
-    }
-
-    .article-body .info-table thead th {
-        color: white;
-        padding: 0.875rem 1rem;
-        font-weight: 600;
-        text-align: left;
-        font-size: 0.95rem;
-    }
-
-    .article-body .info-table tbody tr {
-        border-bottom: 1px solid var(--border);
-    }
-
-    .article-body .info-table tbody tr:hover {
-        background: var(--bg);
-    }
-
-    .article-body .info-table tbody td {
-        padding: 0.75rem 1rem;
-        vertical-align: top;
-    }
-
-    .article-body .info-table tbody td:first-child {
-        font-weight: 600;
-        color: var(--text);
-        width: 35%;
-    }
-
-    .article-body .info-table .tip-num {
-        width: 40px;
-        text-align: center;
-        font-weight: 800;
-        color: var(--primary);
-        font-size: 1rem;
-    }
-
-    /* Warning/Info Boxes */
-    .article-body .warning-box {
-        background: rgba(245, 158, 11, 0.1);
-        border: 1px solid rgba(245, 158, 11, 0.3);
-        border-left: 4px solid #D97706;
-        padding: 1.25rem;
-        margin: 1.5rem 0;
-        border-radius: 0 12px 12px 0;
-    }
-
-    .article-body .warning-box h4 {
-        color: #B45309;
-        font-size: 1rem;
-        font-weight: 700;
-        margin-bottom: 0.75rem;
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-
-    .article-body .warning-box ul {
-        margin: 0;
-    }
-
-    .article-body .warning-box li::before {
-        background: #D97706;
-    }
-
-    .article-body .tip-box {
-        background: rgba(59, 130, 246, 0.08);
-        border: 1px solid rgba(59, 130, 246, 0.2);
-        border-left: 4px solid #3B82F6;
-        padding: 1.25rem;
-        margin: 1.5rem 0;
-        border-radius: 0 12px 12px 0;
-    }
-
-    .article-body .tip-box h4 {
-        color: #1D4ED8;
-        font-size: 1rem;
-        font-weight: 700;
-        margin-bottom: 0.75rem;
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-
-    /* Stats/Key Facts Cards */
-    .article-body .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 1rem;
-        margin: 1.5rem 0;
-    }
-
-    .article-body .stat-card {
-        background: var(--bg);
-        border: 1px solid var(--border);
+    /* Key Takeaways */
+    .key-takeaways {
+        background: var(--bg-secondary);
         border-radius: 12px;
-        padding: 1rem;
-        text-align: center;
+        padding: 24px;
+        margin-bottom: 32px;
     }
 
-    .article-body .stat-card .stat-value {
-        font-size: 1.75rem;
-        font-weight: 800;
-        color: var(--primary);
-        line-height: 1.2;
-    }
-
-    .article-body .stat-card .stat-label {
-        font-size: 0.8rem;
-        color: var(--text-muted);
-        margin-top: 0.25rem;
-    }
-
-    /* Timeline styling */
-    .article-body .timeline {
-        position: relative;
-        padding-left: 2rem;
-        margin: 1.5rem 0;
-    }
-
-    .article-body .timeline::before {
-        content: '';
-        position: absolute;
-        left: 0.5rem;
-        top: 0;
-        bottom: 0;
-        width: 3px;
-        background: linear-gradient(to bottom, var(--primary), var(--accent));
-        border-radius: 2px;
-    }
-
-    .article-body .timeline-item {
-        position: relative;
-        padding: 1rem 0;
-    }
-
-    .article-body .timeline-item::before {
-        content: '';
-        position: absolute;
-        left: -1.625rem;
-        top: 1.25rem;
-        width: 12px;
-        height: 12px;
-        background: var(--primary);
-        border: 3px solid white;
-        border-radius: 50%;
-        box-shadow: 0 2px 8px rgba(30, 58, 95, 0.3);
-    }
-
-    .article-body .timeline-item .timeline-date {
-        font-weight: 700;
-        color: var(--primary);
-        font-size: 0.9rem;
-    }
-
-    .article-body .timeline-item .timeline-content {
-        margin-top: 0.25rem;
-    }
-
-    /* Verification Badge */
-    .verification-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
+    .key-takeaways h4 {
+        font-size: 14px;
         font-weight: 600;
-        margin-bottom: 1rem;
-    }
-
-    .verification-badge.verified {
-        background: rgba(5, 150, 105, 0.1);
-        color: #059669;
-        border: 1px solid rgba(5, 150, 105, 0.3);
-    }
-
-    .verification-badge.partially-verified {
-        background: rgba(217, 119, 6, 0.1);
-        color: #D97706;
-        border: 1px solid rgba(217, 119, 6, 0.3);
-    }
-
-    .verification-badge.unverified {
-        background: rgba(107, 114, 128, 0.1);
-        color: #6B7280;
-        border: 1px solid rgba(107, 114, 128, 0.3);
-    }
-
-    /* Key Takeaways Box */
-    .key-takeaways-box {
-        background: rgba(30, 58, 95, 0.08);
-        border: 1px solid rgba(30, 58, 95, 0.2);
-        border-radius: 12px;
-        padding: 1.25rem;
-        margin: 1.5rem 0;
-    }
-
-    .key-takeaways-box h4 {
-        color: var(--primary);
-        font-size: 1rem;
-        font-weight: 700;
-        margin-bottom: 0.75rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .key-takeaways-box ul {
-        margin: 0;
-        padding-left: 0;
-        list-style: none;
-    }
-
-    .key-takeaways-box li {
-        padding: 0.4rem 0;
-        padding-left: 1.5rem;
-        position: relative;
-        color: var(--text);
-    }
-
-    .key-takeaways-box li::before {
-        content: '✓';
-        position: absolute;
-        left: 0;
-        color: var(--primary);
-        font-weight: bold;
-    }
-
-    /* Stat Cards Grid */
-    .article-stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-        gap: 1rem;
-        margin: 1.5rem 0;
-    }
-
-    .article-stat-card {
-        background: var(--bg);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 1rem;
-        text-align: center;
-    }
-
-    .article-stat-card .value {
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: var(--primary);
-        line-height: 1.2;
-    }
-
-    .article-stat-card .label {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        margin-top: 0.25rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    /* Sources Section */
-    .sources-section {
-        background: var(--bg);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 1.25rem;
-        margin: 1.5rem 0;
-    }
-
-    .sources-section h4 {
-        font-size: 1rem;
-        font-weight: 700;
-        margin-bottom: 0.75rem;
-        color: var(--text);
-    }
-
-    .sources-section ul {
-        margin: 0;
-        padding-left: 0;
-        list-style: none;
-    }
-
-    .sources-section li {
-        padding: 0.5rem 0;
-        border-bottom: 1px solid var(--border);
-    }
-
-    .sources-section li:last-child {
-        border-bottom: none;
-    }
-
-    .sources-section a {
-        color: var(--primary);
-        text-decoration: none;
-    }
-
-    .sources-section a:hover {
-        text-decoration: underline;
-    }
-
-    /* References Section - Academic Style */
-    .references-section {
-        margin-top: 2rem;
-        padding: 1.5rem;
-        background: linear-gradient(135deg, rgba(30, 58, 95, 0.04), rgba(30, 58, 95, 0.02));
-        border-radius: 12px;
-        border-left: 4px solid var(--primary);
-    }
-
-    .references-section h4 {
-        font-size: 1rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        color: var(--primary);
-    }
-
-    .references-section ol {
-        padding-left: 1.5rem;
-        margin: 0;
-    }
-
-    .references-section li {
-        margin-bottom: 0.75rem;
-        font-size: 0.9rem;
-        line-height: 1.6;
-        color: var(--text-muted);
-    }
-
-    .references-section li::marker {
-        color: var(--primary);
-        font-weight: 600;
-    }
-
-    .references-section a {
-        color: var(--text);
-        text-decoration: none;
-        word-break: break-word;
-    }
-
-    .references-section a:hover {
-        color: var(--primary);
-        text-decoration: underline;
-    }
-
-    /* Callout Box */
-    .article-body .callout-box {
-        background: linear-gradient(135deg, rgba(30, 58, 95, 0.08), rgba(196, 30, 58, 0.04));
-        border-left: 4px solid var(--accent);
-        padding: 1.25rem 1.5rem;
-        border-radius: 0 12px 12px 0;
-        margin: 1.5rem 0;
-    }
-
-    .article-body .callout-box h3, .article-body .callout-box h4 {
-        font-size: 1rem;
-        margin-bottom: 0.5rem;
-        color: var(--primary);
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-
-    /* Data Table */
-    .article-body .data-table {
-        margin: 1.5rem 0;
-        overflow-x: auto;
-    }
-
-    .article-body .data-table table {
-        width: 100%;
-        border-collapse: collapse;
-        background: var(--card);
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    .article-body .data-table th {
-        background: var(--primary);
-        color: white;
-        padding: 1rem 1.25rem;
-        text-align: left;
-        font-weight: 600;
-        font-size: 0.9rem;
-    }
-
-    .article-body .data-table td {
-        padding: 1rem 1.25rem;
-        border-bottom: 1px solid var(--border);
-        font-size: 0.95rem;
-    }
-
-    .article-body .data-table tr:last-child td {
-        border-bottom: none;
-    }
-
-    .article-body .data-table tr:hover {
-        background: rgba(30, 58, 95, 0.03);
-    }
-
-    .article-body .data-table .positive {
-        color: #16a34a;
-        font-weight: 600;
-    }
-
-    .article-body .data-table .negative {
-        color: var(--accent);
-        font-weight: 600;
-    }
-
-    /* Comparison Table */
-    .article-body .comparison-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 1.5rem 0;
-        background: var(--card);
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    .article-body .comparison-table th {
-        background: var(--primary);
-        color: white;
-        padding: 0.875rem 1rem;
-        text-align: left;
-        font-weight: 600;
-    }
-
-    .article-body .comparison-table td {
-        padding: 0.875rem 1rem;
-        border-bottom: 1px solid var(--border);
-    }
-
-    .article-body .comparison-table tr:last-child td {
-        border-bottom: none;
-    }
-
-    /* Highlighted text */
-    .article-body .highlight, .article-body strong.highlight {
-        background: linear-gradient(120deg, rgba(196, 30, 58, 0.15) 0%, rgba(196, 30, 58, 0.15) 100%);
-        padding: 2px 6px;
-        border-radius: 4px;
-        color: var(--accent);
-        font-weight: 700;
-    }
-
-    .article-body .stat-big {
-        font-size: 1.3em;
-        font-weight: 700;
-        color: var(--primary);
-    }
-
-    .source-badge {
-        display: inline-block;
-        padding: 0.15rem 0.5rem;
-        border-radius: 4px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        margin-right: 0.5rem;
-        text-transform: uppercase;
-    }
-
-    .source-badge.official {
-        background: rgba(196, 30, 58, 0.1);
-        color: var(--accent);
-    }
-
-    .source-badge.secondary {
-        background: rgba(107, 114, 128, 0.1);
-        color: #6B7280;
-    }
-
-    .article-source-box {
-        background: rgba(30, 58, 95, 0.08);
-        border-left: 4px solid var(--primary);
-        padding: 1rem;
-        margin: 1.5rem 0;
-        border-radius: 0 12px 12px 0;
-    }
-
-    .article-source-box.official-source {
-        background: rgba(196, 30, 58, 0.08);
-        border: 1px solid rgba(196, 30, 58, 0.2);
-        border-left: 4px solid var(--accent);
-        border-radius: 12px;
-        padding: 1.25rem;
-    }
-
-    .article-source-box.official-source h4 {
-        font-size: 0.95rem;
-        color: var(--accent);
-        margin-bottom: 0.5rem;
-        font-weight: 700;
-    }
-
-    .article-source-box.official-source h4 i {
-        color: var(--accent);
-        margin-right: 0.5rem;
-    }
-
-    .article-source-box.official-source p {
-        font-size: 0.9rem;
-        color: var(--text-muted);
-        margin-bottom: 0.75rem;
-    }
-
-    .article-source-box.official-source a {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: var(--accent);
-        color: white;
-        padding: 0.6rem 1rem;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.85rem;
-        transition: all 0.2s ease;
-    }
-
-    .article-source-box.official-source a:hover {
-        opacity: 0.9;
-    }
-
-    .article-source-box h4 {
-        font-size: 0.9rem;
-        color: var(--text-muted);
-        margin-bottom: 0.5rem;
-    }
-
-    .article-source-box a {
-        color: var(--primary);
-        font-weight: 600;
-    }
-
-    .article-sidebar {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-
-    .sidebar-card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 1.5rem;
-        transition: all 0.3s ease;
-    }
-
-    .sidebar-card:hover {
-        box-shadow: var(--shadow-md);
-    }
-
-    .sidebar-card h3 {
-        font-size: 1rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        color: var(--text);
+        color: var(--text-primary);
+        margin-bottom: 16px;
         display: flex;
         align-items: center;
         gap: 8px;
     }
 
-    .sidebar-card h3 i {
-        color: var(--primary-light);
+    .key-takeaways ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
     }
 
-    .related-article {
-        display: block;
-        padding: 0.6rem 0;
-        border-bottom: 1px solid var(--border);
+    .key-takeaways li {
+        padding: 8px 0;
+        padding-left: 24px;
+        position: relative;
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    .key-takeaways li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 14px;
+        width: 8px;
+        height: 8px;
+        background: var(--gold);
+        border-radius: 50%;
+    }
+
+    /* Stat Cards */
+    .stat-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 16px;
+        margin-bottom: 32px;
+    }
+
+    .stat-card {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-subtle);
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .stat-card-value {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+    }
+
+    .stat-card-label {
+        font-size: 12px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    /* Article Body */
+    .article-body {
+        font-size: 16px;
+        line-height: 1.8;
+        color: var(--text-secondary);
+    }
+
+    .article-body h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-top: 40px;
+        margin-bottom: 16px;
+        letter-spacing: -0.01em;
+    }
+
+    .article-body h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-top: 32px;
+        margin-bottom: 12px;
+    }
+
+    .article-body p {
+        margin-bottom: 20px;
+    }
+
+    .article-body ul, .article-body ol {
+        margin: 20px 0;
+        padding-left: 24px;
+    }
+
+    .article-body li {
+        margin-bottom: 10px;
+    }
+
+    .article-body strong {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+    .article-body a {
+        color: var(--gold);
         text-decoration: none;
-        color: var(--text);
-        transition: color 0.2s ease;
     }
 
-    .related-article:last-child {
-        border-bottom: none;
+    .article-body a:hover {
+        text-decoration: underline;
     }
 
-    .related-article:hover {
-        color: var(--primary);
+    /* Source Box */
+    .source-box {
+        background: var(--bg-secondary);
+        border-left: 3px solid var(--gold);
+        padding: 20px 24px;
+        margin-top: 40px;
+        border-radius: 0 10px 10px 0;
     }
 
-    .related-article-title {
+    .source-box-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 8px;
+    }
+
+    .source-box a {
+        color: var(--gold);
+        text-decoration: none;
         font-weight: 500;
-        font-size: 0.9rem;
-        line-height: 1.4;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+        display: flex;
+        align-items: center;
+        gap: 6px;
     }
 
-    .related-article-meta {
-        font-size: 0.75rem;
-        color: var(--text-light);
-        margin-top: 0.25rem;
+    .source-box a:hover {
+        text-decoration: underline;
     }
 
+    /* Sidebar */
+    .article-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .sidebar-card {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+        padding: 24px;
+    }
+
+    .sidebar-card h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Share Buttons */
     .share-buttons {
         display: flex;
-        gap: 0.75rem;
+        gap: 10px;
     }
 
     .share-btn {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
         text-decoration: none;
-        transition: all 0.2s ease;
+        transition: transform var(--duration-fast);
     }
 
     .share-btn:hover {
-        opacity: 0.9;
+        transform: translateY(-2px);
         color: white;
     }
 
     .share-btn.facebook { background: #1877f2; }
     .share-btn.twitter { background: #000; }
     .share-btn.linkedin { background: #0a66c2; }
-    .share-btn.copy { background: var(--primary); cursor: pointer; }
+    .share-btn.copy { background: var(--obsidian); cursor: pointer; }
 
-    .cta-box {
-        background: var(--gradient-primary);
-        color: white;
+    /* Related Articles */
+    .related-article {
+        display: block;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border-subtle);
+        text-decoration: none;
+        transition: all var(--duration-fast);
+    }
+
+    .related-article:last-child {
+        border-bottom: none;
+    }
+
+    .related-article:hover .related-article-title {
+        color: var(--gold);
+    }
+
+    .related-article-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+        line-height: 1.4;
+        margin-bottom: 4px;
+        transition: color var(--duration-fast);
+    }
+
+    .related-article-meta {
+        font-size: 12px;
+        color: var(--text-muted);
+    }
+
+    /* CTA Card */
+    .cta-card {
+        background: var(--obsidian);
         text-align: center;
         position: relative;
         overflow: hidden;
     }
 
-    .cta-box::before {
+    .cta-card::before {
         content: '';
         position: absolute;
         top: -50%;
-        right: -30%;
-        width: 150px;
-        height: 150px;
-        background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(184, 134, 11, 0.15) 0%, transparent 50%);
+        pointer-events: none;
     }
 
-    .cta-box h3 {
-        color: white;
+    .cta-card h3 {
+        color: var(--snow);
         position: relative;
         z-index: 1;
     }
 
-    .cta-box p {
-        opacity: 0.9;
-        margin-bottom: 1.25rem;
-        font-size: 0.9rem;
+    .cta-card p {
+        color: var(--pearl);
+        font-size: 13px;
+        margin-bottom: 16px;
         position: relative;
         z-index: 1;
     }
 
-    .cta-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: white;
-        color: var(--primary);
-        padding: 0.75rem 1.5rem;
-        border-radius: 10px;
-        font-weight: 600;
-        text-decoration: none;
-        transition: all 0.3s ease;
+    .cta-card .btn {
         position: relative;
         z-index: 1;
     }
 
-    .cta-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        color: var(--primary);
+    /* Responsive */
+    @media (max-width: 991px) {
+        .article-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .article-sidebar {
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        .sidebar-card {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .article-title {
+            font-size: 2rem;
+        }
+
+        .article-featured-image {
+            height: 280px;
+        }
     }
 
     @media (max-width: 768px) {
         .article-title {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
         }
 
-        .article-main {
-            padding: 1.5rem;
+        .article-meta {
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
-        .article-body {
-            font-size: 1rem;
+        .article-featured-image {
+            height: 220px;
+        }
+
+        .sidebar-card {
+            min-width: 100%;
         }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<!-- Article Layout Wrapper - applies layout-specific styles -->
-<div class="layout-{{ article.layout | default('standard') }}">
-
 <!-- Breadcrumb -->
-<div class="article-breadcrumb">
-    <a href="/">Home</a> <i class="bi bi-chevron-right"></i> <a href="/articles">Articles</a> <i class="bi bi-chevron-right"></i> <span>{{ article.category | replace('_', ' ') | title }}</span>
-</div>
+<nav class="breadcrumb-nav">
+    <a href="/">Home</a>
+    <i class="bi bi-chevron-right"></i>
+    <a href="/articles">Insights</a>
+    <i class="bi bi-chevron-right"></i>
+    <span>{{ article.category | replace('_', ' ') | title }}</span>
+</nav>
 
-<!-- Article Header -->
-<div class="article-header-card scroll-animate">
-    <span class="article-category category-{{ article.category }}">{{ article.category | replace('_', ' ') | title }}</span>
-    <h1 class="article-title">{{ article.title }}</h1>
-    <div class="article-meta">
-        <span><i class="bi bi-calendar3"></i> {{ article.created_at[:10] if article.created_at else 'Recent' }}</span>
-        <span><i class="bi bi-clock"></i> {{ article.reading_time }} min read</span>
-        <span><i class="bi bi-building"></i> {{ article.source }}</span>
-    </div>
-</div>
+<div class="article-layout">
+    <!-- Main Content -->
+    <article>
+        <!-- Header -->
+        <header class="article-header" data-animate>
+            <span class="article-category-badge">{{ article.category | replace('_', ' ') | title }}</span>
+            <h1 class="article-title">{{ article.title }}</h1>
+            <div class="article-meta">
+                <span><i class="bi bi-calendar3"></i> {{ article.created_at[:10] if article.created_at else 'Recent' }}</span>
+                <span><i class="bi bi-clock"></i> {{ article.reading_time or 5 }} min read</span>
+                <span><i class="bi bi-building"></i> {{ article.source or 'IRCC' }}</span>
+            </div>
+        </header>
 
-<section class="article-content-section">
-        <div class="article-container">
-            <main class="article-main">
-                <!-- Verification Badge - only show if explicitly verified -->
-                {% if article.verification and article.verification.status == 'verified' %}
-                <div class="verification-badge verified">
-                    <i class="bi bi-patch-check-fill"></i> Verified ({{ article.verification.confidence }}% confidence)
-                </div>
-                {% endif %}
+        <!-- Featured Image -->
+        {% if article.image_url %}
+        <div class="article-featured-image" style="background-image: url('{{ article.image_url }}');" data-animate></div>
+        {% endif %}
 
-                <!-- Key Takeaways -->
-                {% if article.key_takeaways and article.key_takeaways|length > 0 %}
-                <div class="key-takeaways-box">
-                    <h4><i class="bi bi-lightbulb-fill"></i> Key Takeaways</h4>
-                    <ul>
-                        {% for takeaway in article.key_takeaways %}
-                        <li>{{ takeaway }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                {% endif %}
-
-                <!-- Stat Cards -->
-                {% if article.stat_cards and article.stat_cards|length > 0 %}
-                <div class="article-stats-grid">
-                    {% for stat in article.stat_cards %}
-                    <div class="article-stat-card">
-                        <div class="value">{{ stat.value }}</div>
-                        <div class="label">{{ stat.label }}</div>
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                <article class="article-body">
-                    {% if '<h2>' in article.full_article or '<p>' in article.full_article or '<ul>' in article.full_article %}
-                        {{ article.full_article | safe }}
-                    {% else %}
-                        <p>{{ article.full_article | replace('\n\n', '</p><p>') | replace('\n', '<br>') | safe }}</p>
-                    {% endif %}
-                </article>
-
-                <!-- Sources Section -->
-                {% if article.sources and (article.sources.official or article.sources.secondary) %}
-                <div class="sources-section">
-                    <h4><i class="bi bi-journal-text me-2"></i>Sources & References</h4>
-                    <ul>
-                        {% for source in article.sources.official %}
-                        <li>
-                            <span class="source-badge official">Official</span>
-                            <a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.name or source.url }}</a>
-                        </li>
-                        {% endfor %}
-                        {% for source in article.sources.secondary %}
-                        <li>
-                            <span class="source-badge secondary">Secondary</span>
-                            <a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.name or source.url }}</a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                {% endif %}
-
-                <!-- References Section -->
-                {% if article.references and article.references|length > 0 %}
-                <div class="references-section">
-                    <h4><i class="bi bi-journal-bookmark me-2"></i>References</h4>
-                    <ol>
-                        {% for ref in article.references %}
-                        <li>
-                            {% if ref.url %}
-                            <a href="{{ ref.url }}" target="_blank" rel="noopener">{{ ref.title or ref.name or ref.url }}</a>
-                            {% else %}
-                            {{ ref.title or ref.name or ref }}
-                            {% endif %}
-                            {% if ref.source %} - {{ ref.source }}{% endif %}
-                            {% if ref.date %} ({{ ref.date }}){% endif %}
-                        </li>
-                        {% endfor %}
-                    </ol>
-                </div>
-                {% endif %}
-
-                {% if article.official_source_url %}
-                <div class="article-source-box official-source">
-                    <h4><i class="bi bi-patch-check-fill"></i> Official Government Source</h4>
-                    <p>This article is based on official information from:</p>
-                    <a href="{{ article.official_source_url }}" target="_blank" rel="noopener">
-                        <i class="bi bi-building"></i> {{ article.official_source_url | replace('https://', '') | replace('http://', '') | truncate(60) }}
-                        <i class="bi bi-box-arrow-up-right"></i>
-                    </a>
-                </div>
-                {% elif article.source_url %}
-                <div class="article-source-box">
-                    <h4>Source</h4>
-                    <a href="{{ article.source_url }}" target="_blank" rel="noopener">{{ article.source }} <i class="bi bi-box-arrow-up-right"></i></a>
-                </div>
-                {% endif %}
-            </main>
-
-            <aside class="article-sidebar">
-                <div class="sidebar-card">
-                    <h3><i class="bi bi-share"></i> Share Article</h3>
-                    <div class="share-buttons">
-                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" target="_blank" class="share-btn facebook"><i class="bi bi-facebook"></i></a>
-                        <a href="https://twitter.com/intent/tweet?url={{ request.url }}&text={{ article.title }}" target="_blank" class="share-btn twitter"><i class="bi bi-twitter-x"></i></a>
-                        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.url }}&title={{ article.title }}" target="_blank" class="share-btn linkedin"><i class="bi bi-linkedin"></i></a>
-                        <div class="share-btn copy" onclick="navigator.clipboard.writeText(window.location.href); this.innerHTML='<i class=\'bi bi-check\'></i>'"><i class="bi bi-link-45deg"></i></div>
-                    </div>
-                </div>
-
-                {% if related %}
-                <div class="sidebar-card">
-                    <h3><i class="bi bi-journal-text"></i> Related Articles</h3>
-                    {% for rel in related %}
-                    <a href="/articles/{{ rel.slug or rel.id }}" class="related-article">
-                        <div class="related-article-title">{{ rel.title }}</div>
-                        <div class="related-article-meta">{{ rel.reading_time }} min read</div>
-                    </a>
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                <div class="sidebar-card cta-box">
-                    <h3><i class="bi bi-calculator-fill"></i> Calculate Your CRS Score</h3>
-                    <p>Find out your Express Entry ranking</p>
-                    <a href="/tools/crs-calculator" class="cta-btn">
-                        Calculate Now
-                        <i class="bi bi-arrow-right"></i>
-                    </a>
-                </div>
-            </aside>
+        <!-- Key Takeaways -->
+        {% if article.key_takeaways and article.key_takeaways|length > 0 %}
+        <div class="key-takeaways" data-animate>
+            <h4><i class="bi bi-lightbulb"></i> Key Takeaways</h4>
+            <ul>
+                {% for takeaway in article.key_takeaways %}
+                <li>{{ takeaway }}</li>
+                {% endfor %}
+            </ul>
         </div>
-    </div>
-</section>
+        {% endif %}
 
-</div><!-- End layout wrapper -->
+        <!-- Stat Cards -->
+        {% if article.stat_cards and article.stat_cards|length > 0 %}
+        <div class="stat-cards" data-animate>
+            {% for stat in article.stat_cards %}
+            <div class="stat-card">
+                <div class="stat-card-value">{{ stat.value }}</div>
+                <div class="stat-card-label">{{ stat.label }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Article Body -->
+        <div class="article-body" data-animate>
+            {% if '<h2>' in article.full_article or '<p>' in article.full_article %}
+                {{ article.full_article | safe }}
+            {% else %}
+                <p>{{ article.full_article | replace('\n\n', '</p><p>') | replace('\n', '<br>') | safe }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Source -->
+        {% if article.source_url %}
+        <div class="source-box" data-animate>
+            <div class="source-box-label">Source</div>
+            <a href="{{ article.source_url }}" target="_blank" rel="noopener">
+                {{ article.source or 'Official Source' }}
+                <i class="bi bi-arrow-up-right"></i>
+            </a>
+        </div>
+        {% endif %}
+    </article>
+
+    <!-- Sidebar -->
+    <aside class="article-sidebar">
+        <!-- Share -->
+        <div class="sidebar-card">
+            <h3><i class="bi bi-share"></i> Share</h3>
+            <div class="share-buttons">
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" target="_blank" class="share-btn facebook" title="Share on Facebook"><i class="bi bi-facebook"></i></a>
+                <a href="https://twitter.com/intent/tweet?url={{ request.url }}&text={{ article.title }}" target="_blank" class="share-btn twitter" title="Share on X"><i class="bi bi-twitter-x"></i></a>
+                <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.url }}" target="_blank" class="share-btn linkedin" title="Share on LinkedIn"><i class="bi bi-linkedin"></i></a>
+                <div class="share-btn copy" onclick="navigator.clipboard.writeText(window.location.href); this.innerHTML='<i class=\'bi bi-check\'></i>'" title="Copy link"><i class="bi bi-link-45deg"></i></div>
+            </div>
+        </div>
+
+        <!-- Related Articles -->
+        {% if related %}
+        <div class="sidebar-card">
+            <h3><i class="bi bi-journal-text"></i> Related</h3>
+            {% for rel in related %}
+            <a href="/articles/{{ rel.slug or rel.id }}" class="related-article">
+                <div class="related-article-title">{{ rel.title }}</div>
+                <div class="related-article-meta">{{ rel.reading_time or 5 }} min read</div>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- CRS CTA -->
+        <div class="sidebar-card cta-card">
+            <h3><i class="bi bi-calculator"></i> CRS Calculator</h3>
+            <p>Calculate your Express Entry score</p>
+            <a href="/tools/crs-calculator" class="btn btn-gold btn-sm">
+                Calculate Now
+                <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    </aside>
+</div>
 {% endblock %}
