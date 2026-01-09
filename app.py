@@ -2442,6 +2442,61 @@ def clear_logs():
     return jsonify({'success': True, 'message': 'Logs cleared'})
 
 
+@app.route('/api/clear-all', methods=['POST'])
+def clear_all_data():
+    """Clear ALL data - articles, results, logs, guides (requires password)"""
+    data = request.get_json() or {}
+    password = data.get('password', request.args.get('p', ''))
+
+    if password != ADMIN_PASSWORD:
+        return jsonify({'error': 'Unauthorized', 'hint': 'Send {"password": "your_password"}'}), 401
+
+    cleared = []
+
+    # Clear all JSON data files
+    data_files = {
+        'results': RESULTS_FILE,
+        'articles': ARTICLES_FILE,
+        'approved': APPROVED_FILE,
+        'guides': GUIDES_FILE,
+        'logs': LOGS_FILE,
+        'ai_decisions': AI_DECISIONS_FILE
+    }
+
+    for name, filepath in data_files.items():
+        try:
+            with open(filepath, 'w') as f:
+                json.dump([], f)
+            cleared.append(name)
+        except Exception as e:
+            pass
+
+    # Also clear the backend queue and results
+    try:
+        requests.post(f"{POST_API_URL}/queue/clear", timeout=5)
+        cleared.append('backend_queue')
+    except:
+        pass
+
+    try:
+        requests.post(f"{POST_API_URL}/results/clear", timeout=5)
+        cleared.append('backend_results')
+    except:
+        pass
+
+    try:
+        requests.post(f"{POST_API_URL}/posting/reset", timeout=5)
+        cleared.append('posting_status')
+    except:
+        pass
+
+    return jsonify({
+        'success': True,
+        'message': 'All data cleared',
+        'cleared': cleared
+    })
+
+
 # =============================================================================
 # AI DECISION LOGGING (For Training)
 # =============================================================================
