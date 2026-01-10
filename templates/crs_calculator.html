@@ -162,15 +162,14 @@
 
     /* Score Display */
     .score-display {
-        position: sticky;
-        top: 80px;
+        position: relative;
         background: var(--card);
         border: 1px solid var(--border);
         border-radius: 20px;
         padding: 2rem;
+        padding-top: 2.5rem;
         text-align: center;
         box-shadow: var(--shadow-lg);
-        overflow: hidden;
     }
 
     .score-display::before {
@@ -181,6 +180,8 @@
         right: 0;
         height: 4px;
         background: var(--gradient-primary);
+        border-radius: 20px 20px 0 0;
+        z-index: 1;
     }
 
     .score-label {
@@ -194,13 +195,15 @@
 
     .score-value {
         font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 5rem;
+        font-size: 4rem;
         font-weight: 800;
         background: var(--gradient-primary);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        line-height: 1;
+        line-height: 1.1;
+        position: relative;
+        z-index: 2;
     }
 
     .score-max {
