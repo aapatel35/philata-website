@@ -22,7 +22,8 @@ IRCC_URLS = {
     'family': 'https://www.canada.ca/en/immigration-refugees-citizenship/services/application/check-processing-times.html',
 }
 
-# Express Entry Draw History URL
+# Express Entry Draw History URL - Official IRCC JSON endpoint
+EE_DRAWS_JSON_URL = 'https://www.canada.ca/content/dam/ircc/documents/json/ee_rounds_4_en.json'
 EE_DRAWS_URL = 'https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/submit-profile/rounds-invitations.html'
 
 HEADERS = {
@@ -103,52 +104,89 @@ def get_status(value, unit, category):
 
 
 def scrape_express_entry_draws():
-    """Scrape Express Entry draw history"""
-    html = fetch_page(EE_DRAWS_URL)
-    if not html:
-        return get_fallback_draws()
+    """Fetch Express Entry draw history from official IRCC JSON endpoint"""
+    try:
+        response = requests.get(EE_DRAWS_JSON_URL, headers=HEADERS, timeout=30)
+        response.raise_for_status()
+        data = response.json()
 
-    soup = BeautifulSoup(html, 'html.parser')
-    draws = []
+        draws = []
+        # Parse the IRCC JSON structure
+        rounds_data = data.get('rounds', [])
 
-    # Find the draws table
-    tables = soup.find_all('table')
-    for table in tables:
-        rows = table.find_all('tr')
-        for row in rows[1:6]:  # Get first 5 draws
-            cells = row.find_all(['td', 'th'])
-            if len(cells) >= 4:
-                try:
-                    draw = {
-                        'date': cells[0].get_text(strip=True),
-                        'category': cells[1].get_text(strip=True) if len(cells) > 1 else 'General',
-                        'crs_score': cells[2].get_text(strip=True) if len(cells) > 2 else '',
-                        'itas': cells[3].get_text(strip=True) if len(cells) > 3 else ''
-                    }
-                    # Clean up CRS score
-                    crs_match = re.search(r'(\d+)', draw['crs_score'])
-                    if crs_match:
-                        draw['crs_score'] = int(crs_match.group(1))
-                        draws.append(draw)
-                except:
-                    continue
+        for round_item in rounds_data[:20]:  # Get last 20 draws
+            try:
+                # Extract draw details from IRCC JSON format
+                draw_date = round_item.get('drawDate', '')
+                draw_name = round_item.get('drawName', 'General')
+                crs_score = round_item.get('drawCRS', '')
+                itas = round_item.get('drawSize', '')
+                draw_number = round_item.get('drawNumber', '')
 
-    if not draws:
-        return get_fallback_draws()
+                # Parse CRS score
+                crs_match = re.search(r'(\d+)', str(crs_score))
+                crs_int = int(crs_match.group(1)) if crs_match else 0
 
-    return draws[:5]
+                # Format ITA count with commas
+                itas_match = re.search(r'(\d+)', str(itas).replace(',', ''))
+                itas_formatted = '{:,}'.format(int(itas_match.group(1))) if itas_match else itas
+
+                # Normalize category names
+                category = draw_name
+                if 'experience' in draw_name.lower():
+                    category = 'Canadian Experience Class'
+                elif 'provincial' in draw_name.lower() or 'pnp' in draw_name.lower():
+                    category = 'Provincial Nominee Program'
+                elif 'french' in draw_name.lower():
+                    category = 'French Language Proficiency'
+                elif 'healthcare' in draw_name.lower():
+                    category = 'Healthcare Occupations'
+                elif 'stem' in draw_name.lower():
+                    category = 'STEM Occupations'
+                elif 'trade' in draw_name.lower():
+                    category = 'Trade Occupations'
+                elif 'transport' in draw_name.lower():
+                    category = 'Transport Occupations'
+                elif 'general' in draw_name.lower() or 'no program' in draw_name.lower():
+                    category = 'General'
+
+                draw = {
+                    'draw_number': draw_number,
+                    'date': draw_date,
+                    'category': category,
+                    'crs_score': crs_int,
+                    'itas': itas_formatted
+                }
+
+                if crs_int > 0:
+                    draws.append(draw)
+
+            except Exception as e:
+                print(f"Error parsing draw: {e}")
+                continue
+
+        if draws:
+            return draws
+
+    except Exception as e:
+        print(f"Error fetching IRCC draws JSON: {e}")
+
+    return get_fallback_draws()
 
 
 def get_fallback_draws():
-    """Fallback Express Entry draws data"""
+    """Fallback Express Entry draws data - from official IRCC source"""
     return [
-        {'date': 'Jan 8, 2026', 'category': 'General', 'crs_score': 524, 'itas': '2,500'},
-        {'date': 'Jan 7, 2026', 'category': 'Canadian Experience Class', 'crs_score': 511, 'itas': '8,000'},
-        {'date': 'Jan 5, 2026', 'category': 'Provincial Nominee Program', 'crs_score': 711, 'itas': '574'},
-        {'date': 'Dec 19, 2025', 'category': 'General', 'crs_score': 518, 'itas': '3,200'},
-        {'date': 'Dec 11, 2025', 'category': 'Healthcare', 'crs_score': 431, 'itas': '1,800'},
-        {'date': 'Dec 4, 2025', 'category': 'French', 'crs_score': 379, 'itas': '6,000'},
-        {'date': 'Nov 27, 2025', 'category': 'General', 'crs_score': 522, 'itas': '2,850'},
+        {'draw_number': '390', 'date': 'January 7, 2026', 'category': 'Canadian Experience Class', 'crs_score': 511, 'itas': '8,000'},
+        {'draw_number': '389', 'date': 'January 5, 2026', 'category': 'Provincial Nominee Program', 'crs_score': 711, 'itas': '574'},
+        {'draw_number': '388', 'date': 'December 17, 2025', 'category': 'French Language Proficiency', 'crs_score': 399, 'itas': '6,000'},
+        {'draw_number': '387', 'date': 'December 16, 2025', 'category': 'Canadian Experience Class', 'crs_score': 515, 'itas': '5,000'},
+        {'draw_number': '386', 'date': 'December 15, 2025', 'category': 'Provincial Nominee Program', 'crs_score': 731, 'itas': '399'},
+        {'draw_number': '385', 'date': 'December 11, 2025', 'category': 'Healthcare Occupations', 'crs_score': 476, 'itas': '1,000'},
+        {'draw_number': '384', 'date': 'December 10, 2025', 'category': 'Canadian Experience Class', 'crs_score': 520, 'itas': '6,000'},
+        {'draw_number': '383', 'date': 'December 8, 2025', 'category': 'Provincial Nominee Program', 'crs_score': 729, 'itas': '1,123'},
+        {'draw_number': '382', 'date': 'November 28, 2025', 'category': 'French Language Proficiency', 'crs_score': 408, 'itas': '6,000'},
+        {'draw_number': '381', 'date': 'November 26, 2025', 'category': 'Canadian Experience Class', 'crs_score': 531, 'itas': '1,000'},
     ]
 
 
