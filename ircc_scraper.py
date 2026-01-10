@@ -26,6 +26,64 @@ IRCC_URLS = {
 EE_DRAWS_JSON_URL = 'https://www.canada.ca/content/dam/ircc/documents/json/ee_rounds_4_en.json'
 EE_DRAWS_URL = 'https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/submit-profile/rounds-invitations.html'
 
+# Official Provincial Nominee Program (PNP) Sources
+PNP_SOURCES = {
+    'ontario': {
+        'name': 'Ontario Immigrant Nominee Program (OINP)',
+        'url': 'https://www.ontario.ca/page/ontario-immigrant-nominee-program-oinp',
+        'draws_url': 'https://www.ontario.ca/page/2024-ontario-immigrant-nominee-program-updates',
+        'api_url': None,  # No public API
+    },
+    'bc': {
+        'name': 'BC Provincial Nominee Program (BC PNP)',
+        'url': 'https://www.welcomebc.ca/Immigrate-to-B-C/BC-PNP-Skills-Immigration',
+        'draws_url': 'https://www.welcomebc.ca/Immigrate-to-B-C/BC-PNP-Skills-Immigration/Invitations-to-Apply',
+        'api_url': None,
+    },
+    'alberta': {
+        'name': 'Alberta Advantage Immigration Program (AAIP)',
+        'url': 'https://www.alberta.ca/alberta-advantage-immigration-program',
+        'draws_url': 'https://www.alberta.ca/aaip-processing-times',
+        'api_url': None,
+    },
+    'saskatchewan': {
+        'name': 'Saskatchewan Immigrant Nominee Program (SINP)',
+        'url': 'https://www.saskatchewan.ca/residents/moving-to-saskatchewan/immigrating-to-saskatchewan/saskatchewan-immigrant-nominee-program',
+        'draws_url': 'https://www.saskatchewan.ca/residents/moving-to-saskatchewan/immigrating-to-saskatchewan/saskatchewan-immigrant-nominee-program/browse-sinp-programs',
+        'api_url': None,
+    },
+    'manitoba': {
+        'name': 'Manitoba Provincial Nominee Program (MPNP)',
+        'url': 'https://immigratemanitoba.com/',
+        'draws_url': 'https://immigratemanitoba.com/immigrate-to-manitoba/',
+        'api_url': None,
+    },
+    'nova_scotia': {
+        'name': 'Nova Scotia Nominee Program (NSNP)',
+        'url': 'https://novascotiaimmigration.com/move-here/',
+        'draws_url': 'https://novascotiaimmigration.com/move-here/',
+        'api_url': None,
+    },
+    'new_brunswick': {
+        'name': 'New Brunswick Provincial Nominee Program (NBPNP)',
+        'url': 'https://www.welcomenb.ca/content/wel-bien/en/immigrating/content/HowToImmigrate/NBProvincialNomineeProgram.html',
+        'draws_url': None,
+        'api_url': None,
+    },
+    'pei': {
+        'name': 'PEI Provincial Nominee Program (PEI PNP)',
+        'url': 'https://www.princeedwardisland.ca/en/topic/office-immigration',
+        'draws_url': 'https://www.princeedwardisland.ca/en/information/office-of-immigration/pei-pnp-expression-of-interest-draws',
+        'api_url': None,
+    },
+    'yukon': {
+        'name': 'Yukon Nominee Program (YNP)',
+        'url': 'https://yukon.ca/en/immigrate-yukon',
+        'draws_url': None,
+        'api_url': None,
+    },
+}
+
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -305,11 +363,41 @@ def get_immigration_stats():
     """Get current immigration statistics and targets"""
     return {
         'immigration_target_2025': 485000,
-        'express_entry_target': 110770,
+        'immigration_target_2026': 395000,  # Reduced target for 2026
+        'express_entry_target_2025': 110770,
+        'express_entry_target_2026': 109000,  # Reduced for 2026
         'pnp_target': 117500,
         'family_class_target': 82000,
         'active_profiles': '2.5M+',
-        'average_crs_cutoff': 500,
+        'average_crs_cutoff': 515,
+    }
+
+
+def get_pnp_sources():
+    """Get official PNP sources for all provinces"""
+    return PNP_SOURCES
+
+
+def get_official_sources():
+    """Get all official data sources used"""
+    return {
+        'express_entry': {
+            'name': 'Express Entry Rounds of Invitations',
+            'url': 'https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/submit-profile/rounds-invitations.html',
+            'data_url': EE_DRAWS_JSON_URL,
+            'description': 'Official IRCC Express Entry draw history'
+        },
+        'processing_times': {
+            'name': 'Check Processing Times',
+            'url': 'https://www.canada.ca/en/immigration-refugees-citizenship/services/application/check-processing-times.html',
+            'description': 'Official IRCC processing times tool'
+        },
+        'immigration_levels': {
+            'name': 'Immigration Levels Plan',
+            'url': 'https://www.canada.ca/en/immigration-refugees-citizenship/news/notices/supplementary-immigration-levels-2025-2027.html',
+            'description': 'Canada Immigration Levels Plan 2025-2027'
+        },
+        'pnp_programs': PNP_SOURCES
     }
 
 
@@ -524,7 +612,8 @@ def get_processing_times_data():
             ]
         },
         'countries': country_times,
-        'stats': stats
+        'stats': stats,
+        'official_sources': get_official_sources()
     }
 
     return data
