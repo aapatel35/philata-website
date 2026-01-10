@@ -64,7 +64,7 @@ class User(UserMixin):
     def create(email, password, name=''):
         """Create a new user"""
         users = get_users_collection()
-        if not users:
+        if users is None:
             return None, "Database not available"
 
         # Check if email already exists
@@ -98,7 +98,7 @@ class User(UserMixin):
     def get_by_id(user_id):
         """Get user by ID"""
         users = get_users_collection()
-        if not users:
+        if users is None:
             return None
 
         try:
@@ -114,7 +114,7 @@ class User(UserMixin):
     def get_by_email(email):
         """Get user by email"""
         users = get_users_collection()
-        if not users:
+        if users is None:
             return None
 
         user_data = users.find_one({'email': email.lower()})
@@ -127,7 +127,7 @@ class User(UserMixin):
     def authenticate(email, password):
         """Authenticate user with email and password"""
         users = get_users_collection()
-        if not users:
+        if users is None:
             return None, "Database not available"
 
         user_data = users.find_one({'email': email.lower()})
@@ -149,7 +149,7 @@ class User(UserMixin):
     def update_profile(user_id, profile_data):
         """Update user profile"""
         users = get_users_collection()
-        if not users:
+        if users is None:
             return False
 
         try:
@@ -165,7 +165,7 @@ class User(UserMixin):
     def update_password(user_id, new_password):
         """Update user password"""
         users = get_users_collection()
-        if not users:
+        if users is None:
             return False
 
         try:
@@ -186,7 +186,7 @@ class User(UserMixin):
 def save_user_score(user_id, score_data):
     """Save user's CRS score calculation"""
     scores = get_user_scores_collection()
-    if not scores:
+    if scores is None:
         return None
 
     score_doc = {
@@ -204,7 +204,7 @@ def save_user_score(user_id, score_data):
 def get_user_scores(user_id, limit=10):
     """Get user's CRS score history"""
     scores = get_user_scores_collection()
-    if not scores:
+    if scores is None:
         return []
 
     cursor = scores.find(
@@ -217,7 +217,7 @@ def get_user_scores(user_id, limit=10):
 def get_latest_user_score(user_id):
     """Get user's most recent CRS score"""
     scores = get_user_scores_collection()
-    if not scores:
+    if scores is None:
         return None
 
     return scores.find_one(
@@ -233,7 +233,7 @@ def get_latest_user_score(user_id):
 def save_user_checklist(user_id, program, checklist_data):
     """Save or update user's document checklist progress"""
     checklists = get_user_checklists_collection()
-    if not checklists:
+    if checklists is None:
         return False
 
     checklists.update_one(
@@ -255,7 +255,7 @@ def save_user_checklist(user_id, program, checklist_data):
 def get_user_checklist(user_id, program):
     """Get user's checklist for a program"""
     checklists = get_user_checklists_collection()
-    if not checklists:
+    if checklists is None:
         return None
 
     return checklists.find_one({'user_id': user_id, 'program': program})
@@ -264,7 +264,7 @@ def get_user_checklist(user_id, program):
 def get_all_user_checklists(user_id):
     """Get all user's checklists"""
     checklists = get_user_checklists_collection()
-    if not checklists:
+    if checklists is None:
         return []
 
     return list(checklists.find({'user_id': user_id}))
@@ -277,7 +277,7 @@ def get_all_user_checklists(user_id):
 def save_article(user_id, article_id, article_data=None):
     """Save an article for a user"""
     saved = get_saved_articles_collection()
-    if not saved:
+    if saved is None:
         return False
 
     try:
@@ -300,7 +300,7 @@ def save_article(user_id, article_id, article_data=None):
 def unsave_article(user_id, article_id):
     """Remove a saved article"""
     saved = get_saved_articles_collection()
-    if not saved:
+    if saved is None:
         return False
 
     result = saved.delete_one({'user_id': user_id, 'article_id': article_id})
@@ -310,7 +310,7 @@ def unsave_article(user_id, article_id):
 def get_saved_articles(user_id):
     """Get user's saved articles"""
     saved = get_saved_articles_collection()
-    if not saved:
+    if saved is None:
         return []
 
     return list(saved.find({'user_id': user_id}).sort('saved_at', -1))
@@ -319,7 +319,7 @@ def get_saved_articles(user_id):
 def is_article_saved(user_id, article_id):
     """Check if article is saved by user"""
     saved = get_saved_articles_collection()
-    if not saved:
+    if saved is None:
         return False
 
     return saved.find_one({'user_id': user_id, 'article_id': article_id}) is not None

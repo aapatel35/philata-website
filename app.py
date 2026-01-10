@@ -4,6 +4,10 @@ Dashboard for viewing and approving generated content
 Comprehensive Immigration Guides
 """
 
+# Load environment variables first (before other imports)
+from dotenv import load_dotenv
+load_dotenv()
+
 import os
 import json
 import requests

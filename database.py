@@ -99,31 +99,31 @@ def close_connection():
 def get_users_collection():
     """Get users collection"""
     db = get_database()
-    return db.users if db else None
+    return db.users if db is not None else None
 
 
 def get_user_scores_collection():
     """Get user CRS scores collection"""
     db = get_database()
-    return db.user_scores if db else None
+    return db.user_scores if db is not None else None
 
 
 def get_user_checklists_collection():
     """Get user checklists collection"""
     db = get_database()
-    return db.user_checklists if db else None
+    return db.user_checklists if db is not None else None
 
 
 def get_saved_articles_collection():
     """Get saved articles collection"""
     db = get_database()
-    return db.saved_articles if db else None
+    return db.saved_articles if db is not None else None
 
 
 def get_articles_collection():
     """Get articles/news collection"""
     db = get_database()
-    return db.articles if db else None
+    return db.articles if db is not None else None
 
 
 def is_connected():
