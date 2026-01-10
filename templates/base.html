@@ -1270,6 +1270,192 @@
 
         document.querySelectorAll('[data-counter]').forEach(el => counterObserver.observe(el));
     </script>
+
+    <!-- Development Disclaimer Modal -->
+    <div id="disclaimerModal" class="disclaimer-modal" style="display: none;">
+        <div class="disclaimer-overlay"></div>
+        <div class="disclaimer-content">
+            <div class="disclaimer-icon">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <h2>Important Disclaimer</h2>
+            <div class="disclaimer-body">
+                <p><strong>This website is currently under development.</strong></p>
+                <p>Please be advised that:</p>
+                <ul>
+                    <li>All content on this website is for informational purposes only</li>
+                    <li>Information may be incomplete, inaccurate, or outdated</li>
+                    <li>Do NOT rely on any material from this website for immigration decisions</li>
+                    <li>Always consult official IRCC sources and licensed immigration consultants</li>
+                    <li>CRS calculations and predictions are estimates only</li>
+                </ul>
+                <p class="disclaimer-warning">By clicking "I Understand & Accept", you acknowledge that you have read and understood this disclaimer and agree not to rely on any information from this website for immigration-related decisions.</p>
+            </div>
+            <button class="disclaimer-accept-btn" onclick="acceptDisclaimer()">
+                <i class="bi bi-check-circle me-2"></i>I Understand & Accept
+            </button>
+        </div>
+    </div>
+
+    <style>
+        .disclaimer-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .disclaimer-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+        }
+
+        .disclaimer-content {
+            position: relative;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 550px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            animation: disclaimerSlideIn 0.4s ease;
+        }
+
+        @keyframes disclaimerSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .disclaimer-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .disclaimer-icon i {
+            font-size: 2.5rem;
+            color: #D97706;
+        }
+
+        .disclaimer-content h2 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #18181b;
+            margin-bottom: 1.5rem;
+        }
+
+        .disclaimer-body {
+            text-align: left;
+            color: #3f3f46;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .disclaimer-body p {
+            margin-bottom: 1rem;
+        }
+
+        .disclaimer-body ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .disclaimer-body li {
+            margin-bottom: 0.5rem;
+            color: #DC2626;
+        }
+
+        .disclaimer-warning {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #991B1B;
+        }
+
+        .disclaimer-accept-btn {
+            margin-top: 1.5rem;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #1E3A5F 0%, #0891B2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .disclaimer-accept-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(30, 58, 95, 0.3);
+        }
+
+        @media (max-width: 576px) {
+            .disclaimer-content {
+                padding: 1.5rem;
+            }
+
+            .disclaimer-content h2 {
+                font-size: 1.4rem;
+            }
+
+            .disclaimer-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .disclaimer-icon i {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+
+    <script>
+        // Show disclaimer on first visit
+        (function() {
+            if (!localStorage.getItem('philata_disclaimer_accepted')) {
+                document.getElementById('disclaimerModal').style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        })();
+
+        function acceptDisclaimer() {
+            localStorage.setItem('philata_disclaimer_accepted', 'true');
+            document.getElementById('disclaimerModal').style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    </script>
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>
