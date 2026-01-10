@@ -143,6 +143,8 @@ def get_fallback_draws():
     """Fallback Express Entry draws data"""
     return [
         {'date': 'Jan 8, 2026', 'category': 'General', 'crs_score': 524, 'itas': '2,500'},
+        {'date': 'Jan 7, 2026', 'category': 'Canadian Experience Class', 'crs_score': 511, 'itas': '8,000'},
+        {'date': 'Jan 5, 2026', 'category': 'Provincial Nominee Program', 'crs_score': 711, 'itas': '574'},
         {'date': 'Dec 19, 2025', 'category': 'General', 'crs_score': 518, 'itas': '3,200'},
         {'date': 'Dec 11, 2025', 'category': 'Healthcare', 'crs_score': 431, 'itas': '1,800'},
         {'date': 'Dec 4, 2025', 'category': 'French', 'crs_score': 379, 'itas': '6,000'},
