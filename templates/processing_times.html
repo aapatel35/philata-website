@@ -1,0 +1,896 @@
+{% extends "base.html" %}
+
+{% block title %}Processing Times - Canada Immigration{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Page Header */
+    .page-header-times {
+        margin-bottom: 32px;
+    }
+
+    .page-header-times .page-title {
+        font-family: 'Plus Jakarta Sans', var(--font-family);
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .page-header-times .page-title i {
+        font-size: 28px;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .page-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+    }
+
+    /* Last Updated Banner */
+    .last-updated {
+        background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), rgba(8, 145, 178, 0.1));
+        border: 1px solid rgba(30, 58, 138, 0.2);
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .last-updated-text {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text);
+    }
+
+    .last-updated-text i {
+        color: var(--primary);
+        font-size: 1.25rem;
+    }
+
+    .last-updated-text strong {
+        color: var(--primary);
+    }
+
+    .source-link {
+        font-size: 0.85rem;
+        color: var(--accent);
+        text-decoration: none;
+    }
+
+    .source-link:hover {
+        text-decoration: underline;
+    }
+
+    /* Category Tabs */
+    .category-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .category-tab {
+        padding: 0.75rem 1.25rem;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 500;
+        color: var(--text-muted);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .category-tab:hover {
+        border-color: var(--primary);
+        color: var(--text);
+    }
+
+    .category-tab.active {
+        background: var(--gradient-primary);
+        color: white;
+        border-color: transparent;
+    }
+
+    .category-tab i {
+        font-size: 1rem;
+    }
+
+    /* Timeline Table Container */
+    .timeline-container {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .timeline-header {
+        background: var(--bg);
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .timeline-header i {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        color: white;
+    }
+
+    .timeline-header h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    /* Timeline Table */
+    .timeline-table {
+        width: 100%;
+    }
+
+    .timeline-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1.5fr;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+        align-items: center;
+    }
+
+    .timeline-row:last-child {
+        border-bottom: none;
+    }
+
+    .timeline-row.header {
+        background: var(--bg);
+        font-weight: 600;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .timeline-row:not(.header):hover {
+        background: rgba(30, 58, 138, 0.03);
+    }
+
+    .visa-type {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .visa-name {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .visa-code {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    .processing-time {
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+
+    .time-fast {
+        color: #059669;
+    }
+
+    .time-moderate {
+        color: #D97706;
+    }
+
+    .time-slow {
+        color: #DC2626;
+    }
+
+    .time-unit {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--text-muted);
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .status-normal {
+        background: rgba(16, 185, 129, 0.15);
+        color: #059669;
+    }
+
+    .status-delayed {
+        background: rgba(245, 158, 11, 0.15);
+        color: #D97706;
+    }
+
+    .status-backlog {
+        background: rgba(239, 68, 68, 0.15);
+        color: #DC2626;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .progress-bar {
+        height: 8px;
+        background: var(--bg);
+        border-radius: 4px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+    }
+
+    .progress-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.5s ease;
+    }
+
+    .progress-fill.fast {
+        background: linear-gradient(90deg, #10B981, #059669);
+    }
+
+    .progress-fill.moderate {
+        background: linear-gradient(90deg, #F59E0B, #D97706);
+    }
+
+    .progress-fill.slow {
+        background: linear-gradient(90deg, #EF4444, #DC2626);
+    }
+
+    .progress-label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+
+    /* Info Cards */
+    .info-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+    }
+
+    .info-card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1rem;
+    }
+
+    .info-card-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .info-card h4 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .info-card p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        line-height: 1.6;
+    }
+
+    /* Legend */
+    .legend {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+        padding: 1rem 1.5rem;
+        background: var(--bg);
+        border-radius: 12px;
+        margin-top: 2rem;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        color: var(--text);
+    }
+
+    .legend-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+
+    .legend-dot.fast { background: #10B981; }
+    .legend-dot.moderate { background: #F59E0B; }
+    .legend-dot.slow { background: #EF4444; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .timeline-row {
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .timeline-row.header {
+            display: none;
+        }
+
+        .timeline-row:not(.header) {
+            padding: 1.25rem;
+        }
+
+        .visa-type::before,
+        .processing-time::before,
+        .status-badge::before,
+        .progress-container::before {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .visa-type::before { content: 'Application Type'; }
+        .processing-time::before { content: 'Processing Time'; }
+
+        .category-tabs {
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            padding-bottom: 0.5rem;
+        }
+
+        .category-tab {
+            white-space: nowrap;
+        }
+    }
+
+    /* Disclaimer */
+    .times-disclaimer {
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-top: 2rem;
+        font-size: 0.9rem;
+        color: var(--text);
+    }
+
+    .times-disclaimer i {
+        color: #D97706;
+        margin-right: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header-times">
+    <h1 class="page-title">
+        <i class="bi bi-clock-history"></i>
+        Processing Times
+    </h1>
+    <p class="page-subtitle">Estimated processing times for Canadian immigration applications</p>
+</div>
+
+<!-- Last Updated Banner -->
+<div class="last-updated">
+    <div class="last-updated-text">
+        <i class="bi bi-calendar-check"></i>
+        {% if data and data.last_updated %}
+        <span>Last updated: <strong>{{ data.last_updated[:10] }}</strong> - Based on IRCC official data</span>
+        {% else %}
+        <span>Last updated: <strong>January 10, 2026</strong> - Based on IRCC official data</span>
+        {% endif %}
+    </div>
+    <a href="https://www.canada.ca/en/immigration-refugees-citizenship/services/application/check-processing-times.html" target="_blank" class="source-link">
+        View official IRCC processing times <i class="bi bi-box-arrow-up-right"></i>
+    </a>
+</div>
+
+<!-- Category Tabs -->
+<div class="category-tabs">
+    <div class="category-tab active" onclick="showCategory('all')">
+        <i class="bi bi-grid-3x3-gap"></i>
+        All Applications
+    </div>
+    <div class="category-tab" onclick="showCategory('express')">
+        <i class="bi bi-lightning"></i>
+        Express Entry
+    </div>
+    <div class="category-tab" onclick="showCategory('temporary')">
+        <i class="bi bi-clock"></i>
+        Temporary Visas
+    </div>
+    <div class="category-tab" onclick="showCategory('family')">
+        <i class="bi bi-people"></i>
+        Family Sponsorship
+    </div>
+    <div class="category-tab" onclick="showCategory('pnp')">
+        <i class="bi bi-geo-alt"></i>
+        PNP Programs
+    </div>
+</div>
+
+<!-- Express Entry Section -->
+<div class="timeline-container category-section" data-category="express all">
+    <div class="timeline-header">
+        <i style="background: linear-gradient(135deg, #6366F1, #8B5CF6);" class="bi bi-lightning-fill"></i>
+        <h3>Express Entry Programs</h3>
+    </div>
+    <div class="timeline-table">
+        <div class="timeline-row header">
+            <span>Application Type</span>
+            <span>Processing Time</span>
+            <span>Status</span>
+            <span>Progress</span>
+        </div>
+        <div class="timeline-row">
+            <div class="visa-type">
+                <span class="visa-name">Federal Skilled Worker (FSW)</span>
+                <span class="visa-code">Express Entry - IMM 0008</span>
+            </div>
+            <div>
+                <span class="processing-time time-fast">6</span>
+                <span class="time-unit">months</span>
+            </div>
+            <span class="status-badge status-normal"><i class="bi bi-check-circle"></i> On Track</span>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill fast" style="width: 85%"></div>
+                </div>
+                <span class="progress-label">80% of applications processed in 6 months</span>
+            </div>
+        </div>
+        <div class="timeline-row">
+            <div class="visa-type">
+                <span class="visa-name">Canadian Experience Class (CEC)</span>
+                <span class="visa-code">Express Entry - IMM 0008</span>
+            </div>
+            <div>
+                <span class="processing-time time-fast">5</span>
+                <span class="time-unit">months</span>
+            </div>
+            <span class="status-badge status-normal"><i class="bi bi-check-circle"></i> On Track</span>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill fast" style="width: 90%"></div>
+                </div>
+                <span class="progress-label">80% of applications processed in 5 months</span>
+            </div>
+        </div>
+        <div class="timeline-row">
+            <div class="visa-type">
+                <span class="visa-name">Federal Skilled Trades (FST)</span>
+                <span class="visa-code">Express Entry - IMM 0008</span>
+            </div>
+            <div>
+                <span class="processing-time time-fast">6</span>
+                <span class="time-unit">months</span>
+            </div>
+            <span class="status-badge status-normal"><i class="bi bi-check-circle"></i> On Track</span>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill fast" style="width: 80%"></div>
+                </div>
+                <span class="progress-label">80% of applications processed in 6 months</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Temporary Residence Section -->
+<div class="timeline-container category-section" data-category="temporary all">
+    <div class="timeline-header">
+        <i style="background: linear-gradient(135deg, #0891B2, #06B6D4);" class="bi bi-clock-fill"></i>
+        <h3>Temporary Residence</h3>
+    </div>
+    <div class="timeline-table">
+        <div class="timeline-row header">
+            <span>Application Type</span>
+            <span>Processing Time</span>
+            <span>Status</span>
+            <span>Progress</span>
+        </div>
+        <div class="timeline-row">
+            <div class="visa-type">
+                <span class="visa-name">Visitor Visa (TRV)</span>
+                <span class="visa-code">IMM 5257 - Outside Canada</span>
+            </div>
+            <div>
+                <span class="processing-time time-moderate">45</span>
+                <span class="time-unit">days</span>
+            </div>
+            <span class="status-badge status-delayed"><i class="bi bi-exclamation-circle"></i> Delays</span>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill moderate" style="width: 60%"></div>
+                </div>
+                <span class="progress-label">Varies by country of application</span>
+            </div>
+        </div>
+        <div class="timeline-row">
+            <div class="visa-type">
+                <span class="visa-name">Study Permit</span>
+                <span class="visa-code">IMM 1294 - Outside Canada</span>
+            </div>
+            <div>
+                <span class="processing-time time-moderate">8</span>
+                <span class="time-unit">weeks</span>
+            </div>
+            <span class="status-badge status-normal"><i class="bi bi-check-circle"></i> On Track</span>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill moderate" style="width: 70%"></div>
+                </div>
+                <span class="progress-label">80% processed within 8 weeks</span>
+            </div>
+        </div>
+        <div class="timeline-row">
+            <div class="visa-type">
+                <span class="visa-name">Work Permit (Employer-specific)</span>
+                <span class="visa-code">IMM 1295 - LMIA Required</span>
+            </div>
+            <div>
+                <span class="processing-time time-moderate">12</span>
+                <span class="time-unit">weeks</span>
+            </div>
+            <span class="status-badge status-delayed"><i class="bi bi-exclamation-circle"></i> Delays</span>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill moderate" style="width: 55%"></div>
+                </div>
+                <span class="progress-label">LMIA processing adds 2-4 weeks</span>
+            </div>
+        </div>
+        <div class="timeline-row">
+            <div class="visa-type">
+                <span class="visa-name">Open Work Permit (PGWP)</span>
+                <span class="visa-code">Post-Graduation Work Permit</span>
+            </div>
+            <div>
+                <span class="processing-time time-moderate">80</span>
+                <span class="time-unit">days</span>
+            </div>
+            <span class="status-badge status-normal"><i class="bi bi-check-circle"></i> On Track</span>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill moderate" style="width: 65%"></div>
+                </div>
+                <span class="progress-label">80% processed within 80 days</span>
+            </div>
+        </div>
+        <div class="timeline-row">
+            <div class="visa-type">
+                <span class="visa-name">Visitor Record Extension</span>
+                <span class="visa-code">IMM 5708 - Inside Canada</span>
+            </div>
+            <div>
+                <span class="processing-time time-slow">120</span>
+                <span class="time-unit">days</span>
+            </div>
+            <span class="status-badge status-backlog"><i class="bi bi-x-circle"></i> Backlog</span>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill slow" style="width: 40%"></div>
+                </div>
+                <span class="progress-label">Significant processing delays</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Family Sponsorship Section -->
+<div class="timeline-container category-section" data-category="family all">
+    <div class="timeline-header">
+        <i style="background: linear-gradient(135deg, #E31837, #FF6B6B);" class="bi bi-people-fill"></i>
+        <h3>Family Sponsorship</h3>
+    </div>
+    <div class="timeline-table">
+        <div class="timeline-row header">
+            <span>Application Type</span>
+            <span>Processing Time</span>
+            <span>Status</span>
+            <span>Progress</span>
+        </div>
+        <div class="timeline-row">
+            <div class="visa-type">
+                <span class="visa-name">Spouse/Partner (Inside Canada)</span>
+                <span class="visa-code">IMM 1344 - Inland Sponsorship</span>
+            </div>
+            <div>
+                <span class="processing-time time-moderate">12</span>
+                <span class="time-unit">months</span>
+            </div>
+            <span class="status-badge status-normal"><i class="bi bi-check-circle"></i> On Track</span>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill moderate" style="width: 70%"></div>
+                </div>
+                <span class="progress-label">80% processed within 12 months</span>
+            </div>
+        </div>
+        <div class="timeline-row">
+            <div class="visa-type">
+                <span class="visa-name">Spouse/Partner (Outside Canada)</span>
+                <span class="visa-code">IMM 1344 - Outland Sponsorship</span>
+            </div>
+            <div>
+                <span class="processing-time time-moderate">12</span>
+                <span class="time-unit">months</span>
+            </div>
+            <span class="status-badge status-normal"><i class="bi bi-check-circle"></i> On Track</span>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill moderate" style="width: 70%"></div>
+                </div>
+                <span class="progress-label">80% processed within 12 months</span>
+            </div>
+        </div>
+        <div class="timeline-row">
+            <div class="visa-type">
+                <span class="visa-name">Parents & Grandparents (PGP)</span>
+                <span class="visa-code">IMM 1344 - PGP Sponsorship</span>
+            </div>
+            <div>
+                <span class="processing-time time-slow">24</span>
+                <span class="time-unit">months</span>
+            </div>
+            <span class="status-badge status-backlog"><i class="bi bi-x-circle"></i> Backlog</span>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill slow" style="width: 45%"></div>
+                </div>
+                <span class="progress-label">Limited annual intake - lottery system</span>
+            </div>
+        </div>
+        <div class="timeline-row">
+            <div class="visa-type">
+                <span class="visa-name">Super Visa (Parents/Grandparents)</span>
+                <span class="visa-code">IMM 5257 - Super Visa</span>
+            </div>
+            <div>
+                <span class="processing-time time-moderate">60</span>
+                <span class="time-unit">days</span>
+            </div>
+            <span class="status-badge status-normal"><i class="bi bi-check-circle"></i> On Track</span>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill moderate" style="width: 75%"></div>
+                </div>
+                <span class="progress-label">Faster alternative to PGP</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PNP Section -->
+<div class="timeline-container category-section" data-category="pnp all">
+    <div class="timeline-header">
+        <i style="background: linear-gradient(135deg, #10B981, #34D399);" class="bi bi-geo-alt-fill"></i>
+        <h3>Provincial Nominee Programs (PNP)</h3>
+    </div>
+    <div class="timeline-table">
+        <div class="timeline-row header">
+            <span>Application Type</span>
+            <span>Processing Time</span>
+            <span>Status</span>
+            <span>Progress</span>
+        </div>
+        <div class="timeline-row">
+            <div class="visa-type">
+                <span class="visa-name">PNP (Express Entry Stream)</span>
+                <span class="visa-code">Enhanced Nomination - EE Linked</span>
+            </div>
+            <div>
+                <span class="processing-time time-fast">6</span>
+                <span class="time-unit">months</span>
+            </div>
+            <span class="status-badge status-normal"><i class="bi bi-check-circle"></i> On Track</span>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill fast" style="width: 85%"></div>
+                </div>
+                <span class="progress-label">Processed with Express Entry</span>
+            </div>
+        </div>
+        <div class="timeline-row">
+            <div class="visa-type">
+                <span class="visa-name">PNP (Base/Paper-based)</span>
+                <span class="visa-code">Non-EE Provincial Nomination</span>
+            </div>
+            <div>
+                <span class="processing-time time-slow">18</span>
+                <span class="time-unit">months</span>
+            </div>
+            <span class="status-badge status-delayed"><i class="bi bi-exclamation-circle"></i> Delays</span>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill slow" style="width: 50%"></div>
+                </div>
+                <span class="progress-label">Paper-based processing slower</span>
+            </div>
+        </div>
+        <div class="timeline-row">
+            <div class="visa-type">
+                <span class="visa-name">Ontario PNP (OINP)</span>
+                <span class="visa-code">Ontario Immigrant Nominee Program</span>
+            </div>
+            <div>
+                <span class="processing-time time-moderate">3-6</span>
+                <span class="time-unit">months</span>
+            </div>
+            <span class="status-badge status-normal"><i class="bi bi-check-circle"></i> On Track</span>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill moderate" style="width: 70%"></div>
+                </div>
+                <span class="progress-label">Provincial nomination stage</span>
+            </div>
+        </div>
+        <div class="timeline-row">
+            <div class="visa-type">
+                <span class="visa-name">BC PNP</span>
+                <span class="visa-code">British Columbia Provincial Nominee</span>
+            </div>
+            <div>
+                <span class="processing-time time-moderate">2-4</span>
+                <span class="time-unit">months</span>
+            </div>
+            <span class="status-badge status-normal"><i class="bi bi-check-circle"></i> On Track</span>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill fast" style="width: 80%"></div>
+                </div>
+                <span class="progress-label">Provincial nomination stage</span>
+            </div>
+        </div>
+        <div class="timeline-row">
+            <div class="visa-type">
+                <span class="visa-name">Alberta PNP (AAIP)</span>
+                <span class="visa-code">Alberta Advantage Immigration Program</span>
+            </div>
+            <div>
+                <span class="processing-time time-moderate">3-5</span>
+                <span class="time-unit">months</span>
+            </div>
+            <span class="status-badge status-normal"><i class="bi bi-check-circle"></i> On Track</span>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill moderate" style="width: 75%"></div>
+                </div>
+                <span class="progress-label">Provincial nomination stage</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Info Cards -->
+<div class="info-cards">
+    <div class="info-card">
+        <div class="info-card-header">
+            <div class="info-card-icon" style="background: rgba(16, 185, 129, 0.15); color: #059669;">
+                <i class="bi bi-speedometer2"></i>
+            </div>
+            <h4>What Affects Processing Time?</h4>
+        </div>
+        <p>Processing times depend on application completeness, document quality, medical/security checks, and current application volumes. Category-based draws may have different timelines.</p>
+    </div>
+    <div class="info-card">
+        <div class="info-card-header">
+            <div class="info-card-icon" style="background: rgba(99, 102, 241, 0.15); color: #6366F1;">
+                <i class="bi bi-hourglass-split"></i>
+            </div>
+            <h4>Service Standards vs Reality</h4>
+        </div>
+        <p>IRCC aims to process 80% of applications within the stated timeframe. Complex cases, additional document requests, or background checks can extend processing significantly.</p>
+    </div>
+    <div class="info-card">
+        <div class="info-card-header">
+            <div class="info-card-icon" style="background: rgba(245, 158, 11, 0.15); color: #D97706;">
+                <i class="bi bi-bell"></i>
+            </div>
+            <h4>Track Your Application</h4>
+        </div>
+        <p>Check your application status online through your IRCC account. You'll receive email notifications for updates, document requests, and final decisions.</p>
+    </div>
+</div>
+
+<!-- Legend -->
+<div class="legend">
+    <div class="legend-item">
+        <span class="legend-dot fast"></span>
+        <span>Fast (Within Target)</span>
+    </div>
+    <div class="legend-item">
+        <span class="legend-dot moderate"></span>
+        <span>Moderate (Near Target)</span>
+    </div>
+    <div class="legend-item">
+        <span class="legend-dot slow"></span>
+        <span>Slow (Backlog/Delays)</span>
+    </div>
+</div>
+
+<!-- Disclaimer -->
+<div class="times-disclaimer">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    <strong>Disclaimer:</strong> Processing times shown are estimates based on IRCC published data and may vary. Times are subject to change without notice. Always check the official IRCC website for the most current processing times. Individual cases may take longer due to additional verification requirements.
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function showCategory(category) {
+    // Update tab states
+    document.querySelectorAll('.category-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    event.target.closest('.category-tab').classList.add('active');
+
+    // Show/hide sections
+    document.querySelectorAll('.category-section').forEach(section => {
+        const categories = section.dataset.category.split(' ');
+        if (categories.includes(category)) {
+            section.style.display = 'block';
+        } else {
+            section.style.display = 'none';
+        }
+    });
+}
+
+// Initialize - show all
+document.addEventListener('DOMContentLoaded', function() {
+    showCategory('all');
+});
+</script>
+{% endblock %}

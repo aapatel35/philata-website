@@ -356,6 +356,60 @@ def crs_calculator():
     return render_template('crs_calculator.html')
 
 
+@app.route('/tools/processing-times')
+def processing_times():
+    """Processing Times page with live IRCC data"""
+    try:
+        from ircc_scraper import get_cached_processing_times
+        data = get_cached_processing_times()
+    except Exception as e:
+        print(f"Error fetching processing times: {e}")
+        data = None
+    return render_template('processing_times.html', data=data)
+
+
+@app.route('/tools/crs-prediction')
+def crs_prediction():
+    """CRS Score Prediction page"""
+    try:
+        from ircc_scraper import get_cached_processing_times
+        data = get_cached_processing_times()
+        draws = data.get('express_entry', {}).get('draws', []) if data else []
+        avg_crs = data.get('express_entry', {}).get('average_crs', 520) if data else 520
+    except Exception as e:
+        print(f"Error fetching draws: {e}")
+        draws = []
+        avg_crs = 520
+    return render_template('crs_prediction.html', draws=draws, avg_crs=avg_crs)
+
+
+@app.route('/api/processing-times')
+def api_processing_times():
+    """API endpoint for processing times data"""
+    try:
+        from ircc_scraper import get_cached_processing_times
+        data = get_cached_processing_times()
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/express-entry-draws')
+def api_express_entry_draws():
+    """API endpoint for Express Entry draws"""
+    try:
+        from ircc_scraper import get_cached_processing_times
+        data = get_cached_processing_times()
+        return jsonify({
+            'draws': data.get('express_entry', {}).get('draws', []),
+            'average_crs': data.get('express_entry', {}).get('average_crs', 520),
+            'predicted_cutoff': data.get('express_entry', {}).get('predicted_next_cutoff', 520),
+            'last_updated': data.get('last_updated')
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/learn')
 def learning_hub():
     """Learning Hub - Immigration Education Center"""

@@ -360,6 +360,191 @@
         color: #D97706;
         margin-right: 8px;
     }
+
+    /* Prediction Panel Styles */
+    .prediction-panel {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .prediction-header {
+        background: linear-gradient(135deg, #1E3A5F 0%, #0891B2 100%);
+        padding: 1rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: white;
+    }
+
+    .prediction-header i {
+        font-size: 1.25rem;
+    }
+
+    .prediction-header h4 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .prediction-body {
+        padding: 1.25rem;
+    }
+
+    .prediction-meter {
+        margin-bottom: 1.5rem;
+    }
+
+    .meter-label {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+    }
+
+    .meter-bar {
+        height: 12px;
+        background: var(--bg);
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+    }
+
+    .meter-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #EF4444 0%, #F59E0B 35%, #10B981 70%, #059669 100%);
+        border-radius: 6px;
+        transition: width 0.5s ease;
+    }
+
+    .meter-value {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-top: 0.5rem;
+        text-align: center;
+    }
+
+    .prediction-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 1rem;
+        background: var(--bg);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+    }
+
+    .stat-value {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .stat-label {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 4px;
+    }
+
+    .recent-draws {
+        margin-bottom: 1.5rem;
+    }
+
+    .recent-draws h5 {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.75rem;
+    }
+
+    .draws-table {
+        background: var(--bg);
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+    }
+
+    .draw-row {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 0.6fr 0.6fr;
+        padding: 0.6rem 0.75rem;
+        font-size: 0.8rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .draw-row:last-child {
+        border-bottom: none;
+    }
+
+    .draw-row.header {
+        background: var(--card);
+        font-weight: 600;
+        color: var(--text-muted);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+    }
+
+    .draw-row .crs-score {
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .prediction-tips {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 12px;
+        padding: 1rem;
+    }
+
+    .prediction-tips h5 {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #059669;
+        margin-bottom: 0.75rem;
+    }
+
+    .prediction-tips ul {
+        margin: 0;
+        padding-left: 1.25rem;
+        font-size: 0.85rem;
+        color: var(--text);
+    }
+
+    .prediction-tips li {
+        margin-bottom: 0.4rem;
+    }
+
+    .prediction-tips li:last-child {
+        margin-bottom: 0;
+    }
+
+    .prediction-tips.warning {
+        background: rgba(245, 158, 11, 0.1);
+        border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .prediction-tips.warning h5 {
+        color: #D97706;
+    }
+
+    @media (max-width: 768px) {
+        .prediction-stats {
+            grid-template-columns: 1fr;
+        }
+
+        .draw-row {
+            grid-template-columns: 1fr 0.8fr 0.5fr 0.5fr;
+            font-size: 0.75rem;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -1119,6 +1304,87 @@
                     <a href="/guides/express-entry/express-entry-overview" class="btn btn-primary w-100 mt-4">
                         <i class="bi bi-book me-2"></i>Express Entry Guide
                     </a>
+                    <a href="#" id="detailedPredictionLink" class="btn btn-outline-primary w-100 mt-2" onclick="goToDetailedPrediction()">
+                        <i class="bi bi-graph-up-arrow me-2"></i>View Detailed Prediction
+                    </a>
+                </div>
+
+                <!-- CRS Score Prediction Panel -->
+                <div class="prediction-panel mt-4">
+                    <div class="prediction-header">
+                        <i class="bi bi-graph-up-arrow"></i>
+                        <h4>ITA Prediction</h4>
+                    </div>
+
+                    <div class="prediction-body">
+                        <div class="prediction-meter">
+                            <div class="meter-label">Chance of Receiving ITA</div>
+                            <div class="meter-bar">
+                                <div class="meter-fill" id="itaChanceFill" style="width: 0%"></div>
+                            </div>
+                            <div class="meter-value" id="itaChanceText">Calculate your score</div>
+                        </div>
+
+                        <div class="prediction-stats">
+                            <div class="stat-item">
+                                <span class="stat-value" id="predictedCutoff">--</span>
+                                <span class="stat-label">Predicted Next Cutoff</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="pointsNeeded">--</span>
+                                <span class="stat-label">Points to Improve</span>
+                            </div>
+                        </div>
+
+                        <div class="recent-draws">
+                            <h5><i class="bi bi-clock-history me-2"></i>Recent Express Entry Draws</h5>
+                            <div class="draws-table">
+                                <div class="draw-row header">
+                                    <span>Date</span>
+                                    <span>Category</span>
+                                    <span>CRS</span>
+                                    <span>ITAs</span>
+                                </div>
+                                <div class="draw-row" id="draw1">
+                                    <span>Jan 8, 2026</span>
+                                    <span>General</span>
+                                    <span class="crs-score">524</span>
+                                    <span>2,500</span>
+                                </div>
+                                <div class="draw-row" id="draw2">
+                                    <span>Dec 19, 2025</span>
+                                    <span>General</span>
+                                    <span class="crs-score">518</span>
+                                    <span>3,200</span>
+                                </div>
+                                <div class="draw-row" id="draw3">
+                                    <span>Dec 11, 2025</span>
+                                    <span>Healthcare</span>
+                                    <span class="crs-score">431</span>
+                                    <span>1,800</span>
+                                </div>
+                                <div class="draw-row" id="draw4">
+                                    <span>Dec 4, 2025</span>
+                                    <span>French</span>
+                                    <span class="crs-score">379</span>
+                                    <span>6,000</span>
+                                </div>
+                                <div class="draw-row" id="draw5">
+                                    <span>Nov 27, 2025</span>
+                                    <span>General</span>
+                                    <span class="crs-score">522</span>
+                                    <span>2,850</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="prediction-tips" id="predictionTips">
+                            <h5><i class="bi bi-lightbulb me-2"></i>Tips to Improve Your Score</h5>
+                            <ul id="improvementTips">
+                                <li>Complete your profile to see personalized tips</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1429,6 +1695,137 @@ function updateScore() {
     } else {
         statusEl.className = 'score-status needs-improvement';
         statusText.innerHTML = '<i class="bi bi-arrow-up-circle me-2"></i>Score can be improved';
+    }
+
+    // Update prediction panel
+    updatePrediction(totalScore, age, education, lang1Speaking, canadianWork, foreignWork, frenchBonus, hasPNP);
+}
+
+// CRS Score Prediction Logic
+function updatePrediction(score, age, education, langScore, canWork, forWork, frenchBonus, hasPNP) {
+    const predictedCutoff = 520; // Based on recent general draws average
+    const itaChanceFill = document.getElementById('itaChanceFill');
+    const itaChanceText = document.getElementById('itaChanceText');
+    const predictedCutoffEl = document.getElementById('predictedCutoff');
+    const pointsNeededEl = document.getElementById('pointsNeeded');
+    const tipsEl = document.getElementById('predictionTips');
+    const tipsList = document.getElementById('improvementTips');
+
+    if (score === 0) {
+        itaChanceFill.style.width = '0%';
+        itaChanceText.textContent = 'Calculate your score';
+        predictedCutoffEl.textContent = '--';
+        pointsNeededEl.textContent = '--';
+        tipsList.innerHTML = '<li>Complete your profile to see personalized tips</li>';
+        return;
+    }
+
+    // Calculate ITA chance based on score relative to cutoff
+    let chance = 0;
+    let chanceText = '';
+
+    if (hasPNP) {
+        chance = 98;
+        chanceText = '98% - PNP Nomination (Guaranteed ITA)';
+    } else if (score >= 550) {
+        chance = 95;
+        chanceText = '95% - Excellent (Very High Chance)';
+    } else if (score >= 520) {
+        chance = 80;
+        chanceText = '80% - Strong (High Chance)';
+    } else if (score >= 490) {
+        chance = 55;
+        chanceText = '55% - Moderate (Competitive)';
+    } else if (score >= 460) {
+        chance = 30;
+        chanceText = '30% - Low (Consider Category-Based)';
+    } else if (score >= 430) {
+        chance = 15;
+        chanceText = '15% - Very Low (Category-Based Only)';
+    } else {
+        chance = 5;
+        chanceText = '5% - Unlikely (Improvement Needed)';
+    }
+
+    itaChanceFill.style.width = chance + '%';
+    itaChanceText.textContent = chanceText;
+    predictedCutoffEl.textContent = predictedCutoff;
+
+    const pointsNeeded = Math.max(0, predictedCutoff - score);
+    pointsNeededEl.textContent = pointsNeeded > 0 ? '+' + pointsNeeded : '0';
+
+    // Generate personalized tips
+    let tips = [];
+
+    if (score < predictedCutoff) {
+        // Age tips
+        if (age > 35) {
+            tips.push('Age factor is reducing points - apply sooner rather than later');
+        }
+
+        // Language tips
+        if (langScore < 9) {
+            const langGain = langScore < 7 ? '30-50' : '15-25';
+            tips.push(`Improve language to CLB 9+ for additional ${langGain} points`);
+        }
+
+        // Education tips
+        if (education !== 'masters' && education !== 'doctorate') {
+            tips.push('A Master\'s or PhD could add 10-15 points');
+        }
+
+        // Canadian experience tips
+        if (canWork < 1) {
+            tips.push('1 year Canadian work experience adds 35-40 points');
+        } else if (canWork < 3) {
+            tips.push('Additional Canadian work experience can add more points');
+        }
+
+        // French tips
+        if (frenchBonus === 0) {
+            tips.push('French language (TEF/TCF) can add 25-50 bonus points');
+        }
+
+        // PNP tips
+        if (!hasPNP) {
+            tips.push('Provincial Nominee Program (PNP) adds 600 points - guaranteed ITA');
+        }
+
+        // Category-based tips
+        if (score >= 400 && score < 500) {
+            tips.push('Consider category-based draws (Healthcare, STEM, French, Trade Occupations)');
+        }
+
+        // ECA tip
+        tips.push('Ensure your foreign credentials are properly assessed (ECA)');
+
+    } else {
+        tips.push('Your score is competitive for general draws!');
+        tips.push('Maintain your profile and respond quickly to any ITAs');
+        tips.push('Ensure all documents are ready for application');
+    }
+
+    // Limit to 5 tips
+    tips = tips.slice(0, 5);
+
+    tipsList.innerHTML = tips.map(tip => '<li>' + tip + '</li>').join('');
+
+    // Update tips panel style based on score
+    if (score >= predictedCutoff || hasPNP) {
+        tipsEl.className = 'prediction-tips';
+        tipsEl.querySelector('h5').innerHTML = '<i class="bi bi-check-circle me-2"></i>You\'re in Good Shape!';
+    } else {
+        tipsEl.className = 'prediction-tips warning';
+        tipsEl.querySelector('h5').innerHTML = '<i class="bi bi-lightbulb me-2"></i>Tips to Improve Your Score';
+    }
+}
+
+function goToDetailedPrediction() {
+    const score = parseInt(document.getElementById('totalScore').textContent) || 0;
+    if (score > 0) {
+        window.location.href = '/tools/crs-prediction?score=' + score;
+    } else {
+        alert('Please calculate your CRS score first');
     }
 }
 
