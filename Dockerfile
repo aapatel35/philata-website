@@ -38,11 +38,11 @@ RUN playwright install chromium
 # Copy application code
 COPY . .
 
-# Make start script executable and ensure Unix line endings
-RUN chmod +x start.sh && sed -i 's/\r$//' start.sh
-
 # Default port
 ENV PORT=8080
 
-# Run with bash to ensure proper variable expansion
-CMD ["/bin/bash", "./start.sh"]
+# Expose port
+EXPOSE 8080
+
+# Run gunicorn directly - shell form for variable expansion
+CMD gunicorn --bind 0.0.0.0:${PORT:-8080} --workers 4 --timeout 120 app:app
