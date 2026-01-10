@@ -1,0 +1,737 @@
+{% extends "base.html" %}
+
+{% block title %}Points Improvement Simulator - Boost Your CRS Score{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        margin-bottom: 32px;
+    }
+
+    .page-header .page-title {
+        font-family: 'Plus Jakarta Sans', var(--font-family);
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .page-header .page-title i {
+        font-size: 28px;
+        color: var(--primary);
+    }
+
+    .page-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+    }
+
+    /* Current Score Section */
+    .current-score-section {
+        background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        color: white;
+    }
+
+    .score-input-row {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .score-input-row label {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .score-input-row input {
+        padding: 1rem 1.5rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        width: 150px;
+        border: none;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+    .target-score {
+        margin-left: auto;
+        text-align: right;
+    }
+
+    .target-score .label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    .target-score .value {
+        font-size: 2rem;
+        font-weight: 800;
+    }
+
+    /* Simulator Grid */
+    .simulator-grid {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+        .simulator-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Improvement Options */
+    .improvement-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .improvement-section h3 {
+        font-size: 1.1rem;
+        color: var(--text);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .improvement-section h3 i {
+        color: var(--primary);
+    }
+
+    .improvement-options {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .improvement-option {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        background: var(--bg);
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .improvement-option:hover {
+        border-color: var(--primary);
+    }
+
+    .improvement-option.selected {
+        border-color: var(--primary);
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+    }
+
+    .improvement-option .option-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .improvement-option .checkbox {
+        width: 22px;
+        height: 22px;
+        border: 2px solid var(--border);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+
+    .improvement-option.selected .checkbox {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+    }
+
+    .improvement-option .option-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .improvement-option .option-title {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .improvement-option .option-desc {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    .improvement-option .points-badge {
+        padding: 0.4rem 0.8rem;
+        background: linear-gradient(135deg, #16a34a, #22c55e);
+        color: white;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    /* Results Panel */
+    .results-panel {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        position: sticky;
+        top: 100px;
+    }
+
+    .results-panel h3 {
+        font-size: 1.1rem;
+        color: var(--text);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .results-panel h3 i {
+        color: var(--primary);
+    }
+
+    .projected-score {
+        text-align: center;
+        padding: 2rem;
+        background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05));
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+    }
+
+    .projected-score .label {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+    }
+
+    .projected-score .score {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: #16a34a;
+    }
+
+    .projected-score .increase {
+        display: inline-block;
+        margin-top: 0.5rem;
+        padding: 0.4rem 1rem;
+        background: #16a34a;
+        color: white;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .score-comparison {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem;
+        background: var(--bg);
+        border-radius: 10px;
+        margin-bottom: 1rem;
+    }
+
+    .score-comparison .item {
+        text-align: center;
+    }
+
+    .score-comparison .label {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-bottom: 0.25rem;
+    }
+
+    .score-comparison .value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .score-comparison .value.green {
+        color: #16a34a;
+    }
+
+    .selected-improvements {
+        margin-top: 1.5rem;
+    }
+
+    .selected-improvements h4 {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-bottom: 0.75rem;
+    }
+
+    .selected-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.9rem;
+    }
+
+    .selected-item:last-child {
+        border-bottom: none;
+    }
+
+    .selected-item .points {
+        font-weight: 600;
+        color: #16a34a;
+    }
+
+    /* Target Analysis */
+    .target-analysis {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .target-analysis.on-track {
+        background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05));
+        border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .target-analysis.needs-work {
+        background: linear-gradient(135deg, rgba(234, 179, 8, 0.1), rgba(234, 179, 8, 0.05));
+        border: 1px solid rgba(234, 179, 8, 0.3);
+    }
+
+    .target-analysis .status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+    }
+
+    .target-analysis.on-track .status {
+        color: #16a34a;
+    }
+
+    .target-analysis.needs-work .status {
+        color: #ca8a04;
+    }
+
+    .target-analysis .message {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-top: 0.5rem;
+    }
+
+    /* Recommendations */
+    .recommendations-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .recommendations-section h3 {
+        font-size: 1.1rem;
+        color: var(--text);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .rec-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .rec-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .rec-card {
+        padding: 1.25rem;
+        background: var(--bg);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+    }
+
+    .rec-card .priority {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        display: inline-block;
+        margin-bottom: 0.75rem;
+    }
+
+    .rec-card .priority.high {
+        background: rgba(239, 68, 68, 0.1);
+        color: #dc2626;
+    }
+
+    .rec-card .priority.medium {
+        background: rgba(234, 179, 8, 0.1);
+        color: #ca8a04;
+    }
+
+    .rec-card .priority.low {
+        background: rgba(34, 197, 94, 0.1);
+        color: #16a34a;
+    }
+
+    .rec-card .title {
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+
+    .rec-card .desc {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    .rec-card .impact {
+        margin-top: 0.75rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #16a34a;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">
+        <i class="bi bi-graph-up-arrow"></i>
+        Points Improvement Simulator
+    </h1>
+    <p class="page-subtitle">Discover how different improvements can boost your CRS score and increase your chances of receiving an ITA</p>
+</div>
+
+<div class="current-score-section">
+    <div class="score-input-row">
+        <label>Enter Your Current CRS Score:</label>
+        <input type="number" id="currentScore" value="450" min="0" max="1200" onchange="updateSimulation()">
+        <div class="target-score">
+            <div class="label">Latest Draw Cutoff</div>
+            <div class="value" id="targetScore">520</div>
+        </div>
+    </div>
+</div>
+
+<div class="simulator-grid">
+    <div class="improvement-options-container">
+        <div class="improvement-section">
+            <h3><i class="bi bi-translate"></i> Language Improvements</h3>
+            <div class="improvement-options">
+                <div class="improvement-option" onclick="toggleOption(this, 'lang-clb9')" data-points="40" data-id="lang-clb9">
+                    <div class="option-info">
+                        <div class="checkbox"><i class="bi bi-check"></i></div>
+                        <div class="option-text">
+                            <span class="option-title">Improve to CLB 9 in all abilities</span>
+                            <span class="option-desc">Study for higher IELTS/CELPIP scores</span>
+                        </div>
+                    </div>
+                    <span class="points-badge">+40 pts</span>
+                </div>
+                <div class="improvement-option" onclick="toggleOption(this, 'lang-clb10')" data-points="64" data-id="lang-clb10">
+                    <div class="option-info">
+                        <div class="checkbox"><i class="bi bi-check"></i></div>
+                        <div class="option-text">
+                            <span class="option-title">Achieve CLB 10 in all abilities</span>
+                            <span class="option-desc">Maximum language points (136 single / 128 married)</span>
+                        </div>
+                    </div>
+                    <span class="points-badge">+64 pts</span>
+                </div>
+                <div class="improvement-option" onclick="toggleOption(this, 'french')" data-points="50" data-id="french">
+                    <div class="option-info">
+                        <div class="checkbox"><i class="bi bi-check"></i></div>
+                        <div class="option-text">
+                            <span class="option-title">Add French as second language</span>
+                            <span class="option-desc">NCLC 7+ in all abilities (TEF/TCF)</span>
+                        </div>
+                    </div>
+                    <span class="points-badge">+50 pts</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="improvement-section">
+            <h3><i class="bi bi-mortarboard"></i> Education Improvements</h3>
+            <div class="improvement-options">
+                <div class="improvement-option" onclick="toggleOption(this, 'edu-masters')" data-points="25" data-id="edu-masters">
+                    <div class="option-info">
+                        <div class="checkbox"><i class="bi bi-check"></i></div>
+                        <div class="option-text">
+                            <span class="option-title">Complete a Master's degree</span>
+                            <span class="option-desc">Or second Bachelor's degree (2+ credentials)</span>
+                        </div>
+                    </div>
+                    <span class="points-badge">+25 pts</span>
+                </div>
+                <div class="improvement-option" onclick="toggleOption(this, 'edu-phd')" data-points="25" data-id="edu-phd">
+                    <div class="option-info">
+                        <div class="checkbox"><i class="bi bi-check"></i></div>
+                        <div class="option-text">
+                            <span class="option-title">Complete a PhD/Doctoral degree</span>
+                            <span class="option-desc">Highest education points available</span>
+                        </div>
+                    </div>
+                    <span class="points-badge">+25 pts</span>
+                </div>
+                <div class="improvement-option" onclick="toggleOption(this, 'edu-canadian')" data-points="30" data-id="edu-canadian">
+                    <div class="option-info">
+                        <div class="checkbox"><i class="bi bi-check"></i></div>
+                        <div class="option-text">
+                            <span class="option-title">Get Canadian education credential</span>
+                            <span class="option-desc">Study in Canada (1-3 year program)</span>
+                        </div>
+                    </div>
+                    <span class="points-badge">+30 pts</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="improvement-section">
+            <h3><i class="bi bi-briefcase"></i> Work Experience</h3>
+            <div class="improvement-options">
+                <div class="improvement-option" onclick="toggleOption(this, 'exp-1year')" data-points="25" data-id="exp-1year">
+                    <div class="option-info">
+                        <div class="checkbox"><i class="bi bi-check"></i></div>
+                        <div class="option-text">
+                            <span class="option-title">Gain 1 year Canadian work experience</span>
+                            <span class="option-desc">Work permit + NOC 0/A/B employment</span>
+                        </div>
+                    </div>
+                    <span class="points-badge">+25 pts</span>
+                </div>
+                <div class="improvement-option" onclick="toggleOption(this, 'exp-3year')" data-points="50" data-id="exp-3year">
+                    <div class="option-info">
+                        <div class="checkbox"><i class="bi bi-check"></i></div>
+                        <div class="option-text">
+                            <span class="option-title">Gain 3+ years Canadian work experience</span>
+                            <span class="option-desc">Maximum Canadian experience points</span>
+                        </div>
+                    </div>
+                    <span class="points-badge">+50 pts</span>
+                </div>
+                <div class="improvement-option" onclick="toggleOption(this, 'exp-foreign')" data-points="25" data-id="exp-foreign">
+                    <div class="option-info">
+                        <div class="checkbox"><i class="bi bi-check"></i></div>
+                        <div class="option-text">
+                            <span class="option-title">Add more foreign work experience</span>
+                            <span class="option-desc">Up to 3+ years in skilled occupation</span>
+                        </div>
+                    </div>
+                    <span class="points-badge">+25 pts</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="improvement-section">
+            <h3><i class="bi bi-star"></i> Additional Factors</h3>
+            <div class="improvement-options">
+                <div class="improvement-option" onclick="toggleOption(this, 'pnp')" data-points="600" data-id="pnp">
+                    <div class="option-info">
+                        <div class="checkbox"><i class="bi bi-check"></i></div>
+                        <div class="option-text">
+                            <span class="option-title">Provincial Nomination (PNP)</span>
+                            <span class="option-desc">Apply through Provincial Nominee Program</span>
+                        </div>
+                    </div>
+                    <span class="points-badge">+600 pts</span>
+                </div>
+                <div class="improvement-option" onclick="toggleOption(this, 'job-offer')" data-points="200" data-id="job-offer">
+                    <div class="option-info">
+                        <div class="checkbox"><i class="bi bi-check"></i></div>
+                        <div class="option-text">
+                            <span class="option-title">Arranged Employment (LMIA job offer)</span>
+                            <span class="option-desc">NOC 00 Senior Manager position</span>
+                        </div>
+                    </div>
+                    <span class="points-badge">+200 pts</span>
+                </div>
+                <div class="improvement-option" onclick="toggleOption(this, 'job-offer-other')" data-points="50" data-id="job-offer-other">
+                    <div class="option-info">
+                        <div class="checkbox"><i class="bi bi-check"></i></div>
+                        <div class="option-text">
+                            <span class="option-title">Arranged Employment (Other NOC)</span>
+                            <span class="option-desc">LMIA-backed job offer for TEER 0-3</span>
+                        </div>
+                    </div>
+                    <span class="points-badge">+50 pts</span>
+                </div>
+                <div class="improvement-option" onclick="toggleOption(this, 'sibling')" data-points="15" data-id="sibling">
+                    <div class="option-info">
+                        <div class="checkbox"><i class="bi bi-check"></i></div>
+                        <div class="option-text">
+                            <span class="option-title">Sibling in Canada</span>
+                            <span class="option-desc">Canadian citizen or PR sibling 18+</span>
+                        </div>
+                    </div>
+                    <span class="points-badge">+15 pts</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-panel">
+        <h3><i class="bi bi-calculator"></i> Projected Score</h3>
+
+        <div class="projected-score">
+            <div class="label">With Selected Improvements</div>
+            <div class="score" id="projectedScore">450</div>
+            <div class="increase" id="totalIncrease">+0 points</div>
+        </div>
+
+        <div class="score-comparison">
+            <div class="item">
+                <div class="label">Current</div>
+                <div class="value" id="currentDisplay">450</div>
+            </div>
+            <div class="item">
+                <div class="label">Target</div>
+                <div class="value">520</div>
+            </div>
+            <div class="item">
+                <div class="label">Gap</div>
+                <div class="value green" id="gapDisplay">-70</div>
+            </div>
+        </div>
+
+        <div class="selected-improvements">
+            <h4>Selected Improvements</h4>
+            <div id="selectedList">
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Click on improvements above to see their impact</p>
+            </div>
+        </div>
+
+        <div class="target-analysis needs-work" id="targetAnalysis">
+            <div class="status">
+                <i class="bi bi-exclamation-triangle"></i>
+                <span>Below Target Cutoff</span>
+            </div>
+            <div class="message">Select improvements above to reach the target score</div>
+        </div>
+    </div>
+</div>
+
+<div class="recommendations-section">
+    <h3><i class="bi bi-lightbulb"></i> Personalized Recommendations</h3>
+    <div class="rec-grid">
+        <div class="rec-card">
+            <span class="priority high">High Impact</span>
+            <div class="title">Provincial Nomination</div>
+            <div class="desc">Apply to PNP streams you qualify for. This single factor guarantees an ITA.</div>
+            <div class="impact">Impact: +600 points (guaranteed ITA)</div>
+        </div>
+        <div class="rec-card">
+            <span class="priority high">High Impact</span>
+            <div class="title">Improve English Scores</div>
+            <div class="desc">Retake IELTS/CELPIP to achieve CLB 9+ in all abilities. Most accessible improvement.</div>
+            <div class="impact">Impact: Up to +64 points</div>
+        </div>
+        <div class="rec-card">
+            <span class="priority medium">Medium Impact</span>
+            <div class="title">Learn French</div>
+            <div class="desc">Take TEF/TCF to add French as second language. Also eligible for French-specific draws.</div>
+            <div class="impact">Impact: +50 points + special draws</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let selectedOptions = new Set();
+
+function toggleOption(element, optionId) {
+    element.classList.toggle('selected');
+
+    if (selectedOptions.has(optionId)) {
+        selectedOptions.delete(optionId);
+    } else {
+        selectedOptions.add(optionId);
+    }
+
+    updateSimulation();
+}
+
+function updateSimulation() {
+    const currentScore = parseInt(document.getElementById('currentScore').value) || 0;
+    const targetScore = 520;
+
+    let totalIncrease = 0;
+    let selectedItems = [];
+
+    document.querySelectorAll('.improvement-option.selected').forEach(option => {
+        const points = parseInt(option.dataset.points) || 0;
+        const title = option.querySelector('.option-title').textContent;
+        totalIncrease += points;
+        selectedItems.push({ title, points });
+    });
+
+    const projectedScore = currentScore + totalIncrease;
+    const gap = projectedScore - targetScore;
+
+    document.getElementById('projectedScore').textContent = projectedScore;
+    document.getElementById('totalIncrease').textContent = '+' + totalIncrease + ' points';
+    document.getElementById('currentDisplay').textContent = currentScore;
+    document.getElementById('gapDisplay').textContent = gap >= 0 ? '+' + gap : gap;
+
+    // Update selected list
+    const selectedList = document.getElementById('selectedList');
+    if (selectedItems.length === 0) {
+        selectedList.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">Click on improvements above to see their impact</p>';
+    } else {
+        selectedList.innerHTML = selectedItems.map(item =>
+            `<div class="selected-item">
+                <span>${item.title}</span>
+                <span class="points">+${item.points}</span>
+            </div>`
+        ).join('');
+    }
+
+    // Update target analysis
+    const analysis = document.getElementById('targetAnalysis');
+    if (projectedScore >= targetScore) {
+        analysis.className = 'target-analysis on-track';
+        analysis.innerHTML = `
+            <div class="status">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Above Target Cutoff!</span>
+            </div>
+            <div class="message">With these improvements, you would likely receive an ITA in the next general draw.</div>
+        `;
+    } else {
+        const needed = targetScore - projectedScore;
+        analysis.className = 'target-analysis needs-work';
+        analysis.innerHTML = `
+            <div class="status">
+                <i class="bi bi-exclamation-triangle"></i>
+                <span>Below Target Cutoff</span>
+            </div>
+            <div class="message">You need ${needed} more points to reach the target. Consider PNP or category-specific draws.</div>
+        `;
+    }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', updateSimulation);
+</script>
+{% endblock %}

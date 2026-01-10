@@ -1,0 +1,782 @@
+{% extends "base.html" %}
+
+{% block title %}Cost of Living Comparison - Canadian Cities{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        margin-bottom: 32px;
+    }
+
+    .page-header .page-title {
+        font-family: 'Plus Jakarta Sans', var(--font-family);
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .page-header .page-title i {
+        font-size: 28px;
+        color: var(--primary);
+    }
+
+    .page-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+    }
+
+    /* City Selector */
+    .city-selector {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .city-selector h3 {
+        font-size: 1rem;
+        color: var(--text);
+        margin-bottom: 1rem;
+    }
+
+    .city-select-row {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    @media (max-width: 768px) {
+        .city-select-row {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .city-select-row select {
+        padding: 1rem;
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 500;
+        background: var(--bg);
+        cursor: pointer;
+    }
+
+    .city-select-row select:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+
+    .vs-badge {
+        background: var(--primary);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    /* Summary Cards */
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+        .summary-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .city-summary {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+    }
+
+    .city-summary.primary {
+        border-color: var(--primary);
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.02));
+    }
+
+    .city-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+
+    .city-province {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .city-stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .city-stat {
+        padding: 0.75rem;
+        background: var(--bg);
+        border-radius: 8px;
+    }
+
+    .city-stat .label {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    .city-stat .value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .city-stat .value.cheaper {
+        color: #16a34a;
+    }
+
+    .city-stat .value.expensive {
+        color: #dc2626;
+    }
+
+    /* Comparison Table */
+    .comparison-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .comparison-header {
+        padding: 1.25rem 1.5rem;
+        background: var(--bg);
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .comparison-header i {
+        color: var(--primary);
+    }
+
+    .comparison-table {
+        width: 100%;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+        padding: 1rem 1.5rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .comparison-table th {
+        font-weight: 600;
+        color: var(--text);
+        background: var(--bg);
+    }
+
+    .comparison-table th:not(:first-child) {
+        text-align: right;
+    }
+
+    .comparison-table td {
+        color: var(--text-muted);
+    }
+
+    .comparison-table td:not(:first-child) {
+        text-align: right;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .comparison-table .category-row {
+        background: var(--bg);
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .comparison-table .category-row td {
+        color: var(--text);
+    }
+
+    .diff-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+    }
+
+    .diff-badge.cheaper {
+        background: rgba(34, 197, 94, 0.1);
+        color: #16a34a;
+    }
+
+    .diff-badge.expensive {
+        background: rgba(239, 68, 68, 0.1);
+        color: #dc2626;
+    }
+
+    .diff-badge.same {
+        background: rgba(156, 163, 175, 0.1);
+        color: #6b7280;
+    }
+
+    /* City Rankings */
+    .rankings-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+    }
+
+    .rankings-section h3 {
+        font-size: 1.1rem;
+        color: var(--text);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .rankings-section h3 i {
+        color: var(--primary);
+    }
+
+    .rankings-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .ranking-card {
+        padding: 1rem;
+        background: var(--bg);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .ranking-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .ranking-number {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.9rem;
+    }
+
+    .ranking-number.gold {
+        background: linear-gradient(135deg, #f59e0b, #eab308);
+    }
+
+    .ranking-number.silver {
+        background: linear-gradient(135deg, #9ca3af, #6b7280);
+    }
+
+    .ranking-number.bronze {
+        background: linear-gradient(135deg, #d97706, #b45309);
+    }
+
+    .ranking-info {
+        flex: 1;
+    }
+
+    .ranking-city {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .ranking-index {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">
+        <i class="bi bi-geo-alt"></i>
+        Cost of Living Comparison
+    </h1>
+    <p class="page-subtitle">Compare living costs across major Canadian cities to help plan your settlement</p>
+</div>
+
+<div class="city-selector">
+    <h3>Select cities to compare</h3>
+    <div class="city-select-row">
+        <select id="city1" onchange="updateComparison()">
+            <option value="toronto">Toronto, ON</option>
+            <option value="vancouver">Vancouver, BC</option>
+            <option value="calgary">Calgary, AB</option>
+            <option value="montreal">Montreal, QC</option>
+            <option value="ottawa">Ottawa, ON</option>
+            <option value="edmonton">Edmonton, AB</option>
+            <option value="winnipeg">Winnipeg, MB</option>
+            <option value="halifax">Halifax, NS</option>
+            <option value="victoria">Victoria, BC</option>
+            <option value="saskatoon">Saskatoon, SK</option>
+        </select>
+        <span class="vs-badge">VS</span>
+        <select id="city2" onchange="updateComparison()">
+            <option value="toronto">Toronto, ON</option>
+            <option value="vancouver" selected>Vancouver, BC</option>
+            <option value="calgary">Calgary, AB</option>
+            <option value="montreal">Montreal, QC</option>
+            <option value="ottawa">Ottawa, ON</option>
+            <option value="edmonton">Edmonton, AB</option>
+            <option value="winnipeg">Winnipeg, MB</option>
+            <option value="halifax">Halifax, NS</option>
+            <option value="victoria">Victoria, BC</option>
+            <option value="saskatoon">Saskatoon, SK</option>
+        </select>
+    </div>
+</div>
+
+<div class="summary-grid">
+    <div class="city-summary primary" id="summary1">
+        <!-- Dynamically populated -->
+    </div>
+    <div class="city-summary" id="summary2">
+        <!-- Dynamically populated -->
+    </div>
+</div>
+
+<div class="comparison-section">
+    <div class="comparison-header">
+        <i class="bi bi-bar-chart"></i> Detailed Cost Comparison
+    </div>
+    <table class="comparison-table" id="comparisonTable">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th id="col1">City 1</th>
+                <th id="col2">City 2</th>
+                <th>Difference</th>
+            </tr>
+        </thead>
+        <tbody id="comparisonBody">
+            <!-- Dynamically populated -->
+        </tbody>
+    </table>
+</div>
+
+<div class="rankings-section">
+    <h3><i class="bi bi-trophy"></i> Most Affordable Canadian Cities (Overall Index)</h3>
+    <div class="rankings-grid">
+        <div class="ranking-card" onclick="selectCity('winnipeg')">
+            <div class="ranking-number gold">1</div>
+            <div class="ranking-info">
+                <div class="ranking-city">Winnipeg</div>
+                <div class="ranking-index">Index: 72</div>
+            </div>
+        </div>
+        <div class="ranking-card" onclick="selectCity('saskatoon')">
+            <div class="ranking-number silver">2</div>
+            <div class="ranking-info">
+                <div class="ranking-city">Saskatoon</div>
+                <div class="ranking-index">Index: 74</div>
+            </div>
+        </div>
+        <div class="ranking-card" onclick="selectCity('edmonton')">
+            <div class="ranking-number bronze">3</div>
+            <div class="ranking-info">
+                <div class="ranking-city">Edmonton</div>
+                <div class="ranking-index">Index: 76</div>
+            </div>
+        </div>
+        <div class="ranking-card" onclick="selectCity('calgary')">
+            <div class="ranking-number">4</div>
+            <div class="ranking-info">
+                <div class="ranking-city">Calgary</div>
+                <div class="ranking-index">Index: 78</div>
+            </div>
+        </div>
+        <div class="ranking-card" onclick="selectCity('montreal')">
+            <div class="ranking-number">5</div>
+            <div class="ranking-info">
+                <div class="ranking-city">Montreal</div>
+                <div class="ranking-index">Index: 79</div>
+            </div>
+        </div>
+        <div class="ranking-card" onclick="selectCity('halifax')">
+            <div class="ranking-number">6</div>
+            <div class="ranking-info">
+                <div class="ranking-city">Halifax</div>
+                <div class="ranking-index">Index: 81</div>
+            </div>
+        </div>
+        <div class="ranking-card" onclick="selectCity('ottawa')">
+            <div class="ranking-number">7</div>
+            <div class="ranking-info">
+                <div class="ranking-city">Ottawa</div>
+                <div class="ranking-index">Index: 85</div>
+            </div>
+        </div>
+        <div class="ranking-card" onclick="selectCity('toronto')">
+            <div class="ranking-number">8</div>
+            <div class="ranking-info">
+                <div class="ranking-city">Toronto</div>
+                <div class="ranking-index">Index: 100</div>
+            </div>
+        </div>
+        <div class="ranking-card" onclick="selectCity('victoria')">
+            <div class="ranking-number">9</div>
+            <div class="ranking-info">
+                <div class="ranking-city">Victoria</div>
+                <div class="ranking-index">Index: 102</div>
+            </div>
+        </div>
+        <div class="ranking-card" onclick="selectCity('vancouver')">
+            <div class="ranking-number">10</div>
+            <div class="ranking-info">
+                <div class="ranking-city">Vancouver</div>
+                <div class="ranking-index">Index: 108</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Cost of living data (monthly costs in CAD, approximate 2024 values)
+const cityData = {
+    toronto: {
+        name: 'Toronto',
+        province: 'Ontario',
+        index: 100, // Base index
+        rent1br: 2500,
+        rent3br: 3800,
+        utilities: 180,
+        internet: 75,
+        groceries: 450,
+        restaurant: 22,
+        transit: 156,
+        gasoline: 1.55,
+        fitness: 60,
+        cinema: 18,
+        childcare: 1800,
+        avgSalary: 65000
+    },
+    vancouver: {
+        name: 'Vancouver',
+        province: 'British Columbia',
+        index: 108,
+        rent1br: 2700,
+        rent3br: 4200,
+        utilities: 150,
+        internet: 80,
+        groceries: 480,
+        restaurant: 24,
+        transit: 105,
+        gasoline: 1.75,
+        fitness: 65,
+        cinema: 17,
+        childcare: 1600,
+        avgSalary: 62000
+    },
+    calgary: {
+        name: 'Calgary',
+        province: 'Alberta',
+        index: 78,
+        rent1br: 1750,
+        rent3br: 2600,
+        utilities: 200,
+        internet: 70,
+        groceries: 420,
+        restaurant: 20,
+        transit: 112,
+        gasoline: 1.45,
+        fitness: 50,
+        cinema: 16,
+        childcare: 1200,
+        avgSalary: 68000
+    },
+    montreal: {
+        name: 'Montreal',
+        province: 'Quebec',
+        index: 79,
+        rent1br: 1650,
+        rent3br: 2400,
+        utilities: 120,
+        internet: 65,
+        groceries: 380,
+        restaurant: 18,
+        transit: 94,
+        gasoline: 1.65,
+        fitness: 45,
+        cinema: 15,
+        childcare: 200, // Subsidized in Quebec
+        avgSalary: 55000
+    },
+    ottawa: {
+        name: 'Ottawa',
+        province: 'Ontario',
+        index: 85,
+        rent1br: 2100,
+        rent3br: 3100,
+        utilities: 175,
+        internet: 75,
+        groceries: 430,
+        restaurant: 20,
+        transit: 125,
+        gasoline: 1.50,
+        fitness: 55,
+        cinema: 17,
+        childcare: 1500,
+        avgSalary: 70000
+    },
+    edmonton: {
+        name: 'Edmonton',
+        province: 'Alberta',
+        index: 76,
+        rent1br: 1500,
+        rent3br: 2200,
+        utilities: 220,
+        internet: 70,
+        groceries: 400,
+        restaurant: 18,
+        transit: 100,
+        gasoline: 1.40,
+        fitness: 48,
+        cinema: 15,
+        childcare: 1100,
+        avgSalary: 65000
+    },
+    winnipeg: {
+        name: 'Winnipeg',
+        province: 'Manitoba',
+        index: 72,
+        rent1br: 1300,
+        rent3br: 1900,
+        utilities: 180,
+        internet: 65,
+        groceries: 380,
+        restaurant: 16,
+        transit: 104,
+        gasoline: 1.45,
+        fitness: 42,
+        cinema: 14,
+        childcare: 900,
+        avgSalary: 55000
+    },
+    halifax: {
+        name: 'Halifax',
+        province: 'Nova Scotia',
+        index: 81,
+        rent1br: 1900,
+        rent3br: 2800,
+        utilities: 170,
+        internet: 75,
+        groceries: 420,
+        restaurant: 19,
+        transit: 82,
+        gasoline: 1.60,
+        fitness: 50,
+        cinema: 15,
+        childcare: 1100,
+        avgSalary: 52000
+    },
+    victoria: {
+        name: 'Victoria',
+        province: 'British Columbia',
+        index: 102,
+        rent1br: 2200,
+        rent3br: 3400,
+        utilities: 140,
+        internet: 80,
+        groceries: 460,
+        restaurant: 22,
+        transit: 95,
+        gasoline: 1.70,
+        fitness: 60,
+        cinema: 17,
+        childcare: 1500,
+        avgSalary: 58000
+    },
+    saskatoon: {
+        name: 'Saskatoon',
+        province: 'Saskatchewan',
+        index: 74,
+        rent1br: 1200,
+        rent3br: 1700,
+        utilities: 190,
+        internet: 65,
+        groceries: 390,
+        restaurant: 16,
+        transit: 95,
+        gasoline: 1.40,
+        fitness: 45,
+        cinema: 14,
+        childcare: 950,
+        avgSalary: 58000
+    }
+};
+
+function updateComparison() {
+    const city1Id = document.getElementById('city1').value;
+    const city2Id = document.getElementById('city2').value;
+
+    const city1 = cityData[city1Id];
+    const city2 = cityData[city2Id];
+
+    // Update summaries
+    updateSummary('summary1', city1, city2);
+    updateSummary('summary2', city2, city1);
+
+    // Update table headers
+    document.getElementById('col1').textContent = city1.name;
+    document.getElementById('col2').textContent = city2.name;
+
+    // Update comparison table
+    const tbody = document.getElementById('comparisonBody');
+    tbody.innerHTML = generateComparisonRows(city1, city2);
+}
+
+function updateSummary(elementId, city, otherCity) {
+    const element = document.getElementById(elementId);
+    const indexDiff = city.index - otherCity.index;
+    const indexClass = indexDiff < 0 ? 'cheaper' : indexDiff > 0 ? 'expensive' : '';
+
+    element.innerHTML = `
+        <div class="city-name">${city.name}</div>
+        <div class="city-province">${city.province}</div>
+        <div class="city-stats">
+            <div class="city-stat">
+                <div class="label">Cost Index</div>
+                <div class="value ${indexClass}">${city.index}</div>
+            </div>
+            <div class="city-stat">
+                <div class="label">1BR Rent</div>
+                <div class="value">$${city.rent1br.toLocaleString()}</div>
+            </div>
+            <div class="city-stat">
+                <div class="label">Avg. Salary</div>
+                <div class="value">$${city.avgSalary.toLocaleString()}</div>
+            </div>
+            <div class="city-stat">
+                <div class="label">Monthly Groceries</div>
+                <div class="value">$${city.groceries}</div>
+            </div>
+        </div>
+    `;
+}
+
+function generateComparisonRows(city1, city2) {
+    const categories = [
+        {
+            name: 'Housing',
+            items: [
+                { label: '1 Bedroom Apartment (City Center)', key: 'rent1br' },
+                { label: '3 Bedroom Apartment', key: 'rent3br' },
+                { label: 'Utilities (Monthly)', key: 'utilities' },
+                { label: 'Internet (60 Mbps+)', key: 'internet' }
+            ]
+        },
+        {
+            name: 'Food & Dining',
+            items: [
+                { label: 'Monthly Groceries (1 person)', key: 'groceries' },
+                { label: 'Restaurant Meal (Mid-range)', key: 'restaurant' }
+            ]
+        },
+        {
+            name: 'Transportation',
+            items: [
+                { label: 'Monthly Transit Pass', key: 'transit' },
+                { label: 'Gasoline (per liter)', key: 'gasoline', format: 'currency' }
+            ]
+        },
+        {
+            name: 'Lifestyle',
+            items: [
+                { label: 'Gym Membership (Monthly)', key: 'fitness' },
+                { label: 'Cinema Ticket', key: 'cinema' }
+            ]
+        },
+        {
+            name: 'Family',
+            items: [
+                { label: 'Childcare (Monthly, Full-time)', key: 'childcare' }
+            ]
+        }
+    ];
+
+    let html = '';
+
+    categories.forEach(cat => {
+        html += `<tr class="category-row"><td colspan="4"><i class="bi bi-caret-right-fill"></i> ${cat.name}</td></tr>`;
+
+        cat.items.forEach(item => {
+            const val1 = city1[item.key];
+            const val2 = city2[item.key];
+            const diff = val1 - val2;
+            const diffPercent = ((diff / val2) * 100).toFixed(0);
+
+            let diffBadge = '';
+            if (diff < 0) {
+                diffBadge = `<span class="diff-badge cheaper">${diffPercent}%</span>`;
+            } else if (diff > 0) {
+                diffBadge = `<span class="diff-badge expensive">+${diffPercent}%</span>`;
+            } else {
+                diffBadge = `<span class="diff-badge same">Same</span>`;
+            }
+
+            const format = item.format === 'currency' ? '$' + val1.toFixed(2) : '$' + val1.toLocaleString();
+            const format2 = item.format === 'currency' ? '$' + val2.toFixed(2) : '$' + val2.toLocaleString();
+
+            html += `
+                <tr>
+                    <td>${item.label}</td>
+                    <td>${format}</td>
+                    <td>${format2}</td>
+                    <td>${diffBadge}</td>
+                </tr>
+            `;
+        });
+    });
+
+    return html;
+}
+
+function selectCity(cityId) {
+    document.getElementById('city1').value = cityId;
+    updateComparison();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', updateComparison);
+</script>
+{% endblock %}

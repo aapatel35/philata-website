@@ -1,0 +1,861 @@
+{% extends "base.html" %}
+
+{% block title %}Eligibility Checker - Find Your Immigration Pathway{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        margin-bottom: 32px;
+    }
+
+    .page-header .page-title {
+        font-family: 'Plus Jakarta Sans', var(--font-family);
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .page-header .page-title i {
+        font-size: 28px;
+        color: var(--primary);
+    }
+
+    .page-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+    }
+
+    /* Progress Steps */
+    .progress-steps {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+        gap: 0;
+    }
+
+    .step {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .step-number {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 2px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        color: var(--text-muted);
+        transition: all 0.3s;
+    }
+
+    .step.active .step-number {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+    }
+
+    .step.completed .step-number {
+        background: #16a34a;
+        border-color: #16a34a;
+        color: white;
+    }
+
+    .step-label {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        display: none;
+    }
+
+    @media (min-width: 768px) {
+        .step-label {
+            display: block;
+        }
+    }
+
+    .step-line {
+        width: 60px;
+        height: 2px;
+        background: var(--border);
+        margin: 0 0.5rem;
+    }
+
+    .step.completed + .step-line,
+    .step.active + .step-line {
+        background: var(--primary);
+    }
+
+    /* Question Card */
+    .question-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        max-width: 800px;
+        margin: 0 auto 2rem;
+    }
+
+    .question-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .question-header .category {
+        font-size: 0.85rem;
+        color: var(--primary);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .question-header h2 {
+        font-size: 1.5rem;
+        color: var(--text);
+        font-weight: 700;
+    }
+
+    .options-grid {
+        display: grid;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .option-btn {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.25rem;
+        background: var(--bg);
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: left;
+    }
+
+    .option-btn:hover {
+        border-color: var(--primary);
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.02));
+    }
+
+    .option-btn.selected {
+        border-color: var(--primary);
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+    }
+
+    .option-btn .radio {
+        width: 24px;
+        height: 24px;
+        border: 2px solid var(--border);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .option-btn.selected .radio {
+        border-color: var(--primary);
+        background: var(--primary);
+    }
+
+    .option-btn.selected .radio::after {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background: white;
+        border-radius: 50%;
+    }
+
+    .option-btn .option-text {
+        flex: 1;
+    }
+
+    .option-btn .option-title {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .option-btn .option-desc {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-top: 0.25rem;
+    }
+
+    .nav-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+    }
+
+    .nav-btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .nav-btn.back {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        color: var(--text);
+    }
+
+    .nav-btn.next {
+        background: var(--primary);
+        border: none;
+        color: white;
+    }
+
+    .nav-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .nav-btn.next:hover {
+        background: var(--primary-hover);
+    }
+
+    .nav-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Results */
+    .results-section {
+        display: none;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .results-section.show {
+        display: block;
+    }
+
+    .results-summary {
+        background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        color: white;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .results-summary h2 {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .results-summary p {
+        opacity: 0.9;
+    }
+
+    .eligible-programs {
+        margin-bottom: 2rem;
+    }
+
+    .eligible-programs h3 {
+        font-size: 1.25rem;
+        color: var(--text);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .eligible-programs h3 i {
+        color: #16a34a;
+    }
+
+    .program-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .program-card .program-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .program-card .program-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .program-card .eligibility-badge {
+        padding: 0.4rem 0.8rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .program-card .eligibility-badge.eligible {
+        background: rgba(34, 197, 94, 0.1);
+        color: #16a34a;
+    }
+
+    .program-card .eligibility-badge.likely {
+        background: rgba(234, 179, 8, 0.1);
+        color: #ca8a04;
+    }
+
+    .program-card .eligibility-badge.not-eligible {
+        background: rgba(239, 68, 68, 0.1);
+        color: #dc2626;
+    }
+
+    .program-card .requirements {
+        margin-bottom: 1rem;
+    }
+
+    .program-card .req-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 0;
+        font-size: 0.9rem;
+    }
+
+    .program-card .req-item i {
+        width: 18px;
+    }
+
+    .program-card .req-item i.bi-check-circle-fill {
+        color: #16a34a;
+    }
+
+    .program-card .req-item i.bi-x-circle-fill {
+        color: #dc2626;
+    }
+
+    .program-card .req-item i.bi-question-circle-fill {
+        color: #ca8a04;
+    }
+
+    .program-card .learn-more {
+        color: var(--primary);
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    /* Your Profile Summary */
+    .profile-summary {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .profile-summary h3 {
+        font-size: 1.1rem;
+        color: var(--text);
+        margin-bottom: 1rem;
+    }
+
+    .profile-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .profile-item {
+        padding: 0.75rem;
+        background: var(--bg);
+        border-radius: 8px;
+    }
+
+    .profile-item .label {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    .profile-item .value {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .restart-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 1rem 2rem;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        margin: 2rem auto 0;
+        transition: all 0.2s;
+    }
+
+    .restart-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">
+        <i class="bi bi-clipboard-check"></i>
+        Eligibility Checker
+    </h1>
+    <p class="page-subtitle">Answer a few questions to discover which Canadian immigration programs you may qualify for</p>
+</div>
+
+<div class="progress-steps" id="progressSteps">
+    <div class="step active" data-step="1">
+        <div class="step-number">1</div>
+        <span class="step-label">Basic Info</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" data-step="2">
+        <div class="step-number">2</div>
+        <span class="step-label">Education</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" data-step="3">
+        <div class="step-number">3</div>
+        <span class="step-label">Experience</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" data-step="4">
+        <div class="step-number">4</div>
+        <span class="step-label">Language</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" data-step="5">
+        <div class="step-number">5</div>
+        <span class="step-label">Results</span>
+    </div>
+</div>
+
+<div id="questionContainer">
+    <!-- Questions will be dynamically inserted here -->
+</div>
+
+<div class="results-section" id="resultsSection">
+    <div class="results-summary">
+        <h2>Your Eligibility Results</h2>
+        <p>Based on your answers, here are the programs you may qualify for</p>
+    </div>
+
+    <div class="profile-summary">
+        <h3>Your Profile Summary</h3>
+        <div class="profile-grid" id="profileGrid">
+            <!-- Dynamically populated -->
+        </div>
+    </div>
+
+    <div class="eligible-programs">
+        <h3><i class="bi bi-check-circle-fill"></i> Programs You May Qualify For</h3>
+        <div id="programResults">
+            <!-- Dynamically populated -->
+        </div>
+    </div>
+
+    <button class="restart-btn" onclick="restartChecker()">
+        <i class="bi bi-arrow-counterclockwise"></i>
+        Start Over
+    </button>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const questions = [
+    {
+        id: 'age',
+        category: 'Basic Information',
+        question: 'What is your age?',
+        step: 1,
+        options: [
+            { value: '18-24', label: '18-24 years old' },
+            { value: '25-29', label: '25-29 years old' },
+            { value: '30-34', label: '30-34 years old' },
+            { value: '35-39', label: '35-39 years old' },
+            { value: '40-44', label: '40-44 years old' },
+            { value: '45+', label: '45 years or older' }
+        ]
+    },
+    {
+        id: 'marital',
+        category: 'Basic Information',
+        question: 'What is your marital status?',
+        step: 1,
+        options: [
+            { value: 'single', label: 'Single / Never Married' },
+            { value: 'married', label: 'Married or Common-law Partner' },
+            { value: 'divorced', label: 'Divorced / Separated / Widowed' }
+        ]
+    },
+    {
+        id: 'education',
+        category: 'Education',
+        question: 'What is your highest level of education?',
+        step: 2,
+        options: [
+            { value: 'phd', label: 'Doctoral degree (PhD)' },
+            { value: 'masters', label: "Master's degree" },
+            { value: 'two-bachelors', label: 'Two or more Bachelor\'s degrees' },
+            { value: 'bachelors', label: "Bachelor's degree (3+ years)" },
+            { value: 'diploma-3', label: 'Post-secondary diploma (3+ years)' },
+            { value: 'diploma-2', label: 'Post-secondary diploma (2 years)' },
+            { value: 'diploma-1', label: 'Post-secondary diploma (1 year)' },
+            { value: 'highschool', label: 'High school diploma or less' }
+        ]
+    },
+    {
+        id: 'canadian-edu',
+        category: 'Education',
+        question: 'Do you have any Canadian education credentials?',
+        step: 2,
+        options: [
+            { value: 'yes-3', label: 'Yes, 3+ year program' },
+            { value: 'yes-2', label: 'Yes, 2 year program' },
+            { value: 'yes-1', label: 'Yes, 1 year program' },
+            { value: 'no', label: 'No Canadian education' }
+        ]
+    },
+    {
+        id: 'work-exp-foreign',
+        category: 'Work Experience',
+        question: 'How many years of skilled work experience do you have outside Canada?',
+        step: 3,
+        options: [
+            { value: '5+', label: '5 or more years', desc: 'In NOC TEER 0, 1, 2, or 3 occupations' },
+            { value: '3-4', label: '3-4 years', desc: 'In NOC TEER 0, 1, 2, or 3 occupations' },
+            { value: '1-2', label: '1-2 years', desc: 'In NOC TEER 0, 1, 2, or 3 occupations' },
+            { value: 'none', label: 'Less than 1 year or none' }
+        ]
+    },
+    {
+        id: 'work-exp-canadian',
+        category: 'Work Experience',
+        question: 'How many years of skilled work experience do you have in Canada?',
+        step: 3,
+        options: [
+            { value: '3+', label: '3 or more years', desc: 'In NOC TEER 0, 1, 2, or 3 occupations' },
+            { value: '2', label: '2 years', desc: 'In NOC TEER 0, 1, 2, or 3 occupations' },
+            { value: '1', label: '1 year', desc: 'In NOC TEER 0, 1, 2, or 3 occupations' },
+            { value: 'none', label: 'Less than 1 year or none' }
+        ]
+    },
+    {
+        id: 'trade-cert',
+        category: 'Work Experience',
+        question: 'Do you have a Canadian trade certificate?',
+        step: 3,
+        options: [
+            { value: 'yes', label: 'Yes', desc: 'Certificate of qualification in a skilled trade' },
+            { value: 'no', label: 'No' }
+        ]
+    },
+    {
+        id: 'language-english',
+        category: 'Language Ability',
+        question: 'What is your English language proficiency (CLB level)?',
+        step: 4,
+        options: [
+            { value: 'clb10', label: 'CLB 10 or higher', desc: 'IELTS 8.0+ / CELPIP 10+' },
+            { value: 'clb9', label: 'CLB 9', desc: 'IELTS 7.0-7.5 / CELPIP 9' },
+            { value: 'clb8', label: 'CLB 8', desc: 'IELTS 6.5-7.0 / CELPIP 8' },
+            { value: 'clb7', label: 'CLB 7', desc: 'IELTS 6.0 / CELPIP 7' },
+            { value: 'clb5-6', label: 'CLB 5-6', desc: 'IELTS 5.0-5.5 / CELPIP 5-6' },
+            { value: 'below-clb5', label: 'Below CLB 5 or no test' }
+        ]
+    },
+    {
+        id: 'language-french',
+        category: 'Language Ability',
+        question: 'What is your French language proficiency (NCLC level)?',
+        step: 4,
+        options: [
+            { value: 'nclc7+', label: 'NCLC 7 or higher', desc: 'Strong French proficiency' },
+            { value: 'nclc5-6', label: 'NCLC 5-6', desc: 'Moderate French proficiency' },
+            { value: 'below-nclc5', label: 'Below NCLC 5 or no test' }
+        ]
+    },
+    {
+        id: 'job-offer',
+        category: 'Additional Factors',
+        question: 'Do you have a valid job offer from a Canadian employer?',
+        step: 4,
+        options: [
+            { value: 'lmia-senior', label: 'Yes, LMIA-supported (Senior Manager NOC 00)' },
+            { value: 'lmia-other', label: 'Yes, LMIA-supported (Other skilled position)' },
+            { value: 'lmia-exempt', label: 'Yes, LMIA-exempt' },
+            { value: 'no', label: 'No job offer' }
+        ]
+    }
+];
+
+let currentQuestion = 0;
+let answers = {};
+
+function renderQuestion() {
+    const q = questions[currentQuestion];
+    const container = document.getElementById('questionContainer');
+
+    container.innerHTML = `
+        <div class="question-card">
+            <div class="question-header">
+                <div class="category">${q.category}</div>
+                <h2>${q.question}</h2>
+            </div>
+            <div class="options-grid">
+                ${q.options.map((opt, i) => `
+                    <button class="option-btn ${answers[q.id] === opt.value ? 'selected' : ''}" onclick="selectOption('${q.id}', '${opt.value}', this)">
+                        <div class="radio"></div>
+                        <div class="option-text">
+                            <div class="option-title">${opt.label}</div>
+                            ${opt.desc ? `<div class="option-desc">${opt.desc}</div>` : ''}
+                        </div>
+                    </button>
+                `).join('')}
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn back" onclick="prevQuestion()" ${currentQuestion === 0 ? 'style="visibility:hidden"' : ''}>
+                    <i class="bi bi-arrow-left"></i> Back
+                </button>
+                <button class="nav-btn next" onclick="nextQuestion()" ${!answers[q.id] ? 'disabled' : ''}>
+                    ${currentQuestion === questions.length - 1 ? 'See Results' : 'Next'} <i class="bi bi-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    `;
+
+    updateProgress();
+}
+
+function selectOption(questionId, value, element) {
+    answers[questionId] = value;
+
+    // Update visual selection
+    element.parentElement.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+    element.classList.add('selected');
+
+    // Enable next button
+    document.querySelector('.nav-btn.next').disabled = false;
+}
+
+function nextQuestion() {
+    if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        renderQuestion();
+    } else {
+        showResults();
+    }
+}
+
+function prevQuestion() {
+    if (currentQuestion > 0) {
+        currentQuestion--;
+        renderQuestion();
+    }
+}
+
+function updateProgress() {
+    const steps = document.querySelectorAll('.step');
+    const currentStep = questions[currentQuestion].step;
+
+    steps.forEach((step, i) => {
+        const stepNum = i + 1;
+        step.classList.remove('active', 'completed');
+
+        if (stepNum < currentStep) {
+            step.classList.add('completed');
+        } else if (stepNum === currentStep) {
+            step.classList.add('active');
+        }
+    });
+}
+
+function showResults() {
+    document.getElementById('questionContainer').style.display = 'none';
+    document.getElementById('progressSteps').style.display = 'none';
+    document.getElementById('resultsSection').classList.add('show');
+
+    // Populate profile summary
+    const profileGrid = document.getElementById('profileGrid');
+    profileGrid.innerHTML = `
+        <div class="profile-item">
+            <div class="label">Age</div>
+            <div class="value">${answers.age || 'Not specified'}</div>
+        </div>
+        <div class="profile-item">
+            <div class="label">Marital Status</div>
+            <div class="value">${answers.marital || 'Not specified'}</div>
+        </div>
+        <div class="profile-item">
+            <div class="label">Education</div>
+            <div class="value">${getEducationLabel(answers.education)}</div>
+        </div>
+        <div class="profile-item">
+            <div class="label">Foreign Experience</div>
+            <div class="value">${answers['work-exp-foreign'] || 'None'}</div>
+        </div>
+        <div class="profile-item">
+            <div class="label">Canadian Experience</div>
+            <div class="value">${answers['work-exp-canadian'] || 'None'}</div>
+        </div>
+        <div class="profile-item">
+            <div class="label">English Level</div>
+            <div class="value">${answers['language-english']?.toUpperCase() || 'Not tested'}</div>
+        </div>
+    `;
+
+    // Calculate eligibility
+    const programs = calculateEligibility();
+    const programResults = document.getElementById('programResults');
+
+    programResults.innerHTML = programs.map(prog => `
+        <div class="program-card">
+            <div class="program-header">
+                <div class="program-name">${prog.name}</div>
+                <span class="eligibility-badge ${prog.status}">${prog.statusText}</span>
+            </div>
+            <div class="requirements">
+                ${prog.requirements.map(req => `
+                    <div class="req-item">
+                        <i class="bi bi-${req.met ? 'check-circle-fill' : req.met === null ? 'question-circle-fill' : 'x-circle-fill'}"></i>
+                        <span>${req.text}</span>
+                    </div>
+                `).join('')}
+            </div>
+            <a href="${prog.link}" class="learn-more">Learn more <i class="bi bi-arrow-right"></i></a>
+        </div>
+    `).join('');
+}
+
+function getEducationLabel(value) {
+    const labels = {
+        'phd': 'Doctoral (PhD)',
+        'masters': "Master's degree",
+        'two-bachelors': "Two Bachelor's degrees",
+        'bachelors': "Bachelor's degree",
+        'diploma-3': '3-year diploma',
+        'diploma-2': '2-year diploma',
+        'diploma-1': '1-year diploma',
+        'highschool': 'High school'
+    };
+    return labels[value] || 'Not specified';
+}
+
+function calculateEligibility() {
+    const programs = [];
+
+    // Federal Skilled Worker (FSW)
+    const fswReqs = [
+        { text: 'CLB 7 or higher in all abilities', met: ['clb7', 'clb8', 'clb9', 'clb10'].includes(answers['language-english']) },
+        { text: '1+ year skilled work experience', met: answers['work-exp-foreign'] !== 'none' },
+        { text: 'Post-secondary education', met: !['highschool'].includes(answers.education) },
+        { text: 'Meet 67 points on FSW grid', met: null }
+    ];
+    const fswMet = fswReqs.filter(r => r.met === true).length;
+    programs.push({
+        name: 'Federal Skilled Worker (FSW)',
+        status: fswMet >= 3 ? 'eligible' : fswMet >= 2 ? 'likely' : 'not-eligible',
+        statusText: fswMet >= 3 ? 'Likely Eligible' : fswMet >= 2 ? 'May Qualify' : 'May Not Qualify',
+        requirements: fswReqs,
+        link: '/learn'
+    });
+
+    // Canadian Experience Class (CEC)
+    const cecReqs = [
+        { text: '1+ year Canadian work experience', met: answers['work-exp-canadian'] !== 'none' },
+        { text: 'CLB 7 for NOC 0/A or CLB 5 for NOC B', met: !['below-clb5'].includes(answers['language-english']) },
+        { text: 'Plan to live outside Quebec', met: true }
+    ];
+    const cecMet = cecReqs.filter(r => r.met === true).length;
+    programs.push({
+        name: 'Canadian Experience Class (CEC)',
+        status: cecMet === 3 ? 'eligible' : cecMet >= 2 ? 'likely' : 'not-eligible',
+        statusText: cecMet === 3 ? 'Likely Eligible' : cecMet >= 2 ? 'May Qualify' : 'May Not Qualify',
+        requirements: cecReqs,
+        link: '/learn'
+    });
+
+    // Federal Skilled Trades (FST)
+    const fstReqs = [
+        { text: 'Trade certificate or 2 years experience in trade', met: answers['trade-cert'] === 'yes' },
+        { text: 'CLB 5 Speaking/Listening, CLB 4 Reading/Writing', met: !['below-clb5'].includes(answers['language-english']) },
+        { text: 'Job offer or certificate of qualification', met: answers['job-offer'] !== 'no' || answers['trade-cert'] === 'yes' }
+    ];
+    const fstMet = fstReqs.filter(r => r.met === true).length;
+    programs.push({
+        name: 'Federal Skilled Trades (FST)',
+        status: fstMet === 3 ? 'eligible' : fstMet >= 2 ? 'likely' : 'not-eligible',
+        statusText: fstMet === 3 ? 'Likely Eligible' : fstMet >= 2 ? 'May Qualify' : 'May Not Qualify',
+        requirements: fstReqs,
+        link: '/learn'
+    });
+
+    // Provincial Nominee Program (PNP)
+    const pnpReqs = [
+        { text: 'Meet Express Entry minimum requirements', met: fswMet >= 2 || cecMet >= 2 },
+        { text: 'Intent to live in nominating province', met: true },
+        { text: 'Meets specific provincial criteria', met: null }
+    ];
+    programs.push({
+        name: 'Provincial Nominee Program (PNP)',
+        status: 'likely',
+        statusText: 'Worth Exploring',
+        requirements: pnpReqs,
+        link: '/tools/immigration-targets'
+    });
+
+    // French-language draws
+    if (answers['language-french'] === 'nclc7+') {
+        programs.push({
+            name: 'French-Language Category Draws',
+            status: 'eligible',
+            statusText: 'Likely Eligible',
+            requirements: [
+                { text: 'NCLC 7+ in all French abilities', met: true },
+                { text: 'In Express Entry pool', met: fswMet >= 2 || cecMet >= 2 }
+            ],
+            link: '/tools/crs-prediction'
+        });
+    }
+
+    return programs;
+}
+
+function restartChecker() {
+    currentQuestion = 0;
+    answers = {};
+    document.getElementById('questionContainer').style.display = 'block';
+    document.getElementById('progressSteps').style.display = 'flex';
+    document.getElementById('resultsSection').classList.remove('show');
+    renderQuestion();
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', renderQuestion);
+</script>
+{% endblock %}

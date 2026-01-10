@@ -1,0 +1,814 @@
+{% extends "base.html" %}
+
+{% block title %}Document Checklist Generator - Immigration Documents{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        margin-bottom: 32px;
+    }
+
+    .page-header .page-title {
+        font-family: 'Plus Jakarta Sans', var(--font-family);
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .page-header .page-title i {
+        font-size: 28px;
+        color: var(--primary);
+    }
+
+    .page-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+    }
+
+    /* Program Selector */
+    .program-selector {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .program-selector h3 {
+        font-size: 1.1rem;
+        color: var(--text);
+        margin-bottom: 1rem;
+    }
+
+    .program-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .program-btn {
+        padding: 1.25rem;
+        background: var(--bg);
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: left;
+    }
+
+    .program-btn:hover {
+        border-color: var(--primary);
+    }
+
+    .program-btn.selected {
+        border-color: var(--primary);
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+    }
+
+    .program-btn .name {
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.25rem;
+    }
+
+    .program-btn .desc {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    /* Checklist Section */
+    .checklist-section {
+        display: none;
+    }
+
+    .checklist-section.show {
+        display: block;
+    }
+
+    .checklist-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .checklist-header h2 {
+        font-size: 1.5rem;
+        color: var(--text);
+    }
+
+    .progress-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .progress-bar {
+        width: 200px;
+        height: 8px;
+        background: var(--border);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .progress-bar .fill {
+        height: 100%;
+        background: linear-gradient(90deg, #16a34a, #22c55e);
+        transition: width 0.3s;
+    }
+
+    .progress-text {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    /* Checklist Categories */
+    .checklist-category {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+
+    .category-header {
+        padding: 1.25rem 1.5rem;
+        background: var(--bg);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .category-header h3 {
+        font-size: 1.1rem;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .category-header h3 i {
+        color: var(--primary);
+    }
+
+    .category-count {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    .category-items {
+        padding: 1rem 1.5rem;
+    }
+
+    .checklist-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .checklist-item:last-child {
+        border-bottom: none;
+    }
+
+    .checklist-item input[type="checkbox"] {
+        width: 22px;
+        height: 22px;
+        margin-top: 2px;
+        cursor: pointer;
+        accent-color: var(--primary);
+    }
+
+    .item-content {
+        flex: 1;
+    }
+
+    .item-title {
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.25rem;
+    }
+
+    .item-desc {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+    }
+
+    .item-tags {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .item-tag {
+        font-size: 0.75rem;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        font-weight: 500;
+    }
+
+    .item-tag.required {
+        background: rgba(239, 68, 68, 0.1);
+        color: #dc2626;
+    }
+
+    .item-tag.optional {
+        background: rgba(234, 179, 8, 0.1);
+        color: #ca8a04;
+    }
+
+    .item-tag.if-applicable {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--primary);
+    }
+
+    .checklist-item.completed .item-title {
+        text-decoration: line-through;
+        color: var(--text-muted);
+    }
+
+    /* Actions */
+    .checklist-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .action-btn.primary {
+        background: var(--primary);
+        border: none;
+        color: white;
+    }
+
+    .action-btn.secondary {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        color: var(--text);
+    }
+
+    .action-btn:hover {
+        transform: translateY(-1px);
+    }
+
+    /* Tips Section */
+    .tips-section {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .tips-section h3 {
+        font-size: 1.1rem;
+        color: var(--text);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .tips-section h3 i {
+        color: var(--primary);
+    }
+
+    .tips-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+
+    .tip-item {
+        display: flex;
+        gap: 0.75rem;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+    }
+
+    .tip-item i {
+        color: var(--primary);
+        margin-top: 0.2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">
+        <i class="bi bi-list-check"></i>
+        Document Checklist Generator
+    </h1>
+    <p class="page-subtitle">Get a personalized checklist of documents required for your Canadian immigration application</p>
+</div>
+
+<div class="program-selector">
+    <h3>Select Your Immigration Program</h3>
+    <div class="program-grid">
+        <button class="program-btn" onclick="selectProgram('fsw')">
+            <div class="name">Federal Skilled Worker (FSW)</div>
+            <div class="desc">Express Entry skilled worker program</div>
+        </button>
+        <button class="program-btn" onclick="selectProgram('cec')">
+            <div class="name">Canadian Experience Class (CEC)</div>
+            <div class="desc">For those with Canadian work experience</div>
+        </button>
+        <button class="program-btn" onclick="selectProgram('fst')">
+            <div class="name">Federal Skilled Trades (FST)</div>
+            <div class="desc">For qualified tradespersons</div>
+        </button>
+        <button class="program-btn" onclick="selectProgram('pnp')">
+            <div class="name">Provincial Nominee Program (PNP)</div>
+            <div class="desc">Provincial nomination stream</div>
+        </button>
+        <button class="program-btn" onclick="selectProgram('study')">
+            <div class="name">Study Permit</div>
+            <div class="desc">For international students</div>
+        </button>
+        <button class="program-btn" onclick="selectProgram('work')">
+            <div class="name">Work Permit</div>
+            <div class="desc">LMIA-based or LMIA-exempt</div>
+        </button>
+    </div>
+</div>
+
+<div class="checklist-section" id="checklistSection">
+    <div class="checklist-header">
+        <h2 id="programTitle">Document Checklist</h2>
+        <div class="progress-info">
+            <div class="progress-bar">
+                <div class="fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <span class="progress-text" id="progressText">0/0 completed</span>
+        </div>
+    </div>
+
+    <div id="checklistContainer">
+        <!-- Checklist categories will be inserted here -->
+    </div>
+
+    <div class="checklist-actions">
+        <button class="action-btn primary" onclick="downloadChecklist()">
+            <i class="bi bi-download"></i> Download PDF
+        </button>
+        <button class="action-btn secondary" onclick="printChecklist()">
+            <i class="bi bi-printer"></i> Print
+        </button>
+        <button class="action-btn secondary" onclick="resetChecklist()">
+            <i class="bi bi-arrow-counterclockwise"></i> Reset
+        </button>
+    </div>
+
+    <div class="tips-section">
+        <h3><i class="bi bi-lightbulb"></i> Important Tips</h3>
+        <div class="tips-list">
+            <div class="tip-item">
+                <i class="bi bi-check2"></i>
+                <span>All documents must be translated by a certified translator if not in English or French</span>
+            </div>
+            <div class="tip-item">
+                <i class="bi bi-check2"></i>
+                <span>Keep both original documents and certified copies ready</span>
+            </div>
+            <div class="tip-item">
+                <i class="bi bi-check2"></i>
+                <span>Language test results are valid for 2 years from the test date</span>
+            </div>
+            <div class="tip-item">
+                <i class="bi bi-check2"></i>
+                <span>Police clearance certificates should be obtained within 6 months of application</span>
+            </div>
+            <div class="tip-item">
+                <i class="bi bi-check2"></i>
+                <span>Medical exams are valid for 12 months from the examination date</span>
+            </div>
+            <div class="tip-item">
+                <i class="bi bi-check2"></i>
+                <span>ECA reports are valid for 5 years from the date of issue</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const checklists = {
+    fsw: {
+        title: 'Federal Skilled Worker (FSW) Documents',
+        categories: [
+            {
+                name: 'Identity Documents',
+                icon: 'person-badge',
+                items: [
+                    { title: 'Valid Passport', desc: 'All pages including blank pages', tag: 'required' },
+                    { title: 'Birth Certificate', desc: 'Original or certified copy', tag: 'required' },
+                    { title: 'National ID Card', desc: 'If applicable in your country', tag: 'if-applicable' },
+                    { title: 'Passport-sized Photos', desc: 'Meeting IRCC specifications', tag: 'required' }
+                ]
+            },
+            {
+                name: 'Language Test Results',
+                icon: 'translate',
+                items: [
+                    { title: 'IELTS General Training', desc: 'Or CELPIP-G for English', tag: 'required' },
+                    { title: 'TEF Canada or TCF Canada', desc: 'For French language ability', tag: 'optional' }
+                ]
+            },
+            {
+                name: 'Education Documents',
+                icon: 'mortarboard',
+                items: [
+                    { title: 'Educational Credential Assessment (ECA)', desc: 'From WES, IQAS, or other designated organization', tag: 'required' },
+                    { title: 'Degree/Diploma Certificates', desc: 'All post-secondary credentials', tag: 'required' },
+                    { title: 'Transcripts', desc: 'Official transcripts from all institutions', tag: 'required' },
+                    { title: 'Professional Licenses', desc: 'If applicable to your occupation', tag: 'if-applicable' }
+                ]
+            },
+            {
+                name: 'Work Experience Documents',
+                icon: 'briefcase',
+                items: [
+                    { title: 'Reference Letters', desc: 'From all employers, on company letterhead', tag: 'required' },
+                    { title: 'Employment Contracts', desc: 'Showing job duties and dates', tag: 'required' },
+                    { title: 'Pay Stubs/Salary Slips', desc: 'Recent 6-12 months', tag: 'optional' },
+                    { title: 'Tax Documents', desc: 'Proof of employment and income', tag: 'optional' }
+                ]
+            },
+            {
+                name: 'Financial Documents',
+                icon: 'bank',
+                items: [
+                    { title: 'Proof of Funds', desc: 'Bank statements for past 6 months', tag: 'required' },
+                    { title: 'Bank Letter', desc: 'Confirming account balance and history', tag: 'required' },
+                    { title: 'Investment Statements', desc: 'Stocks, bonds, mutual funds', tag: 'optional' },
+                    { title: 'Property Documents', desc: 'If using as proof of funds', tag: 'if-applicable' }
+                ]
+            },
+            {
+                name: 'Police & Medical',
+                icon: 'shield-check',
+                items: [
+                    { title: 'Police Clearance Certificates', desc: 'From all countries lived 6+ months since age 18', tag: 'required' },
+                    { title: 'Medical Examination', desc: 'By IRCC-approved panel physician', tag: 'required' }
+                ]
+            },
+            {
+                name: 'Family Documents',
+                icon: 'people',
+                items: [
+                    { title: 'Marriage Certificate', desc: 'If married', tag: 'if-applicable' },
+                    { title: 'Spouse Passport & Photos', desc: 'If including spouse', tag: 'if-applicable' },
+                    { title: 'Spouse Language Test', desc: 'For additional CRS points', tag: 'optional' },
+                    { title: 'Children Birth Certificates', desc: 'For dependent children', tag: 'if-applicable' },
+                    { title: 'Custody Documents', desc: 'If applicable', tag: 'if-applicable' },
+                    { title: 'Divorce Certificate', desc: 'If previously married', tag: 'if-applicable' }
+                ]
+            }
+        ]
+    },
+    cec: {
+        title: 'Canadian Experience Class (CEC) Documents',
+        categories: [
+            {
+                name: 'Identity Documents',
+                icon: 'person-badge',
+                items: [
+                    { title: 'Valid Passport', desc: 'All pages including blank pages', tag: 'required' },
+                    { title: 'Birth Certificate', desc: 'Original or certified copy', tag: 'required' },
+                    { title: 'Passport-sized Photos', desc: 'Meeting IRCC specifications', tag: 'required' }
+                ]
+            },
+            {
+                name: 'Canadian Work Experience',
+                icon: 'briefcase',
+                items: [
+                    { title: 'Canadian Reference Letters', desc: 'Detailed job duties on company letterhead', tag: 'required' },
+                    { title: 'T4 Tax Slips', desc: 'For each year worked in Canada', tag: 'required' },
+                    { title: 'Notice of Assessment', desc: 'From CRA for Canadian tax years', tag: 'required' },
+                    { title: 'Work Permit(s)', desc: 'All work permits held in Canada', tag: 'required' },
+                    { title: 'Pay Stubs', desc: 'Recent Canadian pay stubs', tag: 'optional' }
+                ]
+            },
+            {
+                name: 'Language Test Results',
+                icon: 'translate',
+                items: [
+                    { title: 'IELTS General or CELPIP-G', desc: 'CLB 7 for NOC 0/A or CLB 5 for NOC B', tag: 'required' },
+                    { title: 'French Test (TEF/TCF)', desc: 'For additional points', tag: 'optional' }
+                ]
+            },
+            {
+                name: 'Education Documents',
+                icon: 'mortarboard',
+                items: [
+                    { title: 'ECA Report', desc: 'Not required but adds CRS points', tag: 'optional' },
+                    { title: 'Canadian Credentials', desc: 'If studied in Canada', tag: 'if-applicable' }
+                ]
+            },
+            {
+                name: 'Police & Medical',
+                icon: 'shield-check',
+                items: [
+                    { title: 'Police Clearance Certificates', desc: 'From all countries lived 6+ months since age 18', tag: 'required' },
+                    { title: 'Canadian RCMP Check', desc: 'If currently in Canada', tag: 'if-applicable' },
+                    { title: 'Medical Examination', desc: 'By IRCC-approved panel physician', tag: 'required' }
+                ]
+            }
+        ]
+    },
+    fst: {
+        title: 'Federal Skilled Trades (FST) Documents',
+        categories: [
+            {
+                name: 'Identity Documents',
+                icon: 'person-badge',
+                items: [
+                    { title: 'Valid Passport', desc: 'All pages', tag: 'required' },
+                    { title: 'Birth Certificate', desc: 'Original or certified copy', tag: 'required' },
+                    { title: 'Photos', desc: 'IRCC specifications', tag: 'required' }
+                ]
+            },
+            {
+                name: 'Trade Certification',
+                icon: 'award',
+                items: [
+                    { title: 'Certificate of Qualification', desc: 'From Canadian province/territory', tag: 'required' },
+                    { title: 'Trade Certification', desc: 'From home country if applicable', tag: 'if-applicable' },
+                    { title: 'Apprenticeship Records', desc: 'Completion documents', tag: 'if-applicable' }
+                ]
+            },
+            {
+                name: 'Job Offer Documents',
+                icon: 'file-earmark-text',
+                items: [
+                    { title: 'Valid Job Offer Letter', desc: 'For at least 1 year continuous work', tag: 'required' },
+                    { title: 'LMIA', desc: 'If required for the position', tag: 'if-applicable' },
+                    { title: 'Employer Information', desc: 'Business registration, contact details', tag: 'required' }
+                ]
+            },
+            {
+                name: 'Work Experience',
+                icon: 'briefcase',
+                items: [
+                    { title: 'Reference Letters', desc: '2 years experience in trade within last 5 years', tag: 'required' },
+                    { title: 'Employment Records', desc: 'Contracts, pay stubs', tag: 'required' }
+                ]
+            },
+            {
+                name: 'Language & Other',
+                icon: 'translate',
+                items: [
+                    { title: 'Language Test', desc: 'CLB 5 Speaking/Listening, CLB 4 Reading/Writing', tag: 'required' },
+                    { title: 'Police Certificates', desc: 'From all countries', tag: 'required' },
+                    { title: 'Medical Exam', desc: 'IRCC panel physician', tag: 'required' }
+                ]
+            }
+        ]
+    },
+    pnp: {
+        title: 'Provincial Nominee Program (PNP) Documents',
+        categories: [
+            {
+                name: 'Express Entry Documents',
+                icon: 'file-earmark-check',
+                items: [
+                    { title: 'Express Entry Profile Number', desc: 'Your EE profile confirmation', tag: 'required' },
+                    { title: 'Job Seeker Validation Code', desc: 'From Express Entry account', tag: 'required' },
+                    { title: 'All FSW/CEC Documents', desc: 'As applicable to your program', tag: 'required' }
+                ]
+            },
+            {
+                name: 'Provincial Requirements',
+                icon: 'geo-alt',
+                items: [
+                    { title: 'Provincial Application Form', desc: 'Specific to the province', tag: 'required' },
+                    { title: 'Intent to Reside Letter', desc: 'Commitment to live in the province', tag: 'required' },
+                    { title: 'Settlement Plan', desc: 'How you plan to settle in the province', tag: 'required' },
+                    { title: 'Connection to Province', desc: 'Family, work, or study ties', tag: 'if-applicable' }
+                ]
+            },
+            {
+                name: 'Job Offer (if applicable)',
+                icon: 'briefcase',
+                items: [
+                    { title: 'Provincial Job Offer Letter', desc: 'From employer in the province', tag: 'if-applicable' },
+                    { title: 'Employer Declaration', desc: 'Provincial employer forms', tag: 'if-applicable' },
+                    { title: 'Labour Market Assessment', desc: 'If required by province', tag: 'if-applicable' }
+                ]
+            }
+        ]
+    },
+    study: {
+        title: 'Study Permit Documents',
+        categories: [
+            {
+                name: 'Identity Documents',
+                icon: 'person-badge',
+                items: [
+                    { title: 'Valid Passport', desc: 'Valid for duration of studies', tag: 'required' },
+                    { title: 'Photos', desc: 'IRCC specifications', tag: 'required' },
+                    { title: 'Birth Certificate', desc: 'With translation if needed', tag: 'required' }
+                ]
+            },
+            {
+                name: 'Acceptance Documents',
+                icon: 'mortarboard',
+                items: [
+                    { title: 'Letter of Acceptance', desc: 'From a DLI (Designated Learning Institution)', tag: 'required' },
+                    { title: 'Provincial Attestation Letter (PAL)', desc: 'Required for most study permits from Jan 2024', tag: 'required' },
+                    { title: 'Previous Transcripts', desc: 'Academic history', tag: 'required' }
+                ]
+            },
+            {
+                name: 'Financial Documents',
+                icon: 'bank',
+                items: [
+                    { title: 'Proof of Financial Support', desc: 'Tuition + $20,635 CAD living expenses per year', tag: 'required' },
+                    { title: 'Bank Statements', desc: 'Past 4-6 months', tag: 'required' },
+                    { title: 'Scholarship Letter', desc: 'If receiving funding', tag: 'if-applicable' },
+                    { title: 'Sponsor Letter & Documents', desc: 'If being sponsored by family', tag: 'if-applicable' },
+                    { title: 'GIC Certificate', desc: 'Guaranteed Investment Certificate from Canadian bank', tag: 'optional' }
+                ]
+            },
+            {
+                name: 'Additional Requirements',
+                icon: 'file-text',
+                items: [
+                    { title: 'Statement of Purpose', desc: 'Why you want to study in Canada', tag: 'required' },
+                    { title: 'Language Test Results', desc: 'IELTS/TOEFL as required by institution', tag: 'if-applicable' },
+                    { title: 'Police Certificate', desc: 'From home country', tag: 'required' },
+                    { title: 'Medical Exam', desc: 'If from designated country or studying certain programs', tag: 'if-applicable' },
+                    { title: 'Custodian Declaration', desc: 'If minor student', tag: 'if-applicable' }
+                ]
+            }
+        ]
+    },
+    work: {
+        title: 'Work Permit Documents',
+        categories: [
+            {
+                name: 'Identity Documents',
+                icon: 'person-badge',
+                items: [
+                    { title: 'Valid Passport', desc: 'Valid beyond intended stay', tag: 'required' },
+                    { title: 'Photos', desc: 'IRCC specifications', tag: 'required' },
+                    { title: 'Current Immigration Status', desc: 'If already in Canada', tag: 'if-applicable' }
+                ]
+            },
+            {
+                name: 'Job Offer & LMIA',
+                icon: 'briefcase',
+                items: [
+                    { title: 'Job Offer Letter', desc: 'Detailed position, salary, duties', tag: 'required' },
+                    { title: 'LMIA (Labour Market Impact Assessment)', desc: 'Positive LMIA from ESDC', tag: 'required' },
+                    { title: 'LMIA Number', desc: 'For work permit application', tag: 'required' },
+                    { title: 'Employment Contract', desc: 'Signed by both parties', tag: 'required' }
+                ]
+            },
+            {
+                name: 'LMIA-Exempt Stream',
+                icon: 'file-earmark-check',
+                items: [
+                    { title: 'Employer Compliance Fee Receipt', desc: 'From IRCC employer portal', tag: 'if-applicable' },
+                    { title: 'International Agreement Proof', desc: 'CUSMA, CPTPP, etc.', tag: 'if-applicable' },
+                    { title: 'Intra-Company Transfer Documents', desc: 'If ICT category', tag: 'if-applicable' }
+                ]
+            },
+            {
+                name: 'Qualifications',
+                icon: 'award',
+                items: [
+                    { title: 'Resume/CV', desc: 'Detailed work history', tag: 'required' },
+                    { title: 'Educational Credentials', desc: 'Degrees, diplomas, certificates', tag: 'required' },
+                    { title: 'Professional Licenses', desc: 'If required for the job', tag: 'if-applicable' },
+                    { title: 'Reference Letters', desc: 'From previous employers', tag: 'optional' }
+                ]
+            },
+            {
+                name: 'Additional Requirements',
+                icon: 'shield-check',
+                items: [
+                    { title: 'Police Certificate', desc: 'If required for your job type', tag: 'if-applicable' },
+                    { title: 'Medical Exam', desc: 'If in healthcare or from designated country', tag: 'if-applicable' },
+                    { title: 'Biometrics', desc: 'Fingerprints and photo', tag: 'required' }
+                ]
+            }
+        ]
+    }
+};
+
+let currentProgram = null;
+let checkedItems = new Set();
+
+function selectProgram(program) {
+    currentProgram = program;
+    checkedItems = new Set();
+
+    // Update button states
+    document.querySelectorAll('.program-btn').forEach(btn => btn.classList.remove('selected'));
+    event.target.closest('.program-btn').classList.add('selected');
+
+    // Show checklist
+    const section = document.getElementById('checklistSection');
+    section.classList.add('show');
+
+    const data = checklists[program];
+    document.getElementById('programTitle').textContent = data.title;
+
+    const container = document.getElementById('checklistContainer');
+    container.innerHTML = data.categories.map((cat, catIndex) => `
+        <div class="checklist-category">
+            <div class="category-header" onclick="toggleCategory(${catIndex})">
+                <h3><i class="bi bi-${cat.icon}"></i> ${cat.name}</h3>
+                <span class="category-count">${cat.items.length} items</span>
+            </div>
+            <div class="category-items" id="category-${catIndex}">
+                ${cat.items.map((item, itemIndex) => `
+                    <div class="checklist-item" id="item-${catIndex}-${itemIndex}">
+                        <input type="checkbox" onchange="toggleItem('${catIndex}-${itemIndex}')">
+                        <div class="item-content">
+                            <div class="item-title">${item.title}</div>
+                            <div class="item-desc">${item.desc}</div>
+                            <div class="item-tags">
+                                <span class="item-tag ${item.tag}">${item.tag.replace('-', ' ')}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+
+    updateProgress();
+}
+
+function toggleCategory(index) {
+    const items = document.getElementById(`category-${index}`);
+    items.style.display = items.style.display === 'none' ? 'block' : 'none';
+}
+
+function toggleItem(itemId) {
+    const item = document.getElementById(`item-${itemId}`);
+
+    if (checkedItems.has(itemId)) {
+        checkedItems.delete(itemId);
+        item.classList.remove('completed');
+    } else {
+        checkedItems.add(itemId);
+        item.classList.add('completed');
+    }
+
+    updateProgress();
+}
+
+function updateProgress() {
+    if (!currentProgram) return;
+
+    const data = checklists[currentProgram];
+    const totalItems = data.categories.reduce((sum, cat) => sum + cat.items.length, 0);
+    const completed = checkedItems.size;
+    const percentage = Math.round((completed / totalItems) * 100);
+
+    document.getElementById('progressFill').style.width = `${percentage}%`;
+    document.getElementById('progressText').textContent = `${completed}/${totalItems} completed`;
+}
+
+function resetChecklist() {
+    checkedItems = new Set();
+    document.querySelectorAll('.checklist-item').forEach(item => {
+        item.classList.remove('completed');
+        item.querySelector('input').checked = false;
+    });
+    updateProgress();
+}
+
+function downloadChecklist() {
+    alert('PDF download feature - In a production app, this would generate a PDF of your checklist');
+}
+
+function printChecklist() {
+    window.print();
+}
+</script>
+{% endblock %}

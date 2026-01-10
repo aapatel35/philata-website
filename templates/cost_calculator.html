@@ -1,0 +1,652 @@
+{% extends "base.html" %}
+
+{% block title %}Immigration Cost Calculator - Fees & Settlement Costs{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        margin-bottom: 32px;
+    }
+
+    .page-header .page-title {
+        font-family: 'Plus Jakarta Sans', var(--font-family);
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .page-header .page-title i {
+        font-size: 28px;
+        color: var(--primary);
+    }
+
+    .page-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+    }
+
+    .calculator-grid {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+        .calculator-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Input Sections */
+    .input-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .input-section h3 {
+        font-size: 1.1rem;
+        color: var(--text);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .input-section h3 i {
+        color: var(--primary);
+    }
+
+    .input-group {
+        margin-bottom: 1rem;
+    }
+
+    .input-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .input-group label {
+        display: block;
+        font-weight: 500;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+
+    .input-group select,
+    .input-group input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 1rem;
+        background: var(--bg);
+        transition: border-color 0.2s;
+    }
+
+    .input-group select:focus,
+    .input-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+
+    .input-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        background: var(--bg);
+        border-radius: 8px;
+        cursor: pointer;
+        margin-bottom: 0.5rem;
+    }
+
+    .checkbox-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .checkbox-group input {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--primary);
+    }
+
+    .checkbox-group span {
+        flex: 1;
+    }
+
+    .checkbox-group .cost {
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    /* Results Panel */
+    .results-panel {
+        position: sticky;
+        top: 100px;
+    }
+
+    .total-card {
+        background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        color: white;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .total-card .label {
+        font-size: 1rem;
+        opacity: 0.9;
+        margin-bottom: 0.5rem;
+    }
+
+    .total-card .amount {
+        font-size: 3rem;
+        font-weight: 800;
+    }
+
+    .total-card .currency {
+        font-size: 1rem;
+        opacity: 0.8;
+        margin-top: 0.5rem;
+    }
+
+    .breakdown-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .breakdown-header {
+        padding: 1.25rem 1.5rem;
+        background: var(--bg);
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .breakdown-header i {
+        color: var(--primary);
+    }
+
+    .breakdown-items {
+        padding: 1rem 1.5rem;
+    }
+
+    .breakdown-category {
+        margin-bottom: 1.5rem;
+    }
+
+    .breakdown-category:last-child {
+        margin-bottom: 0;
+    }
+
+    .breakdown-category h4 {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.75rem;
+    }
+
+    .breakdown-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        font-size: 0.95rem;
+    }
+
+    .breakdown-item .label {
+        color: var(--text);
+    }
+
+    .breakdown-item .amount {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .breakdown-subtotal {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-top: 1px solid var(--border);
+        margin-top: 0.5rem;
+        font-weight: 600;
+    }
+
+    .breakdown-subtotal .amount {
+        color: var(--primary);
+    }
+
+    /* Fee Reference */
+    .fee-reference {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .fee-reference h3 {
+        font-size: 1.1rem;
+        color: var(--text);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .fee-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .fee-table th,
+    .fee-table td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .fee-table th {
+        font-weight: 600;
+        color: var(--text);
+        background: var(--bg);
+    }
+
+    .fee-table td {
+        color: var(--text-muted);
+    }
+
+    .fee-table .amount {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .note {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: rgba(234, 179, 8, 0.1);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: #ca8a04;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">
+        <i class="bi bi-calculator"></i>
+        Immigration Cost Calculator
+    </h1>
+    <p class="page-subtitle">Estimate the total cost of your Canadian immigration journey including fees and settlement expenses</p>
+</div>
+
+<div class="calculator-grid">
+    <div class="inputs-container">
+        <div class="input-section">
+            <h3><i class="bi bi-person"></i> Applicant Information</h3>
+            <div class="input-group">
+                <label>Immigration Program</label>
+                <select id="program" onchange="calculateCosts()">
+                    <option value="ee">Express Entry (FSW/CEC/FST)</option>
+                    <option value="pnp">Provincial Nominee Program</option>
+                    <option value="study">Study Permit</option>
+                    <option value="work">Work Permit</option>
+                </select>
+            </div>
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Number of Adults</label>
+                    <select id="adults" onchange="calculateCosts()">
+                        <option value="1">1 (Principal only)</option>
+                        <option value="2">2 (With spouse)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Number of Children</label>
+                    <select id="children" onchange="calculateCosts()">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4+</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <h3><i class="bi bi-file-earmark-text"></i> Application Fees</h3>
+            <div class="checkbox-group">
+                <input type="checkbox" id="biometrics" checked onchange="calculateCosts()">
+                <span>Biometrics Fee</span>
+                <span class="cost">$85</span>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="eca" checked onchange="calculateCosts()">
+                <span>Educational Credential Assessment (ECA)</span>
+                <span class="cost">$200-300</span>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="languageTest" checked onchange="calculateCosts()">
+                <span>Language Test (IELTS/CELPIP)</span>
+                <span class="cost">$300-350</span>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="secondLanguage" onchange="calculateCosts()">
+                <span>Second Language Test (French TEF/TCF)</span>
+                <span class="cost">$350-400</span>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="medical" checked onchange="calculateCosts()">
+                <span>Medical Examination</span>
+                <span class="cost">$200-450</span>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="police" checked onchange="calculateCosts()">
+                <span>Police Clearance Certificate</span>
+                <span class="cost">$50-100</span>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <h3><i class="bi bi-house"></i> Settlement Funds</h3>
+            <div class="checkbox-group">
+                <input type="checkbox" id="includeSettlement" checked onchange="calculateCosts()">
+                <span>Include Proof of Funds (Required for FSW)</span>
+                <span class="cost">Required</span>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">
+                Minimum funds required vary based on family size. These must be available but are not "spent" - they're proof you can support yourself.
+            </p>
+        </div>
+
+        <div class="input-section">
+            <h3><i class="bi bi-airplane"></i> Additional Expenses</h3>
+            <div class="checkbox-group">
+                <input type="checkbox" id="flights" checked onchange="calculateCosts()">
+                <span>Flight Tickets (per person)</span>
+                <span class="cost">$800-2,000</span>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="initialAccommodation" checked onchange="calculateCosts()">
+                <span>Initial Accommodation (first month)</span>
+                <span class="cost">$1,500-3,000</span>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="lawyer" onchange="calculateCosts()">
+                <span>Immigration Lawyer/Consultant</span>
+                <span class="cost">$3,000-8,000</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="results-panel">
+        <div class="total-card">
+            <div class="label">Estimated Total Cost</div>
+            <div class="amount" id="totalCost">$0</div>
+            <div class="currency">Canadian Dollars (CAD)</div>
+        </div>
+
+        <div class="breakdown-card">
+            <div class="breakdown-header">
+                <i class="bi bi-list-ul"></i> Cost Breakdown
+            </div>
+            <div class="breakdown-items" id="breakdown">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="fee-reference">
+    <h3><i class="bi bi-info-circle"></i> Official IRCC Fee Schedule (2024)</h3>
+    <table class="fee-table">
+        <thead>
+            <tr>
+                <th>Fee Type</th>
+                <th>Principal Applicant</th>
+                <th>Spouse</th>
+                <th>Dependent Child</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>PR Application Processing Fee</td>
+                <td class="amount">$850</td>
+                <td class="amount">$850</td>
+                <td class="amount">$230</td>
+            </tr>
+            <tr>
+                <td>Right of Permanent Residence Fee (RPRF)</td>
+                <td class="amount">$515</td>
+                <td class="amount">$515</td>
+                <td class="amount">N/A</td>
+            </tr>
+            <tr>
+                <td>Biometrics</td>
+                <td class="amount">$85</td>
+                <td class="amount">$85</td>
+                <td class="amount">$85</td>
+            </tr>
+            <tr>
+                <td>Work Permit</td>
+                <td class="amount">$155</td>
+                <td class="amount">$155</td>
+                <td class="amount">N/A</td>
+            </tr>
+            <tr>
+                <td>Study Permit</td>
+                <td class="amount">$150</td>
+                <td class="amount">N/A</td>
+                <td class="amount">N/A</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="note">
+        <i class="bi bi-exclamation-triangle"></i>
+        <span>Fees are subject to change. Always verify current fees on the official IRCC website before submitting your application.</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const fees = {
+    ee: {
+        processing: 850,
+        rprf: 515,
+        spouseProcessing: 850,
+        spouseRprf: 515,
+        childProcessing: 230
+    },
+    pnp: {
+        processing: 850,
+        rprf: 515,
+        spouseProcessing: 850,
+        spouseRprf: 515,
+        childProcessing: 230,
+        provincialFee: 300  // Average provincial nomination fee
+    },
+    study: {
+        permit: 150,
+        biometrics: 85
+    },
+    work: {
+        permit: 155,
+        biometrics: 85,
+        lmia: 0  // Paid by employer
+    }
+};
+
+const settlementFunds = {
+    1: 14690,
+    2: 18288,
+    3: 22483,
+    4: 27315,
+    5: 30980,
+    6: 34942,
+    7: 38905
+};
+
+function calculateCosts() {
+    const program = document.getElementById('program').value;
+    const adults = parseInt(document.getElementById('adults').value);
+    const children = parseInt(document.getElementById('children').value);
+    const familySize = adults + children;
+
+    let breakdown = [];
+    let total = 0;
+
+    // Government Fees
+    let govFees = [];
+
+    if (program === 'ee' || program === 'pnp') {
+        // Processing fees
+        govFees.push({ label: 'PR Processing Fee (Principal)', amount: fees.ee.processing });
+        total += fees.ee.processing;
+
+        if (adults === 2) {
+            govFees.push({ label: 'PR Processing Fee (Spouse)', amount: fees.ee.spouseProcessing });
+            total += fees.ee.spouseProcessing;
+        }
+
+        for (let i = 0; i < children; i++) {
+            govFees.push({ label: `PR Processing Fee (Child ${i + 1})`, amount: fees.ee.childProcessing });
+            total += fees.ee.childProcessing;
+        }
+
+        // RPRF
+        govFees.push({ label: 'RPRF (Principal)', amount: fees.ee.rprf });
+        total += fees.ee.rprf;
+
+        if (adults === 2) {
+            govFees.push({ label: 'RPRF (Spouse)', amount: fees.ee.spouseRprf });
+            total += fees.ee.spouseRprf;
+        }
+
+        if (program === 'pnp') {
+            govFees.push({ label: 'Provincial Nomination Fee (avg)', amount: fees.pnp.provincialFee });
+            total += fees.pnp.provincialFee;
+        }
+    } else if (program === 'study') {
+        govFees.push({ label: 'Study Permit Fee', amount: fees.study.permit });
+        total += fees.study.permit;
+    } else if (program === 'work') {
+        govFees.push({ label: 'Work Permit Fee', amount: fees.work.permit });
+        total += fees.work.permit;
+    }
+
+    breakdown.push({ category: 'Government Fees', items: govFees, subtotal: govFees.reduce((sum, i) => sum + i.amount, 0) });
+
+    // Third-Party Fees
+    let thirdParty = [];
+
+    if (document.getElementById('biometrics').checked) {
+        const bioFee = 85 * familySize;
+        thirdParty.push({ label: `Biometrics (${familySize} person${familySize > 1 ? 's' : ''})`, amount: bioFee });
+        total += bioFee;
+    }
+
+    if (document.getElementById('eca').checked) {
+        thirdParty.push({ label: 'ECA (WES)', amount: 250 });
+        total += 250;
+    }
+
+    if (document.getElementById('languageTest').checked) {
+        const langFee = adults === 2 ? 650 : 325;
+        thirdParty.push({ label: `Language Test (${adults} adult${adults > 1 ? 's' : ''})`, amount: langFee });
+        total += langFee;
+    }
+
+    if (document.getElementById('secondLanguage').checked) {
+        thirdParty.push({ label: 'French Language Test', amount: 375 });
+        total += 375;
+    }
+
+    if (document.getElementById('medical').checked) {
+        const medFee = 300 * familySize;
+        thirdParty.push({ label: `Medical Exam (${familySize} person${familySize > 1 ? 's' : ''})`, amount: medFee });
+        total += medFee;
+    }
+
+    if (document.getElementById('police').checked) {
+        const policeFee = 75 * adults;
+        thirdParty.push({ label: `Police Certificates (${adults} adult${adults > 1 ? 's' : ''})`, amount: policeFee });
+        total += policeFee;
+    }
+
+    breakdown.push({ category: 'Third-Party Fees', items: thirdParty, subtotal: thirdParty.reduce((sum, i) => sum + i.amount, 0) });
+
+    // Settlement/Travel
+    let settlement = [];
+
+    if (document.getElementById('includeSettlement').checked && (program === 'ee' || program === 'pnp')) {
+        const requiredFunds = settlementFunds[Math.min(familySize, 7)];
+        settlement.push({ label: `Proof of Funds (Family of ${familySize})`, amount: requiredFunds, note: 'Must have available' });
+    }
+
+    if (document.getElementById('flights').checked) {
+        const flightCost = 1200 * familySize;
+        settlement.push({ label: `Flight Tickets (${familySize} person${familySize > 1 ? 's' : ''})`, amount: flightCost });
+        total += flightCost;
+    }
+
+    if (document.getElementById('initialAccommodation').checked) {
+        settlement.push({ label: 'Initial Accommodation (1 month)', amount: 2000 });
+        total += 2000;
+    }
+
+    if (document.getElementById('lawyer').checked) {
+        settlement.push({ label: 'Immigration Consultant/Lawyer', amount: 5000 });
+        total += 5000;
+    }
+
+    breakdown.push({ category: 'Settlement & Travel', items: settlement, subtotal: settlement.filter(i => !i.note).reduce((sum, i) => sum + i.amount, 0) });
+
+    // Update display
+    document.getElementById('totalCost').textContent = '$' + total.toLocaleString();
+
+    const breakdownHtml = breakdown.map(cat => `
+        <div class="breakdown-category">
+            <h4>${cat.category}</h4>
+            ${cat.items.map(item => `
+                <div class="breakdown-item">
+                    <span class="label">${item.label}${item.note ? ' *' : ''}</span>
+                    <span class="amount">${item.note ? item.note : '$' + item.amount.toLocaleString()}</span>
+                </div>
+            `).join('')}
+            <div class="breakdown-subtotal">
+                <span>Subtotal</span>
+                <span class="amount">$${cat.subtotal.toLocaleString()}</span>
+            </div>
+        </div>
+    `).join('');
+
+    document.getElementById('breakdown').innerHTML = breakdownHtml;
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', calculateCosts);
+</script>
+{% endblock %}

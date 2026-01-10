@@ -1,0 +1,1003 @@
+{% extends "base.html" %}
+
+{% block title %}Language Score Converter - IELTS/CELPIP/TEF to CLB{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        margin-bottom: 32px;
+    }
+
+    .page-header .page-title {
+        font-family: 'Plus Jakarta Sans', var(--font-family);
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .page-header .page-title i {
+        font-size: 28px;
+        color: var(--primary);
+    }
+
+    .page-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+    }
+
+    /* Converter Section */
+    .converter-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .test-selector {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .test-btn {
+        padding: 1rem 2rem;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        background: var(--card);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .test-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .test-btn.active {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+    }
+
+    .score-inputs {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+        .score-inputs {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    .score-input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .score-input-group label {
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .score-input-group label i {
+        color: var(--primary);
+    }
+
+    .score-input-group select,
+    .score-input-group input {
+        padding: 1rem;
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        background: var(--bg);
+        transition: all 0.2s;
+    }
+
+    .score-input-group select:focus,
+    .score-input-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+
+    .convert-btn {
+        padding: 1rem 2rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .convert-btn:hover {
+        background: var(--primary-hover);
+        transform: translateY(-1px);
+    }
+
+    /* Results Section */
+    .results-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        display: none;
+    }
+
+    .results-section.show {
+        display: block;
+    }
+
+    .results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .results-header h3 {
+        font-size: 1.25rem;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .clb-overall {
+        background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    .clb-breakdown {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+        .clb-breakdown {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    .clb-card {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .clb-card .skill-name {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+    }
+
+    .clb-card .clb-level {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary);
+    }
+
+    .clb-card .original-score {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-top: 0.25rem;
+    }
+
+    /* CRS Points Info */
+    .crs-points-info {
+        background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05));
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        border-radius: 12px;
+        padding: 1.5rem;
+    }
+
+    .crs-points-info h4 {
+        color: #16a34a;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .crs-points-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .crs-points-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .crs-points-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem;
+        background: white;
+        border-radius: 8px;
+    }
+
+    .crs-points-item .label {
+        color: var(--text-muted);
+    }
+
+    .crs-points-item .points {
+        font-weight: 700;
+        color: #16a34a;
+    }
+
+    /* Reference Tables */
+    .reference-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .reference-section h3 {
+        font-size: 1.25rem;
+        color: var(--text);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .tab-btn {
+        padding: 0.75rem 1.25rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--bg);
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+        border-color: var(--primary);
+    }
+
+    .tab-btn.active {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .conversion-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+    }
+
+    .conversion-table th,
+    .conversion-table td {
+        padding: 0.75rem 1rem;
+        text-align: center;
+        border: 1px solid var(--border);
+    }
+
+    .conversion-table th {
+        background: var(--bg);
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .conversion-table tr:nth-child(even) {
+        background: var(--bg);
+    }
+
+    .clb-highlight {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    /* Info Cards */
+    .info-cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .info-cards {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .info-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+    }
+
+    .info-card h4 {
+        font-size: 1rem;
+        color: var(--text);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .info-card h4 i {
+        color: var(--primary);
+    }
+
+    .info-card ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .info-card li {
+        padding: 0.5rem 0;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .info-card li i {
+        color: var(--primary);
+        margin-top: 0.2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">
+        <i class="bi bi-translate"></i>
+        Language Score Converter
+    </h1>
+    <p class="page-subtitle">Convert your IELTS, CELPIP, or TEF scores to Canadian Language Benchmark (CLB) levels</p>
+</div>
+
+<div class="converter-section">
+    <div class="test-selector">
+        <button class="test-btn active" onclick="selectTest('ielts')" id="btn-ielts">
+            <i class="bi bi-globe"></i> IELTS General
+        </button>
+        <button class="test-btn" onclick="selectTest('celpip')" id="btn-celpip">
+            <i class="bi bi-award"></i> CELPIP-G
+        </button>
+        <button class="test-btn" onclick="selectTest('tef')" id="btn-tef">
+            <i class="bi bi-flag"></i> TEF Canada
+        </button>
+        <button class="test-btn" onclick="selectTest('tcf')" id="btn-tcf">
+            <i class="bi bi-journal-text"></i> TCF Canada
+        </button>
+    </div>
+
+    <div id="ielts-inputs" class="score-inputs">
+        <div class="score-input-group">
+            <label><i class="bi bi-headphones"></i> Listening</label>
+            <select id="ielts-listening" onchange="convertScores()">
+                <option value="">Select</option>
+                <option value="9">9.0</option>
+                <option value="8.5">8.5</option>
+                <option value="8">8.0</option>
+                <option value="7.5">7.5</option>
+                <option value="7">7.0</option>
+                <option value="6.5">6.5</option>
+                <option value="6">6.0</option>
+                <option value="5.5">5.5</option>
+                <option value="5">5.0</option>
+                <option value="4.5">4.5</option>
+                <option value="4">4.0</option>
+            </select>
+        </div>
+        <div class="score-input-group">
+            <label><i class="bi bi-book"></i> Reading</label>
+            <select id="ielts-reading" onchange="convertScores()">
+                <option value="">Select</option>
+                <option value="9">9.0</option>
+                <option value="8.5">8.5</option>
+                <option value="8">8.0</option>
+                <option value="7.5">7.5</option>
+                <option value="7">7.0</option>
+                <option value="6.5">6.5</option>
+                <option value="6">6.0</option>
+                <option value="5.5">5.5</option>
+                <option value="5">5.0</option>
+                <option value="4.5">4.5</option>
+                <option value="4">4.0</option>
+                <option value="3.5">3.5</option>
+            </select>
+        </div>
+        <div class="score-input-group">
+            <label><i class="bi bi-pencil"></i> Writing</label>
+            <select id="ielts-writing" onchange="convertScores()">
+                <option value="">Select</option>
+                <option value="9">9.0</option>
+                <option value="8.5">8.5</option>
+                <option value="8">8.0</option>
+                <option value="7.5">7.5</option>
+                <option value="7">7.0</option>
+                <option value="6.5">6.5</option>
+                <option value="6">6.0</option>
+                <option value="5.5">5.5</option>
+                <option value="5">5.0</option>
+                <option value="4.5">4.5</option>
+                <option value="4">4.0</option>
+            </select>
+        </div>
+        <div class="score-input-group">
+            <label><i class="bi bi-mic"></i> Speaking</label>
+            <select id="ielts-speaking" onchange="convertScores()">
+                <option value="">Select</option>
+                <option value="9">9.0</option>
+                <option value="8.5">8.5</option>
+                <option value="8">8.0</option>
+                <option value="7.5">7.5</option>
+                <option value="7">7.0</option>
+                <option value="6.5">6.5</option>
+                <option value="6">6.0</option>
+                <option value="5.5">5.5</option>
+                <option value="5">5.0</option>
+                <option value="4.5">4.5</option>
+                <option value="4">4.0</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="celpip-inputs" class="score-inputs" style="display: none;">
+        <div class="score-input-group">
+            <label><i class="bi bi-headphones"></i> Listening</label>
+            <select id="celpip-listening" onchange="convertScores()">
+                <option value="">Select</option>
+                <option value="12">12</option>
+                <option value="11">11</option>
+                <option value="10">10</option>
+                <option value="9">9</option>
+                <option value="8">8</option>
+                <option value="7">7</option>
+                <option value="6">6</option>
+                <option value="5">5</option>
+                <option value="4">4</option>
+            </select>
+        </div>
+        <div class="score-input-group">
+            <label><i class="bi bi-book"></i> Reading</label>
+            <select id="celpip-reading" onchange="convertScores()">
+                <option value="">Select</option>
+                <option value="12">12</option>
+                <option value="11">11</option>
+                <option value="10">10</option>
+                <option value="9">9</option>
+                <option value="8">8</option>
+                <option value="7">7</option>
+                <option value="6">6</option>
+                <option value="5">5</option>
+                <option value="4">4</option>
+            </select>
+        </div>
+        <div class="score-input-group">
+            <label><i class="bi bi-pencil"></i> Writing</label>
+            <select id="celpip-writing" onchange="convertScores()">
+                <option value="">Select</option>
+                <option value="12">12</option>
+                <option value="11">11</option>
+                <option value="10">10</option>
+                <option value="9">9</option>
+                <option value="8">8</option>
+                <option value="7">7</option>
+                <option value="6">6</option>
+                <option value="5">5</option>
+                <option value="4">4</option>
+            </select>
+        </div>
+        <div class="score-input-group">
+            <label><i class="bi bi-mic"></i> Speaking</label>
+            <select id="celpip-speaking" onchange="convertScores()">
+                <option value="">Select</option>
+                <option value="12">12</option>
+                <option value="11">11</option>
+                <option value="10">10</option>
+                <option value="9">9</option>
+                <option value="8">8</option>
+                <option value="7">7</option>
+                <option value="6">6</option>
+                <option value="5">5</option>
+                <option value="4">4</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="tef-inputs" class="score-inputs" style="display: none;">
+        <div class="score-input-group">
+            <label><i class="bi bi-headphones"></i> Comprehension orale</label>
+            <select id="tef-listening" onchange="convertScores()">
+                <option value="">Select</option>
+                <option value="316">316-360</option>
+                <option value="298">298-315</option>
+                <option value="280">280-297</option>
+                <option value="249">249-279</option>
+                <option value="217">217-248</option>
+                <option value="181">181-216</option>
+                <option value="145">145-180</option>
+            </select>
+        </div>
+        <div class="score-input-group">
+            <label><i class="bi bi-book"></i> Comprehension ecrite</label>
+            <select id="tef-reading" onchange="convertScores()">
+                <option value="">Select</option>
+                <option value="263">263-300</option>
+                <option value="248">248-262</option>
+                <option value="233">233-247</option>
+                <option value="207">207-232</option>
+                <option value="181">181-206</option>
+                <option value="151">151-180</option>
+                <option value="121">121-150</option>
+            </select>
+        </div>
+        <div class="score-input-group">
+            <label><i class="bi bi-pencil"></i> Expression ecrite</label>
+            <select id="tef-writing" onchange="convertScores()">
+                <option value="">Select</option>
+                <option value="393">393-450</option>
+                <option value="371">371-392</option>
+                <option value="349">349-370</option>
+                <option value="310">310-348</option>
+                <option value="271">271-309</option>
+                <option value="226">226-270</option>
+                <option value="181">181-225</option>
+            </select>
+        </div>
+        <div class="score-input-group">
+            <label><i class="bi bi-mic"></i> Expression orale</label>
+            <select id="tef-speaking" onchange="convertScores()">
+                <option value="">Select</option>
+                <option value="393">393-450</option>
+                <option value="371">371-392</option>
+                <option value="349">349-370</option>
+                <option value="310">310-348</option>
+                <option value="271">271-309</option>
+                <option value="226">226-270</option>
+                <option value="181">181-225</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="tcf-inputs" class="score-inputs" style="display: none;">
+        <div class="score-input-group">
+            <label><i class="bi bi-headphones"></i> Comprehension orale</label>
+            <select id="tcf-listening" onchange="convertScores()">
+                <option value="">Select</option>
+                <option value="549">549-699</option>
+                <option value="523">523-548</option>
+                <option value="503">503-522</option>
+                <option value="458">458-502</option>
+                <option value="398">398-457</option>
+                <option value="331">331-397</option>
+                <option value="306">306-330</option>
+            </select>
+        </div>
+        <div class="score-input-group">
+            <label><i class="bi bi-book"></i> Comprehension ecrite</label>
+            <select id="tcf-reading" onchange="convertScores()">
+                <option value="">Select</option>
+                <option value="549">549-699</option>
+                <option value="524">524-548</option>
+                <option value="499">499-523</option>
+                <option value="453">453-498</option>
+                <option value="406">406-452</option>
+                <option value="375">375-405</option>
+                <option value="342">342-374</option>
+            </select>
+        </div>
+        <div class="score-input-group">
+            <label><i class="bi bi-pencil"></i> Expression ecrite</label>
+            <select id="tcf-writing" onchange="convertScores()">
+                <option value="">Select</option>
+                <option value="16">16-20</option>
+                <option value="14">14-15</option>
+                <option value="12">12-13</option>
+                <option value="10">10-11</option>
+                <option value="7">7-9</option>
+                <option value="6">6</option>
+                <option value="4">4-5</option>
+            </select>
+        </div>
+        <div class="score-input-group">
+            <label><i class="bi bi-mic"></i> Expression orale</label>
+            <select id="tcf-speaking" onchange="convertScores()">
+                <option value="">Select</option>
+                <option value="16">16-20</option>
+                <option value="14">14-15</option>
+                <option value="12">12-13</option>
+                <option value="10">10-11</option>
+                <option value="7">7-9</option>
+                <option value="6">6</option>
+                <option value="4">4-5</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div id="results-section" class="results-section">
+    <div class="results-header">
+        <h3><i class="bi bi-check-circle-fill"></i> Your CLB Levels</h3>
+        <div class="clb-overall" id="clb-overall">CLB 0</div>
+    </div>
+
+    <div class="clb-breakdown">
+        <div class="clb-card">
+            <div class="skill-name">Listening</div>
+            <div class="clb-level" id="clb-listening">-</div>
+            <div class="original-score" id="orig-listening"></div>
+        </div>
+        <div class="clb-card">
+            <div class="skill-name">Reading</div>
+            <div class="clb-level" id="clb-reading">-</div>
+            <div class="original-score" id="orig-reading"></div>
+        </div>
+        <div class="clb-card">
+            <div class="skill-name">Writing</div>
+            <div class="clb-level" id="clb-writing">-</div>
+            <div class="original-score" id="orig-writing"></div>
+        </div>
+        <div class="clb-card">
+            <div class="skill-name">Speaking</div>
+            <div class="clb-level" id="clb-speaking">-</div>
+            <div class="original-score" id="orig-speaking"></div>
+        </div>
+    </div>
+
+    <div class="crs-points-info">
+        <h4><i class="bi bi-calculator"></i> CRS Points Estimate (First Official Language)</h4>
+        <div class="crs-points-grid">
+            <div class="crs-points-item">
+                <span class="label">Without Spouse/Partner</span>
+                <span class="points" id="crs-single">0 points</span>
+            </div>
+            <div class="crs-points-item">
+                <span class="label">With Spouse/Partner</span>
+                <span class="points" id="crs-married">0 points</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="reference-section">
+    <h3><i class="bi bi-table"></i> Conversion Reference Tables</h3>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('ielts-table')">IELTS</button>
+        <button class="tab-btn" onclick="showTab('celpip-table')">CELPIP</button>
+        <button class="tab-btn" onclick="showTab('tef-table')">TEF</button>
+        <button class="tab-btn" onclick="showTab('tcf-table')">TCF</button>
+    </div>
+
+    <div id="ielts-table" class="tab-content active">
+        <table class="conversion-table">
+            <thead>
+                <tr>
+                    <th class="clb-highlight">CLB Level</th>
+                    <th>Reading</th>
+                    <th>Writing</th>
+                    <th>Listening</th>
+                    <th>Speaking</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="clb-highlight">10</td>
+                    <td>8.0</td>
+                    <td>7.5</td>
+                    <td>8.5</td>
+                    <td>7.5</td>
+                </tr>
+                <tr>
+                    <td class="clb-highlight">9</td>
+                    <td>7.0</td>
+                    <td>7.0</td>
+                    <td>8.0</td>
+                    <td>7.0</td>
+                </tr>
+                <tr>
+                    <td class="clb-highlight">8</td>
+                    <td>6.5</td>
+                    <td>6.5</td>
+                    <td>7.5</td>
+                    <td>6.5</td>
+                </tr>
+                <tr>
+                    <td class="clb-highlight">7</td>
+                    <td>6.0</td>
+                    <td>6.0</td>
+                    <td>6.0</td>
+                    <td>6.0</td>
+                </tr>
+                <tr>
+                    <td class="clb-highlight">6</td>
+                    <td>5.0</td>
+                    <td>5.5</td>
+                    <td>5.5</td>
+                    <td>5.5</td>
+                </tr>
+                <tr>
+                    <td class="clb-highlight">5</td>
+                    <td>4.0</td>
+                    <td>5.0</td>
+                    <td>5.0</td>
+                    <td>5.0</td>
+                </tr>
+                <tr>
+                    <td class="clb-highlight">4</td>
+                    <td>3.5</td>
+                    <td>4.0</td>
+                    <td>4.5</td>
+                    <td>4.0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="celpip-table" class="tab-content">
+        <table class="conversion-table">
+            <thead>
+                <tr>
+                    <th class="clb-highlight">CLB Level</th>
+                    <th>CELPIP Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="clb-highlight">10+</td><td>12</td></tr>
+                <tr><td class="clb-highlight">10</td><td>10</td></tr>
+                <tr><td class="clb-highlight">9</td><td>9</td></tr>
+                <tr><td class="clb-highlight">8</td><td>8</td></tr>
+                <tr><td class="clb-highlight">7</td><td>7</td></tr>
+                <tr><td class="clb-highlight">6</td><td>6</td></tr>
+                <tr><td class="clb-highlight">5</td><td>5</td></tr>
+                <tr><td class="clb-highlight">4</td><td>4</td></tr>
+            </tbody>
+        </table>
+        <p style="margin-top: 1rem; color: var(--text-muted); font-size: 0.9rem;">
+            <i class="bi bi-info-circle"></i> CELPIP scores correspond directly to CLB levels. A CELPIP score of 10 or higher equals CLB 10.
+        </p>
+    </div>
+
+    <div id="tef-table" class="tab-content">
+        <table class="conversion-table">
+            <thead>
+                <tr>
+                    <th class="clb-highlight">CLB/NCLC</th>
+                    <th>Reading</th>
+                    <th>Writing</th>
+                    <th>Listening</th>
+                    <th>Speaking</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="clb-highlight">10+</td><td>263-300</td><td>393-450</td><td>316-360</td><td>393-450</td></tr>
+                <tr><td class="clb-highlight">10</td><td>248-262</td><td>371-392</td><td>298-315</td><td>371-392</td></tr>
+                <tr><td class="clb-highlight">9</td><td>233-247</td><td>349-370</td><td>280-297</td><td>349-370</td></tr>
+                <tr><td class="clb-highlight">8</td><td>207-232</td><td>310-348</td><td>249-279</td><td>310-348</td></tr>
+                <tr><td class="clb-highlight">7</td><td>181-206</td><td>271-309</td><td>217-248</td><td>271-309</td></tr>
+                <tr><td class="clb-highlight">6</td><td>151-180</td><td>226-270</td><td>181-216</td><td>226-270</td></tr>
+                <tr><td class="clb-highlight">5</td><td>121-150</td><td>181-225</td><td>145-180</td><td>181-225</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="tcf-table" class="tab-content">
+        <table class="conversion-table">
+            <thead>
+                <tr>
+                    <th class="clb-highlight">CLB/NCLC</th>
+                    <th>Reading</th>
+                    <th>Writing</th>
+                    <th>Listening</th>
+                    <th>Speaking</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="clb-highlight">10+</td><td>549-699</td><td>16-20</td><td>549-699</td><td>16-20</td></tr>
+                <tr><td class="clb-highlight">10</td><td>524-548</td><td>14-15</td><td>523-548</td><td>14-15</td></tr>
+                <tr><td class="clb-highlight">9</td><td>499-523</td><td>12-13</td><td>503-522</td><td>12-13</td></tr>
+                <tr><td class="clb-highlight">8</td><td>453-498</td><td>10-11</td><td>458-502</td><td>10-11</td></tr>
+                <tr><td class="clb-highlight">7</td><td>406-452</td><td>7-9</td><td>398-457</td><td>7-9</td></tr>
+                <tr><td class="clb-highlight">6</td><td>375-405</td><td>6</td><td>331-397</td><td>6</td></tr>
+                <tr><td class="clb-highlight">5</td><td>342-374</td><td>4-5</td><td>306-330</td><td>4-5</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="info-cards">
+    <div class="info-card">
+        <h4><i class="bi bi-lightbulb"></i> Minimum Requirements by Program</h4>
+        <ul>
+            <li><i class="bi bi-check2"></i> <strong>Express Entry FSW:</strong> CLB 7 in all abilities</li>
+            <li><i class="bi bi-check2"></i> <strong>Express Entry CEC:</strong> CLB 7 (NOC 0/A) or CLB 5 (NOC B)</li>
+            <li><i class="bi bi-check2"></i> <strong>Express Entry FST:</strong> CLB 5 Speaking/Listening, CLB 4 Reading/Writing</li>
+            <li><i class="bi bi-check2"></i> <strong>PNP Programs:</strong> Varies by province (typically CLB 4-7)</li>
+        </ul>
+    </div>
+    <div class="info-card">
+        <h4><i class="bi bi-graph-up-arrow"></i> Tips to Maximize Points</h4>
+        <ul>
+            <li><i class="bi bi-arrow-right"></i> CLB 9+ in all abilities gives maximum CRS points (136 single, 128 married)</li>
+            <li><i class="bi bi-arrow-right"></i> Second language (French) can add up to 24 extra points</li>
+            <li><i class="bi bi-arrow-right"></i> Strong language + education combos give bonus points</li>
+            <li><i class="bi bi-arrow-right"></i> French proficiency bonus: +25 to +50 additional points</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentTest = 'ielts';
+
+// Conversion tables based on official IRCC charts
+const conversionTables = {
+    ielts: {
+        listening: { 9: 10, 8.5: 10, 8: 9, 7.5: 8, 7: 8, 6: 7, 5.5: 6, 5: 5, 4.5: 4, 4: 4 },
+        reading: { 9: 10, 8.5: 10, 8: 10, 7: 9, 6.5: 8, 6: 7, 5: 6, 4: 5, 3.5: 4 },
+        writing: { 9: 10, 8.5: 10, 8: 10, 7.5: 10, 7: 9, 6.5: 8, 6: 7, 5.5: 6, 5: 5, 4.5: 5, 4: 4 },
+        speaking: { 9: 10, 8.5: 10, 8: 10, 7.5: 10, 7: 9, 6.5: 8, 6: 7, 5.5: 6, 5: 5, 4.5: 5, 4: 4 }
+    },
+    celpip: {
+        listening: { 12: 10, 11: 10, 10: 10, 9: 9, 8: 8, 7: 7, 6: 6, 5: 5, 4: 4 },
+        reading: { 12: 10, 11: 10, 10: 10, 9: 9, 8: 8, 7: 7, 6: 6, 5: 5, 4: 4 },
+        writing: { 12: 10, 11: 10, 10: 10, 9: 9, 8: 8, 7: 7, 6: 6, 5: 5, 4: 4 },
+        speaking: { 12: 10, 11: 10, 10: 10, 9: 9, 8: 8, 7: 7, 6: 6, 5: 5, 4: 4 }
+    },
+    tef: {
+        listening: { 316: 10, 298: 10, 280: 9, 249: 8, 217: 7, 181: 6, 145: 5 },
+        reading: { 263: 10, 248: 10, 233: 9, 207: 8, 181: 7, 151: 6, 121: 5 },
+        writing: { 393: 10, 371: 10, 349: 9, 310: 8, 271: 7, 226: 6, 181: 5 },
+        speaking: { 393: 10, 371: 10, 349: 9, 310: 8, 271: 7, 226: 6, 181: 5 }
+    },
+    tcf: {
+        listening: { 549: 10, 523: 10, 503: 9, 458: 8, 398: 7, 331: 6, 306: 5 },
+        reading: { 549: 10, 524: 10, 499: 9, 453: 8, 406: 7, 375: 6, 342: 5 },
+        writing: { 16: 10, 14: 10, 12: 9, 10: 8, 7: 7, 6: 6, 4: 5 },
+        speaking: { 16: 10, 14: 10, 12: 9, 10: 8, 7: 7, 6: 6, 4: 5 }
+    }
+};
+
+// CRS points for first official language
+const crsPointsSingle = {
+    listening: { 10: 34, 9: 31, 8: 23, 7: 17, 6: 9, 5: 6, 4: 6 },
+    speaking: { 10: 34, 9: 31, 8: 23, 7: 17, 6: 9, 5: 6, 4: 6 },
+    reading: { 10: 34, 9: 31, 8: 23, 7: 17, 6: 9, 5: 6, 4: 6 },
+    writing: { 10: 34, 9: 31, 8: 23, 7: 17, 6: 9, 5: 6, 4: 6 }
+};
+
+const crsPointsMarried = {
+    listening: { 10: 32, 9: 29, 8: 22, 7: 16, 6: 8, 5: 6, 4: 6 },
+    speaking: { 10: 32, 9: 29, 8: 22, 7: 16, 6: 8, 5: 6, 4: 6 },
+    reading: { 10: 32, 9: 29, 8: 22, 7: 16, 6: 8, 5: 6, 4: 6 },
+    writing: { 10: 32, 9: 29, 8: 22, 7: 16, 6: 8, 5: 6, 4: 6 }
+};
+
+function selectTest(test) {
+    currentTest = test;
+
+    // Update buttons
+    document.querySelectorAll('.test-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('btn-' + test).classList.add('active');
+
+    // Show/hide inputs
+    document.querySelectorAll('.score-inputs').forEach(inputs => inputs.style.display = 'none');
+    document.getElementById(test + '-inputs').style.display = 'grid';
+
+    // Reset results
+    document.getElementById('results-section').classList.remove('show');
+}
+
+function convertScores() {
+    const listening = document.getElementById(currentTest + '-listening').value;
+    const reading = document.getElementById(currentTest + '-reading').value;
+    const writing = document.getElementById(currentTest + '-writing').value;
+    const speaking = document.getElementById(currentTest + '-speaking').value;
+
+    if (!listening || !reading || !writing || !speaking) return;
+
+    const table = conversionTables[currentTest];
+
+    const clbListening = table.listening[parseFloat(listening)] || 4;
+    const clbReading = table.reading[parseFloat(reading)] || 4;
+    const clbWriting = table.writing[parseFloat(writing)] || 4;
+    const clbSpeaking = table.speaking[parseFloat(speaking)] || 4;
+
+    const minCLB = Math.min(clbListening, clbReading, clbWriting, clbSpeaking);
+
+    // Update display
+    document.getElementById('clb-listening').textContent = clbListening;
+    document.getElementById('clb-reading').textContent = clbReading;
+    document.getElementById('clb-writing').textContent = clbWriting;
+    document.getElementById('clb-speaking').textContent = clbSpeaking;
+
+    document.getElementById('orig-listening').textContent = currentTest.toUpperCase() + ': ' + listening;
+    document.getElementById('orig-reading').textContent = currentTest.toUpperCase() + ': ' + reading;
+    document.getElementById('orig-writing').textContent = currentTest.toUpperCase() + ': ' + writing;
+    document.getElementById('orig-speaking').textContent = currentTest.toUpperCase() + ': ' + speaking;
+
+    document.getElementById('clb-overall').textContent = 'CLB ' + minCLB + ' (minimum)';
+
+    // Calculate CRS points
+    const crsSingle = (crsPointsSingle.listening[clbListening] || 0) +
+                      (crsPointsSingle.reading[clbReading] || 0) +
+                      (crsPointsSingle.writing[clbWriting] || 0) +
+                      (crsPointsSingle.speaking[clbSpeaking] || 0);
+
+    const crsMarried = (crsPointsMarried.listening[clbListening] || 0) +
+                       (crsPointsMarried.reading[clbReading] || 0) +
+                       (crsPointsMarried.writing[clbWriting] || 0) +
+                       (crsPointsMarried.speaking[clbSpeaking] || 0);
+
+    document.getElementById('crs-single').textContent = crsSingle + ' points';
+    document.getElementById('crs-married').textContent = crsMarried + ' points';
+
+    document.getElementById('results-section').classList.add('show');
+}
+
+function showTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+    document.getElementById(tabId).classList.add('active');
+    event.target.classList.add('active');
+}
+</script>
+{% endblock %}

@@ -7,7 +7,8 @@ Comprehensive Immigration Guides
 import os
 import json
 import requests
-from datetime import datetime
+import threading
+from datetime import datetime, timedelta
 from flask import Flask, render_template, jsonify, request, send_from_directory, redirect
 from flask_cors import CORS
 
@@ -16,6 +17,16 @@ CORS(app)
 
 # Post API URL for fetching results
 POST_API_URL = os.environ.get('POST_API_URL', 'https://web-production-35219.up.railway.app')
+
+# In-memory cache to prevent data loss during runtime
+# Data persists in memory until container restarts
+_memory_cache = {
+    'articles': [],
+    'results': [],
+    'last_fetch': None,
+    'cache_ttl': timedelta(minutes=5)  # Re-fetch from API every 5 minutes
+}
+_cache_lock = threading.Lock()
 
 # Data storage
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
@@ -174,25 +185,55 @@ def load_guides():
 
 
 def load_articles():
-    """Load articles from Post API or local fallback"""
+    """Load articles from Post API, memory cache, or local fallback"""
+    global _memory_cache
+
     raw_results = []
 
-    # Try external API first
-    try:
-        response = requests.get(f"{POST_API_URL}/results/list", timeout=5)
-        if response.status_code == 200:
-            data = response.json()
-            raw_results = data if isinstance(data, list) else data.get('results', [])
-    except:
-        pass
+    # Check memory cache first (prevents data loss during runtime)
+    with _cache_lock:
+        now = datetime.now()
+        cache_valid = (_memory_cache.get('last_fetch') and
+                      now - _memory_cache['last_fetch'] < _memory_cache['cache_ttl'])
+
+        if cache_valid and _memory_cache.get('results'):
+            raw_results = _memory_cache['results']
+
+    # If cache miss or expired, fetch from API
+    if not raw_results:
+        try:
+            response = requests.get(f"{POST_API_URL}/results/list", timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                raw_results = data if isinstance(data, list) else data.get('results', [])
+                # Update memory cache
+                if raw_results:
+                    with _cache_lock:
+                        _memory_cache['results'] = raw_results
+                        _memory_cache['last_fetch'] = datetime.now()
+                        # Also save to local file for future deployments
+                        try:
+                            with open('data/results.json', 'w') as f:
+                                json.dump(raw_results, f, indent=2)
+                        except:
+                            pass
+        except Exception as e:
+            print(f"Error fetching from API: {e}")
 
     # Fallback to local results.json
     if not raw_results:
         try:
             with open('data/results.json', 'r') as f:
-                raw_results = json.load(f)
+                local_data = json.load(f)
+                if local_data:  # Only use if not empty
+                    raw_results = local_data
         except:
             pass
+
+    # Final fallback to cached memory (even if expired)
+    if not raw_results:
+        with _cache_lock:
+            raw_results = _memory_cache.get('results', [])
 
     if raw_results:
         # Filter only items with full_article content
@@ -269,9 +310,15 @@ def load_results():
 
 
 def save_results(results):
-    """Save results"""
+    """Save results to file and memory cache"""
+    global _memory_cache
+    # Save to file
     with open(RESULTS_FILE, 'w') as f:
         json.dump(results, f, indent=2)
+    # Update memory cache
+    with _cache_lock:
+        _memory_cache['results'] = results
+        _memory_cache['last_fetch'] = datetime.now()
 
 
 def load_approved():
@@ -387,6 +434,54 @@ def crs_prediction():
 def immigration_targets():
     """Immigration Targets page - Levels Plan data"""
     return render_template('immigration_targets.html')
+
+
+@app.route('/tools/noc-finder')
+def noc_finder():
+    """NOC Code Finder - Search occupation codes"""
+    return render_template('noc_finder.html')
+
+
+@app.route('/tools/language-converter')
+def language_converter():
+    """Language Score Converter - IELTS/CELPIP/TEF to CLB"""
+    return render_template('language_converter.html')
+
+
+@app.route('/tools/points-simulator')
+def points_simulator():
+    """Points Improvement Simulator"""
+    return render_template('points_simulator.html')
+
+
+@app.route('/tools/eligibility-checker')
+def eligibility_checker():
+    """Eligibility Checker for immigration programs"""
+    return render_template('eligibility_checker.html')
+
+
+@app.route('/tools/document-checklist')
+def document_checklist():
+    """Document Checklist Generator"""
+    return render_template('document_checklist.html')
+
+
+@app.route('/tools/cost-calculator')
+def cost_calculator():
+    """Immigration Cost Calculator"""
+    return render_template('cost_calculator.html')
+
+
+@app.route('/tools/cost-of-living')
+def cost_of_living():
+    """Cost of Living Comparison by City"""
+    return render_template('cost_of_living.html')
+
+
+@app.route('/tools/pool-stats')
+def pool_stats():
+    """Express Entry Pool Statistics"""
+    return render_template('pool_stats.html')
 
 
 @app.route('/api/processing-times')

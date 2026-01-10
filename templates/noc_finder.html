@@ -1,0 +1,628 @@
+{% extends "base.html" %}
+
+{% block title %}NOC Code Finder - Find Your Occupation Code{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        margin-bottom: 32px;
+    }
+
+    .page-header .page-title {
+        font-family: 'Plus Jakarta Sans', var(--font-family);
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .page-header .page-title i {
+        font-size: 28px;
+        color: var(--primary);
+    }
+
+    .page-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+    }
+
+    /* Search Section */
+    .search-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .search-box {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 1rem 1.25rem;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        font-size: 1rem;
+        background: var(--bg);
+        color: var(--text);
+        transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+    }
+
+    .search-btn {
+        padding: 1rem 2rem;
+        background: var(--gradient-primary);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: transform 0.2s ease;
+    }
+
+    .search-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .search-hints {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .hint-tag {
+        padding: 6px 12px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .hint-tag:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    /* Results Section */
+    .results-section {
+        display: none;
+    }
+
+    .results-section.show {
+        display: block;
+    }
+
+    .results-count {
+        margin-bottom: 1rem;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .results-count strong {
+        color: var(--primary);
+    }
+
+    .noc-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        margin-bottom: 1rem;
+        overflow: hidden;
+        transition: all 0.2s ease;
+    }
+
+    .noc-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .noc-card-header {
+        padding: 1.25rem 1.5rem;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .noc-code {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .noc-code-badge {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+
+    .noc-teer {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .teer-0 { background: rgba(16, 185, 129, 0.15); color: #059669; }
+    .teer-1 { background: rgba(59, 130, 246, 0.15); color: #2563EB; }
+    .teer-2 { background: rgba(139, 92, 246, 0.15); color: #7C3AED; }
+    .teer-3 { background: rgba(245, 158, 11, 0.15); color: #D97706; }
+    .teer-4 { background: rgba(239, 68, 68, 0.15); color: #DC2626; }
+    .teer-5 { background: rgba(107, 114, 128, 0.15); color: #4B5563; }
+
+    .noc-card-body {
+        padding: 1.5rem;
+    }
+
+    .noc-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+
+    .noc-category {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .noc-programs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .program-badge {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .program-badge.eligible {
+        background: rgba(16, 185, 129, 0.15);
+        color: #059669;
+    }
+
+    .program-badge.not-eligible {
+        background: rgba(239, 68, 68, 0.1);
+        color: #DC2626;
+    }
+
+    .noc-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .detail-label {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    .detail-value {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    /* TEER Guide */
+    .teer-guide {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .teer-guide h3 {
+        margin: 0 0 1rem 0;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .teer-guide h3 i {
+        color: var(--primary);
+    }
+
+    .teer-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .teer-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.75rem;
+        background: var(--bg);
+        border-radius: 8px;
+    }
+
+    .teer-badge {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: white;
+    }
+
+    .teer-badge.t0 { background: #059669; }
+    .teer-badge.t1 { background: #2563EB; }
+    .teer-badge.t2 { background: #7C3AED; }
+    .teer-badge.t3 { background: #D97706; }
+    .teer-badge.t4 { background: #DC2626; }
+    .teer-badge.t5 { background: #4B5563; }
+
+    .teer-info {
+        flex: 1;
+    }
+
+    .teer-name {
+        font-weight: 600;
+        color: var(--text);
+        font-size: 0.9rem;
+    }
+
+    .teer-desc {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    @media (max-width: 768px) {
+        .search-box {
+            flex-direction: column;
+        }
+
+        .noc-card-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">
+        <i class="bi bi-search"></i>
+        NOC Code Finder
+    </h1>
+    <p class="page-subtitle">Search for your occupation to find your NOC code and eligible immigration programs</p>
+</div>
+
+<!-- Search Section -->
+<div class="search-section">
+    <div class="search-box">
+        <input type="text" class="search-input" id="nocSearch" placeholder="Search by job title, keywords, or NOC code..." onkeyup="handleSearch(event)">
+        <button class="search-btn" onclick="searchNOC()">
+            <i class="bi bi-search"></i>
+            Search
+        </button>
+    </div>
+    <div class="search-hints">
+        <span class="hint-tag" onclick="setSearch('software developer')">Software Developer</span>
+        <span class="hint-tag" onclick="setSearch('nurse')">Nurse</span>
+        <span class="hint-tag" onclick="setSearch('accountant')">Accountant</span>
+        <span class="hint-tag" onclick="setSearch('electrician')">Electrician</span>
+        <span class="hint-tag" onclick="setSearch('cook')">Cook</span>
+        <span class="hint-tag" onclick="setSearch('truck driver')">Truck Driver</span>
+        <span class="hint-tag" onclick="setSearch('teacher')">Teacher</span>
+        <span class="hint-tag" onclick="setSearch('engineer')">Engineer</span>
+    </div>
+</div>
+
+<!-- Results Section -->
+<div class="results-section" id="resultsSection">
+    <div class="results-count" id="resultsCount"></div>
+    <div id="resultsContainer"></div>
+</div>
+
+<!-- TEER Guide -->
+<div class="teer-guide">
+    <h3><i class="bi bi-info-circle"></i> Understanding TEER Categories</h3>
+    <div class="teer-list">
+        <div class="teer-item">
+            <div class="teer-badge t0">0</div>
+            <div class="teer-info">
+                <div class="teer-name">Management</div>
+                <div class="teer-desc">Legislators, senior managers</div>
+            </div>
+        </div>
+        <div class="teer-item">
+            <div class="teer-badge t1">1</div>
+            <div class="teer-info">
+                <div class="teer-name">Professional</div>
+                <div class="teer-desc">University degree required</div>
+            </div>
+        </div>
+        <div class="teer-item">
+            <div class="teer-badge t2">2</div>
+            <div class="teer-info">
+                <div class="teer-name">Technical</div>
+                <div class="teer-desc">College diploma, 2+ years training</div>
+            </div>
+        </div>
+        <div class="teer-item">
+            <div class="teer-badge t3">3</div>
+            <div class="teer-info">
+                <div class="teer-name">Skilled Trades</div>
+                <div class="teer-desc">Apprenticeship, 2+ years training</div>
+            </div>
+        </div>
+        <div class="teer-item">
+            <div class="teer-badge t4">4</div>
+            <div class="teer-info">
+                <div class="teer-name">Intermediate</div>
+                <div class="teer-desc">High school, on-job training</div>
+            </div>
+        </div>
+        <div class="teer-item">
+            <div class="teer-badge t5">5</div>
+            <div class="teer-info">
+                <div class="teer-name">Labour</div>
+                <div class="teer-desc">Short-term work demo, no formal education</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// NOC Database (2021 version - TEER system)
+const nocDatabase = [
+    // TEER 0 - Management
+    { code: '00010', title: 'Legislators', teer: 0, category: 'Management', keywords: ['politician', 'member of parliament', 'mp', 'senator'] },
+    { code: '00011', title: 'Senior Government Managers', teer: 0, category: 'Management', keywords: ['deputy minister', 'director general'] },
+    { code: '00012', title: 'Senior Managers - Financial & Business', teer: 0, category: 'Management', keywords: ['ceo', 'cfo', 'chief executive', 'president'] },
+    { code: '00013', title: 'Senior Managers - Trade & Broadcasting', teer: 0, category: 'Management', keywords: ['vice president', 'general manager'] },
+    { code: '00015', title: 'Senior Managers - Construction & Transportation', teer: 0, category: 'Management', keywords: ['executive director'] },
+
+    // TEER 1 - Professional
+    { code: '21211', title: 'Data Scientists', teer: 1, category: 'Natural and Applied Sciences', keywords: ['data science', 'machine learning', 'ai', 'artificial intelligence', 'data analyst'] },
+    { code: '21231', title: 'Software Engineers and Designers', teer: 1, category: 'Natural and Applied Sciences', keywords: ['software developer', 'software engineer', 'programmer', 'coder', 'developer', 'full stack', 'backend', 'frontend', 'web developer'] },
+    { code: '21232', title: 'Software Developers and Programmers', teer: 1, category: 'Natural and Applied Sciences', keywords: ['software developer', 'programmer', 'coder', 'application developer', 'mobile developer'] },
+    { code: '21234', title: 'Web Developers and Programmers', teer: 1, category: 'Natural and Applied Sciences', keywords: ['web developer', 'frontend developer', 'web designer', 'javascript developer'] },
+    { code: '21233', title: 'Web Designers', teer: 1, category: 'Natural and Applied Sciences', keywords: ['web designer', 'ui designer', 'ux designer'] },
+    { code: '21311', title: 'Computer Engineers', teer: 1, category: 'Natural and Applied Sciences', keywords: ['computer engineer', 'hardware engineer', 'systems engineer'] },
+    { code: '21222', title: 'Information Systems Specialists', teer: 1, category: 'Natural and Applied Sciences', keywords: ['it specialist', 'systems analyst', 'business analyst', 'it consultant'] },
+    { code: '21221', title: 'Database Analysts and Administrators', teer: 1, category: 'Natural and Applied Sciences', keywords: ['database administrator', 'dba', 'database analyst', 'sql developer'] },
+    { code: '21223', title: 'Cybersecurity Specialists', teer: 1, category: 'Natural and Applied Sciences', keywords: ['cybersecurity', 'security analyst', 'information security', 'penetration tester'] },
+    { code: '21210', title: 'Mathematicians and Statisticians', teer: 1, category: 'Natural and Applied Sciences', keywords: ['mathematician', 'statistician', 'actuary'] },
+    { code: '21310', title: 'Electrical and Electronics Engineers', teer: 1, category: 'Natural and Applied Sciences', keywords: ['electrical engineer', 'electronics engineer', 'power engineer'] },
+    { code: '21300', title: 'Civil Engineers', teer: 1, category: 'Natural and Applied Sciences', keywords: ['civil engineer', 'structural engineer', 'transportation engineer'] },
+    { code: '21301', title: 'Mechanical Engineers', teer: 1, category: 'Natural and Applied Sciences', keywords: ['mechanical engineer', 'hvac engineer', 'automotive engineer'] },
+    { code: '21321', title: 'Industrial and Manufacturing Engineers', teer: 1, category: 'Natural and Applied Sciences', keywords: ['industrial engineer', 'manufacturing engineer', 'process engineer'] },
+    { code: '21322', title: 'Aerospace Engineers', teer: 1, category: 'Natural and Applied Sciences', keywords: ['aerospace engineer', 'aircraft engineer', 'aviation engineer'] },
+    { code: '31100', title: 'Specialists in Clinical and Laboratory Medicine', teer: 1, category: 'Health', keywords: ['specialist physician', 'cardiologist', 'neurologist', 'oncologist'] },
+    { code: '31101', title: 'Specialists in Surgery', teer: 1, category: 'Health', keywords: ['surgeon', 'orthopedic surgeon', 'cardiac surgeon'] },
+    { code: '31102', title: 'General Practitioners and Family Physicians', teer: 1, category: 'Health', keywords: ['doctor', 'physician', 'gp', 'family doctor', 'md'] },
+    { code: '31103', title: 'Dentists', teer: 1, category: 'Health', keywords: ['dentist', 'dental surgeon', 'orthodontist'] },
+    { code: '31110', title: 'Pharmacists', teer: 1, category: 'Health', keywords: ['pharmacist', 'pharmacy', 'clinical pharmacist'] },
+    { code: '31111', title: 'Optometrists', teer: 1, category: 'Health', keywords: ['optometrist', 'eye doctor'] },
+    { code: '31112', title: 'Audiologists and Speech-Language Pathologists', teer: 1, category: 'Health', keywords: ['audiologist', 'speech therapist', 'speech pathologist'] },
+    { code: '31120', title: 'Physiotherapists', teer: 1, category: 'Health', keywords: ['physiotherapist', 'physical therapist', 'pt'] },
+    { code: '31121', title: 'Occupational Therapists', teer: 1, category: 'Health', keywords: ['occupational therapist', 'ot'] },
+    { code: '31200', title: 'Psychologists', teer: 1, category: 'Health', keywords: ['psychologist', 'clinical psychologist', 'counseling psychologist'] },
+    { code: '31201', title: 'Chiropractors', teer: 1, category: 'Health', keywords: ['chiropractor', 'chiropractic'] },
+    { code: '31301', title: 'Registered Nurses', teer: 1, category: 'Health', keywords: ['nurse', 'rn', 'registered nurse', 'nursing'] },
+    { code: '31302', title: 'Nurse Practitioners', teer: 1, category: 'Health', keywords: ['nurse practitioner', 'np', 'advanced practice nurse'] },
+    { code: '41200', title: 'University Professors', teer: 1, category: 'Education', keywords: ['professor', 'university professor', 'lecturer', 'academic'] },
+    { code: '41210', title: 'College Instructors', teer: 1, category: 'Education', keywords: ['college teacher', 'college instructor', 'vocational instructor'] },
+    { code: '41220', title: 'Secondary School Teachers', teer: 1, category: 'Education', keywords: ['high school teacher', 'secondary teacher', 'teacher'] },
+    { code: '41221', title: 'Elementary School Teachers', teer: 1, category: 'Education', keywords: ['elementary teacher', 'primary teacher', 'teacher', 'grade school teacher'] },
+    { code: '11100', title: 'Financial Auditors and Accountants', teer: 1, category: 'Business', keywords: ['accountant', 'auditor', 'cpa', 'chartered accountant', 'financial accountant'] },
+    { code: '11101', title: 'Financial and Investment Analysts', teer: 1, category: 'Business', keywords: ['financial analyst', 'investment analyst', 'equity analyst'] },
+    { code: '11102', title: 'Financial Advisors', teer: 1, category: 'Business', keywords: ['financial advisor', 'financial planner', 'wealth manager'] },
+    { code: '11200', title: 'Human Resources Professionals', teer: 1, category: 'Business', keywords: ['hr manager', 'human resources', 'hr specialist', 'recruiter'] },
+    { code: '11201', title: 'Business Development Officers', teer: 1, category: 'Business', keywords: ['business development', 'bd manager', 'sales manager'] },
+    { code: '41300', title: 'Lawyers', teer: 1, category: 'Law', keywords: ['lawyer', 'attorney', 'barrister', 'solicitor', 'legal counsel'] },
+    { code: '41301', title: 'Notaries', teer: 1, category: 'Law', keywords: ['notary', 'notary public'] },
+    { code: '21200', title: 'Architects', teer: 1, category: 'Natural and Applied Sciences', keywords: ['architect', 'building architect', 'design architect'] },
+
+    // TEER 2 - Technical
+    { code: '22220', title: 'Computer Network and Web Technicians', teer: 2, category: 'Natural and Applied Sciences', keywords: ['network technician', 'it technician', 'help desk', 'tech support', 'network administrator'] },
+    { code: '22221', title: 'User Support Technicians', teer: 2, category: 'Natural and Applied Sciences', keywords: ['help desk', 'it support', 'technical support', 'desktop support'] },
+    { code: '22310', title: 'Electrical and Electronics Engineering Technologists', teer: 2, category: 'Natural and Applied Sciences', keywords: ['electronics technologist', 'electrical technologist'] },
+    { code: '22300', title: 'Civil Engineering Technologists', teer: 2, category: 'Natural and Applied Sciences', keywords: ['civil technologist', 'construction technologist'] },
+    { code: '22301', title: 'Mechanical Engineering Technologists', teer: 2, category: 'Natural and Applied Sciences', keywords: ['mechanical technologist'] },
+    { code: '32102', title: 'Paramedics', teer: 2, category: 'Health', keywords: ['paramedic', 'emt', 'emergency medical technician', 'ambulance'] },
+    { code: '32120', title: 'Medical Laboratory Technologists', teer: 2, category: 'Health', keywords: ['lab technologist', 'medical lab', 'laboratory technologist'] },
+    { code: '32121', title: 'Medical Radiation Technologists', teer: 2, category: 'Health', keywords: ['x-ray technologist', 'radiologic technologist', 'mri technologist'] },
+    { code: '32123', title: 'Dental Hygienists', teer: 2, category: 'Health', keywords: ['dental hygienist', 'hygienist'] },
+    { code: '33102', title: 'Nurse Aides and Patient Service Associates', teer: 2, category: 'Health', keywords: ['nurse aide', 'patient care', 'healthcare aide', 'personal support worker', 'psw'] },
+    { code: '42201', title: 'Social Workers', teer: 2, category: 'Social Services', keywords: ['social worker', 'case worker', 'child welfare'] },
+    { code: '12010', title: 'Administrative Officers', teer: 2, category: 'Business', keywords: ['administrative officer', 'admin officer', 'office manager'] },
+    { code: '12011', title: 'Executive Assistants', teer: 2, category: 'Business', keywords: ['executive assistant', 'ea', 'personal assistant', 'secretary'] },
+    { code: '12013', title: 'Accounting Technicians and Bookkeepers', teer: 2, category: 'Business', keywords: ['bookkeeper', 'accounting clerk', 'accounting technician'] },
+    { code: '12100', title: 'Insurance Adjusters and Claims Examiners', teer: 2, category: 'Business', keywords: ['insurance adjuster', 'claims adjuster', 'claims examiner'] },
+    { code: '62020', title: 'Retail Sales Supervisors', teer: 2, category: 'Sales', keywords: ['retail supervisor', 'store supervisor', 'sales supervisor'] },
+    { code: '62100', title: 'Marketing and Sales Coordinators', teer: 2, category: 'Sales', keywords: ['marketing coordinator', 'sales coordinator', 'marketing assistant'] },
+    { code: '63200', title: 'Cooks', teer: 2, category: 'Service', keywords: ['cook', 'chef', 'line cook', 'prep cook', 'sous chef'] },
+    { code: '62200', title: 'Chefs', teer: 2, category: 'Service', keywords: ['chef', 'head chef', 'executive chef', 'pastry chef'] },
+
+    // TEER 3 - Skilled Trades
+    { code: '72010', title: 'Contractors and Supervisors, Construction Trades', teer: 3, category: 'Trades', keywords: ['construction supervisor', 'site supervisor', 'foreman'] },
+    { code: '72011', title: 'Contractors and Supervisors, Electrical Trades', teer: 3, category: 'Trades', keywords: ['electrical contractor', 'electrical supervisor'] },
+    { code: '72012', title: 'Contractors and Supervisors, Pipefitting Trades', teer: 3, category: 'Trades', keywords: ['plumbing contractor', 'pipefitting supervisor'] },
+    { code: '72020', title: 'Contractors and Supervisors, Mechanic Trades', teer: 3, category: 'Trades', keywords: ['mechanic supervisor', 'automotive supervisor'] },
+    { code: '72100', title: 'Machinists', teer: 3, category: 'Trades', keywords: ['machinist', 'cnc machinist', 'tool maker'] },
+    { code: '72200', title: 'Electricians', teer: 3, category: 'Trades', keywords: ['electrician', 'electrical', 'journeyman electrician', 'industrial electrician'] },
+    { code: '72300', title: 'Plumbers', teer: 3, category: 'Trades', keywords: ['plumber', 'pipefitter', 'steamfitter'] },
+    { code: '72301', title: 'Steamfitters and Pipefitters', teer: 3, category: 'Trades', keywords: ['steamfitter', 'pipefitter', 'sprinkler fitter'] },
+    { code: '72310', title: 'Carpenters', teer: 3, category: 'Trades', keywords: ['carpenter', 'framer', 'finish carpenter', 'cabinetmaker'] },
+    { code: '72320', title: 'Bricklayers', teer: 3, category: 'Trades', keywords: ['bricklayer', 'mason', 'stonemason'] },
+    { code: '72400', title: 'Construction Millwrights and Industrial Mechanics', teer: 3, category: 'Trades', keywords: ['millwright', 'industrial mechanic', 'maintenance mechanic'] },
+    { code: '72410', title: 'Heavy-Duty Equipment Mechanics', teer: 3, category: 'Trades', keywords: ['heavy duty mechanic', 'heavy equipment mechanic', 'diesel mechanic'] },
+    { code: '72500', title: 'Crane Operators', teer: 3, category: 'Trades', keywords: ['crane operator', 'hoist operator', 'tower crane'] },
+    { code: '73100', title: 'Transport Truck Drivers', teer: 3, category: 'Transport', keywords: ['truck driver', 'trucker', 'long haul driver', 'transport driver', 'class 1 driver'] },
+    { code: '73101', title: 'Bus Drivers and Subway Operators', teer: 3, category: 'Transport', keywords: ['bus driver', 'transit driver', 'school bus driver'] },
+    { code: '73200', title: 'Automotive Service Technicians', teer: 3, category: 'Trades', keywords: ['mechanic', 'auto mechanic', 'automotive technician', 'car mechanic'] },
+    { code: '73201', title: 'Auto Body Technicians', teer: 3, category: 'Trades', keywords: ['auto body', 'body shop', 'collision repair'] },
+    { code: '73300', title: 'Welders', teer: 3, category: 'Trades', keywords: ['welder', 'welding', 'mig welder', 'tig welder', 'pipe welder'] },
+
+    // TEER 4 - Intermediate
+    { code: '64100', title: 'Retail Salespersons', teer: 4, category: 'Sales', keywords: ['retail sales', 'sales associate', 'store clerk', 'salesperson'] },
+    { code: '64200', title: 'Cashiers', teer: 4, category: 'Sales', keywords: ['cashier', 'checkout clerk'] },
+    { code: '65200', title: 'Food and Beverage Servers', teer: 4, category: 'Service', keywords: ['server', 'waiter', 'waitress', 'food server'] },
+    { code: '65201', title: 'Food Counter Attendants and Kitchen Helpers', teer: 4, category: 'Service', keywords: ['kitchen helper', 'food counter', 'fast food', 'dishwasher'] },
+    { code: '65310', title: 'Light Duty Cleaners', teer: 4, category: 'Service', keywords: ['cleaner', 'janitor', 'custodian', 'housekeeper'] },
+    { code: '65311', title: 'Specialized Cleaners', teer: 4, category: 'Service', keywords: ['industrial cleaner', 'commercial cleaner'] },
+    { code: '65312', title: 'Janitors and Caretakers', teer: 4, category: 'Service', keywords: ['janitor', 'caretaker', 'building maintenance'] },
+    { code: '64314', title: 'Customer Service Representatives', teer: 4, category: 'Business', keywords: ['customer service', 'csr', 'call center', 'customer support'] },
+    { code: '75101', title: 'Material Handlers', teer: 4, category: 'Labour', keywords: ['material handler', 'warehouse worker', 'forklift operator'] },
+    { code: '75110', title: 'Construction Trades Helpers and Labourers', teer: 4, category: 'Labour', keywords: ['construction labourer', 'general labourer', 'construction helper'] },
+    { code: '84120', title: 'Farm Workers', teer: 4, category: 'Agriculture', keywords: ['farm worker', 'agricultural worker', 'farm labourer', 'harvester'] },
+
+    // TEER 5 - Labour
+    { code: '95100', title: 'Labourers in Food and Beverage Processing', teer: 5, category: 'Manufacturing', keywords: ['food processing', 'meat packer', 'food plant worker'] },
+    { code: '95101', title: 'Labourers in Fish Processing', teer: 5, category: 'Manufacturing', keywords: ['fish processing', 'fish plant worker'] },
+    { code: '95109', title: 'Other Labourers in Processing and Manufacturing', teer: 5, category: 'Manufacturing', keywords: ['factory worker', 'assembly line', 'production worker'] },
+];
+
+function setSearch(term) {
+    document.getElementById('nocSearch').value = term;
+    searchNOC();
+}
+
+function handleSearch(event) {
+    if (event.key === 'Enter') {
+        searchNOC();
+    }
+}
+
+function searchNOC() {
+    const searchTerm = document.getElementById('nocSearch').value.toLowerCase().trim();
+    if (!searchTerm) return;
+
+    const results = nocDatabase.filter(noc => {
+        return noc.code.includes(searchTerm) ||
+               noc.title.toLowerCase().includes(searchTerm) ||
+               noc.category.toLowerCase().includes(searchTerm) ||
+               noc.keywords.some(k => k.includes(searchTerm));
+    });
+
+    displayResults(results, searchTerm);
+}
+
+function displayResults(results, searchTerm) {
+    const resultsSection = document.getElementById('resultsSection');
+    const resultsCount = document.getElementById('resultsCount');
+    const container = document.getElementById('resultsContainer');
+
+    resultsSection.classList.add('show');
+    resultsCount.innerHTML = `Found <strong>${results.length}</strong> occupation${results.length !== 1 ? 's' : ''} matching "${searchTerm}"`;
+
+    if (results.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                <i class="bi bi-search" style="font-size: 3rem; opacity: 0.5;"></i>
+                <p style="margin-top: 1rem;">No occupations found. Try different keywords or check the spelling.</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = results.map(noc => {
+        const programs = getEligiblePrograms(noc.teer);
+        return `
+            <div class="noc-card">
+                <div class="noc-card-header">
+                    <div class="noc-code">
+                        <span class="noc-code-badge">${noc.code}</span>
+                        <span class="noc-teer teer-${noc.teer}">TEER ${noc.teer}</span>
+                    </div>
+                </div>
+                <div class="noc-card-body">
+                    <div class="noc-title">${noc.title}</div>
+                    <div class="noc-category">${noc.category}</div>
+                    <div class="noc-programs">
+                        ${programs.map(p => `<span class="program-badge ${p.eligible ? 'eligible' : 'not-eligible'}">${p.eligible ? '<i class="bi bi-check-circle"></i>' : '<i class="bi bi-x-circle"></i>'} ${p.name}</span>`).join('')}
+                    </div>
+                    <div class="noc-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Education Level</span>
+                            <span class="detail-value">${getEducationLevel(noc.teer)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Express Entry Points</span>
+                            <span class="detail-value">${noc.teer <= 1 ? 'Full Points' : noc.teer <= 3 ? 'Full Points' : 'Limited'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">LMIA Eligible</span>
+                            <span class="detail-value">Yes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function getEligiblePrograms(teer) {
+    return [
+        { name: 'FSW', eligible: teer <= 1 },
+        { name: 'CEC', eligible: teer <= 3 },
+        { name: 'FST', eligible: teer === 3 },
+        { name: 'PNP', eligible: true },
+        { name: 'LMIA Work Permit', eligible: true }
+    ];
+}
+
+function getEducationLevel(teer) {
+    const levels = {
+        0: 'University degree + experience',
+        1: 'University degree',
+        2: 'College diploma / 2+ years training',
+        3: 'Apprenticeship / Trade certification',
+        4: 'High school / On-job training',
+        5: 'Short-term training / No formal education'
+    };
+    return levels[teer] || 'Varies';
+}
+</script>
+{% endblock %}
