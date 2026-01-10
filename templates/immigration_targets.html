@@ -1,0 +1,1022 @@
+{% extends "base.html" %}
+
+{% block title %}Immigration Targets 2024-2026 - Canada Immigration Levels{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header-targets {
+        margin-bottom: 32px;
+    }
+
+    .page-header-targets .page-title {
+        font-family: 'Plus Jakarta Sans', var(--font-family);
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .page-header-targets .page-title i {
+        font-size: 28px;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .page-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+    }
+
+    /* Year Tabs */
+    .year-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .year-tab {
+        padding: 0.75rem 1.5rem;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--text-muted);
+        transition: all 0.2s ease;
+    }
+
+    .year-tab:hover {
+        border-color: var(--primary);
+        color: var(--text);
+    }
+
+    .year-tab.active {
+        background: var(--gradient-primary);
+        color: white;
+        border-color: transparent;
+    }
+
+    /* Summary Cards */
+    .summary-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .summary-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .summary-card.highlight {
+        background: linear-gradient(135deg, #1E3A5F 0%, #0891B2 100%);
+        border: none;
+        color: white;
+    }
+
+    .summary-card.highlight .summary-label,
+    .summary-card.highlight .summary-sublabel {
+        color: rgba(255,255,255,0.9);
+    }
+
+    .summary-value {
+        font-size: 2.25rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+    }
+
+    .summary-card:not(.highlight) .summary-value {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .summary-label {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        font-weight: 500;
+    }
+
+    .summary-sublabel {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 0.25rem;
+    }
+
+    .summary-change {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-weight: 600;
+    }
+
+    .summary-change.decrease {
+        background: rgba(239, 68, 68, 0.15);
+        color: #DC2626;
+    }
+
+    .summary-change.increase {
+        background: rgba(16, 185, 129, 0.15);
+        color: #059669;
+    }
+
+    /* Pathway Section */
+    .pathway-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+
+    .pathway-header {
+        background: var(--bg);
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .pathway-header-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .pathway-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: white;
+    }
+
+    .pathway-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text);
+        margin: 0;
+    }
+
+    .pathway-subtitle {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    .pathway-total {
+        text-align: right;
+    }
+
+    .pathway-total-value {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--primary);
+    }
+
+    .pathway-total-label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+
+    .pathway-body {
+        padding: 1.5rem;
+    }
+
+    /* Progress Bar */
+    .progress-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+    }
+
+    .progress-label {
+        font-size: 0.85rem;
+        color: var(--text);
+        font-weight: 500;
+    }
+
+    .progress-stats {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    .progress-stats strong {
+        color: var(--primary);
+    }
+
+    .progress-bar-large {
+        height: 12px;
+        background: var(--bg);
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+    }
+
+    .progress-fill-large {
+        height: 100%;
+        border-radius: 6px;
+        background: linear-gradient(90deg, #10B981, #0891B2);
+        transition: width 0.5s ease;
+    }
+
+    /* Breakdown Grid */
+    .breakdown-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .breakdown-item {
+        background: var(--bg);
+        border-radius: 12px;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .breakdown-name {
+        font-weight: 500;
+        color: var(--text);
+    }
+
+    .breakdown-value {
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    /* Provincial Targets */
+    .provincial-section {
+        margin-top: 2rem;
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1.5rem;
+    }
+
+    .section-header i {
+        font-size: 1.5rem;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .section-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .provincial-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+
+    .province-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .province-header {
+        background: var(--bg);
+        padding: 1rem 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .province-name {
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .province-target {
+        font-weight: 700;
+        color: var(--primary);
+        font-size: 1.1rem;
+    }
+
+    .province-body {
+        padding: 1rem 1.25rem;
+    }
+
+    .province-progress {
+        margin-bottom: 0.75rem;
+    }
+
+    .province-progress-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .province-progress-label {
+        color: var(--text-muted);
+    }
+
+    .province-progress-value {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .province-progress-bar {
+        height: 8px;
+        background: var(--bg);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .province-progress-fill {
+        height: 100%;
+        border-radius: 4px;
+        background: linear-gradient(90deg, #10B981, #0891B2);
+    }
+
+    .province-streams {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+    }
+
+    .stream-tag {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+        background: var(--bg);
+        border-radius: 6px;
+        color: var(--text-muted);
+    }
+
+    /* Reasoning Section */
+    .reasoning-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .reasoning-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .reasoning-header i {
+        font-size: 1.5rem;
+        color: var(--accent);
+    }
+
+    .reasoning-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .reasoning-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .reasoning-item {
+        padding: 1rem;
+        background: var(--bg);
+        border-radius: 12px;
+        border-left: 4px solid var(--primary);
+    }
+
+    .reasoning-title {
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .reasoning-title i {
+        color: var(--primary);
+    }
+
+    .reasoning-text {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    /* Source */
+    .source-box {
+        margin-top: 2rem;
+        padding: 1rem 1.5rem;
+        background: var(--bg);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    .source-box i {
+        color: var(--primary);
+        font-size: 1.25rem;
+    }
+
+    .source-box a {
+        color: var(--primary);
+        text-decoration: none;
+    }
+
+    .source-box a:hover {
+        text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .summary-cards {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .pathway-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .pathway-total {
+            text-align: left;
+        }
+
+        .provincial-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header-targets">
+    <h1 class="page-title">
+        <i class="bi bi-graph-up-arrow"></i>
+        Immigration Targets
+    </h1>
+    <p class="page-subtitle">Canada's Immigration Levels Plan 2024-2026: Targets, progress, and government reasoning</p>
+</div>
+
+<!-- Year Tabs -->
+<div class="year-tabs">
+    <div class="year-tab" onclick="showYear(2024)">2024</div>
+    <div class="year-tab active" onclick="showYear(2025)">2025</div>
+    <div class="year-tab" onclick="showYear(2026)">2026</div>
+</div>
+
+<!-- Summary Cards -->
+<div class="summary-cards">
+    <div class="summary-card highlight">
+        <div class="summary-value" id="totalTarget">395,000</div>
+        <div class="summary-label">Total PR Target</div>
+        <div class="summary-sublabel" id="targetYear">2026 Target</div>
+    </div>
+    <div class="summary-card">
+        <span class="summary-change decrease" id="changeIndicator">-21%</span>
+        <div class="summary-value" id="expressEntryTarget">109,000</div>
+        <div class="summary-label">Express Entry</div>
+        <div class="summary-sublabel">Economic Class</div>
+    </div>
+    <div class="summary-card">
+        <div class="summary-value" id="pnpTarget">82,000</div>
+        <div class="summary-label">Provincial Nominees</div>
+        <div class="summary-sublabel">PNP Allocation</div>
+    </div>
+    <div class="summary-card">
+        <div class="summary-value" id="familyTarget">78,000</div>
+        <div class="summary-label">Family Class</div>
+        <div class="summary-sublabel">Sponsorship</div>
+    </div>
+    <div class="summary-card">
+        <div class="summary-value" id="refugeeTarget">45,000</div>
+        <div class="summary-label">Refugees</div>
+        <div class="summary-sublabel">Humanitarian</div>
+    </div>
+</div>
+
+<!-- Express Entry Section -->
+<div class="pathway-section">
+    <div class="pathway-header">
+        <div class="pathway-header-left">
+            <div class="pathway-icon" style="background: linear-gradient(135deg, #6366F1, #8B5CF6);">
+                <i class="bi bi-lightning-fill"></i>
+            </div>
+            <div>
+                <h3 class="pathway-title">Express Entry</h3>
+                <span class="pathway-subtitle">Federal Skilled Worker, CEC, Federal Skilled Trades</span>
+            </div>
+        </div>
+        <div class="pathway-total">
+            <div class="pathway-total-value" id="eeTotal">109,000</div>
+            <div class="pathway-total-label">2026 Target</div>
+        </div>
+    </div>
+    <div class="pathway-body">
+        <div class="progress-section">
+            <div class="progress-header">
+                <span class="progress-label">Progress (Estimated)</span>
+                <span class="progress-stats"><strong id="eeFilled">~5,000</strong> filled of <span id="eeTarget2">109,000</span></span>
+            </div>
+            <div class="progress-bar-large">
+                <div class="progress-fill-large" id="eeProgressBar" style="width: 5%"></div>
+            </div>
+        </div>
+        <div class="breakdown-grid">
+            <div class="breakdown-item">
+                <span class="breakdown-name">Federal Skilled Worker (FSW)</span>
+                <span class="breakdown-value">~40,000</span>
+            </div>
+            <div class="breakdown-item">
+                <span class="breakdown-name">Canadian Experience Class (CEC)</span>
+                <span class="breakdown-value">~45,000</span>
+            </div>
+            <div class="breakdown-item">
+                <span class="breakdown-name">Federal Skilled Trades (FST)</span>
+                <span class="breakdown-value">~8,000</span>
+            </div>
+            <div class="breakdown-item">
+                <span class="breakdown-name">Category-Based Selection</span>
+                <span class="breakdown-value">~16,000</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Provincial Nominee Program Section -->
+<div class="pathway-section">
+    <div class="pathway-header">
+        <div class="pathway-header-left">
+            <div class="pathway-icon" style="background: linear-gradient(135deg, #10B981, #34D399);">
+                <i class="bi bi-geo-alt-fill"></i>
+            </div>
+            <div>
+                <h3 class="pathway-title">Provincial Nominee Program (PNP)</h3>
+                <span class="pathway-subtitle">All provinces and territories</span>
+            </div>
+        </div>
+        <div class="pathway-total">
+            <div class="pathway-total-value" id="pnpTotal">82,000</div>
+            <div class="pathway-total-label">2026 Target</div>
+        </div>
+    </div>
+    <div class="pathway-body">
+        <div class="progress-section">
+            <div class="progress-header">
+                <span class="progress-label">Progress (Estimated)</span>
+                <span class="progress-stats"><strong id="pnpFilled">~3,000</strong> filled of <span id="pnpTarget2">82,000</span></span>
+            </div>
+            <div class="progress-bar-large">
+                <div class="progress-fill-large" id="pnpProgressBar" style="width: 4%"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Family Class Section -->
+<div class="pathway-section">
+    <div class="pathway-header">
+        <div class="pathway-header-left">
+            <div class="pathway-icon" style="background: linear-gradient(135deg, #E31837, #FF6B6B);">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div>
+                <h3 class="pathway-title">Family Class Sponsorship</h3>
+                <span class="pathway-subtitle">Spouses, partners, children, parents, grandparents</span>
+            </div>
+        </div>
+        <div class="pathway-total">
+            <div class="pathway-total-value" id="familyTotal">78,000</div>
+            <div class="pathway-total-label">2026 Target</div>
+        </div>
+    </div>
+    <div class="pathway-body">
+        <div class="breakdown-grid">
+            <div class="breakdown-item">
+                <span class="breakdown-name">Spouses, Partners & Children</span>
+                <span class="breakdown-value">~60,000</span>
+            </div>
+            <div class="breakdown-item">
+                <span class="breakdown-name">Parents & Grandparents</span>
+                <span class="breakdown-value">~18,000</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Provincial Targets Section -->
+<div class="provincial-section">
+    <div class="section-header">
+        <i class="bi bi-map"></i>
+        <h2>Provincial PNP Allocations</h2>
+    </div>
+
+    <div class="provincial-grid">
+        <!-- Ontario -->
+        <div class="province-card">
+            <div class="province-header">
+                <span class="province-name">Ontario (OINP)</span>
+                <span class="province-target">18,350</span>
+            </div>
+            <div class="province-body">
+                <div class="province-progress">
+                    <div class="province-progress-header">
+                        <span class="province-progress-label">Estimated filled</span>
+                        <span class="province-progress-value">~1,500 (8%)</span>
+                    </div>
+                    <div class="province-progress-bar">
+                        <div class="province-progress-fill" style="width: 8%"></div>
+                    </div>
+                </div>
+                <div class="province-streams">
+                    <span class="stream-tag">Human Capital</span>
+                    <span class="stream-tag">Employer Job Offer</span>
+                    <span class="stream-tag">Masters Graduate</span>
+                    <span class="stream-tag">PhD Graduate</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- British Columbia -->
+        <div class="province-card">
+            <div class="province-header">
+                <span class="province-name">British Columbia (BC PNP)</span>
+                <span class="province-target">11,000</span>
+            </div>
+            <div class="province-body">
+                <div class="province-progress">
+                    <div class="province-progress-header">
+                        <span class="province-progress-label">Estimated filled</span>
+                        <span class="province-progress-value">~900 (8%)</span>
+                    </div>
+                    <div class="province-progress-bar">
+                        <div class="province-progress-fill" style="width: 8%"></div>
+                    </div>
+                </div>
+                <div class="province-streams">
+                    <span class="stream-tag">Skills Immigration</span>
+                    <span class="stream-tag">Express Entry BC</span>
+                    <span class="stream-tag">Tech</span>
+                    <span class="stream-tag">Healthcare</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alberta -->
+        <div class="province-card">
+            <div class="province-header">
+                <span class="province-name">Alberta (AAIP)</span>
+                <span class="province-target">10,140</span>
+            </div>
+            <div class="province-body">
+                <div class="province-progress">
+                    <div class="province-progress-header">
+                        <span class="province-progress-label">Estimated filled</span>
+                        <span class="province-progress-value">~800 (8%)</span>
+                    </div>
+                    <div class="province-progress-bar">
+                        <div class="province-progress-fill" style="width: 8%"></div>
+                    </div>
+                </div>
+                <div class="province-streams">
+                    <span class="stream-tag">Alberta Opportunity</span>
+                    <span class="stream-tag">Alberta Express Entry</span>
+                    <span class="stream-tag">Rural Renewal</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Saskatchewan -->
+        <div class="province-card">
+            <div class="province-header">
+                <span class="province-name">Saskatchewan (SINP)</span>
+                <span class="province-target">8,500</span>
+            </div>
+            <div class="province-body">
+                <div class="province-progress">
+                    <div class="province-progress-header">
+                        <span class="province-progress-label">Estimated filled</span>
+                        <span class="province-progress-value">~700 (8%)</span>
+                    </div>
+                    <div class="province-progress-bar">
+                        <div class="province-progress-fill" style="width: 8%"></div>
+                    </div>
+                </div>
+                <div class="province-streams">
+                    <span class="stream-tag">International Skilled Worker</span>
+                    <span class="stream-tag">Occupation In-Demand</span>
+                    <span class="stream-tag">Express Entry</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manitoba -->
+        <div class="province-card">
+            <div class="province-header">
+                <span class="province-name">Manitoba (MPNP)</span>
+                <span class="province-target">7,500</span>
+            </div>
+            <div class="province-body">
+                <div class="province-progress">
+                    <div class="province-progress-header">
+                        <span class="province-progress-label">Estimated filled</span>
+                        <span class="province-progress-value">~600 (8%)</span>
+                    </div>
+                    <div class="province-progress-bar">
+                        <div class="province-progress-fill" style="width: 8%"></div>
+                    </div>
+                </div>
+                <div class="province-streams">
+                    <span class="stream-tag">Skilled Worker</span>
+                    <span class="stream-tag">International Education</span>
+                    <span class="stream-tag">Business Investor</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nova Scotia -->
+        <div class="province-card">
+            <div class="province-header">
+                <span class="province-name">Nova Scotia (NSNP)</span>
+                <span class="province-target">5,500</span>
+            </div>
+            <div class="province-body">
+                <div class="province-progress">
+                    <div class="province-progress-header">
+                        <span class="province-progress-label">Estimated filled</span>
+                        <span class="province-progress-value">~450 (8%)</span>
+                    </div>
+                    <div class="province-progress-bar">
+                        <div class="province-progress-fill" style="width: 8%"></div>
+                    </div>
+                </div>
+                <div class="province-streams">
+                    <span class="stream-tag">Labour Market Priorities</span>
+                    <span class="stream-tag">Physician</span>
+                    <span class="stream-tag">Entrepreneur</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Brunswick -->
+        <div class="province-card">
+            <div class="province-header">
+                <span class="province-name">New Brunswick (NBPNP)</span>
+                <span class="province-target">5,000</span>
+            </div>
+            <div class="province-body">
+                <div class="province-progress">
+                    <div class="province-progress-header">
+                        <span class="province-progress-label">Estimated filled</span>
+                        <span class="province-progress-value">~400 (8%)</span>
+                    </div>
+                    <div class="province-progress-bar">
+                        <div class="province-progress-fill" style="width: 8%"></div>
+                    </div>
+                </div>
+                <div class="province-streams">
+                    <span class="stream-tag">Skilled Worker</span>
+                    <span class="stream-tag">Express Entry</span>
+                    <span class="stream-tag">Entrepreneur</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- PEI -->
+        <div class="province-card">
+            <div class="province-header">
+                <span class="province-name">Prince Edward Island (PEI PNP)</span>
+                <span class="province-target">2,200</span>
+            </div>
+            <div class="province-body">
+                <div class="province-progress">
+                    <div class="province-progress-header">
+                        <span class="province-progress-label">Estimated filled</span>
+                        <span class="province-progress-value">~180 (8%)</span>
+                    </div>
+                    <div class="province-progress-bar">
+                        <div class="province-progress-fill" style="width: 8%"></div>
+                    </div>
+                </div>
+                <div class="province-streams">
+                    <span class="stream-tag">Labour Impact</span>
+                    <span class="stream-tag">Express Entry</span>
+                    <span class="stream-tag">Business Impact</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Why These Numbers Section -->
+<div class="reasoning-section">
+    <div class="reasoning-header">
+        <i class="bi bi-question-circle-fill"></i>
+        <h3>Why Did the Government Set These Targets?</h3>
+    </div>
+
+    <div class="reasoning-content">
+        <div class="reasoning-item">
+            <div class="reasoning-title">
+                <i class="bi bi-graph-down-arrow"></i>
+                2026 Reduction Explained
+            </div>
+            <div class="reasoning-text">
+                The government reduced 2026 targets from 500,000 to 395,000 (-21%) to address housing affordability, infrastructure strain, and integration capacity. This is the first reduction in immigration targets in decades.
+            </div>
+        </div>
+
+        <div class="reasoning-item">
+            <div class="reasoning-title">
+                <i class="bi bi-house-door"></i>
+                Housing & Infrastructure
+            </div>
+            <div class="reasoning-text">
+                Canada faces a housing shortage with vacancy rates below 2% in major cities. Reducing immigration allows housing construction to catch up with population growth and reduces pressure on healthcare and education systems.
+            </div>
+        </div>
+
+        <div class="reasoning-item">
+            <div class="reasoning-title">
+                <i class="bi bi-briefcase"></i>
+                Labour Market Balance
+            </div>
+            <div class="reasoning-text">
+                While Canada needs skilled workers, the government is prioritizing quality over quantity. Focus is on filling specific labour gaps in healthcare, trades, STEM, and French-speaking regions rather than broad-based immigration.
+            </div>
+        </div>
+
+        <div class="reasoning-item">
+            <div class="reasoning-title">
+                <i class="bi bi-people"></i>
+                In-Canada Focus
+            </div>
+            <div class="reasoning-text">
+                33,000 spots reserved for in-Canada applicants (international students, temporary workers) to transition to PR. This rewards those already contributing to the economy with Canadian experience.
+            </div>
+        </div>
+
+        <div class="reasoning-item">
+            <div class="reasoning-title">
+                <i class="bi bi-geo-alt"></i>
+                Regional Distribution
+            </div>
+            <div class="reasoning-text">
+                PNP allocations aim to distribute newcomers across provinces, not just Toronto, Vancouver, and Montreal. Atlantic provinces and Prairies receive proportionally higher allocations to address regional labour shortages.
+            </div>
+        </div>
+
+        <div class="reasoning-item">
+            <div class="reasoning-title">
+                <i class="bi bi-translate"></i>
+                Francophone Immigration
+            </div>
+            <div class="reasoning-text">
+                Target of 8.5% French-speaking immigrants outside Quebec to support official language communities. Category-based draws for French speakers help meet this goal with lower CRS cutoffs.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Source -->
+<div class="source-box">
+    <i class="bi bi-shield-check"></i>
+    <span>Data source: <a href="https://www.canada.ca/en/immigration-refugees-citizenship/news/notices/supplementary-immigration-levels-2025-2027.html" target="_blank">Official IRCC Immigration Levels Plan 2025-2027</a> | Provincial allocations from respective PNP websites</span>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const targetData = {
+    2024: {
+        total: 485000,
+        expressEntry: 110770,
+        pnp: 110000,
+        family: 114000,
+        refugee: 76000,
+        change: '+7%',
+        changeType: 'increase'
+    },
+    2025: {
+        total: 500000,
+        expressEntry: 124000,
+        pnp: 117500,
+        family: 118000,
+        refugee: 76000,
+        change: '+3%',
+        changeType: 'increase'
+    },
+    2026: {
+        total: 395000,
+        expressEntry: 109000,
+        pnp: 82000,
+        family: 78000,
+        refugee: 45000,
+        change: '-21%',
+        changeType: 'decrease'
+    }
+};
+
+function showYear(year) {
+    // Update tabs
+    document.querySelectorAll('.year-tab').forEach(tab => tab.classList.remove('active'));
+    event.target.classList.add('active');
+
+    const data = targetData[year];
+
+    // Update summary cards
+    document.getElementById('totalTarget').textContent = data.total.toLocaleString();
+    document.getElementById('targetYear').textContent = year + ' Target';
+    document.getElementById('expressEntryTarget').textContent = data.expressEntry.toLocaleString();
+    document.getElementById('pnpTarget').textContent = data.pnp.toLocaleString();
+    document.getElementById('familyTarget').textContent = data.family.toLocaleString();
+    document.getElementById('refugeeTarget').textContent = data.refugee.toLocaleString();
+
+    // Update change indicator
+    const changeEl = document.getElementById('changeIndicator');
+    changeEl.textContent = data.change;
+    changeEl.className = 'summary-change ' + data.changeType;
+
+    // Update pathway totals
+    document.getElementById('eeTotal').textContent = data.expressEntry.toLocaleString();
+    document.getElementById('eeTarget2').textContent = data.expressEntry.toLocaleString();
+    document.getElementById('pnpTotal').textContent = data.pnp.toLocaleString();
+    document.getElementById('pnpTarget2').textContent = data.pnp.toLocaleString();
+    document.getElementById('familyTotal').textContent = data.family.toLocaleString();
+
+    // Calculate estimated progress based on current date
+    const now = new Date();
+    const yearStart = new Date(year, 0, 1);
+    const yearEnd = new Date(year, 11, 31);
+    let progress = 0;
+
+    if (now >= yearEnd) {
+        progress = 100;
+    } else if (now >= yearStart) {
+        const dayOfYear = Math.floor((now - yearStart) / (1000 * 60 * 60 * 24));
+        progress = Math.round((dayOfYear / 365) * 100);
+    }
+
+    // Estimate filled (rough approximation)
+    const eeFilled = Math.round((data.expressEntry * progress / 100) * 0.9);
+    const pnpFilled = Math.round((data.pnp * progress / 100) * 0.85);
+
+    document.getElementById('eeFilled').textContent = '~' + eeFilled.toLocaleString();
+    document.getElementById('pnpFilled').textContent = '~' + pnpFilled.toLocaleString();
+    document.getElementById('eeProgressBar').style.width = Math.min(progress, 100) + '%';
+    document.getElementById('pnpProgressBar').style.width = Math.min(progress * 0.9, 100) + '%';
+}
+
+// Initialize with 2026 (current focus)
+document.addEventListener('DOMContentLoaded', function() {
+    showYear(2026);
+});
+</script>
+{% endblock %}

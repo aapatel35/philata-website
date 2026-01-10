@@ -383,6 +383,12 @@ def crs_prediction():
     return render_template('crs_prediction.html', draws=draws, avg_crs=avg_crs)
 
 
+@app.route('/tools/immigration-targets')
+def immigration_targets():
+    """Immigration Targets page - Levels Plan data"""
+    return render_template('immigration_targets.html')
+
+
 @app.route('/api/processing-times')
 def api_processing_times():
     """API endpoint for processing times data"""
