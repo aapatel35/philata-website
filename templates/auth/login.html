@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Philata{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        max-width: 440px;
+        margin: 0 auto;
+        padding: 2rem 0;
+    }
+
+    .auth-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2.5rem;
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .auth-header .logo {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 1rem;
+    }
+
+    .auth-header h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+
+    .auth-header p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        font-size: 1rem;
+        background: var(--bg);
+        transition: all 0.2s;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+
+    .form-group input::placeholder {
+        color: var(--text-muted);
+    }
+
+    .form-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+    }
+
+    .remember-me input {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--primary);
+    }
+
+    .forgot-link {
+        color: var(--primary);
+        text-decoration: none;
+    }
+
+    .forgot-link:hover {
+        text-decoration: underline;
+    }
+
+    .auth-btn {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .auth-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .auth-divider {
+        display: flex;
+        align-items: center;
+        margin: 1.5rem 0;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+    }
+
+    .auth-divider span {
+        padding: 0 1rem;
+    }
+
+    .auth-footer {
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .auth-footer a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+
+    /* Flash messages */
+    .flash-messages {
+        margin-bottom: 1.5rem;
+    }
+
+    .flash-message {
+        padding: 0.875rem 1rem;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .flash-message.error {
+        background: rgba(239, 68, 68, 0.1);
+        color: #dc2626;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .flash-message.success {
+        background: rgba(34, 197, 94, 0.1);
+        color: #16a34a;
+        border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .flash-message.info {
+        background: rgba(59, 130, 246, 0.1);
+        color: #2563eb;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    /* Features list */
+    .auth-features {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: var(--bg);
+        border-radius: 12px;
+    }
+
+    .auth-features h3 {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 1rem;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    .feature-item i {
+        color: #16a34a;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <img src="/static/images/logo.png" alt="Philata" class="logo" onerror="this.style.display='none'">
+            <h1>Welcome Back</h1>
+            <p>Sign in to access your immigration dashboard</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">
+                            <i class="bi bi-{% if category == 'error' %}exclamation-circle{% elif category == 'success' %}check-circle{% else %}info-circle{% endif %}"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" value="{{ email|default('') }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+
+            <div class="form-options">
+                <label class="remember-me">
+                    <input type="checkbox" name="remember" value="1">
+                    <span>Remember me</span>
+                </label>
+                <a href="#" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="auth-btn">
+                Sign In
+            </button>
+        </form>
+
+        <div class="auth-divider">
+            <span>New to Philata?</span>
+        </div>
+
+        <div class="auth-footer">
+            <a href="{{ url_for('register') }}">Create an account</a>
+        </div>
+    </div>
+
+    <div class="auth-features">
+        <h3>Why create an account?</h3>
+        <div class="feature-item">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>Save your CRS score calculations</span>
+        </div>
+        <div class="feature-item">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>Track document checklist progress</span>
+        </div>
+        <div class="feature-item">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>Bookmark articles and guides</span>
+        </div>
+        <div class="feature-item">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>Get personalized immigration insights</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

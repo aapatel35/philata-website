@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account - Philata{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        max-width: 440px;
+        margin: 0 auto;
+        padding: 2rem 0;
+    }
+
+    .auth-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2.5rem;
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .auth-header .logo {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 1rem;
+    }
+
+    .auth-header h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+
+    .auth-header p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        font-size: 1rem;
+        background: var(--bg);
+        transition: all 0.2s;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+
+    .form-group input::placeholder {
+        color: var(--text-muted);
+    }
+
+    .form-group .hint {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-top: 0.4rem;
+    }
+
+    .password-strength {
+        margin-top: 0.5rem;
+    }
+
+    .strength-bar {
+        height: 4px;
+        background: var(--border);
+        border-radius: 2px;
+        overflow: hidden;
+        margin-bottom: 0.25rem;
+    }
+
+    .strength-bar .fill {
+        height: 100%;
+        transition: all 0.3s;
+        border-radius: 2px;
+    }
+
+    .strength-bar .fill.weak { width: 33%; background: #ef4444; }
+    .strength-bar .fill.medium { width: 66%; background: #f59e0b; }
+    .strength-bar .fill.strong { width: 100%; background: #22c55e; }
+
+    .strength-text {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+
+    .auth-btn {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 0.5rem;
+    }
+
+    .auth-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .auth-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .terms-agreement {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin: 1.5rem 0;
+        line-height: 1.5;
+    }
+
+    .terms-agreement a {
+        color: var(--primary);
+        text-decoration: none;
+    }
+
+    .terms-agreement a:hover {
+        text-decoration: underline;
+    }
+
+    .auth-divider {
+        display: flex;
+        align-items: center;
+        margin: 1.5rem 0;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+    }
+
+    .auth-divider span {
+        padding: 0 1rem;
+    }
+
+    .auth-footer {
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .auth-footer a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+
+    /* Flash messages */
+    .flash-messages {
+        margin-bottom: 1.5rem;
+    }
+
+    .flash-message {
+        padding: 0.875rem 1rem;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .flash-message.error {
+        background: rgba(239, 68, 68, 0.1);
+        color: #dc2626;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .flash-message.success {
+        background: rgba(34, 197, 94, 0.1);
+        color: #16a34a;
+        border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <img src="/static/images/logo.png" alt="Philata" class="logo" onerror="this.style.display='none'">
+            <h1>Create Account</h1>
+            <p>Start your Canadian immigration journey with Philata</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">
+                            <i class="bi bi-{% if category == 'error' %}exclamation-circle{% elif category == 'success' %}check-circle{% else %}info-circle{% endif %}"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('register') }}" id="registerForm">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="John Doe" value="{{ name|default('') }}">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" value="{{ email|default('') }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Create a strong password" required minlength="8" oninput="checkPasswordStrength()">
+                <div class="password-strength">
+                    <div class="strength-bar">
+                        <div class="fill" id="strengthFill"></div>
+                    </div>
+                    <span class="strength-text" id="strengthText"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
+                <div class="hint" id="matchHint"></div>
+            </div>
+
+            <div class="terms-agreement">
+                By creating an account, you agree to our
+                <a href="{{ url_for('terms') }}">Terms of Service</a> and
+                <a href="{{ url_for('privacy_policy') }}">Privacy Policy</a>.
+            </div>
+
+            <button type="submit" class="auth-btn" id="submitBtn">
+                Create Account
+            </button>
+        </form>
+
+        <div class="auth-divider">
+            <span>Already have an account?</span>
+        </div>
+
+        <div class="auth-footer">
+            <a href="{{ url_for('login') }}">Sign in instead</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function checkPasswordStrength() {
+    const password = document.getElementById('password').value;
+    const fill = document.getElementById('strengthFill');
+    const text = document.getElementById('strengthText');
+
+    let strength = 0;
+
+    if (password.length >= 8) strength++;
+    if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+    if (password.match(/[0-9]/)) strength++;
+    if (password.match(/[^a-zA-Z0-9]/)) strength++;
+
+    fill.className = 'fill';
+    if (strength <= 1) {
+        fill.classList.add('weak');
+        text.textContent = 'Weak password';
+    } else if (strength <= 2) {
+        fill.classList.add('medium');
+        text.textContent = 'Medium strength';
+    } else {
+        fill.classList.add('strong');
+        text.textContent = 'Strong password';
+    }
+
+    checkPasswordMatch();
+}
+
+function checkPasswordMatch() {
+    const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirm_password').value;
+    const hint = document.getElementById('matchHint');
+
+    if (confirm.length === 0) {
+        hint.textContent = '';
+        return;
+    }
+
+    if (password === confirm) {
+        hint.textContent = 'Passwords match';
+        hint.style.color = '#22c55e';
+    } else {
+        hint.textContent = 'Passwords do not match';
+        hint.style.color = '#ef4444';
+    }
+}
+
+document.getElementById('confirm_password').addEventListener('input', checkPasswordMatch);
+</script>
+{% endblock %}

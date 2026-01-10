@@ -1,0 +1,604 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - Philata{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-header {
+        background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        color: white;
+        margin-bottom: 2rem;
+    }
+
+    .profile-header-content {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .profile-info h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+    }
+
+    .profile-info .email {
+        opacity: 0.9;
+        font-size: 0.95rem;
+    }
+
+    .profile-info .member-since {
+        font-size: 0.85rem;
+        opacity: 0.7;
+        margin-top: 0.5rem;
+    }
+
+    .profile-stats {
+        display: flex;
+        gap: 2rem;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-item .value {
+        font-size: 1.75rem;
+        font-weight: 700;
+    }
+
+    .stat-item .label {
+        font-size: 0.85rem;
+        opacity: 0.8;
+    }
+
+    /* Dashboard Grid */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 1.5rem;
+    }
+
+    @media (max-width: 1024px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Cards */
+    .dashboard-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .dashboard-card h2 {
+        font-size: 1.1rem;
+        color: var(--text);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .dashboard-card h2 i {
+        color: var(--primary);
+    }
+
+    /* CRS Score Card */
+    .crs-score-display {
+        text-align: center;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+        border-radius: 12px;
+        margin-bottom: 1rem;
+    }
+
+    .crs-score-display .score {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: var(--primary);
+    }
+
+    .crs-score-display .label {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+    }
+
+    .crs-actions {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .crs-actions .btn {
+        flex: 1;
+        padding: 0.75rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .crs-actions .btn-primary {
+        background: var(--primary);
+        color: white;
+    }
+
+    .crs-actions .btn-secondary {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        color: var(--text);
+    }
+
+    /* Profile Form */
+    .profile-form .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .profile-form label {
+        display: block;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--text);
+        margin-bottom: 0.4rem;
+    }
+
+    .profile-form select,
+    .profile-form input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        background: var(--bg);
+    }
+
+    .profile-form select:focus,
+    .profile-form input:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+
+    .profile-form .save-btn {
+        width: 100%;
+        padding: 0.75rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 0.5rem;
+    }
+
+    /* Saved Articles */
+    .saved-list {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .saved-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .saved-item:last-child {
+        border-bottom: none;
+    }
+
+    .saved-item .icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: var(--bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+    }
+
+    .saved-item .info {
+        flex: 1;
+    }
+
+    .saved-item .title {
+        font-weight: 600;
+        color: var(--text);
+        font-size: 0.9rem;
+    }
+
+    .saved-item .category {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    .saved-item .remove-btn {
+        padding: 0.4rem;
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+    }
+
+    .saved-item .remove-btn:hover {
+        color: #ef4444;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-muted);
+    }
+
+    .empty-state i {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        opacity: 0.5;
+    }
+
+    /* Quick Links */
+    .quick-links {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .quick-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        background: var(--bg);
+        border-radius: 10px;
+        text-decoration: none;
+        color: var(--text);
+        transition: all 0.2s;
+    }
+
+    .quick-link:hover {
+        background: var(--border);
+    }
+
+    .quick-link i {
+        font-size: 1.25rem;
+        color: var(--primary);
+    }
+
+    .quick-link span {
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    /* Immigration Stage */
+    .stage-progress {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1rem;
+        position: relative;
+    }
+
+    .stage-progress::before {
+        content: '';
+        position: absolute;
+        top: 15px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--border);
+    }
+
+    .stage-item {
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .stage-item .dot {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 2px solid var(--border);
+        margin: 0 auto 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+    }
+
+    .stage-item.active .dot {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+    }
+
+    .stage-item.completed .dot {
+        background: #22c55e;
+        border-color: #22c55e;
+        color: white;
+    }
+
+    .stage-item .label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+
+    .stage-item.active .label {
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    /* Flash messages */
+    .flash-messages {
+        margin-bottom: 1.5rem;
+    }
+
+    .flash-message {
+        padding: 0.875rem 1rem;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .flash-message.error {
+        background: rgba(239, 68, 68, 0.1);
+        color: #dc2626;
+    }
+
+    .flash-message.success {
+        background: rgba(34, 197, 94, 0.1);
+        color: #16a34a;
+    }
+
+    .flash-message.info {
+        background: rgba(59, 130, 246, 0.1);
+        color: #2563eb;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    <i class="bi bi-{% if category == 'error' %}exclamation-circle{% elif category == 'success' %}check-circle{% else %}info-circle{% endif %}"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<div class="profile-header">
+    <div class="profile-header-content">
+        <div class="profile-avatar">
+            {{ current_user.name[0].upper() if current_user.name else current_user.email[0].upper() }}
+        </div>
+        <div class="profile-info">
+            <h1>{{ current_user.name or 'Welcome!' }}</h1>
+            <div class="email">{{ current_user.email }}</div>
+            <div class="member-since">
+                Member since {{ current_user.created_at.strftime('%B %Y') if current_user.created_at else 'recently' }}
+            </div>
+        </div>
+    </div>
+    <div class="profile-stats">
+        <div class="stat-item">
+            <div class="value">{{ current_user.profile.crs_score or '-' }}</div>
+            <div class="label">CRS Score</div>
+        </div>
+        <div class="stat-item">
+            <div class="value">{{ saved_articles|length }}</div>
+            <div class="label">Saved Articles</div>
+        </div>
+        <div class="stat-item">
+            <div class="value">{{ checklists|length }}</div>
+            <div class="label">Checklists</div>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="main-content">
+        <!-- CRS Score Card -->
+        <div class="dashboard-card">
+            <h2><i class="bi bi-calculator"></i> Your CRS Score</h2>
+            <div class="crs-score-display">
+                {% if latest_score %}
+                    <div class="score">{{ latest_score.score }}</div>
+                    <div class="label">Last calculated {{ latest_score.created_at.strftime('%b %d, %Y') if latest_score.created_at else 'recently' }}</div>
+                {% else %}
+                    <div class="score">-</div>
+                    <div class="label">No score calculated yet</div>
+                {% endif %}
+            </div>
+            <div class="crs-actions">
+                <a href="{{ url_for('crs_calculator') }}" class="btn btn-primary">Calculate Score</a>
+                <a href="{{ url_for('points_simulator') }}" class="btn btn-secondary">Improve Score</a>
+            </div>
+        </div>
+
+        <!-- Immigration Stage -->
+        <div class="dashboard-card">
+            <h2><i class="bi bi-signpost-split"></i> Immigration Journey</h2>
+            <div class="stage-progress">
+                {% set stage = current_user.profile.immigration_stage or 'researching' %}
+                <div class="stage-item {% if stage == 'researching' %}active{% elif stage in ['preparing', 'applied', 'approved'] %}completed{% endif %}">
+                    <div class="dot"><i class="bi bi-search"></i></div>
+                    <div class="label">Research</div>
+                </div>
+                <div class="stage-item {% if stage == 'preparing' %}active{% elif stage in ['applied', 'approved'] %}completed{% endif %}">
+                    <div class="dot"><i class="bi bi-file-earmark-text"></i></div>
+                    <div class="label">Preparing</div>
+                </div>
+                <div class="stage-item {% if stage == 'applied' %}active{% elif stage == 'approved' %}completed{% endif %}">
+                    <div class="dot"><i class="bi bi-send"></i></div>
+                    <div class="label">Applied</div>
+                </div>
+                <div class="stage-item {% if stage == 'approved' %}active{% endif %}">
+                    <div class="dot"><i class="bi bi-check-lg"></i></div>
+                    <div class="label">Approved</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="dashboard-card">
+            <h2><i class="bi bi-grid"></i> Quick Actions</h2>
+            <div class="quick-links">
+                <a href="{{ url_for('eligibility_checker') }}" class="quick-link">
+                    <i class="bi bi-clipboard-check"></i>
+                    <span>Check Eligibility</span>
+                </a>
+                <a href="{{ url_for('document_checklist') }}" class="quick-link">
+                    <i class="bi bi-list-check"></i>
+                    <span>Document Checklist</span>
+                </a>
+                <a href="{{ url_for('noc_finder') }}" class="quick-link">
+                    <i class="bi bi-search"></i>
+                    <span>Find NOC Code</span>
+                </a>
+                <a href="{{ url_for('cost_calculator') }}" class="quick-link">
+                    <i class="bi bi-currency-dollar"></i>
+                    <span>Cost Calculator</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Saved Articles -->
+        <div class="dashboard-card">
+            <h2><i class="bi bi-bookmark"></i> Saved Articles</h2>
+            {% if saved_articles %}
+                <div class="saved-list">
+                    {% for article in saved_articles[:5] %}
+                        <div class="saved-item">
+                            <div class="icon"><i class="bi bi-newspaper"></i></div>
+                            <div class="info">
+                                <div class="title">{{ article.article_title or 'Untitled' }}</div>
+                                <div class="category">{{ article.article_category or 'Article' }}</div>
+                            </div>
+                            <button class="remove-btn" onclick="unsaveArticle('{{ article.article_id }}')" title="Remove">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if saved_articles|length > 5 %}
+                    <p style="text-align: center; margin-top: 1rem;">
+                        <a href="/articles" style="color: var(--primary);">View all {{ saved_articles|length }} saved articles</a>
+                    </p>
+                {% endif %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="bi bi-bookmark"></i>
+                    <p>No saved articles yet</p>
+                    <a href="/articles" style="color: var(--primary);">Browse articles</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="sidebar-content">
+        <!-- Profile Settings -->
+        <div class="dashboard-card">
+            <h2><i class="bi bi-gear"></i> Profile Settings</h2>
+            <form class="profile-form" method="POST" action="{{ url_for('update_profile') }}">
+                <div class="form-group">
+                    <label for="target_program">Target Program</label>
+                    <select id="target_program" name="target_program">
+                        <option value="">Select program</option>
+                        <option value="fsw" {% if current_user.profile.target_program == 'fsw' %}selected{% endif %}>Federal Skilled Worker</option>
+                        <option value="cec" {% if current_user.profile.target_program == 'cec' %}selected{% endif %}>Canadian Experience Class</option>
+                        <option value="fst" {% if current_user.profile.target_program == 'fst' %}selected{% endif %}>Federal Skilled Trades</option>
+                        <option value="pnp" {% if current_user.profile.target_program == 'pnp' %}selected{% endif %}>Provincial Nominee</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="target_province">Target Province</label>
+                    <select id="target_province" name="target_province">
+                        <option value="">Select province</option>
+                        <option value="ontario" {% if current_user.profile.target_province == 'ontario' %}selected{% endif %}>Ontario</option>
+                        <option value="bc" {% if current_user.profile.target_province == 'bc' %}selected{% endif %}>British Columbia</option>
+                        <option value="alberta" {% if current_user.profile.target_province == 'alberta' %}selected{% endif %}>Alberta</option>
+                        <option value="quebec" {% if current_user.profile.target_province == 'quebec' %}selected{% endif %}>Quebec</option>
+                        <option value="manitoba" {% if current_user.profile.target_province == 'manitoba' %}selected{% endif %}>Manitoba</option>
+                        <option value="saskatchewan" {% if current_user.profile.target_province == 'saskatchewan' %}selected{% endif %}>Saskatchewan</option>
+                        <option value="nova_scotia" {% if current_user.profile.target_province == 'nova_scotia' %}selected{% endif %}>Nova Scotia</option>
+                        <option value="other" {% if current_user.profile.target_province == 'other' %}selected{% endif %}>Other / Undecided</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="immigration_stage">Current Stage</label>
+                    <select id="immigration_stage" name="immigration_stage">
+                        <option value="researching" {% if current_user.profile.immigration_stage == 'researching' %}selected{% endif %}>Researching options</option>
+                        <option value="preparing" {% if current_user.profile.immigration_stage == 'preparing' %}selected{% endif %}>Preparing documents</option>
+                        <option value="applied" {% if current_user.profile.immigration_stage == 'applied' %}selected{% endif %}>Application submitted</option>
+                        <option value="approved" {% if current_user.profile.immigration_stage == 'approved' %}selected{% endif %}>Approved / Landed</option>
+                    </select>
+                </div>
+                <button type="submit" class="save-btn">Save Changes</button>
+            </form>
+        </div>
+
+        <!-- Account Actions -->
+        <div class="dashboard-card">
+            <h2><i class="bi bi-person"></i> Account</h2>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <a href="{{ url_for('logout') }}" class="quick-link" style="justify-content: center;">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Sign Out</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function unsaveArticle(articleId) {
+    fetch('/api/user/unsave-article', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ article_id: articleId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    });
+}
+</script>
+{% endblock %}

@@ -9,11 +9,33 @@ import json
 import requests
 import threading
 from datetime import datetime, timedelta
-from flask import Flask, render_template, jsonify, request, send_from_directory, redirect
+from flask import Flask, render_template, jsonify, request, send_from_directory, redirect, url_for, flash
 from flask_cors import CORS
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 app = Flask(__name__)
 CORS(app)
+
+# Secret key for sessions (CHANGE IN PRODUCTION)
+app.secret_key = os.environ.get('SECRET_KEY', 'philata-dev-secret-key-change-in-production')
+
+# Flask-Login configuration
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+login_manager.login_message = 'Please log in to access this page.'
+login_manager.login_message_category = 'info'
+
+# Import models after app is created
+from models import User, save_user_score, get_user_scores, get_latest_user_score
+from models import save_user_checklist, get_user_checklist, get_all_user_checklists
+from models import save_article, unsave_article, get_saved_articles, is_article_saved
+from database import is_connected as db_is_connected
+
+@login_manager.user_loader
+def load_user(user_id):
+    """Load user for Flask-Login"""
+    return User.get_by_id(user_id)
 
 # Post API URL for fetching results
 POST_API_URL = os.environ.get('POST_API_URL', 'https://web-production-35219.up.railway.app')
@@ -396,6 +418,253 @@ def disclaimer():
     """Disclaimer page"""
     return render_template('disclaimer.html')
 
+
+# =============================================================================
+# AUTHENTICATION ROUTES
+# =============================================================================
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    """User registration page"""
+    if current_user.is_authenticated:
+        return redirect(url_for('profile'))
+
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '')
+        confirm_password = request.form.get('confirm_password', '')
+        name = request.form.get('name', '').strip()
+
+        # Validation
+        errors = []
+        if not email:
+            errors.append('Email is required')
+        if not password:
+            errors.append('Password is required')
+        if len(password) < 8:
+            errors.append('Password must be at least 8 characters')
+        if password != confirm_password:
+            errors.append('Passwords do not match')
+
+        if errors:
+            for error in errors:
+                flash(error, 'error')
+            return render_template('auth/register.html', email=email, name=name)
+
+        # Check if database is connected
+        if not db_is_connected():
+            flash('Registration is temporarily unavailable. Please try again later.', 'error')
+            return render_template('auth/register.html', email=email, name=name)
+
+        # Create user
+        user, error = User.create(email, password, name)
+        if error:
+            flash(error, 'error')
+            return render_template('auth/register.html', email=email, name=name)
+
+        # Log in the user
+        login_user(user)
+        flash('Welcome to Philata! Your account has been created.', 'success')
+        return redirect(url_for('profile'))
+
+    return render_template('auth/register.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """User login page"""
+    if current_user.is_authenticated:
+        return redirect(url_for('profile'))
+
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '')
+        remember = request.form.get('remember', False)
+
+        if not email or not password:
+            flash('Please enter your email and password', 'error')
+            return render_template('auth/login.html', email=email)
+
+        # Check if database is connected
+        if not db_is_connected():
+            flash('Login is temporarily unavailable. Please try again later.', 'error')
+            return render_template('auth/login.html', email=email)
+
+        # Authenticate user
+        user, error = User.authenticate(email, password)
+        if error:
+            flash(error, 'error')
+            return render_template('auth/login.html', email=email)
+
+        # Log in the user
+        login_user(user, remember=bool(remember))
+        flash('Welcome back!', 'success')
+
+        # Redirect to next page or profile
+        next_page = request.args.get('next')
+        if next_page:
+            return redirect(next_page)
+        return redirect(url_for('profile'))
+
+    return render_template('auth/login.html')
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    """User logout"""
+    logout_user()
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('home'))
+
+
+@app.route('/profile')
+@login_required
+def profile():
+    """User profile page"""
+    # Get user's latest CRS score
+    latest_score = get_latest_user_score(current_user.id)
+
+    # Get user's saved articles
+    saved = get_saved_articles(current_user.id)
+
+    # Get user's checklists
+    checklists = get_all_user_checklists(current_user.id)
+
+    return render_template('auth/profile.html',
+                         latest_score=latest_score,
+                         saved_articles=saved,
+                         checklists=checklists)
+
+
+@app.route('/profile/update', methods=['POST'])
+@login_required
+def update_profile():
+    """Update user profile"""
+    name = request.form.get('name', '').strip()
+    target_program = request.form.get('target_program', '')
+    target_province = request.form.get('target_province', '')
+    immigration_stage = request.form.get('immigration_stage', '')
+
+    profile_data = {
+        'target_program': target_program or None,
+        'target_province': target_province or None,
+        'immigration_stage': immigration_stage or 'researching',
+        'crs_score': current_user.profile.get('crs_score')
+    }
+
+    if User.update_profile(current_user.id, profile_data):
+        flash('Profile updated successfully!', 'success')
+    else:
+        flash('Failed to update profile. Please try again.', 'error')
+
+    return redirect(url_for('profile'))
+
+
+@app.route('/api/user/save-score', methods=['POST'])
+@login_required
+def api_save_score():
+    """Save user's CRS score calculation"""
+    try:
+        data = request.get_json()
+        score_id = save_user_score(current_user.id, data)
+
+        if score_id:
+            # Also update profile with latest score
+            profile = current_user.profile.copy()
+            profile['crs_score'] = data.get('total', 0)
+            User.update_profile(current_user.id, profile)
+
+            return jsonify({'success': True, 'score_id': score_id})
+
+        return jsonify({'success': False, 'error': 'Failed to save score'}), 500
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/user/scores')
+@login_required
+def api_get_scores():
+    """Get user's CRS score history"""
+    try:
+        scores = get_user_scores(current_user.id)
+        # Convert ObjectId to string for JSON serialization
+        for score in scores:
+            score['_id'] = str(score['_id'])
+        return jsonify({'success': True, 'scores': scores})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/user/save-article', methods=['POST'])
+@login_required
+def api_save_article():
+    """Save an article for the user"""
+    try:
+        data = request.get_json()
+        article_id = data.get('article_id')
+
+        if not article_id:
+            return jsonify({'success': False, 'error': 'Article ID required'}), 400
+
+        success = save_article(current_user.id, article_id, data)
+        return jsonify({'success': success})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/user/unsave-article', methods=['POST'])
+@login_required
+def api_unsave_article():
+    """Remove a saved article"""
+    try:
+        data = request.get_json()
+        article_id = data.get('article_id')
+
+        if not article_id:
+            return jsonify({'success': False, 'error': 'Article ID required'}), 400
+
+        success = unsave_article(current_user.id, article_id)
+        return jsonify({'success': success})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/user/checklist', methods=['POST'])
+@login_required
+def api_save_checklist():
+    """Save user's checklist progress"""
+    try:
+        data = request.get_json()
+        program = data.get('program')
+        items = data.get('items', [])
+
+        if not program:
+            return jsonify({'success': False, 'error': 'Program required'}), 400
+
+        success = save_user_checklist(current_user.id, program, {'items': items})
+        return jsonify({'success': success})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/user/checklist/<program>')
+@login_required
+def api_get_checklist(program):
+    """Get user's checklist for a program"""
+    try:
+        checklist = get_user_checklist(current_user.id, program)
+        if checklist:
+            checklist['_id'] = str(checklist['_id'])
+            return jsonify({'success': True, 'checklist': checklist})
+        return jsonify({'success': True, 'checklist': None})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+# =============================================================================
+# TOOLS
+# =============================================================================
 
 @app.route('/tools/crs-calculator')
 def crs_calculator():
