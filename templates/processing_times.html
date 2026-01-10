@@ -409,6 +409,329 @@
         color: #D97706;
         margin-right: 8px;
     }
+
+    /* Country Processing Times Section */
+    .country-section {
+        margin-top: 3rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .section-title i {
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .section-description {
+        color: var(--text-muted);
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+    }
+
+    .country-filter {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .country-filter-btn {
+        padding: 0.5rem 1rem;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .country-filter-btn:hover {
+        border-color: var(--primary);
+        color: var(--text);
+    }
+
+    .country-filter-btn.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+
+    .country-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1rem;
+    }
+
+    .country-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+        transition: all 0.2s ease;
+    }
+
+    .country-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    .country-card-header {
+        background: var(--bg);
+        padding: 1rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .country-flag {
+        font-size: 1.75rem;
+    }
+
+    .country-name {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .country-region {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    .country-card-body {
+        padding: 1rem 1.25rem;
+    }
+
+    .visa-time-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.6rem 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .visa-time-row:last-child {
+        border-bottom: none;
+    }
+
+    .visa-time-label {
+        font-size: 0.9rem;
+        color: var(--text);
+    }
+
+    .visa-time-value {
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    /* Immigration Stats Section */
+    .stats-section {
+        margin-top: 3rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+    }
+
+    .stat-sublabel {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 0.25rem;
+    }
+
+    /* Key Dates Section */
+    .dates-section {
+        margin-top: 3rem;
+    }
+
+    .key-dates-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .date-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 1.5rem;
+    }
+
+    .date-card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1rem;
+    }
+
+    .date-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: white;
+    }
+
+    .date-card h4 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .date-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .date-list li {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.9rem;
+    }
+
+    .date-list li:last-child {
+        border-bottom: none;
+    }
+
+    .date-label {
+        color: var(--text-muted);
+    }
+
+    .date-value {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    /* Fee Structure Section */
+    .fees-section {
+        margin-top: 3rem;
+    }
+
+    .fees-table {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .fees-header {
+        background: var(--bg);
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .fees-header i {
+        font-size: 1.5rem;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .fees-header h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .fees-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+        align-items: center;
+    }
+
+    .fees-row:last-child {
+        border-bottom: none;
+    }
+
+    .fees-row.header {
+        background: var(--bg);
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        color: var(--text-muted);
+    }
+
+    .fee-amount {
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    .fee-type {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    @media (max-width: 768px) {
+        .country-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .fees-row {
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+
+        .fees-row.header {
+            display: none;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -814,8 +1137,660 @@
     </div>
 </div>
 
+<!-- Country-Specific Processing Times -->
+<div class="country-section">
+    <h2 class="section-title">
+        <i class="bi bi-globe2"></i>
+        Processing Times by Country
+    </h2>
+    <p class="section-description">
+        Processing times vary significantly based on your country of residence. Select a region or view all countries below.
+    </p>
+
+    <div class="country-filter">
+        <button class="country-filter-btn active" onclick="filterCountries('all')">All Countries</button>
+        <button class="country-filter-btn" onclick="filterCountries('asia')">Asia</button>
+        <button class="country-filter-btn" onclick="filterCountries('americas')">Americas</button>
+        <button class="country-filter-btn" onclick="filterCountries('europe')">Europe</button>
+        <button class="country-filter-btn" onclick="filterCountries('africa')">Africa</button>
+        <button class="country-filter-btn" onclick="filterCountries('oceania')">Oceania</button>
+    </div>
+
+    <div class="country-grid">
+        <!-- India -->
+        <div class="country-card" data-region="asia">
+            <div class="country-card-header">
+                <span class="country-flag">🇮🇳</span>
+                <div>
+                    <div class="country-name">India</div>
+                    <div class="country-region">South Asia</div>
+                </div>
+            </div>
+            <div class="country-card-body">
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Visitor Visa</span>
+                    <span class="visa-time-value time-slow">67 days</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Study Permit</span>
+                    <span class="visa-time-value time-moderate">9 weeks</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Work Permit</span>
+                    <span class="visa-time-value time-slow">18 weeks</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- China -->
+        <div class="country-card" data-region="asia">
+            <div class="country-card-header">
+                <span class="country-flag">🇨🇳</span>
+                <div>
+                    <div class="country-name">China</div>
+                    <div class="country-region">East Asia</div>
+                </div>
+            </div>
+            <div class="country-card-body">
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Visitor Visa</span>
+                    <span class="visa-time-value time-moderate">38 days</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Study Permit</span>
+                    <span class="visa-time-value time-moderate">7 weeks</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Work Permit</span>
+                    <span class="visa-time-value time-moderate">14 weeks</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Philippines -->
+        <div class="country-card" data-region="asia">
+            <div class="country-card-header">
+                <span class="country-flag">🇵🇭</span>
+                <div>
+                    <div class="country-name">Philippines</div>
+                    <div class="country-region">Southeast Asia</div>
+                </div>
+            </div>
+            <div class="country-card-body">
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Visitor Visa</span>
+                    <span class="visa-time-value time-slow">72 days</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Study Permit</span>
+                    <span class="visa-time-value time-moderate">10 weeks</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Work Permit</span>
+                    <span class="visa-time-value time-slow">16 weeks</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pakistan -->
+        <div class="country-card" data-region="asia">
+            <div class="country-card-header">
+                <span class="country-flag">🇵🇰</span>
+                <div>
+                    <div class="country-name">Pakistan</div>
+                    <div class="country-region">South Asia</div>
+                </div>
+            </div>
+            <div class="country-card-body">
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Visitor Visa</span>
+                    <span class="visa-time-value time-slow">89 days</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Study Permit</span>
+                    <span class="visa-time-value time-slow">12 weeks</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Work Permit</span>
+                    <span class="visa-time-value time-slow">20 weeks</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nigeria -->
+        <div class="country-card" data-region="africa">
+            <div class="country-card-header">
+                <span class="country-flag">🇳🇬</span>
+                <div>
+                    <div class="country-name">Nigeria</div>
+                    <div class="country-region">West Africa</div>
+                </div>
+            </div>
+            <div class="country-card-body">
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Visitor Visa</span>
+                    <span class="visa-time-value time-slow">95 days</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Study Permit</span>
+                    <span class="visa-time-value time-slow">14 weeks</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Work Permit</span>
+                    <span class="visa-time-value time-slow">22 weeks</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- USA -->
+        <div class="country-card" data-region="americas">
+            <div class="country-card-header">
+                <span class="country-flag">🇺🇸</span>
+                <div>
+                    <div class="country-name">United States</div>
+                    <div class="country-region">North America</div>
+                </div>
+            </div>
+            <div class="country-card-body">
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Visitor Visa</span>
+                    <span class="visa-time-value time-fast">14 days</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Study Permit</span>
+                    <span class="visa-time-value time-fast">3 weeks</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Work Permit</span>
+                    <span class="visa-time-value time-fast">6 weeks</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mexico -->
+        <div class="country-card" data-region="americas">
+            <div class="country-card-header">
+                <span class="country-flag">🇲🇽</span>
+                <div>
+                    <div class="country-name">Mexico</div>
+                    <div class="country-region">North America</div>
+                </div>
+            </div>
+            <div class="country-card-body">
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Visitor Visa</span>
+                    <span class="visa-time-value time-fast">21 days</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Study Permit</span>
+                    <span class="visa-time-value time-fast">4 weeks</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Work Permit</span>
+                    <span class="visa-time-value time-moderate">10 weeks</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Brazil -->
+        <div class="country-card" data-region="americas">
+            <div class="country-card-header">
+                <span class="country-flag">🇧🇷</span>
+                <div>
+                    <div class="country-name">Brazil</div>
+                    <div class="country-region">South America</div>
+                </div>
+            </div>
+            <div class="country-card-body">
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Visitor Visa</span>
+                    <span class="visa-time-value time-moderate">28 days</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Study Permit</span>
+                    <span class="visa-time-value time-moderate">6 weeks</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Work Permit</span>
+                    <span class="visa-time-value time-moderate">12 weeks</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- UK -->
+        <div class="country-card" data-region="europe">
+            <div class="country-card-header">
+                <span class="country-flag">🇬🇧</span>
+                <div>
+                    <div class="country-name">United Kingdom</div>
+                    <div class="country-region">Europe</div>
+                </div>
+            </div>
+            <div class="country-card-body">
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Visitor Visa</span>
+                    <span class="visa-time-value time-fast">12 days</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Study Permit</span>
+                    <span class="visa-time-value time-fast">3 weeks</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Work Permit</span>
+                    <span class="visa-time-value time-fast">5 weeks</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- France -->
+        <div class="country-card" data-region="europe">
+            <div class="country-card-header">
+                <span class="country-flag">🇫🇷</span>
+                <div>
+                    <div class="country-name">France</div>
+                    <div class="country-region">Europe</div>
+                </div>
+            </div>
+            <div class="country-card-body">
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Visitor Visa</span>
+                    <span class="visa-time-value time-fast">10 days</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Study Permit</span>
+                    <span class="visa-time-value time-fast">3 weeks</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Work Permit</span>
+                    <span class="visa-time-value time-fast">5 weeks</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Germany -->
+        <div class="country-card" data-region="europe">
+            <div class="country-card-header">
+                <span class="country-flag">🇩🇪</span>
+                <div>
+                    <div class="country-name">Germany</div>
+                    <div class="country-region">Europe</div>
+                </div>
+            </div>
+            <div class="country-card-body">
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Visitor Visa</span>
+                    <span class="visa-time-value time-fast">11 days</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Study Permit</span>
+                    <span class="visa-time-value time-fast">3 weeks</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Work Permit</span>
+                    <span class="visa-time-value time-fast">5 weeks</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Australia -->
+        <div class="country-card" data-region="oceania">
+            <div class="country-card-header">
+                <span class="country-flag">🇦🇺</span>
+                <div>
+                    <div class="country-name">Australia</div>
+                    <div class="country-region">Oceania</div>
+                </div>
+            </div>
+            <div class="country-card-body">
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Visitor Visa</span>
+                    <span class="visa-time-value time-fast">9 days</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Study Permit</span>
+                    <span class="visa-time-value time-fast">2 weeks</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Work Permit</span>
+                    <span class="visa-time-value time-fast">4 weeks</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- UAE -->
+        <div class="country-card" data-region="asia">
+            <div class="country-card-header">
+                <span class="country-flag">🇦🇪</span>
+                <div>
+                    <div class="country-name">UAE</div>
+                    <div class="country-region">Middle East</div>
+                </div>
+            </div>
+            <div class="country-card-body">
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Visitor Visa</span>
+                    <span class="visa-time-value time-moderate">25 days</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Study Permit</span>
+                    <span class="visa-time-value time-fast">4 weeks</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Work Permit</span>
+                    <span class="visa-time-value time-moderate">8 weeks</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- South Korea -->
+        <div class="country-card" data-region="asia">
+            <div class="country-card-header">
+                <span class="country-flag">🇰🇷</span>
+                <div>
+                    <div class="country-name">South Korea</div>
+                    <div class="country-region">East Asia</div>
+                </div>
+            </div>
+            <div class="country-card-body">
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Visitor Visa</span>
+                    <span class="visa-time-value time-fast">15 days</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Study Permit</span>
+                    <span class="visa-time-value time-fast">4 weeks</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Work Permit</span>
+                    <span class="visa-time-value time-moderate">7 weeks</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- South Africa -->
+        <div class="country-card" data-region="africa">
+            <div class="country-card-header">
+                <span class="country-flag">🇿🇦</span>
+                <div>
+                    <div class="country-name">South Africa</div>
+                    <div class="country-region">Southern Africa</div>
+                </div>
+            </div>
+            <div class="country-card-body">
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Visitor Visa</span>
+                    <span class="visa-time-value time-moderate">42 days</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Study Permit</span>
+                    <span class="visa-time-value time-moderate">8 weeks</span>
+                </div>
+                <div class="visa-time-row">
+                    <span class="visa-time-label">Work Permit</span>
+                    <span class="visa-time-value time-moderate">14 weeks</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Immigration Statistics Section -->
+<div class="stats-section">
+    <h2 class="section-title">
+        <i class="bi bi-bar-chart-fill"></i>
+        Immigration Statistics 2025
+    </h2>
+    <p class="section-description">
+        Key figures and targets for Canadian immigration programs
+    </p>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value">485,000</div>
+            <div class="stat-label">Immigration Target</div>
+            <div class="stat-sublabel">Permanent Residents for 2025</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">110,770</div>
+            <div class="stat-label">Express Entry Target</div>
+            <div class="stat-sublabel">ITAs to be issued in 2025</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">117,500</div>
+            <div class="stat-label">PNP Target</div>
+            <div class="stat-sublabel">Provincial Nominees for 2025</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">82,000</div>
+            <div class="stat-label">Family Class</div>
+            <div class="stat-sublabel">Sponsorship admissions target</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">2.5M+</div>
+            <div class="stat-label">Active Profiles</div>
+            <div class="stat-sublabel">In Express Entry pool</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">~500</div>
+            <div class="stat-label">CRS Cutoff</div>
+            <div class="stat-sublabel">Average for no-program draws</div>
+        </div>
+    </div>
+</div>
+
+<!-- Application Fees Section -->
+<div class="fees-section">
+    <h2 class="section-title">
+        <i class="bi bi-cash-coin"></i>
+        Application Fees (CAD)
+    </h2>
+    <p class="section-description">
+        Current government fees for immigration applications
+    </p>
+
+    <div class="fees-table">
+        <div class="fees-header">
+            <i class="bi bi-currency-dollar"></i>
+            <h3>Immigration Application Fees</h3>
+        </div>
+        <div class="fees-row header">
+            <span>Application Type</span>
+            <span>Principal Applicant</span>
+            <span>Spouse/Child</span>
+        </div>
+        <div class="fees-row">
+            <div class="visa-type">
+                <span class="visa-name">Permanent Residence (Express Entry)</span>
+                <span class="visa-code">Includes processing fee + RPRF</span>
+            </div>
+            <span class="fee-amount">$1,365</span>
+            <span class="fee-amount">$1,365 / $230</span>
+        </div>
+        <div class="fees-row">
+            <div class="visa-type">
+                <span class="visa-name">Visitor Visa (TRV)</span>
+                <span class="visa-code">Single or multiple entry</span>
+            </div>
+            <span class="fee-amount">$100</span>
+            <span class="fee-type">Family max: $500</span>
+        </div>
+        <div class="fees-row">
+            <div class="visa-type">
+                <span class="visa-name">Study Permit</span>
+                <span class="visa-code">Including student visa</span>
+            </div>
+            <span class="fee-amount">$150</span>
+            <span class="fee-type">-</span>
+        </div>
+        <div class="fees-row">
+            <div class="visa-type">
+                <span class="visa-name">Work Permit</span>
+                <span class="visa-code">LMIA-based or LMIA-exempt</span>
+            </div>
+            <span class="fee-amount">$155</span>
+            <span class="fee-type">-</span>
+        </div>
+        <div class="fees-row">
+            <div class="visa-type">
+                <span class="visa-name">Open Work Permit</span>
+                <span class="visa-code">Including PGWP, Bridging OWP</span>
+            </div>
+            <span class="fee-amount">$255</span>
+            <span class="fee-type">$100 holder fee</span>
+        </div>
+        <div class="fees-row">
+            <div class="visa-type">
+                <span class="visa-name">Spousal Sponsorship</span>
+                <span class="visa-code">Sponsorship + PR application</span>
+            </div>
+            <span class="fee-amount">$1,080</span>
+            <span class="fee-type">-</span>
+        </div>
+        <div class="fees-row">
+            <div class="visa-type">
+                <span class="visa-name">Super Visa</span>
+                <span class="visa-code">Parents/Grandparents</span>
+            </div>
+            <span class="fee-amount">$100</span>
+            <span class="fee-type">-</span>
+        </div>
+        <div class="fees-row">
+            <div class="visa-type">
+                <span class="visa-name">Biometrics</span>
+                <span class="visa-code">Fingerprints & photo</span>
+            </div>
+            <span class="fee-amount">$85</span>
+            <span class="fee-type">Family max: $170</span>
+        </div>
+    </div>
+</div>
+
+<!-- Key Dates & Deadlines Section -->
+<div class="dates-section">
+    <h2 class="section-title">
+        <i class="bi bi-calendar-event"></i>
+        Important Dates & Deadlines
+    </h2>
+    <p class="section-description">
+        Key immigration dates and document validity periods
+    </p>
+
+    <div class="key-dates-grid">
+        <div class="date-card">
+            <div class="date-card-header">
+                <div class="date-icon" style="background: linear-gradient(135deg, #6366F1, #8B5CF6);">
+                    <i class="bi bi-lightning"></i>
+                </div>
+                <h4>Express Entry Timelines</h4>
+            </div>
+            <ul class="date-list">
+                <li>
+                    <span class="date-label">Profile Validity</span>
+                    <span class="date-value">12 months</span>
+                </li>
+                <li>
+                    <span class="date-label">ITA Response Time</span>
+                    <span class="date-value">60 days</span>
+                </li>
+                <li>
+                    <span class="date-label">PR Card Validity</span>
+                    <span class="date-value">5 years</span>
+                </li>
+                <li>
+                    <span class="date-label">COPR Validity</span>
+                    <span class="date-value">Until expiry date</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="date-card">
+            <div class="date-card-header">
+                <div class="date-icon" style="background: linear-gradient(135deg, #10B981, #34D399);">
+                    <i class="bi bi-file-text"></i>
+                </div>
+                <h4>Document Validity</h4>
+            </div>
+            <ul class="date-list">
+                <li>
+                    <span class="date-label">IELTS/CELPIP</span>
+                    <span class="date-value">2 years</span>
+                </li>
+                <li>
+                    <span class="date-label">TEF/TCF</span>
+                    <span class="date-value">2 years</span>
+                </li>
+                <li>
+                    <span class="date-label">ECA Report</span>
+                    <span class="date-value">5 years</span>
+                </li>
+                <li>
+                    <span class="date-label">Police Certificate</span>
+                    <span class="date-value">Varies (6-12 mo)</span>
+                </li>
+                <li>
+                    <span class="date-label">Medical Exam</span>
+                    <span class="date-value">12 months</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="date-card">
+            <div class="date-card-header">
+                <div class="date-icon" style="background: linear-gradient(135deg, #F59E0B, #FBBF24);">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+                <h4>Status & Extensions</h4>
+            </div>
+            <ul class="date-list">
+                <li>
+                    <span class="date-label">Visitor Status</span>
+                    <span class="date-value">6 months typical</span>
+                </li>
+                <li>
+                    <span class="date-label">Super Visa Stay</span>
+                    <span class="date-value">5 years per visit</span>
+                </li>
+                <li>
+                    <span class="date-label">PGWP Duration</span>
+                    <span class="date-value">8 mo - 3 years</span>
+                </li>
+                <li>
+                    <span class="date-label">Implied Status</span>
+                    <span class="date-value">Until decision</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="date-card">
+            <div class="date-card-header">
+                <div class="date-icon" style="background: linear-gradient(135deg, #E31837, #FF6B6B);">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+                <h4>Critical Deadlines</h4>
+            </div>
+            <ul class="date-list">
+                <li>
+                    <span class="date-label">Status Restoration</span>
+                    <span class="date-value">90 days</span>
+                </li>
+                <li>
+                    <span class="date-label">Citizenship Residency</span>
+                    <span class="date-value">1,095 days/5 yrs</span>
+                </li>
+                <li>
+                    <span class="date-label">PR Residency Obligation</span>
+                    <span class="date-value">730 days/5 yrs</span>
+                </li>
+                <li>
+                    <span class="date-label">eTA Validity</span>
+                    <span class="date-value">5 years or passport</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 <!-- Info Cards -->
-<div class="info-cards">
     <div class="info-card">
         <div class="info-card-header">
             <div class="info-card-icon" style="background: rgba(16, 185, 129, 0.15); color: #059669;">
@@ -888,9 +1863,89 @@ function showCategory(category) {
     });
 }
 
+function filterCountries(region) {
+    // Update filter button states
+    document.querySelectorAll('.country-filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+
+    // Show/hide country cards
+    document.querySelectorAll('.country-card').forEach(card => {
+        if (region === 'all' || card.dataset.region === region) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
 // Initialize - show all
 document.addEventListener('DOMContentLoaded', function() {
     showCategory('all');
+
+    // Fetch live processing times data
+    fetchLiveProcessingTimes();
 });
+
+// Fetch live data from IRCC (via our API)
+async function fetchLiveProcessingTimes() {
+    try {
+        const response = await fetch('/api/processing-times');
+        if (response.ok) {
+            const data = await response.json();
+            if (data.countries) {
+                updateCountryCards(data.countries);
+            }
+            if (data.last_updated) {
+                document.querySelector('.last-updated-text span').innerHTML =
+                    `Last updated: <strong>${data.last_updated}</strong> - Based on IRCC official data`;
+            }
+        }
+    } catch (error) {
+        console.log('Using cached processing times data');
+    }
+}
+
+function updateCountryCards(countries) {
+    for (const [countryName, times] of Object.entries(countries)) {
+        const cards = document.querySelectorAll('.country-card');
+        cards.forEach(card => {
+            const nameEl = card.querySelector('.country-name');
+            if (nameEl && nameEl.textContent.toLowerCase() === countryName.toLowerCase()) {
+                const rows = card.querySelectorAll('.visa-time-row');
+                rows.forEach(row => {
+                    const label = row.querySelector('.visa-time-label');
+                    const value = row.querySelector('.visa-time-value');
+                    if (label && value) {
+                        const visaType = label.textContent.toLowerCase();
+                        if (visaType.includes('visitor') && times.visitor) {
+                            value.textContent = times.visitor;
+                            updateTimeClass(value, times.visitor);
+                        } else if (visaType.includes('study') && times.study) {
+                            value.textContent = times.study;
+                            updateTimeClass(value, times.study);
+                        } else if (visaType.includes('work') && times.work) {
+                            value.textContent = times.work;
+                            updateTimeClass(value, times.work);
+                        }
+                    }
+                });
+            }
+        });
+    }
+}
+
+function updateTimeClass(element, timeStr) {
+    element.classList.remove('time-fast', 'time-moderate', 'time-slow');
+    const days = parseInt(timeStr) || 0;
+    if (days <= 30) {
+        element.classList.add('time-fast');
+    } else if (days <= 60) {
+        element.classList.add('time-moderate');
+    } else {
+        element.classList.add('time-slow');
+    }
+}
 </script>
 {% endblock %}
