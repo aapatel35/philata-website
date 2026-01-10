@@ -1,2 +1,4 @@
-#!/bin/sh
-exec gunicorn --bind 0.0.0.0:${PORT:-8080} --workers 4 app:app
+#!/bin/bash
+PORT="${PORT:-8080}"
+echo "Starting server on port $PORT"
+exec gunicorn --bind "0.0.0.0:$PORT" --workers 4 --timeout 120 app:app

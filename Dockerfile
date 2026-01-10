@@ -38,11 +38,11 @@ RUN playwright install chromium
 # Copy application code
 COPY . .
 
-# Make start script executable
-RUN chmod +x start.sh
+# Make start script executable and ensure Unix line endings
+RUN chmod +x start.sh && sed -i 's/\r$//' start.sh
 
 # Default port
 ENV PORT=8080
 
-# Run with entrypoint script
-ENTRYPOINT ["./start.sh"]
+# Run with bash to ensure proper variable expansion
+CMD ["/bin/bash", "./start.sh"]
