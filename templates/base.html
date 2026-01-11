@@ -20,14 +20,14 @@
             --charcoal: #18181b;
             --slate: #27272a;
             --graphite: #3f3f46;
-            --silver: #71717a;
-            --pearl: #a1a1aa;
+            --silver: #52525b;
+            --pearl: #71717a;
             --ivory: #fafafa;
             --snow: #ffffff;
 
             /* Accent Colors - Refined */
-            --gold: #b8860b;
-            --gold-light: #d4a84b;
+            --gold: #92400e;
+            --gold-light: #b45309;
             --gold-pale: #f5f0e6;
             --emerald: #047857;
             --sapphire: #1e40af;
@@ -35,7 +35,7 @@
 
             /* Functional */
             --success: #059669;
-            --warning: #d97706;
+            --warning: #b45309;
             --error: #dc2626;
             --info: #0284c7;
 
@@ -44,11 +44,11 @@
             --bg-secondary: #f4f4f5;
             --bg-elevated: #ffffff;
 
-            /* Text */
+            /* Text - WCAG AA Compliant */
             --text-primary: #18181b;
-            --text-secondary: #3f3f46;
-            --text-tertiary: #71717a;
-            --text-muted: #a1a1aa;
+            --text-secondary: #374151;
+            --text-tertiary: #4b5563;
+            --text-muted: #6b7280;
             --text-inverse: #fafafa;
 
             /* Borders */
@@ -70,6 +70,14 @@
             --duration-fast: 150ms;
             --duration-normal: 250ms;
             --duration-slow: 400ms;
+
+            /* Aliases for compatibility */
+            --text: var(--text-primary);
+            --text-light: var(--text-tertiary);
+            --card: var(--bg-elevated);
+            --bg: var(--bg-secondary);
+            --border: var(--border-subtle);
+            --primary: var(--gold);
         }
 
         * {
@@ -109,6 +117,14 @@
 
         .mono {
             font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Global Form Placeholder Styles - WCAG Compliant */
+        input::placeholder,
+        textarea::placeholder,
+        select::placeholder {
+            color: #6b7280 !important;
+            opacity: 1;
         }
 
         /* App Layout */
