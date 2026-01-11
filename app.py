@@ -1111,11 +1111,18 @@ def articles():
     """Articles listing page"""
     all_articles = load_articles()
     category = request.args.get('category')
+    sort = request.args.get('sort', 'newest')
 
     if category:
         all_articles = [a for a in all_articles if a.get('category') == category]
 
-    return render_template('articles.html', articles=all_articles, category=category)
+    # Sort by date
+    if sort == 'oldest':
+        all_articles = sorted(all_articles, key=lambda x: x.get('created_at', ''), reverse=False)
+    else:  # newest first (default)
+        all_articles = sorted(all_articles, key=lambda x: x.get('created_at', ''), reverse=True)
+
+    return render_template('articles.html', articles=all_articles, category=category, sort=sort)
 
 
 def generate_short_id(title):

@@ -378,10 +378,16 @@
         <a href="/articles?category=forms" class="filter-tab {% if category == 'forms' %}active{% endif %}">Forms</a>
         <a href="/articles?category=case_study" class="filter-tab {% if category == 'case_study' %}active{% endif %}">Case Studies</a>
     </div>
-    <div class="filter-count">
-        {% if articles %}
-        <strong>{{ articles|length }}</strong> article{% if articles|length != 1 %}s{% endif %}{% if category %} in {{ category | replace('_', ' ') | title }}{% endif %}
-        {% endif %}
+    <div style="display: flex; align-items: center; gap: 16px;">
+        <select id="sortOrder" class="form-select form-select-sm" style="width: auto; background: var(--bg-secondary); border: 1px solid var(--border-subtle); color: var(--text-primary); font-size: 13px; padding: 8px 32px 8px 12px;" onchange="sortArticles()">
+            <option value="newest" {% if sort != 'oldest' %}selected{% endif %}>Newest First</option>
+            <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Oldest First</option>
+        </select>
+        <div class="filter-count">
+            {% if articles %}
+            <strong>{{ articles|length }}</strong> article{% if articles|length != 1 %}s{% endif %}{% if category %} in {{ category | replace('_', ' ') | title }}{% endif %}
+            {% endif %}
+        </div>
     </div>
 </div>
 
@@ -398,6 +404,7 @@
                     <h2 class="featured-article-title">{{ article.title }}</h2>
                     <p class="featured-article-excerpt">{{ article.full_article | striptags | truncate(180) }}</p>
                     <div class="featured-article-meta">
+                        <span><i class="bi bi-calendar3"></i> {{ article.created_at[:16] | replace('T', ' ') if article.created_at else 'Recent' }}</span>
                         <span><i class="bi bi-clock"></i> {{ article.reading_time or 5 }} min read</span>
                         <span><i class="bi bi-building"></i> {{ article.source or 'IRCC' }}</span>
                     </div>
@@ -413,8 +420,8 @@
                     <h3 class="article-card-title">{{ article.title }}</h3>
                     <p class="article-card-excerpt">{{ article.full_article | striptags | truncate(120) }}</p>
                     <div class="article-card-meta">
+                        <span><i class="bi bi-calendar3"></i> {{ article.created_at[:16] | replace('T', ' ') if article.created_at else 'Recent' }}</span>
                         <span><i class="bi bi-clock"></i> {{ article.reading_time or 5 }} min</span>
-                        <span><i class="bi bi-building"></i> {{ article.source or 'IRCC' }}</span>
                     </div>
                 </div>
             </a>
@@ -431,4 +438,13 @@
     </div>
     {% endif %}
 </div>
+
+<script>
+function sortArticles() {
+    const sortOrder = document.getElementById('sortOrder').value;
+    const url = new URL(window.location.href);
+    url.searchParams.set('sort', sortOrder);
+    window.location.href = url.toString();
+}
+</script>
 {% endblock %}
