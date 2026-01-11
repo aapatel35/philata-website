@@ -25,13 +25,13 @@
             --ivory: #fafafa;
             --snow: #ffffff;
 
-            /* Accent Colors - Refined */
-            --gold: #92400e;
-            --gold-light: #b45309;
+            /* Accent Colors - High Contrast */
+            --gold: #78350f;
+            --gold-light: #92400e;
             --gold-pale: #f5f0e6;
-            --emerald: #047857;
-            --sapphire: #1e40af;
-            --ruby: #be123c;
+            --emerald: #065f46;
+            --sapphire: #1e3a8a;
+            --ruby: #9f1239;
 
             /* Functional */
             --success: #059669;
@@ -44,11 +44,11 @@
             --bg-secondary: #f4f4f5;
             --bg-elevated: #ffffff;
 
-            /* Text - WCAG AA Compliant */
-            --text-primary: #18181b;
-            --text-secondary: #374151;
-            --text-tertiary: #4b5563;
-            --text-muted: #6b7280;
+            /* Text - WCAG AAA Compliant (7:1 ratio) */
+            --text-primary: #111827;
+            --text-secondary: #1f2937;
+            --text-tertiary: #374151;
+            --text-muted: #4b5563;
             --text-inverse: #fafafa;
 
             /* Borders */
@@ -119,12 +119,17 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Global Form Placeholder Styles - WCAG Compliant */
+        /* Global Form Placeholder Styles - WCAG AAA Compliant */
         input::placeholder,
         textarea::placeholder,
         select::placeholder {
-            color: #6b7280 !important;
+            color: #4b5563 !important;
             opacity: 1;
+        }
+
+        /* Ensure all muted/secondary text is readable */
+        .text-muted, .text-secondary, .text-tertiary {
+            color: #374151 !important;
         }
 
         /* App Layout */
