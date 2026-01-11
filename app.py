@@ -3276,8 +3276,8 @@ def chat():
 
         full_prompt = f"{CHAT_SYSTEM_PROMPT}\n\n---\n\nConversation:\n{conversation}"
 
-        # Call Gemini API
-        gemini_url = f"{GEMINI_URL}/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
+        # Call Gemini API - use gemini-1.5-flash for stable performance
+        gemini_url = f"{GEMINI_URL}/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
 
         payload = {
             "contents": [{"parts": [{"text": full_prompt}]}],
@@ -3287,6 +3287,7 @@ def chat():
             }
         }
 
+        print(f"[Chat] Calling Gemini API for message: {user_message[:50]}...")
         response = requests.post(gemini_url, json=payload, timeout=30)
 
         if response.ok:
@@ -3302,15 +3303,17 @@ def chat():
                 if len(chat_history) > 50:
                     _chat_sessions[session_id] = chat_history[-50:]
 
+                print(f"[Chat] Success - response length: {len(ai_response)}")
                 return jsonify({
                     'success': True,
                     'response': ai_response,
                     'session_id': session_id
                 })
             else:
+                print(f"[Chat] Empty response from Gemini")
                 return jsonify({'error': 'No response generated'}), 500
         else:
-            print(f"Gemini API error: {response.status_code} - {response.text[:200]}")
+            print(f"[Chat] Gemini API error: {response.status_code} - {response.text[:500]}")
             return jsonify({'error': 'AI service temporarily unavailable'}), 500
 
     except requests.Timeout:
