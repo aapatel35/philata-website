@@ -3313,14 +3313,28 @@ def chat():
                 print(f"[Chat] Empty response from Gemini")
                 return jsonify({'error': 'No response generated'}), 500
         else:
-            print(f"[Chat] Gemini API error: {response.status_code} - {response.text[:500]}")
-            return jsonify({'error': 'AI service temporarily unavailable'}), 500
+            error_text = response.text[:500] if response.text else "No response body"
+            print(f"[Chat] Gemini API error: {response.status_code} - {error_text}")
+            if response.status_code == 400:
+                return jsonify({'error': 'Invalid request to AI service. Please try again.'}), 500
+            elif response.status_code == 403:
+                return jsonify({'error': 'AI service authentication failed. Please contact support.'}), 500
+            elif response.status_code == 429:
+                return jsonify({'error': 'Too many requests. Please wait a moment and try again.'}), 429
+            else:
+                return jsonify({'error': f'AI service error (code: {response.status_code}). Please try again.'}), 500
 
     except requests.Timeout:
+        print("[Chat] Request timed out")
         return jsonify({'error': 'Request timed out. Please try again.'}), 504
+    except requests.ConnectionError as e:
+        print(f"[Chat] Connection error: {e}")
+        return jsonify({'error': 'Could not connect to AI service. Please check your connection.'}), 503
     except Exception as e:
-        print(f"Chat error: {e}")
-        return jsonify({'error': 'An error occurred. Please try again.'}), 500
+        print(f"[Chat] Unexpected error: {type(e).__name__}: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': 'An unexpected error occurred. Please try again.'}), 500
 
 @app.route('/api/chat/clear', methods=['POST'])
 def clear_chat():
@@ -3350,6 +3364,20 @@ def chat_suggestions():
         "What documents do I need for immigration?"
     ]
     return jsonify({'suggestions': suggestions})
+
+
+@app.route('/api/chat/health', methods=['GET'])
+def chat_health():
+    """Health check for chatbot - helps diagnose API configuration issues"""
+    has_key = bool(GEMINI_API_KEY)
+    key_preview = f"{GEMINI_API_KEY[:8]}..." if GEMINI_API_KEY and len(GEMINI_API_KEY) > 8 else "not set"
+
+    return jsonify({
+        'status': 'configured' if has_key else 'missing_api_key',
+        'gemini_configured': has_key,
+        'key_preview': key_preview,
+        'model': 'gemini-1.5-flash'
+    })
 
 
 # =============================================================================

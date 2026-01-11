@@ -198,7 +198,7 @@
         .nav-section-title {
             font-size: 11px;
             font-weight: 600;
-            color: var(--silver);
+            color: #9ca3af;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             padding: 0 12px;
@@ -210,7 +210,7 @@
             align-items: center;
             gap: 12px;
             padding: 12px 12px;
-            color: var(--pearl);
+            color: #d1d5db;
             text-decoration: none;
             border-radius: 8px;
             margin-bottom: 2px;
@@ -290,13 +290,13 @@
 
         .sidebar-meta a {
             font-size: 12px;
-            color: var(--silver);
+            color: #9ca3af;
             text-decoration: none;
             transition: color var(--duration-fast);
         }
 
         .sidebar-meta a:hover {
-            color: var(--pearl);
+            color: #e5e7eb;
         }
 
         /* Main Wrapper */
@@ -1896,10 +1896,13 @@
                 if (data.success) {
                     addMessage(data.response, 'assistant');
                 } else {
-                    addMessage('Sorry, I encountered an error. Please try again.', 'assistant');
+                    const errorMsg = data.error || 'Sorry, I encountered an error. Please try again.';
+                    addMessage(errorMsg, 'assistant');
+                    console.error('[Chat] Backend error:', data.error);
                 }
             } catch (error) {
                 hideTyping();
+                console.error('[Chat] Connection error:', error);
                 addMessage('Sorry, I\'m having trouble connecting. Please try again.', 'assistant');
             }
         }
