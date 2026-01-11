@@ -25,13 +25,13 @@
             --ivory: #fafafa;
             --snow: #ffffff;
 
-            /* Accent Colors - High Contrast */
-            --gold: #78350f;
-            --gold-light: #92400e;
-            --gold-pale: #f5f0e6;
-            --emerald: #065f46;
-            --sapphire: #1e3a8a;
-            --ruby: #9f1239;
+            /* Accent Colors - Per Design Guide */
+            --gold: #C2410C;            /* orange-700 - labels */
+            --gold-light: #D97706;      /* amber-600 - Canada text */
+            --gold-pale: #FEF3C7;       /* amber-100 */
+            --emerald: #059669;         /* emerald-600 */
+            --sapphire: #2563EB;        /* blue-600 - primary buttons */
+            --ruby: #DC2626;            /* red-600 - alerts */
 
             /* Functional */
             --success: #059669;
@@ -44,12 +44,13 @@
             --bg-secondary: #f4f4f5;
             --bg-elevated: #ffffff;
 
-            /* Text - WCAG AAA Compliant (7:1 ratio) */
-            --text-primary: #111827;
-            --text-secondary: #1f2937;
-            --text-tertiary: #374151;
-            --text-muted: #4b5563;
-            --text-inverse: #fafafa;
+            /* Text - WCAG AAA Compliant */
+            --text-primary: #111827;    /* gray-900 - headings, important text */
+            --text-secondary: #374151;  /* gray-700 - body text, descriptions */
+            --text-tertiary: #4B5563;   /* gray-600 - meta information */
+            --text-muted: #6B7280;      /* gray-500 - placeholders only */
+            --text-inverse: #F9FAFB;    /* gray-50 - on dark backgrounds */
+            --text-link: #2563EB;       /* blue-600 - links */
 
             /* Borders */
             --border-subtle: #e4e4e7;
@@ -119,17 +120,91 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Global Form Placeholder Styles - WCAG AAA Compliant */
+        /* Global Form Styles - Per Design Guide */
         input::placeholder,
         textarea::placeholder,
         select::placeholder {
-            color: #4b5563 !important;
+            color: #9CA3AF !important; /* gray-400 - acceptable for placeholders */
             opacity: 1;
         }
 
-        /* Ensure all muted/secondary text is readable */
-        .text-muted, .text-secondary, .text-tertiary {
-            color: #374151 !important;
+        input, textarea, select {
+            color: #111827 !important; /* gray-900 - actual input text */
+        }
+
+        /* Form Labels */
+        label, .form-label {
+            color: #111827 !important; /* gray-900 */
+            font-weight: 500;
+        }
+
+        /* Helper/Description Text */
+        .helper-text, .form-text, small {
+            color: #6B7280 !important; /* gray-500 */
+        }
+
+        /* Links */
+        a:not(.btn):not(.nav-item):not(.sidebar-meta a) {
+            color: #2563EB; /* blue-600 */
+        }
+        a:not(.btn):not(.nav-item):not(.sidebar-meta a):hover {
+            color: #1D4ED8; /* blue-700 */
+        }
+
+        /* Statistics/Numbers */
+        .stat-value, .stat-number, .hero-stat-value {
+            color: #111827 !important; /* gray-900 */
+        }
+
+        /* Statistics Labels */
+        .stat-label, .hero-stat-label, .stat-label-enhanced {
+            color: #4B5563 !important; /* gray-600 */
+        }
+
+        /* Section Subtitles */
+        .section-subtitle, .page-subtitle {
+            color: #6B7280 !important; /* gray-500 */
+        }
+
+        /* Card Descriptions */
+        .card-description, .service-desc, .pathway-card-description {
+            color: #4B5563 !important; /* gray-600 */
+        }
+
+        /* Meta Information (dates, read time, etc.) */
+        .meta, .article-meta, .read-time, .date {
+            color: #4B5563 !important; /* gray-600 */
+        }
+
+        /* View All Links */
+        .view-all, .view-all-link {
+            color: #2563EB !important; /* blue-600 */
+        }
+        .view-all:hover, .view-all-link:hover {
+            color: #1D4ED8 !important; /* blue-700 */
+        }
+
+        /* Empty State Text */
+        .empty-state p, .no-results, .empty-message {
+            color: #4B5563 !important; /* gray-600 */
+        }
+
+        /* Page Descriptions */
+        .page-description, .page-subtitle, .hero-description {
+            color: #4B5563 !important; /* gray-600 */
+        }
+
+        /* Card & Feature Descriptions */
+        .card-text, .feature-desc, .item-description, .guide-description {
+            color: #4B5563 !important; /* gray-600 */
+        }
+
+        /* Filter & Results Text */
+        .results-count, .filter-text {
+            color: #4B5563 !important; /* gray-600 */
+        }
+        .results-count strong {
+            color: #111827 !important; /* gray-900 */
         }
 
         /* App Layout */
