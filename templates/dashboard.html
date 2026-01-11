@@ -1052,7 +1052,9 @@
         const data = contentData.find(d => d.id === dataId) || {};
 
         const imgEl = card.querySelector('img');
-        document.getElementById('slideImage').src = imgEl ? imgEl.src : '';
+        const slideImg = document.getElementById('slideImage');
+        slideImg.src = imgEl ? imgEl.src : '';
+        slideImg.alt = data.title || 'Immigration article image';
 
         const badge = document.getElementById('slideBadge');
         badge.textContent = (data.track || 'unknown').toUpperCase();

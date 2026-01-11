@@ -12,8 +12,15 @@ import os
 import json
 import requests
 import threading
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from flask import Flask, render_template, jsonify, request, send_from_directory, redirect, url_for, flash
+
+# Eastern timezone (EST = UTC-5, Railway server runs in UTC)
+EST = timezone(timedelta(hours=-5))
+
+def eastern_now():
+    """Get current time in Eastern timezone for user-facing timestamps"""
+    return datetime.now(EST)
 from flask_cors import CORS
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
@@ -1399,7 +1406,7 @@ def add_article():
 
             # Status
             "status": "pending",
-            "created_at": datetime.now().isoformat(),
+            "created_at": eastern_now().strftime('%Y-%m-%dT%H:%M:%S'),
             "approved_at": None,
             "posted_at": None
         }
@@ -1728,7 +1735,7 @@ def add_result():
             "source_url": data.get('source_url', ''),
             "official_source_url": data.get('official_source_url'),
             "status": "pending",  # pending, approved, rejected, posted
-            "created_at": datetime.now().isoformat(),
+            "created_at": eastern_now().strftime('%Y-%m-%dT%H:%M:%S'),
             "approved_at": None,
             "posted_at": None
         }
@@ -3197,6 +3204,149 @@ def clear_ai_decisions():
 
     save_ai_decisions([])
     return jsonify({'success': True, 'message': 'AI decisions cleared'})
+
+
+# =============================================================================
+# AI CHATBOT (Gemini-Powered Immigration Assistant)
+# =============================================================================
+
+CHAT_SYSTEM_PROMPT = """You are Philata AI, a friendly and knowledgeable Canadian immigration assistant. Your role is to help users understand Canadian immigration programs, processes, and requirements.
+
+IMPORTANT GUIDELINES:
+1. Be helpful, accurate, and concise
+2. Always clarify that you provide general information, not legal advice
+3. Recommend consulting IRCC official sources or a licensed immigration consultant for specific cases
+4. Use bullet points and clear formatting for complex information
+5. If you don't know something, say so honestly
+6. Be encouraging and supportive - immigration can be stressful
+
+KNOWLEDGE AREAS:
+- Express Entry (FSW, CEC, FST)
+- Provincial Nominee Programs (all provinces)
+- Study Permits and PGWP
+- Work Permits (LMIA, LMIA-exempt, Open Work Permits)
+- Family Sponsorship
+- Citizenship
+- Visitor Visas
+- Language tests (IELTS, CELPIP, TEF, TCF)
+- CRS score calculation
+- Processing times
+- Document requirements
+
+RESPONSE FORMAT:
+- Keep responses under 500 words unless the user asks for detailed information
+- Use emojis sparingly for friendliness
+- Include relevant links to Philata resources when helpful (e.g., /tools/crs-calculator, /guides, /articles)
+
+Remember: You are representing Philata, a premium Canadian immigration information platform."""
+
+# Store chat history in memory (session-based)
+_chat_sessions = {}
+
+@app.route('/api/chat', methods=['POST'])
+def chat():
+    """AI Chatbot endpoint using Gemini"""
+    try:
+        data = request.get_json()
+        user_message = data.get('message', '').strip()
+        session_id = data.get('session_id', 'default')
+
+        if not user_message:
+            return jsonify({'error': 'Message is required'}), 400
+
+        if not GEMINI_API_KEY:
+            return jsonify({'error': 'AI service not configured'}), 500
+
+        # Get or create chat history for this session
+        if session_id not in _chat_sessions:
+            _chat_sessions[session_id] = []
+
+        chat_history = _chat_sessions[session_id]
+
+        # Build conversation context (last 10 messages for context)
+        context_messages = chat_history[-10:] if len(chat_history) > 10 else chat_history
+
+        # Build the prompt with conversation history
+        conversation = ""
+        for msg in context_messages:
+            role = "User" if msg['role'] == 'user' else "Assistant"
+            conversation += f"{role}: {msg['content']}\n\n"
+
+        conversation += f"User: {user_message}\n\nAssistant:"
+
+        full_prompt = f"{CHAT_SYSTEM_PROMPT}\n\n---\n\nConversation:\n{conversation}"
+
+        # Call Gemini API
+        gemini_url = f"{GEMINI_URL}/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
+
+        payload = {
+            "contents": [{"parts": [{"text": full_prompt}]}],
+            "generationConfig": {
+                "maxOutputTokens": 1000,
+                "temperature": 0.7
+            }
+        }
+
+        response = requests.post(gemini_url, json=payload, timeout=30)
+
+        if response.ok:
+            result = response.json()
+            ai_response = result.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '')
+
+            if ai_response:
+                # Add messages to history
+                chat_history.append({'role': 'user', 'content': user_message})
+                chat_history.append({'role': 'assistant', 'content': ai_response})
+
+                # Keep only last 50 messages per session
+                if len(chat_history) > 50:
+                    _chat_sessions[session_id] = chat_history[-50:]
+
+                return jsonify({
+                    'success': True,
+                    'response': ai_response,
+                    'session_id': session_id
+                })
+            else:
+                return jsonify({'error': 'No response generated'}), 500
+        else:
+            print(f"Gemini API error: {response.status_code} - {response.text[:200]}")
+            return jsonify({'error': 'AI service temporarily unavailable'}), 500
+
+    except requests.Timeout:
+        return jsonify({'error': 'Request timed out. Please try again.'}), 504
+    except Exception as e:
+        print(f"Chat error: {e}")
+        return jsonify({'error': 'An error occurred. Please try again.'}), 500
+
+@app.route('/api/chat/clear', methods=['POST'])
+def clear_chat():
+    """Clear chat history for a session"""
+    try:
+        data = request.get_json()
+        session_id = data.get('session_id', 'default')
+
+        if session_id in _chat_sessions:
+            del _chat_sessions[session_id]
+
+        return jsonify({'success': True, 'message': 'Chat history cleared'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/chat/suggestions', methods=['GET'])
+def chat_suggestions():
+    """Get suggested questions for new users"""
+    suggestions = [
+        "What is Express Entry and how does it work?",
+        "How can I calculate my CRS score?",
+        "What are the requirements for a Study Permit?",
+        "How do Provincial Nominee Programs work?",
+        "What's the difference between IELTS and CELPIP?",
+        "How long does it take to get PR in Canada?",
+        "Can I work while studying in Canada?",
+        "What documents do I need for immigration?"
+    ]
+    return jsonify({'suggestions': suggestions})
 
 
 # =============================================================================
