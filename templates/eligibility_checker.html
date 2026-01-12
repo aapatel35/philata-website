@@ -189,6 +189,26 @@
     .pathway-card.not-eligible { opacity: 0.7; border-color: #dc2626; }
     .pathway-card.not-eligible .pathway-match { color: #dc2626; }
 
+    /* Pathway Stream Title */
+    .pathway-stream { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+
+    /* Provincial Score Bar */
+    .pathway-score { margin-bottom: 1rem; }
+    .score-bar {
+        height: 12px; background: var(--bg); border-radius: 6px;
+        position: relative; overflow: visible; margin-bottom: 0.5rem;
+    }
+    .score-fill {
+        height: 100%; border-radius: 6px; transition: width 0.5s ease;
+    }
+    .score-fill.eligible { background: linear-gradient(90deg, #16a34a, #22c55e); }
+    .score-fill.not-eligible { background: linear-gradient(90deg, #dc2626, #f87171); }
+    .score-threshold {
+        position: absolute; top: -4px; width: 3px; height: 20px;
+        background: var(--text); border-radius: 2px;
+    }
+    .score-text { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+
     /* Improvement Cards */
     .improvement-card {
         background: var(--card); border: 1px solid var(--border);

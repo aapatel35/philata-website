@@ -433,128 +433,171 @@ function renderProvincialPathways() {
     const hasFamily = provincialConnections.includes('family');
     const clb = getLowestCLB();
 
+    // Get all provincial scores
+    const scores = getAllProvincialScores();
+
     const pathways = [];
 
-    // Newfoundland & Labrador - Has its own 67-point scoring system
-    if (province === 'newfoundland' || province === 'any') {
-        const nlScore = calculateNLPNPScore();
-        pathways.push({
-            province: 'Newfoundland & Labrador',
-            stream: 'NLPNP Express Entry Skilled Worker',
-            match: nlScore >= 67 ? `Your NLPNP score: ${nlScore}/100 (67+ required)` : `Your NLPNP score: ${nlScore}/100 (Need 67)`,
-            benefit: '+600 CRS, job offer required',
-            eligible: nlScore >= 67,
-            requirements: ['67+ points on NL grid', 'Job offer from NL employer', 'CLB 4+ (higher for some NOCs)']
-        });
-    }
-
-    // Check category matches with province-specific criteria
-    if (category === 'STEM') {
-        pathways.push({
-            province: 'British Columbia',
-            stream: 'BC PNP Tech',
-            match: hasStudiedInProvince ? 'Studied in BC + Tech occupation = Strong match' : 'Your occupation is on the BC Tech list',
-            benefit: '+600 CRS, weekly draws, fast processing',
-            eligible: true,
-            requirements: ['Tech occupation on BC list', 'Job offer OR valid work permit', 'CLB 4+']
-        });
-        pathways.push({
-            province: 'Ontario',
-            stream: 'OINP Tech Draw',
-            match: hasStudiedInProvince ? 'Studied in ON + Tech = Priority' : 'Eligible for Ontario Tech draws',
-            benefit: '+600 CRS, lower cutoffs than general',
-            eligible: true,
-            requirements: ['Active Express Entry profile', 'Tech occupation', 'CLB 7+']
-        });
-    }
-
-    if (category === 'Healthcare') {
-        pathways.push({
-            province: 'Ontario',
-            stream: 'OINP Health Human Capital',
-            match: hasStudiedInProvince ? 'Studied in ON + Healthcare = Strong match' : 'Healthcare occupation eligible',
-            benefit: '+600 CRS, priority processing',
-            eligible: true,
-            requirements: ['Healthcare NOC code', 'Active Express Entry profile', 'CLB 7+']
-        });
-        pathways.push({
-            province: 'Nova Scotia',
-            stream: 'NSNP Labour Market Priorities',
-            match: 'Healthcare in high demand in NS',
-            benefit: 'No job offer required for some streams',
-            eligible: true,
-            requirements: ['In-demand occupation', 'CLB 5+', 'Settlement funds']
-        });
-    }
-
-    if (category === 'Trades') {
-        pathways.push({
-            province: 'Alberta',
-            stream: 'AAIP Alberta Opportunity',
-            match: hasWorkedInProvince ? 'AB work experience + Trade = Excellent' : 'Trades in demand in Alberta',
-            benefit: 'No Express Entry needed, direct PR pathway',
-            eligible: true,
-            requirements: ['Alberta work experience', 'Valid work permit', 'CLB 4+']
-        });
-        pathways.push({
-            province: 'Saskatchewan',
-            stream: 'SINP Occupation In-Demand',
-            match: 'Trades on in-demand list',
-            benefit: 'Points-based system, no job offer needed',
-            eligible: true,
-            requirements: ['60+ points on SINP grid', 'In-demand occupation', 'CLB 4+']
-        });
-    }
-
-    // Province-specific advantages based on study/work history
-    if (hasStudiedInProvince) {
-        if (province === 'bc' || province === 'any') {
-            pathways.push({
-                province: 'British Columbia',
-                stream: 'BC PNP International Graduate',
-                match: 'Studied in BC = Bonus points on SIRS',
-                benefit: 'BC grads get higher ranking',
-                eligible: true,
-                requirements: ['BC post-secondary degree', 'Job offer in BC', 'CLB 4+']
-            });
-        }
-        if (province === 'ontario' || province === 'any') {
-            pathways.push({
-                province: 'Ontario',
-                stream: 'OINP Masters/PhD Graduate',
-                match: 'Ontario degree = No job offer needed',
-                benefit: 'Direct nomination without job offer',
-                eligible: answers.education_level === 'masters' || answers.education_level === 'phd',
-                requirements: ['Ontario Masters/PhD', 'CLB 7+', 'Lived in ON 1+ year']
-            });
-        }
-    }
-
-    // Add general PNP option
+    // British Columbia - SIRS Points System (200 max)
+    const bcScore = scores.bc;
     pathways.push({
-        province: 'Multiple Provinces',
-        stream: 'Express Entry Linked PNP',
-        match: 'Create EE profile, receive provincial nominations',
-        benefit: '+600 CRS points instantly',
-        eligible: true,
-        requirements: ['Active Express Entry profile', 'Meet provincial criteria']
+        province: 'British Columbia',
+        stream: 'BC PNP Skills Immigration',
+        match: `Your BC SIRS score: ${bcScore.score}/${bcScore.max} (Draws: ~${bcScore.minDraw}+)`,
+        benefit: '+600 CRS, weekly Tech draws',
+        eligible: bcScore.score >= bcScore.minDraw,
+        score: bcScore.score,
+        requirements: ['Job offer from BC employer', 'NOC TEER 0-3', 'CLB 4+'],
+        scoreDetails: { current: bcScore.score, required: bcScore.minDraw, max: bcScore.max }
     });
 
-    // Sort by eligibility and relevance
+    // Saskatchewan - 110 points (60 minimum)
+    const skScore = scores.sk;
+    pathways.push({
+        province: 'Saskatchewan',
+        stream: 'SINP International Skilled Worker',
+        match: `Your SINP score: ${skScore.score}/${skScore.max} (60 required)`,
+        benefit: 'Points-based, no job offer needed for OID',
+        eligible: skScore.score >= skScore.minRequired,
+        score: skScore.score,
+        requirements: ['60+ points on grid', 'In-demand occupation OR job offer', 'CLB 4+'],
+        scoreDetails: { current: skScore.score, required: skScore.minRequired, max: skScore.max }
+    });
+
+    // Manitoba - 1000 points (700+ competitive)
+    const mbScore = scores.mb;
+    pathways.push({
+        province: 'Manitoba',
+        stream: 'MPNP Skilled Worker',
+        match: `Your MPNP score: ${mbScore.score}/${mbScore.max} (700+ competitive)`,
+        benefit: 'Strong adaptability points for connections',
+        eligible: mbScore.score >= mbScore.competitive,
+        score: mbScore.score,
+        requirements: ['Manitoba connection required', 'CLB 4+', '6 months work experience'],
+        scoreDetails: { current: mbScore.score, required: mbScore.competitive, max: mbScore.max }
+    });
+
+    // Alberta - 100 points
+    const abScore = scores.ab;
+    pathways.push({
+        province: 'Alberta',
+        stream: 'AAIP Alberta Opportunity',
+        match: `Your AAIP score: ${abScore.score}/${abScore.max} (Draws: ~${abScore.typicalDraw}+)`,
+        benefit: 'Sector-driven, Alberta experience valued',
+        eligible: abScore.score >= abScore.typicalDraw,
+        score: abScore.score,
+        requirements: ['Alberta work/study preferred', 'CLB 4+', 'Valid job offer helps'],
+        scoreDetails: { current: abScore.score, required: abScore.typicalDraw, max: abScore.max }
+    });
+
+    // New Brunswick - 100 points (67 required)
+    const nbScore = scores.nb;
+    pathways.push({
+        province: 'New Brunswick',
+        stream: 'NBPNP Express Entry',
+        match: `Your NBPNP score: ${nbScore.score}/${nbScore.max} (67 required)`,
+        benefit: 'Atlantic province, employer-driven',
+        eligible: nbScore.score >= nbScore.minRequired,
+        score: nbScore.score,
+        requirements: ['67+ points', 'CLB 7+', 'NB work experience preferred'],
+        scoreDetails: { current: nbScore.score, required: nbScore.minRequired, max: nbScore.max }
+    });
+
+    // PEI - 100 points (67 required)
+    const peiScore = scores.pei;
+    pathways.push({
+        province: 'Prince Edward Island',
+        stream: 'PEI PNP Express Entry',
+        match: `Your PEI score: ${peiScore.score}/${peiScore.max} (67 required)`,
+        benefit: 'No job offer required, bilingual bonus',
+        eligible: peiScore.score >= peiScore.minRequired,
+        score: peiScore.score,
+        requirements: ['67+ points', 'CLB 7+', 'Express Entry profile'],
+        scoreDetails: { current: peiScore.score, required: peiScore.minRequired, max: peiScore.max }
+    });
+
+    // Newfoundland & Labrador - 100 points (67 required)
+    const nlScore = scores.nl;
+    pathways.push({
+        province: 'Newfoundland & Labrador',
+        stream: 'NLPNP Express Entry',
+        match: `Your NLPNP score: ${nlScore.score}/${nlScore.max} (67 required)`,
+        benefit: '+600 CRS, job offer required',
+        eligible: nlScore.score >= nlScore.minRequired,
+        score: nlScore.score,
+        requirements: ['67+ points', 'Job offer from NL employer', 'CLB 4+'],
+        scoreDetails: { current: nlScore.score, required: nlScore.minRequired, max: nlScore.max }
+    });
+
+    // Ontario - CRS based (no provincial points)
+    pathways.push({
+        province: 'Ontario',
+        stream: 'OINP Human Capital Priorities',
+        match: 'Based on CRS score (400+ typical)',
+        benefit: 'Category draws for Tech, Healthcare, Trades',
+        eligible: true,
+        score: null, // Uses CRS
+        requirements: ['Active Express Entry (FSW/CEC)', "Bachelor's degree", 'CLB 7+'],
+        scoreDetails: null
+    });
+
+    // Nova Scotia - CRS based (no provincial points)
+    pathways.push({
+        province: 'Nova Scotia',
+        stream: 'NSNP Labour Market Priorities',
+        match: 'Letter of Interest based on occupation',
+        benefit: 'Healthcare/Trades in high demand',
+        eligible: category === 'Healthcare' || category === 'Trades',
+        score: null,
+        requirements: ['In-demand occupation', 'Express Entry profile', 'CLB 5+'],
+        scoreDetails: null
+    });
+
+    // Sort by eligibility and score
     pathways.sort((a, b) => {
+        // Eligible first
         if (a.eligible && !b.eligible) return -1;
         if (!a.eligible && b.eligible) return 1;
+        // Then by how close to threshold
+        if (a.scoreDetails && b.scoreDetails) {
+            const aRatio = a.scoreDetails.current / a.scoreDetails.required;
+            const bRatio = b.scoreDetails.current / b.scoreDetails.required;
+            return bRatio - aRatio;
+        }
         return 0;
     });
 
-    container.innerHTML = pathways.slice(0, 5).map((p, i) => `
+    // Filter by target province if specified
+    let displayPathways = pathways;
+    if (province !== 'any') {
+        const provinceMap = {
+            'bc': 'British Columbia', 'ontario': 'Ontario', 'alberta': 'Alberta',
+            'saskatchewan': 'Saskatchewan', 'manitoba': 'Manitoba', 'nova_scotia': 'Nova Scotia',
+            'new_brunswick': 'New Brunswick', 'pei': 'Prince Edward Island', 'newfoundland': 'Newfoundland & Labrador'
+        };
+        const targetName = provinceMap[province];
+        displayPathways = pathways.filter(p => p.province === targetName || p.eligible);
+    }
+
+    container.innerHTML = displayPathways.slice(0, 6).map((p, i) => `
         <div class="pathway-card ${i === 0 && p.eligible ? 'recommended' : ''} ${!p.eligible ? 'not-eligible' : ''}">
             ${i === 0 && p.eligible ? '<div class="pathway-badge">Best Match</div>' : ''}
-            <h4>${p.province} - ${p.stream}</h4>
+            <h4>${p.province}</h4>
+            <div class="pathway-stream">${p.stream}</div>
+            ${p.scoreDetails ? `
+                <div class="pathway-score">
+                    <div class="score-bar">
+                        <div class="score-fill ${p.eligible ? 'eligible' : 'not-eligible'}"
+                             style="width: ${Math.min((p.scoreDetails.current / p.scoreDetails.max) * 100, 100)}%"></div>
+                        <div class="score-threshold" style="left: ${(p.scoreDetails.required / p.scoreDetails.max) * 100}%"></div>
+                    </div>
+                    <div class="score-text">${p.scoreDetails.current} / ${p.scoreDetails.max} pts (need ${p.scoreDetails.required})</div>
+                </div>
+            ` : ''}
             <div class="pathway-match"><i class="bi bi-${p.eligible ? 'check-circle-fill' : 'exclamation-circle'}"></i> ${p.match}</div>
             <div class="pathway-benefit"><strong>Benefit:</strong> ${p.benefit}</div>
-            ${p.requirements ? `<div class="pathway-requirements"><strong>Requirements:</strong> ${p.requirements.join(' • ')}</div>` : ''}
-            <a href="/tools/pnp-calculator" class="pathway-cta">Calculate PNP Score <i class="bi bi-arrow-right"></i></a>
+            <div class="pathway-requirements"><strong>Requirements:</strong> ${p.requirements.join(' • ')}</div>
+            <a href="/tools/pnp-calculator" class="pathway-cta">Full PNP Calculator <i class="bi bi-arrow-right"></i></a>
         </div>
     `).join('');
 }
@@ -592,6 +635,274 @@ function calculateNLPNPScore() {
     if (provincialConnections.includes('work')) score += 5;
 
     return score;
+}
+
+// Calculate BC PNP SIRS Score (200 points max, draws typically 138-150)
+function calculateBCPNPScore() {
+    let score = 0;
+    const clb = getLowestCLB();
+    const provincialConnections = Array.isArray(answers.provincial_connection) ? answers.provincial_connection : [];
+    const foreignExp = answers.foreign_experience !== 'none' ? parseInt(answers.foreign_experience) || 0 : 0;
+    const canExp = answers.canadian_experience !== 'none' ? parseInt(answers.canadian_experience) || 0 : 0;
+
+    // Work Experience (max 40 points)
+    const totalExp = foreignExp + canExp;
+    const expPoints = totalExp >= 5 ? 20 : totalExp >= 4 ? 16 : totalExp >= 3 ? 12 : totalExp >= 2 ? 8 : totalExp >= 1 ? 4 : 0;
+    score += expPoints;
+    // Bonus: Canadian work experience
+    if (canExp >= 1) score += 10;
+    // Bonus: Currently working in BC
+    if (provincialConnections.includes('work')) score += 10;
+
+    // Education (max 40 points)
+    const eduPoints = { none: 0, highschool: 0, oneyear: 5, twoyear: 5, bachelors: 15, two_degrees: 15, masters: 22, phd: 27 };
+    score += eduPoints[answers.education_level] || 0;
+    // Bonus: BC education
+    if (provincialConnections.includes('study') && answers.target_province === 'bc') score += 8;
+    // Bonus: Other Canadian education
+    else if (answers.education_country === 'canada') score += 6;
+
+    // Language (max 40 points)
+    const langPoints = { 4: 5, 5: 10, 6: 15, 7: 20, 8: 25, 9: 30, 10: 30 };
+    score += langPoints[clb] || 0;
+    // Bilingual bonus
+    if (answers.french_level === 'nclc7_plus' || answers.french_level === 'nclc5_6') score += 10;
+
+    // Job offer wage is a major factor (max 55 points) - estimate based on occupation
+    // Since we don't ask wage, estimate based on TEER level
+    const teer = answers.occupation_teer || 5;
+    const wagePoints = teer === 0 ? 45 : teer === 1 ? 35 : teer === 2 ? 25 : teer === 3 ? 15 : 5;
+    score += wagePoints;
+
+    // Regional bonus (max 25 points) - outside Metro Vancouver
+    // Can't determine without asking location, estimate 5 points average
+    score += 5;
+
+    return { score, max: 200, minDraw: 138 };
+}
+
+// Calculate Saskatchewan SINP Score (110 points max, 60 minimum required)
+function calculateSINPScore() {
+    let score = 0;
+    const clb = getLowestCLB();
+    const provincialConnections = Array.isArray(answers.provincial_connection) ? answers.provincial_connection : [];
+    const foreignExp = answers.foreign_experience !== 'none' ? parseInt(answers.foreign_experience) || 0 : 0;
+    const canExp = answers.canadian_experience !== 'none' ? parseInt(answers.canadian_experience) || 0 : 0;
+
+    // Education (max 23 points)
+    const eduPoints = { none: 0, highschool: 0, oneyear: 12, twoyear: 15, bachelors: 20, two_degrees: 20, masters: 23, phd: 23 };
+    score += eduPoints[answers.education_level] || 0;
+
+    // Work Experience (max 15 points)
+    const totalExp = foreignExp + canExp;
+    // Last 5 years (max 10)
+    const recentExp = Math.min(totalExp, 5);
+    const recentPoints = recentExp >= 5 ? 10 : recentExp >= 4 ? 8 : recentExp >= 3 ? 6 : recentExp >= 2 ? 4 : recentExp >= 1 ? 2 : 0;
+    score += recentPoints;
+    // 6-10 years ago (max 5) - assume some older experience
+    if (totalExp > 5) score += Math.min(totalExp - 5, 5);
+
+    // Language (max 20 points)
+    const langPoints = { 4: 12, 5: 14, 6: 16, 7: 18, 8: 20, 9: 20, 10: 20 };
+    score += langPoints[clb] || 0;
+    // Second language bonus
+    if (answers.french_level === 'nclc7_plus') score += 10;
+    else if (answers.french_level === 'nclc5_6') score += 2;
+
+    // Age (max 12 points)
+    const agePoints = { '18-24': 8, '25-29': 12, '30-34': 12, '35-39': 10, '40-44': 10, '45-49': 8, '50+': 0 };
+    score += agePoints[answers.age] || 0;
+
+    // Connection to Saskatchewan (max 30 points)
+    if (answers.job_offer === 'yes' && answers.job_province === 'saskatchewan') score += 30;
+    else {
+        if (provincialConnections.includes('family')) score += 20;
+        if (provincialConnections.includes('work')) score += 5;
+        if (provincialConnections.includes('study')) score += 5;
+    }
+
+    return { score, max: 110, minRequired: 60 };
+}
+
+// Calculate Manitoba MPNP Score (1000 points max, 60 minimum, 700+ competitive)
+function calculateMPNPScore() {
+    let score = 0;
+    const clb = getLowestCLB();
+    const provincialConnections = Array.isArray(answers.provincial_connection) ? answers.provincial_connection : [];
+    const foreignExp = answers.foreign_experience !== 'none' ? parseInt(answers.foreign_experience) || 0 : 0;
+    const canExp = answers.canadian_experience !== 'none' ? parseInt(answers.canadian_experience) || 0 : 0;
+
+    // Language (max 125 points) - 25 per band for CLB 8+
+    const langPoints = { 4: 48, 5: 68, 6: 80, 7: 88, 8: 100, 9: 100, 10: 100 };
+    score += langPoints[clb] || 0;
+    // Second language bonus
+    if (answers.french_level === 'nclc7_plus' || answers.french_level === 'nclc5_6') score += 25;
+
+    // Age (max 75 points)
+    const agePoints = { '18-24': 60, '25-29': 75, '30-34': 75, '35-39': 75, '40-44': 75, '45-49': 55, '50+': 0 };
+    score += agePoints[answers.age] || 0;
+
+    // Work Experience (max 175 points)
+    const totalExp = foreignExp + canExp;
+    const expPoints = totalExp >= 4 ? 75 : totalExp >= 3 ? 60 : totalExp >= 2 ? 50 : totalExp >= 1 ? 40 : 0;
+    score += expPoints;
+    // Manitoba work experience bonus (+100)
+    if (provincialConnections.includes('work') && answers.target_province === 'manitoba') score += 100;
+
+    // Education (max 125 points)
+    const eduPoints = { none: 0, highschool: 0, oneyear: 70, twoyear: 100, bachelors: 100, two_degrees: 115, masters: 125, phd: 125 };
+    score += eduPoints[answers.education_level] || 0;
+
+    // Adaptability (max 500 points)
+    if (provincialConnections.includes('family')) score += 200;
+    if (provincialConnections.includes('work')) score += 100;
+    if (provincialConnections.includes('study')) {
+        if (answers.education_level === 'twoyear' || answers.education_level === 'bachelors' ||
+            answers.education_level === 'masters' || answers.education_level === 'phd') score += 100;
+        else score += 50;
+    }
+
+    return { score, max: 1000, minRequired: 60, competitive: 700 };
+}
+
+// Calculate Alberta AAIP Score (100 points max)
+function calculateAAIPScore() {
+    let score = 0;
+    const clb = getLowestCLB();
+    const provincialConnections = Array.isArray(answers.provincial_connection) ? answers.provincial_connection : [];
+    const foreignExp = answers.foreign_experience !== 'none' ? parseInt(answers.foreign_experience) || 0 : 0;
+    const canExp = answers.canadian_experience !== 'none' ? parseInt(answers.canadian_experience) || 0 : 0;
+
+    // Education (max 12 points) - flat 12 for any post-secondary
+    if (['oneyear', 'twoyear', 'bachelors', 'two_degrees', 'masters', 'phd'].includes(answers.education_level)) {
+        score += 12;
+    }
+
+    // Alberta education bonus (max 10 points)
+    if (provincialConnections.includes('study') && answers.target_province === 'alberta') score += 10;
+
+    // Language (max 13 points)
+    if (clb >= 6) score += 10;
+    else if (clb >= 5) score += 5;
+    // French bonus
+    if (answers.french_level === 'nclc7_plus' || answers.french_level === 'nclc5_6') score += 3;
+
+    // Work Experience (max 21 points)
+    const totalExp = foreignExp + canExp;
+    if (totalExp >= 1) score += 11;
+    else if (totalExp >= 0.5) score += 6;
+    // Canadian/Alberta work experience bonus
+    if (provincialConnections.includes('work') && answers.target_province === 'alberta') score += 10;
+    else if (canExp >= 0.5) score += 5;
+
+    // Age (max 5 points) - only 21-34 gets points
+    if (['25-29', '30-34'].includes(answers.age)) score += 5;
+    else if (answers.age === '18-24') score += 5;
+
+    // Family in Alberta (max 8 points)
+    if (provincialConnections.includes('family')) score += 8;
+
+    // Job offer (max 16 points)
+    if (answers.job_offer === 'yes' && answers.job_province === 'alberta') score += 10;
+
+    return { score, max: 100, typicalDraw: 60 };
+}
+
+// Calculate New Brunswick NBPNP Score (100 points, 67 required)
+function calculateNBPNPScore() {
+    let score = 0;
+    const clb = getLowestCLB();
+    const provincialConnections = Array.isArray(answers.provincial_connection) ? answers.provincial_connection : [];
+    const foreignExp = answers.foreign_experience !== 'none' ? parseInt(answers.foreign_experience) || 0 : 0;
+    const canExp = answers.canadian_experience !== 'none' ? parseInt(answers.canadian_experience) || 0 : 0;
+
+    // Education (max 25 points)
+    const eduPoints = { none: 0, highschool: 5, oneyear: 15, twoyear: 19, bachelors: 21, two_degrees: 22, masters: 23, phd: 25 };
+    score += eduPoints[answers.education_level] || 0;
+
+    // Language (max 28 points) - CLB 7 minimum required
+    if (clb >= 9) score += 24;
+    else if (clb >= 8) score += 20;
+    else if (clb >= 7) score += 16;
+    // Second language
+    if (answers.french_level === 'nclc7_plus' || answers.french_level === 'nclc5_6') score += 4;
+
+    // Work Experience (max 15 points)
+    const totalExp = foreignExp + canExp;
+    const expPoints = totalExp >= 6 ? 15 : totalExp >= 4 ? 13 : totalExp >= 2 ? 11 : totalExp >= 1 ? 9 : 0;
+    score += expPoints;
+
+    // Age (max 12 points)
+    const agePoints = { '18-24': 12, '25-29': 12, '30-34': 12, '35-39': 9, '40-44': 5, '45-49': 2, '50+': 0 };
+    score += agePoints[answers.age] || 0;
+
+    // Job offer in NB (max 10 points)
+    if (answers.job_offer === 'yes' && answers.job_province === 'new_brunswick') score += 10;
+
+    // Adaptability (max 10 points)
+    let adaptability = 0;
+    if (provincialConnections.includes('family')) adaptability += 5;
+    if (provincialConnections.includes('work')) adaptability += 5;
+    if (provincialConnections.includes('study')) adaptability += 5;
+    if (answers.french_level !== 'none') adaptability += 5; // Spouse language estimate
+    score += Math.min(adaptability, 10);
+
+    return { score, max: 100, minRequired: 67 };
+}
+
+// Calculate PEI PNP Score (100 points, 67 required)
+function calculatePEIPNPScore() {
+    let score = 0;
+    const clb = getLowestCLB();
+    const provincialConnections = Array.isArray(answers.provincial_connection) ? answers.provincial_connection : [];
+    const foreignExp = answers.foreign_experience !== 'none' ? parseInt(answers.foreign_experience) || 0 : 0;
+    const canExp = answers.canadian_experience !== 'none' ? parseInt(answers.canadian_experience) || 0 : 0;
+
+    // Age (max 12 points)
+    const agePoints = { '18-24': 12, '25-29': 12, '30-34': 12, '35-39': 9, '40-44': 5, '45-49': 2, '50+': 0 };
+    score += agePoints[answers.age] || 0;
+
+    // Education (max 25 points)
+    const eduPoints = { none: 0, highschool: 5, oneyear: 15, twoyear: 19, bachelors: 21, two_degrees: 22, masters: 23, phd: 25 };
+    score += eduPoints[answers.education_level] || 0;
+
+    // Language (max 28 points)
+    if (clb >= 9) score += 24;
+    else if (clb >= 8) score += 20;
+    else if (clb >= 7) score += 16;
+    else if (clb >= 6) score += 12;
+    // Bilingual bonus
+    if (answers.french_level === 'nclc7_plus' || answers.french_level === 'nclc5_6') score += 10;
+
+    // Work Experience (max 15 points)
+    const totalExp = foreignExp + canExp;
+    const expPoints = totalExp >= 6 ? 15 : totalExp >= 4 ? 13 : totalExp >= 2 ? 11 : totalExp >= 1 ? 9 : 0;
+    score += expPoints;
+
+    // Job offer in PEI (max 10 points) - Note: PEI doesn't require job offer
+    if (answers.job_offer === 'yes' && answers.job_province === 'pei') score += 10;
+
+    // Adaptability (max 10 points)
+    let adaptability = 0;
+    if (provincialConnections.includes('family')) adaptability += 5;
+    if (provincialConnections.includes('study')) adaptability += 5;
+    if (canExp >= 1) adaptability += 5;
+    score += Math.min(adaptability, 10);
+
+    return { score, max: 100, minRequired: 67 };
+}
+
+// Get all provincial scores for display
+function getAllProvincialScores() {
+    return {
+        bc: calculateBCPNPScore(),
+        sk: calculateSINPScore(),
+        mb: calculateMPNPScore(),
+        ab: calculateAAIPScore(),
+        nb: calculateNBPNPScore(),
+        pei: calculatePEIPNPScore(),
+        nl: { score: calculateNLPNPScore(), max: 100, minRequired: 67 }
+    };
 }
 
 function renderImprovements(currentScore) {
