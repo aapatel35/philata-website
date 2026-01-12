@@ -422,8 +422,8 @@
     </div>
     <div class="stat-card">
         <div class="label">Latest CRS Cutoff</div>
-        <div class="value" id="latestCutoff">524</div>
-        <div class="change up"><i class="bi bi-arrow-up"></i> General draw</div>
+        <div class="value" id="latestCutoff">511</div>
+        <div class="change up"><i class="bi bi-arrow-up"></i> CEC draw</div>
     </div>
     <div class="stat-card">
         <div class="label">ITAs Issued (2024)</div>
@@ -524,22 +524,22 @@
         </thead>
         <tbody>
             <tr>
-                <td>January 8, 2025</td>
-                <td>General</td>
-                <td class="score">524</td>
-                <td class="itas">2,500</td>
-            </tr>
-            <tr>
-                <td>January 7, 2025</td>
+                <td>January 7, 2026</td>
                 <td>Canadian Experience Class</td>
                 <td class="score">511</td>
                 <td class="itas">8,000</td>
             </tr>
             <tr>
-                <td>January 5, 2025</td>
+                <td>January 5, 2026</td>
                 <td>Provincial Nominee</td>
                 <td class="score">711</td>
-                <td class="itas">1,900</td>
+                <td class="itas">574</td>
+            </tr>
+            <tr>
+                <td>December 17, 2025</td>
+                <td>French Language</td>
+                <td class="score">399</td>
+                <td class="itas">6,000</td>
             </tr>
             <tr>
                 <td>December 18, 2024</td>
@@ -594,7 +594,7 @@ const poolDistribution = {
 };
 
 const totalPool = Object.values(poolDistribution).reduce((a, b) => a + b, 0);
-const latestCutoff = 524;
+const latestCutoff = 511;
 
 function calculatePosition() {
     const score = parseInt(document.getElementById('userScore').value);

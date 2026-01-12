@@ -681,8 +681,8 @@
         padding: 0.875rem 2rem;
         font-size: 1rem;
         font-weight: 600;
-        background: var(--gradient-primary);
-        color: white;
+        background: linear-gradient(135deg, #1E3A5F 0%, #0891B2 100%);
+        color: #FFFFFF;
         border: none;
         border-radius: 12px;
         cursor: pointer;
@@ -694,6 +694,7 @@
     .check-btn:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 25px rgba(30, 58, 95, 0.3);
+        background: linear-gradient(135deg, #1a3352 0%, #0780a0 100%);
     }
 
     /* Check Result */
@@ -888,7 +889,7 @@
         </div>
         <div class="prediction-item">
             <span class="prediction-item-label">Highest Recent CRS</span>
-            <span class="prediction-item-value" id="highestCrs">524</span>
+            <span class="prediction-item-value" id="highestCrs">711</span>
         </div>
         <div class="prediction-item">
             <span class="prediction-item-label">Lowest Recent CRS</span>
@@ -1048,10 +1049,10 @@
             {% endfor %}
         {% else %}
             <div class="draw-row">
-                <span>Jan 8, 2026</span>
-                <span><span class="draw-category-badge general">General</span></span>
-                <span class="draw-crs">524</span>
-                <span>2,500</span>
+                <span>Jan 7, 2026</span>
+                <span><span class="draw-category-badge cec">CEC</span></span>
+                <span class="draw-crs">511</span>
+                <span>8,000</span>
             </div>
             <div class="draw-row">
                 <span>Dec 19, 2025</span>
@@ -1216,7 +1217,7 @@
             Official Data Source
         </div>
         <div class="reasoning-text">
-            All predictions are based on official IRCC data from <strong>canada.ca</strong>. We fetch the latest Express Entry draws directly from the government JSON API, ensuring accuracy and real-time updates.
+            All predictions are based on official IRCC data from <strong>canada.ca</strong>. Our draw information is sourced directly from IRCC's official Express Entry rounds page, ensuring accuracy and timely updates.
         </div>
     </div>
 
@@ -1287,6 +1288,9 @@
                 <li><a href="https://novascotiaimmigration.com/move-here/" target="_blank" style="color: var(--primary);">Nova Scotia NSNP</a></li>
                 <li><a href="https://www.welcomenb.ca/content/wel-bien/en/immigrating/content/HowToImmigrate/NBProvincialNomineeProgram.html" target="_blank" style="color: var(--primary);">New Brunswick NBPNP</a></li>
                 <li><a href="https://www.princeedwardisland.ca/en/topic/office-immigration" target="_blank" style="color: var(--primary);">PEI PNP</a></li>
+                <li><a href="https://www.gov.nl.ca/immigration/immigrating-to-newfoundland-and-labrador/provincial-nominee-program/" target="_blank" style="color: var(--primary);">Newfoundland & Labrador NLPNP</a></li>
+                <li><a href="https://www.immigratenwt.ca/en/northwest-territories-nominee-program" target="_blank" style="color: var(--primary);">Northwest Territories NTNP</a></li>
+                <li><a href="https://yukon.ca/en/doing-business/business-supports-and-financing/yukon-nominee-program" target="_blank" style="color: var(--primary);">Yukon YNP</a></li>
             </ul>
         </div>
     </div>
