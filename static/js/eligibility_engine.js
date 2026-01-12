@@ -398,8 +398,27 @@ function renderImprovements(currentScore) {
 
 function renderAlternativePathways() {
     const container = document.getElementById('alternativeResults');
-    container.innerHTML = ALTERNATIVE_PATHWAYS.slice(0, 2).map(alt => `
-        <div class="alt-pathway">
+
+    // Filter pathways based on user's profile
+    const relevantPathways = ALTERNATIVE_PATHWAYS.filter(alt => {
+        try {
+            return alt.condition ? alt.condition(answers) : true;
+        } catch(e) {
+            return true;
+        }
+    });
+
+    // Sort by relevance (CEC direct first if applicable, then others)
+    relevantPathways.sort((a, b) => {
+        if (a.id === 'cec_direct') return -1;
+        if (b.id === 'cec_direct') return 1;
+        return 0;
+    });
+
+    // Show up to 6 relevant pathways
+    container.innerHTML = relevantPathways.slice(0, 6).map(alt => `
+        <div class="alt-pathway ${alt.id === 'cec_direct' ? 'recommended' : ''}">
+            ${alt.id === 'cec_direct' ? '<div class="badge">Recommended for You</div>' : ''}
             <h4>${alt.name}</h4>
             <div class="description">${alt.description}</div>
             <div class="timeline"><i class="bi bi-clock"></i> ${alt.timeline}</div>
@@ -409,6 +428,11 @@ function renderAlternativePathways() {
             </div>
         </div>
     `).join('');
+
+    // If no pathways match, show a message
+    if (relevantPathways.length === 0) {
+        container.innerHTML = '<div class="no-pathways">Based on your profile, Express Entry appears to be your best option. Consider improving your CRS score with the suggestions above.</div>';
+    }
 }
 
 function renderCareerTransitions() {

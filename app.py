@@ -764,6 +764,20 @@ def pool_stats():
     return render_template('pool_stats.html')
 
 
+@app.route('/api/draws')
+def api_draws():
+    """API endpoint for Express Entry draws data"""
+    try:
+        draws_file = os.path.join(os.path.dirname(__file__), 'data', 'draws.json')
+        if os.path.exists(draws_file):
+            with open(draws_file, 'r') as f:
+                data = json.load(f)
+            return jsonify(data)
+        return jsonify({"draws": [], "pool_stats": {}, "error": "No data available"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route('/tools/pnp-calculator')
 @app.route('/tools/pnp-calculator/<province_id>')
 def pnp_calculator(province_id=None):

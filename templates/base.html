@@ -1214,6 +1214,58 @@
             }
         }
 
+        /* Enhanced Responsive - Ensure proper scaling */
+        html {
+            font-size: 16px;
+        }
+
+        @media (min-width: 1400px) {
+            .content-container {
+                max-width: 1320px;
+            }
+        }
+
+        @media (min-width: 1600px) {
+            .content-container {
+                max-width: 1500px;
+            }
+            .main-content {
+                padding: 48px;
+            }
+        }
+
+        @media (min-width: 1920px) {
+            html {
+                font-size: 18px;
+            }
+            .content-container {
+                max-width: 1700px;
+            }
+        }
+
+        /* Fluid typography for larger screens */
+        @media (min-width: 1200px) {
+            .page-title {
+                font-size: clamp(2rem, 2.5vw, 3rem);
+            }
+            .page-subtitle {
+                font-size: clamp(1rem, 1.2vw, 1.25rem);
+            }
+        }
+
+        /* Fix table responsiveness */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Fix form elements on mobile */
+        @media (max-width: 768px) {
+            input, select, textarea, button {
+                font-size: 16px !important; /* Prevents iOS zoom */
+            }
+        }
+
         /* Utility Classes */
         .text-primary { color: var(--text-primary) !important; }
         .text-secondary { color: var(--text-secondary) !important; }
