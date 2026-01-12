@@ -275,6 +275,23 @@
         color: var(--text);
     }
 
+    .data-timestamp {
+        margin-left: auto;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        background: var(--card);
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+    }
+    .data-timestamp a {
+        color: var(--primary);
+        text-decoration: none;
+    }
+    .data-timestamp a:hover {
+        text-decoration: underline;
+    }
+
     .draws-table {
         width: 100%;
     }
@@ -340,6 +357,16 @@
     .draw-category-badge.trade {
         background: rgba(245, 158, 11, 0.15);
         color: #D97706;
+    }
+
+    .draw-category-badge.cec {
+        background: rgba(34, 197, 94, 0.15);
+        color: #16A34A;
+    }
+
+    .draw-category-badge.pnp {
+        background: rgba(236, 72, 153, 0.15);
+        color: #DB2777;
     }
 
     /* Reasoning Section */
@@ -1026,6 +1053,7 @@
     <div class="draws-header">
         <i class="bi bi-clock-history"></i>
         <h3>Recent Express Entry Draws</h3>
+        <span class="data-timestamp">Last updated: Jan 12, 2026 | Source: <a href="https://www.canada.ca/en/immigration-refugees-citizenship/corporate/mandate/policies-operational-instructions-agreements/ministerial-instructions/express-entry-rounds.html" target="_blank" rel="noopener">Official IRCC</a></span>
     </div>
     <div class="draws-table">
         <div class="draw-row header">
@@ -1048,6 +1076,7 @@
             </div>
             {% endfor %}
         {% else %}
+            <!-- Official IRCC Draw Data - Last updated: Jan 12, 2026 -->
             <div class="draw-row">
                 <span>Jan 7, 2026</span>
                 <span><span class="draw-category-badge cec">CEC</span></span>
@@ -1055,28 +1084,28 @@
                 <span>8,000</span>
             </div>
             <div class="draw-row">
-                <span>Dec 19, 2025</span>
-                <span><span class="draw-category-badge general">General</span></span>
-                <span class="draw-crs">518</span>
-                <span>3,200</span>
+                <span>Jan 5, 2026</span>
+                <span><span class="draw-category-badge pnp">PNP</span></span>
+                <span class="draw-crs">711</span>
+                <span>574</span>
+            </div>
+            <div class="draw-row">
+                <span>Dec 17, 2025</span>
+                <span><span class="draw-category-badge french">French</span></span>
+                <span class="draw-crs">399</span>
+                <span>6,000</span>
+            </div>
+            <div class="draw-row">
+                <span>Dec 16, 2025</span>
+                <span><span class="draw-category-badge cec">CEC</span></span>
+                <span class="draw-crs">515</span>
+                <span>5,000</span>
             </div>
             <div class="draw-row">
                 <span>Dec 11, 2025</span>
                 <span><span class="draw-category-badge healthcare">Healthcare</span></span>
-                <span class="draw-crs">431</span>
-                <span>1,800</span>
-            </div>
-            <div class="draw-row">
-                <span>Dec 4, 2025</span>
-                <span><span class="draw-category-badge french">French</span></span>
-                <span class="draw-crs">379</span>
-                <span>6,000</span>
-            </div>
-            <div class="draw-row">
-                <span>Nov 27, 2025</span>
-                <span><span class="draw-category-badge general">General</span></span>
-                <span class="draw-crs">522</span>
-                <span>2,850</span>
+                <span class="draw-crs">476</span>
+                <span>1,000</span>
             </div>
         {% endif %}
     </div>

@@ -351,6 +351,142 @@
 
     .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
     @media (max-width: 900px) { .results-grid { grid-template-columns: 1fr; } }
+
+    /* Category-Based Draws Section */
+    .category-info {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1));
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;
+        display: flex; align-items: center; gap: 0.75rem;
+        font-size: 0.95rem; color: var(--text);
+    }
+    .category-info i { color: #3b82f6; font-size: 1.25rem; }
+
+    .category-draws-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+
+    .category-card {
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: 12px; padding: 1.25rem; position: relative; overflow: hidden;
+    }
+    .category-card.best-match { border: 2px solid #16a34a; }
+    .category-card .best-badge {
+        position: absolute; top: 0; right: 0;
+        background: linear-gradient(135deg, #16a34a, #22c55e);
+        color: white; font-size: 0.7rem; font-weight: 600; padding: 0.35rem 0.75rem;
+        border-radius: 0 10px 0 12px; text-transform: uppercase;
+    }
+    .category-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .category-header h4 { font-size: 1rem; color: var(--text); margin: 0; }
+    .advantage-badge {
+        font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 6px; text-transform: uppercase;
+    }
+    .advantage-badge.strong { background: #dcfce7; color: #16a34a; }
+    .advantage-badge.good { background: #dbeafe; color: #3b82f6; }
+    .advantage-badge.moderate { background: #fef3c7; color: #d97706; }
+    .advantage-badge.developing { background: #fee2e2; color: #dc2626; }
+
+    .category-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
+    .category-stats .stat { text-align: center; padding: 0.5rem; background: var(--bg); border-radius: 8px; }
+    .category-stats .stat-value { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+    .category-stats .stat-label { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.15rem; }
+    .category-stats .stat.positive .stat-value { color: #16a34a; }
+    .category-stats .stat.negative .stat-value { color: #dc2626; }
+
+    .category-details { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; font-size: 0.85rem; color: var(--text-muted); }
+    .category-details i { color: var(--primary); margin-right: 0.35rem; }
+
+    .category-verdict { font-size: 0.85rem; padding: 0.75rem; border-radius: 8px; display: flex; align-items: center; gap: 0.5rem; }
+    .category-verdict.success { background: #dcfce7; color: #16a34a; }
+    .category-verdict.warning { background: #fef3c7; color: #d97706; }
+
+    /* NOC Pathway Section */
+    .noc-pathway-card {
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: 12px; padding: 1.5rem;
+    }
+    .noc-pathway-card.highlighted { border: 2px solid var(--primary); }
+    .noc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .noc-header h4 { font-size: 1.15rem; color: var(--text); margin: 0; }
+    .noc-badge { background: var(--primary); color: white; font-size: 0.75rem; font-weight: 600; padding: 0.35rem 0.75rem; border-radius: 6px; }
+
+    .recommendation-box {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1));
+        border-radius: 10px; padding: 1rem; margin-bottom: 1.25rem;
+        display: flex; align-items: flex-start; gap: 0.75rem;
+    }
+    .recommendation-box i { color: #f59e0b; font-size: 1.25rem; flex-shrink: 0; }
+    .recommendation-box span { color: var(--text); font-size: 0.95rem; line-height: 1.5; }
+
+    .pathway-sections { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 600px) { .pathway-sections { grid-template-columns: 1fr; } }
+
+    .pathway-section h5 { font-size: 0.9rem; color: var(--text); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+    .pathway-section h5 i { color: var(--primary); }
+
+    .category-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .category-tag { font-size: 0.75rem; font-weight: 600; padding: 0.35rem 0.75rem; border-radius: 6px; }
+    .category-tag.stem { background: #dbeafe; color: #3b82f6; }
+    .category-tag.healthcare { background: #dcfce7; color: #16a34a; }
+    .category-tag.trades { background: #fef3c7; color: #d97706; }
+    .category-tag.transport { background: #e0e7ff; color: #6366f1; }
+    .category-tag.agriculture { background: #d1fae5; color: #059669; }
+    .category-tag.french { background: #fce7f3; color: #db2777; }
+
+    .draw-comparison { display: flex; flex-direction: column; gap: 0.5rem; }
+    .draw-item {
+        display: grid; grid-template-columns: 1fr 60px 1fr; gap: 0.5rem;
+        background: var(--bg); padding: 0.6rem 0.75rem; border-radius: 8px; font-size: 0.85rem;
+    }
+    .draw-item.qualified { border-left: 3px solid #16a34a; }
+    .draw-type { font-weight: 600; color: var(--text); }
+    .draw-cutoff { text-align: center; color: var(--text-muted); }
+    .your-status { text-align: right; font-weight: 500; }
+    .draw-item.qualified .your-status { color: #16a34a; }
+
+    .provincial-streams { display: flex; flex-direction: column; gap: 0.4rem; }
+    .stream-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted); }
+    .stream-item i { color: var(--primary); font-size: 0.8rem; }
+
+    .pathway-tips .tip { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.5rem 0; font-size: 0.9rem; color: var(--text-muted); }
+    .pathway-tips .tip i { color: var(--primary); margin-top: 0.15rem; }
+
+    /* Family Sponsorship Section */
+    .family-options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; }
+
+    .family-option-card {
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: 12px; padding: 1.5rem;
+    }
+    .family-option-card.highlighted { border: 2px solid #dc2777; background: linear-gradient(135deg, rgba(219, 39, 119, 0.03), rgba(244, 114, 182, 0.03)); }
+
+    .option-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+    .option-header i { font-size: 1.5rem; color: #db2777; }
+    .option-header h4 { font-size: 1.1rem; color: var(--text); margin: 0; }
+    .option-desc { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; line-height: 1.5; }
+
+    .streams-list { margin-bottom: 1rem; }
+    .stream-option { background: var(--bg); padding: 0.75rem; border-radius: 8px; margin-bottom: 0.5rem; }
+    .stream-option strong { color: var(--text); font-size: 0.95rem; }
+    .stream-details { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.35rem; font-size: 0.85rem; color: var(--text-muted); }
+    .stream-details i { color: var(--primary); margin-right: 0.25rem; }
+
+    .requirements-list { margin-bottom: 1rem; }
+    .requirements-list strong { font-size: 0.85rem; color: var(--text); }
+    .requirements-list ul { margin: 0.5rem 0 0 1.25rem; padding: 0; }
+    .requirements-list li { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem; }
+
+    .family-tip {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1));
+        border-radius: 8px; padding: 0.75rem; font-size: 0.85rem; color: var(--text);
+        display: flex; align-items: flex-start; gap: 0.5rem;
+    }
+    .family-tip i { color: #f59e0b; flex-shrink: 0; margin-top: 0.15rem; }
+
+    .info-card {
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: 12px; padding: 1.25rem;
+    }
+    .info-card p { color: var(--text-muted); margin-bottom: 1rem; }
 </style>
 {% endblock %}
 
@@ -404,6 +540,15 @@
 
     <!-- Warnings Section -->
     <div id="warningsSection" style="margin-bottom: 2rem;"></div>
+
+    <!-- Category-Based Draws Section (for occupation-specific draws) -->
+    <div id="categoryDrawsSection" style="margin-bottom: 2rem;"></div>
+
+    <!-- NOC-Specific Pathway Recommendations -->
+    <div id="nocPathwaysSection" style="margin-bottom: 2rem;"></div>
+
+    <!-- Family Sponsorship Options (if applicable) -->
+    <div id="familySponsorshipSection" style="margin-bottom: 2rem;"></div>
 
     <div class="results-grid">
         <div>

@@ -949,6 +949,7 @@ class PhilataPoster:
         Args:
             title: Post title
             captions: Dict with caption_instagram, caption_facebook, caption_linkedin, caption_x
+                     (also accepts instagram, facebook, linkedin, twitter/x keys)
             image_url: Public image URL (Cloudinary)
 
         Returns:
@@ -957,6 +958,9 @@ class PhilataPoster:
         print("\n" + "="*60)
         print(f"POSTING IMAGE: {title}")
         print("="*60)
+
+        # Normalize caption keys to expected format
+        captions = self._normalize_captions(captions)
 
         results = {}
 
@@ -991,7 +995,7 @@ class PhilataPoster:
 
         Args:
             title: Post title
-            captions: Dict with platform captions
+            captions: Dict with platform captions (supports both formats)
             image_urls: List of 2-10 public image URLs
 
         Returns:
@@ -1000,6 +1004,9 @@ class PhilataPoster:
         print("\n" + "="*60)
         print(f"POSTING CAROUSEL: {title} ({len(image_urls)} images)")
         print("="*60)
+
+        # Normalize caption keys to expected format
+        captions = self._normalize_captions(captions)
 
         results = {}
 
@@ -1041,7 +1048,7 @@ class PhilataPoster:
 
         Args:
             title: Post title
-            captions: Dict with platform captions
+            captions: Dict with platform captions (supports both formats)
             video_url: Public video URL
             thumbnail_url: Thumbnail image for Facebook/X/LinkedIn
 
@@ -1051,6 +1058,9 @@ class PhilataPoster:
         print("\n" + "="*60)
         print(f"POSTING REEL: {title}")
         print("="*60)
+
+        # Normalize caption keys to expected format
+        captions = self._normalize_captions(captions)
 
         results = {}
 
@@ -1342,6 +1352,36 @@ class PhilataPoster:
         print(f"   --- POSTING COMPLETE: {results} ---")
 
         return results
+
+    def _normalize_captions(self, captions: Dict[str, str]) -> Dict[str, str]:
+        """Normalize caption keys to expected format (caption_instagram, caption_facebook, etc.)"""
+        normalized = {
+            "caption_instagram": "",
+            "caption_facebook": "",
+            "caption_linkedin": "",
+            "caption_x": ""
+        }
+
+        # Map both formats: 'instagram' -> 'caption_instagram' and 'caption_instagram' -> 'caption_instagram'
+        key_mapping = {
+            'instagram': 'caption_instagram',
+            'facebook': 'caption_facebook',
+            'linkedin': 'caption_linkedin',
+            'twitter': 'caption_x',
+            'x': 'caption_x',
+            'caption_instagram': 'caption_instagram',
+            'caption_facebook': 'caption_facebook',
+            'caption_linkedin': 'caption_linkedin',
+            'caption_x': 'caption_x',
+            'caption_twitter': 'caption_x'
+        }
+
+        for key, value in captions.items():
+            normalized_key = key_mapping.get(key.lower())
+            if normalized_key and value:
+                normalized[normalized_key] = value
+
+        return normalized
 
     def _load_captions_from_folder(self, output_folder: str) -> Dict[str, str]:
         """Load platform-specific captions from folder."""

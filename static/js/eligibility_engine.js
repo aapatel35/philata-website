@@ -497,6 +497,9 @@ function showResults() {
 
     renderProfileSummary();
     renderWarnings();
+    renderCategoryDraws();          // NEW: Category-based Express Entry draws
+    renderNOCPathways();            // NEW: NOC-specific pathway recommendations
+    renderFamilySponsorship();      // NEW: Family sponsorship options
     renderProgramEligibility(crsScore);
     renderProvincialPathways();
     renderImprovements(crsScore);
@@ -1384,6 +1387,333 @@ function renderCareerTransitions() {
                 <div class="improvement-details">Canadian diploma + PGWP in a skilled field</div>
             </div>
             <div class="improvement-gain">TEER 0-3</div>
+        </div>
+    `;
+}
+
+// Render Category-Based Express Entry Draws
+function renderCategoryDraws() {
+    const section = document.getElementById('categoryDrawsSection');
+    const nocCode = answers.occupation;
+    const crsScore = calculateCRS();
+    const clb = getLowestCLB();
+
+    if (!nocCode || typeof FEDERAL_CATEGORIES === 'undefined') {
+        section.innerHTML = '';
+        return;
+    }
+
+    const eligibleCategories = [];
+
+    // Check each category for NOC eligibility
+    for (const [catId, category] of Object.entries(FEDERAL_CATEGORIES)) {
+        // French category is based on language, not NOC
+        if (catId === 'french') {
+            if (answers.french_level === 'nclc7_plus') {
+                eligibleCategories.push({
+                    id: catId,
+                    ...category,
+                    yourScore: crsScore,
+                    eligible: true,
+                    advantage: crsScore >= category.recentCutoff ? 'STRONG' : 'GOOD'
+                });
+            }
+            continue;
+        }
+
+        // Check if user's NOC is in this category
+        if (category.eligibleNOCs && category.eligibleNOCs.includes(nocCode)) {
+            const advantage = crsScore >= category.recentCutoff ? 'STRONG' :
+                             crsScore >= category.averageCutoff - 50 ? 'MODERATE' : 'DEVELOPING';
+            eligibleCategories.push({
+                id: catId,
+                ...category,
+                yourScore: crsScore,
+                eligible: true,
+                advantage
+            });
+        }
+    }
+
+    if (eligibleCategories.length === 0) {
+        // Check if French could be an option
+        if (answers.french_level !== 'nclc7_plus' && answers.french_level !== 'none') {
+            section.innerHTML = `
+                <h3 class="section-title"><i class="bi bi-lightning-charge"></i> Category-Based Draws</h3>
+                <div class="info-card">
+                    <p>Your occupation is not currently targeted by category-based draws. However, you could qualify for:</p>
+                    <div class="improvement-card">
+                        <div>
+                            <div class="improvement-action">French Language Category</div>
+                            <div class="improvement-details">Improve your French to NCLC 7+ to qualify for French draws with cutoffs as low as ${FEDERAL_CATEGORIES.french?.recentCutoff || 379}</div>
+                        </div>
+                        <div class="improvement-gain">CRS ${FEDERAL_CATEGORIES.french?.recentCutoff || 379}</div>
+                    </div>
+                </div>
+            `;
+        } else {
+            section.innerHTML = '';
+        }
+        return;
+    }
+
+    // Sort by advantage (best matches first)
+    eligibleCategories.sort((a, b) => {
+        const order = { 'STRONG': 0, 'GOOD': 1, 'MODERATE': 2, 'DEVELOPING': 3 };
+        return (order[a.advantage] || 3) - (order[b.advantage] || 3);
+    });
+
+    section.innerHTML = `
+        <h3 class="section-title"><i class="bi bi-lightning-charge"></i> Category-Based Express Entry Draws</h3>
+        <div class="category-info">
+            <i class="bi bi-info-circle"></i>
+            Category-based draws target specific occupations with <strong>lower CRS cutoffs</strong> than general draws.
+            Your occupation qualifies for ${eligibleCategories.length} category draw${eligibleCategories.length !== 1 ? 's' : ''}!
+        </div>
+        <div class="category-draws-grid">
+            ${eligibleCategories.map((cat, i) => `
+                <div class="category-card ${cat.advantage.toLowerCase()} ${i === 0 ? 'best-match' : ''}">
+                    ${i === 0 ? '<div class="best-badge">Best Opportunity</div>' : ''}
+                    <div class="category-header">
+                        <h4>${cat.name}</h4>
+                        <span class="advantage-badge ${cat.advantage.toLowerCase()}">${cat.advantage}</span>
+                    </div>
+                    <div class="category-stats">
+                        <div class="stat">
+                            <div class="stat-value">${cat.recentCutoff}</div>
+                            <div class="stat-label">Recent Cutoff</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${crsScore}</div>
+                            <div class="stat-label">Your CRS</div>
+                        </div>
+                        <div class="stat ${crsScore >= cat.recentCutoff ? 'positive' : 'negative'}">
+                            <div class="stat-value">${crsScore >= cat.recentCutoff ? '+' : ''}${crsScore - cat.recentCutoff}</div>
+                            <div class="stat-label">Difference</div>
+                        </div>
+                    </div>
+                    <div class="category-details">
+                        <div><i class="bi bi-calendar-event"></i> ${cat.frequency}</div>
+                        <div><i class="bi bi-graph-up"></i> ${cat.trend}</div>
+                    </div>
+                    ${crsScore >= cat.recentCutoff
+                        ? '<div class="category-verdict success"><i class="bi bi-check-circle-fill"></i> You would likely receive an ITA in a ${cat.name} draw!</div>'
+                        : `<div class="category-verdict warning"><i class="bi bi-exclamation-circle"></i> ${cat.recentCutoff - crsScore} more points needed for recent cutoff</div>`
+                    }
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+// Render NOC-Specific Pathway Recommendations
+function renderNOCPathways() {
+    const section = document.getElementById('nocPathwaysSection');
+    const nocCode = answers.occupation;
+
+    if (!nocCode || typeof NOC_PATHWAY_MATCHING === 'undefined') {
+        section.innerHTML = '';
+        return;
+    }
+
+    const nocPathway = NOC_PATHWAY_MATCHING[nocCode];
+
+    if (!nocPathway) {
+        // No specific pathway info for this NOC, but show general advice based on category
+        const category = selectedOccupation?.category;
+        if (category) {
+            section.innerHTML = `
+                <h3 class="section-title"><i class="bi bi-signpost-2"></i> Occupation-Based Recommendations</h3>
+                <div class="noc-pathway-card">
+                    <h4>${selectedOccupation?.title || 'Your Occupation'} (NOC ${nocCode})</h4>
+                    <p>Your occupation falls under the <strong>${category}</strong> category.</p>
+                    <div class="pathway-tips">
+                        ${category === 'STEM' ? '<div class="tip"><i class="bi bi-laptop"></i> Consider BC PNP Tech, Ontario Tech Draws, or STEM category draws</div>' : ''}
+                        ${category === 'Healthcare' ? '<div class="tip"><i class="bi bi-heart-pulse"></i> Healthcare category draws offer lower CRS cutoffs. Check Ontario\'s 2026 Priority Healthcare stream!</div>' : ''}
+                        ${category === 'Trades' ? '<div class="tip"><i class="bi bi-tools"></i> Federal Skilled Trades program and Trade draws are great options. Red Seal certification helps!</div>' : ''}
+                        ${category === 'Transport' ? '<div class="tip"><i class="bi bi-truck"></i> Transport category draws target your occupation. Provincial streams in Alberta and Saskatchewan also recruit heavily.</div>' : ''}
+                        ${category === 'Agriculture' ? '<div class="tip"><i class="bi bi-tree"></i> Agriculture draws have the lowest CRS cutoffs. Also check Agri-Food Pilot program!</div>' : ''}
+                    </div>
+                </div>
+            `;
+        } else {
+            section.innerHTML = '';
+        }
+        return;
+    }
+
+    const crsScore = calculateCRS();
+
+    section.innerHTML = `
+        <h3 class="section-title"><i class="bi bi-signpost-2"></i> Your Occupation's Best Pathways</h3>
+        <div class="noc-pathway-card highlighted">
+            <div class="noc-header">
+                <h4>${nocPathway.title}</h4>
+                <span class="noc-badge">NOC ${nocCode}</span>
+            </div>
+
+            <div class="recommendation-box">
+                <i class="bi bi-lightbulb-fill"></i>
+                <span>${nocPathway.recommendation}</span>
+            </div>
+
+            <div class="pathway-sections">
+                <div class="pathway-section">
+                    <h5><i class="bi bi-flag"></i> Federal Category Draws</h5>
+                    <div class="category-tags">
+                        ${nocPathway.federalCategories.map(cat => `
+                            <span class="category-tag ${cat.toLowerCase()}">${cat}</span>
+                        `).join('')}
+                    </div>
+                    ${nocPathway.recentDraws ? `
+                        <div class="draw-comparison">
+                            ${Object.entries(nocPathway.recentDraws).map(([type, cutoff]) => `
+                                <div class="draw-item ${crsScore >= cutoff ? 'qualified' : ''}">
+                                    <span class="draw-type">${type.charAt(0).toUpperCase() + type.slice(1)}</span>
+                                    <span class="draw-cutoff">${cutoff}</span>
+                                    <span class="your-status">${crsScore >= cutoff ? '<i class="bi bi-check-circle-fill"></i> Qualified' : `Need +${cutoff - crsScore}`}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+
+                <div class="pathway-section">
+                    <h5><i class="bi bi-geo-alt"></i> Provincial Priority Streams</h5>
+                    <div class="provincial-streams">
+                        ${nocPathway.provincialPriority.map(stream => {
+                            const streamNames = {
+                                'oinp_tech_draw': 'Ontario Tech Draw',
+                                'oinp_priority_healthcare': 'Ontario Priority Healthcare',
+                                'oinp_critical_sectors': 'Ontario Critical Sectors',
+                                'bcpnp_tech': 'BC PNP Tech',
+                                'bcpnp_healthcare': 'BC PNP Healthcare',
+                                'aaip_tech': 'Alberta Tech Pathway',
+                                'aaip_opportunity': 'Alberta Opportunity Stream',
+                                'sinp_occupation_demand': 'Saskatchewan In-Demand',
+                                'mpnp_skilled_manitoba': 'Manitoba Skilled Worker',
+                                'aip_skilled': 'Atlantic Immigration Program'
+                            };
+                            return `<div class="stream-item"><i class="bi bi-arrow-right-circle"></i> ${streamNames[stream] || stream}</div>`;
+                        }).join('')}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Render Family Sponsorship Options
+function renderFamilySponsorship() {
+    const section = document.getElementById('familySponsorshipSection');
+
+    const hasCanadianSpouse = answers.canadian_spouse === 'yes_citizen' || answers.canadian_spouse === 'yes_pr';
+    const hasCanadianParent = answers.family_in_canada === 'parent';
+    const hasCanadianChild = answers.family_in_canada === 'child';
+    const interestedInPGP = answers.pgp_interest === 'yes';
+
+    if (!hasCanadianSpouse && !hasCanadianParent && !hasCanadianChild && !interestedInPGP) {
+        section.innerHTML = '';
+        return;
+    }
+
+    let familyOptions = [];
+
+    if (hasCanadianSpouse) {
+        const isOutsideCanada = answers.current_country === 'outside';
+        const relationshipLength = answers.relationship_duration;
+
+        familyOptions.push({
+            type: 'Spousal Sponsorship',
+            icon: 'heart-fill',
+            highlight: true,
+            description: `Your ${answers.canadian_spouse === 'yes_citizen' ? 'Canadian citizen' : 'PR'} spouse can sponsor you for permanent residence.`,
+            streams: [
+                {
+                    name: isOutsideCanada ? 'Outland Sponsorship' : 'Inland Sponsorship',
+                    processing: isOutsideCanada ? '12-15 months' : '12-18 months',
+                    benefit: isOutsideCanada ? 'Can visit Canada while processing' : 'Can apply for open work permit while waiting'
+                }
+            ],
+            requirements: [
+                'Genuine relationship (marriage certificate or 12+ months cohabitation)',
+                'Sponsor meets income requirements (usually met)',
+                'No criminal inadmissibility',
+                'Medical examination'
+            ],
+            tip: relationshipLength === 'under_1year'
+                ? 'Relationships under 1 year may face extra scrutiny. Gather extensive proof of genuine relationship.'
+                : 'Strong pathway! Spousal sponsorship has high approval rates for genuine relationships.'
+        });
+    }
+
+    if (interestedInPGP && (hasCanadianChild || answers.has_canadian_child === 'yes')) {
+        familyOptions.push({
+            type: 'Parents & Grandparents Program (PGP)',
+            icon: 'people-fill',
+            highlight: false,
+            description: 'Your Canadian citizen or PR child can sponsor you.',
+            streams: [
+                {
+                    name: 'PGP Lottery',
+                    processing: '24-36 months after selection',
+                    benefit: 'Direct path to PR'
+                },
+                {
+                    name: 'Super Visa (Alternative)',
+                    processing: '2-4 weeks',
+                    benefit: '10-year multiple entry, 5 years per visit'
+                }
+            ],
+            requirements: [
+                'Sponsor must meet Minimum Necessary Income (MNI) for 3 years',
+                'Undertaking to support for 20 years',
+                'Limited spots - lottery system'
+            ],
+            tip: 'PGP opens once per year with limited invitations. Super Visa is a good alternative while waiting.'
+        });
+    }
+
+    if (familyOptions.length === 0) {
+        section.innerHTML = '';
+        return;
+    }
+
+    section.innerHTML = `
+        <h3 class="section-title"><i class="bi bi-house-heart"></i> Family Sponsorship Options</h3>
+        <div class="family-options-grid">
+            ${familyOptions.map(opt => `
+                <div class="family-option-card ${opt.highlight ? 'highlighted' : ''}">
+                    <div class="option-header">
+                        <i class="bi bi-${opt.icon}"></i>
+                        <h4>${opt.type}</h4>
+                    </div>
+                    <p class="option-desc">${opt.description}</p>
+
+                    <div class="streams-list">
+                        ${opt.streams.map(s => `
+                            <div class="stream-option">
+                                <strong>${s.name}</strong>
+                                <div class="stream-details">
+                                    <span><i class="bi bi-clock"></i> ${s.processing}</span>
+                                    <span><i class="bi bi-check"></i> ${s.benefit}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="requirements-list">
+                        <strong>Key Requirements:</strong>
+                        <ul>
+                            ${opt.requirements.map(r => `<li>${r}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="family-tip">
+                        <i class="bi bi-lightbulb"></i> ${opt.tip}
+                    </div>
+                </div>
+            `).join('')}
         </div>
     `;
 }

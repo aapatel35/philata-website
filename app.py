@@ -1390,8 +1390,9 @@ def add_article():
         # Use provided slug or generate from title
         slug = data.get('slug') or create_slug(data.get('title', ''))
 
-        # Generate unique ID
-        content_id = f"{data.get('track', 'unknown')}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{len(results)}"
+        # Generate unique ID - use track, fallback to category, then 'content'
+        track = data.get('track') or data.get('category') or 'content'
+        content_id = f"{track}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{len(results)}"
 
         # Build article URL
         article_url = data.get('article_url') or f"https://www.philata.com/articles/{slug}"
@@ -1767,14 +1768,15 @@ def add_result():
         data = request.get_json()
         results = load_results()
 
-        # Generate unique ID
-        content_id = f"{data.get('track', 'unknown')}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{len(results)}"
+        # Generate unique ID - use track, fallback to category, then 'content'
+        track = data.get('track') or data.get('category') or 'content'
+        content_id = f"{track}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{len(results)}"
 
         result = {
             "id": content_id,
             "title": data.get('title', ''),
-            "track": data.get('track', 'unknown'),
-            "category": data.get('category', ''),
+            "track": track,
+            "category": data.get('category') or track,
             "content_type": data.get('content_type', 'news'),
             "image_url": convert_image_url(data.get('image_url', '')),
             "filename": data.get('filename', ''),
