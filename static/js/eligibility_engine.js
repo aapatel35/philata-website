@@ -497,14 +497,18 @@ function showResults() {
 
     renderProfileSummary();
     renderWarnings();
-    renderCategoryDraws();          // NEW: Category-based Express Entry draws
-    renderNOCPathways();            // NEW: NOC-specific pathway recommendations
-    renderFamilySponsorship();      // NEW: Family sponsorship options
+    renderCategoryDraws();          // Category-based Express Entry draws
+    renderNOCPathways();            // NOC-specific pathway recommendations
+    renderFamilySponsorship();      // Family sponsorship options
     renderProgramEligibility(crsScore);
     renderProvincialPathways();
     renderImprovements(crsScore);
     renderAlternativePathways();
     renderCareerTransitions();
+    renderCostCalculator();         // NEW: Government fees breakdown
+    renderDocumentChecklist();      // NEW: Required documents per program
+    renderTimeline();               // NEW: Processing timeline estimator
+    renderAllPathways();            // NEW: Comprehensive pathways overview
 }
 
 function renderProfileSummary() {
@@ -1714,6 +1718,424 @@ function renderFamilySponsorship() {
                     </div>
                 </div>
             `).join('')}
+        </div>
+    `;
+}
+
+// Render Cost Calculator - Government Fees Breakdown
+function renderCostCalculator() {
+    const section = document.getElementById('costCalculatorSection');
+    const clb = getLowestCLB();
+    const canExp = answers.canadian_experience !== 'none' ? parseInt(answers.canadian_experience) || 0 : 0;
+    const hasSpouse = answers.spouse_coming === 'yes';
+    const dependents = parseInt(answers.dependents_count) || 0;
+
+    // Government fees (2025 rates)
+    const fees = {
+        application: 850,
+        rightOfPR: 515,
+        biometrics: 85,
+        spouseApplication: hasSpouse ? 850 : 0,
+        spouseRightOfPR: hasSpouse ? 515 : 0,
+        dependentApplication: dependents * 230,
+        dependentRightOfPR: dependents * 515,
+        medical: hasSpouse ? 450 : 250,
+        policeCheck: 50,
+        eca: answers.education_country === 'foreign' && answers.eca_status !== 'yes' ? 250 : 0,
+        languageTest: answers.english_test === 'none' ? 350 : 0
+    };
+
+    const governmentTotal = fees.application + fees.rightOfPR + fees.biometrics +
+                           fees.spouseApplication + fees.spouseRightOfPR +
+                           fees.dependentApplication + fees.dependentRightOfPR;
+    const otherCosts = fees.medical + fees.policeCheck + fees.eca + fees.languageTest;
+    const totalCost = governmentTotal + otherCosts;
+
+    section.innerHTML = `
+        <h3 class="section-title"><i class="bi bi-calculator"></i> Estimated Costs (CAD)</h3>
+        <div class="cost-calculator">
+            <div class="cost-breakdown">
+                <div class="cost-item">
+                    <span class="cost-label"><i class="bi bi-file-earmark-text"></i> Principal Application Fee</span>
+                    <span class="cost-amount">$${fees.application}</span>
+                </div>
+                <div class="cost-item">
+                    <span class="cost-label"><i class="bi bi-shield-check"></i> Right of PR Fee</span>
+                    <span class="cost-amount">$${fees.rightOfPR}</span>
+                </div>
+                <div class="cost-item">
+                    <span class="cost-label"><i class="bi bi-fingerprint"></i> Biometrics</span>
+                    <span class="cost-amount">$${fees.biometrics}</span>
+                </div>
+                ${hasSpouse ? `
+                <div class="cost-item">
+                    <span class="cost-label"><i class="bi bi-people"></i> Spouse Application + PR Fee</span>
+                    <span class="cost-amount">$${fees.spouseApplication + fees.spouseRightOfPR}</span>
+                </div>
+                ` : ''}
+                ${dependents > 0 ? `
+                <div class="cost-item">
+                    <span class="cost-label"><i class="bi bi-person-hearts"></i> Dependent Children (${dependents})</span>
+                    <span class="cost-amount">$${fees.dependentApplication + fees.dependentRightOfPR}</span>
+                </div>
+                ` : ''}
+                <div class="cost-item subtotal">
+                    <span class="cost-label"><strong>Government Fees Subtotal</strong></span>
+                    <span class="cost-amount">$${governmentTotal.toLocaleString()}</span>
+                </div>
+                <div class="cost-item">
+                    <span class="cost-label"><i class="bi bi-hospital"></i> Medical Exam (estimated)</span>
+                    <span class="cost-amount">$${fees.medical}</span>
+                </div>
+                <div class="cost-item">
+                    <span class="cost-label"><i class="bi bi-file-earmark-lock"></i> Police Clearance</span>
+                    <span class="cost-amount">$${fees.policeCheck}</span>
+                </div>
+                ${fees.eca > 0 ? `
+                <div class="cost-item">
+                    <span class="cost-label"><i class="bi bi-mortarboard"></i> ECA (WES)</span>
+                    <span class="cost-amount">$${fees.eca}</span>
+                </div>
+                ` : ''}
+                ${fees.languageTest > 0 ? `
+                <div class="cost-item">
+                    <span class="cost-label"><i class="bi bi-chat-dots"></i> Language Test</span>
+                    <span class="cost-amount">$${fees.languageTest}</span>
+                </div>
+                ` : ''}
+                <div class="cost-item total">
+                    <span class="cost-label"><strong>Total Estimated Cost</strong></span>
+                    <span class="cost-amount">$${totalCost.toLocaleString()}</span>
+                </div>
+            </div>
+            <div class="cost-note">
+                <i class="bi bi-info-circle"></i> These are government fees only. Additional costs may include: translation services (~$50/document), photos (~$20), courier/shipping (~$50). RCIC consultation fees range from $2,000-$5,000.
+            </div>
+        </div>
+    `;
+}
+
+// Render Document Checklist - Required Documents per Program
+function renderDocumentChecklist() {
+    const section = document.getElementById('documentChecklistSection');
+    const docsReady = answers.documents_ready || [];
+
+    const documents = {
+        identity: [
+            { name: 'Valid Passport', required: true, ready: docsReady.includes('passport') },
+            { name: 'Birth Certificate', required: true, ready: false },
+            { name: 'National ID Card', required: false, ready: false },
+            { name: 'Travel History (last 10 years)', required: true, ready: false }
+        ],
+        education: [
+            { name: 'Degree/Diploma Certificates', required: true, ready: false },
+            { name: 'Transcripts', required: true, ready: false },
+            { name: 'ECA Report', required: answers.education_country === 'foreign', ready: docsReady.includes('eca') },
+            { name: 'Professional License (if applicable)', required: false, ready: false }
+        ],
+        language: [
+            { name: 'IELTS/CELPIP/PTE Results', required: true, ready: docsReady.includes('language_test') },
+            { name: 'French Test Results (TEF/TCF)', required: answers.french_level === 'nclc7_plus', ready: false }
+        ],
+        employment: [
+            { name: 'Reference Letters', required: true, ready: docsReady.includes('reference_letters') },
+            { name: 'Employment Contracts', required: false, ready: false },
+            { name: 'Pay Stubs (last 3 months)', required: false, ready: false },
+            { name: 'Job Offer Letter', required: answers.job_offer === 'yes', ready: false },
+            { name: 'LMIA Document', required: answers.job_lmia === 'lmia_approved', ready: false }
+        ],
+        financial: [
+            { name: 'Bank Statements (6 months)', required: true, ready: answers.bank_statements_ready === 'yes_ready' },
+            { name: 'Investment Statements', required: false, ready: false },
+            { name: 'Property Documents', required: false, ready: false }
+        ],
+        admissibility: [
+            { name: 'Police Clearance Certificate', required: true, ready: docsReady.includes('police_clearance') },
+            { name: 'Medical Exam Results', required: true, ready: docsReady.includes('medical') },
+            { name: 'Rehabilitation Certificate', required: answers.criminal_history !== 'no', ready: false }
+        ]
+    };
+
+    const renderCategory = (title, icon, items) => {
+        const requiredItems = items.filter(i => i.required);
+        const readyCount = requiredItems.filter(i => i.ready).length;
+
+        return `
+            <div class="checklist-category">
+                <h4><i class="bi bi-${icon}"></i> ${title} <span style="font-size: 0.8rem; color: var(--text-muted);">(${readyCount}/${requiredItems.length})</span></h4>
+                <div class="checklist-items">
+                    ${items.filter(i => i.required).map(item => `
+                        <div class="checklist-item ${item.ready ? 'ready' : 'needed'} ${!item.ready && item.required ? 'urgent' : ''}">
+                            <i class="bi bi-${item.ready ? 'check-circle-fill' : 'circle'}"></i>
+                            <span>${item.name}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    };
+
+    section.innerHTML = `
+        <h3 class="section-title"><i class="bi bi-list-check"></i> Document Checklist</h3>
+        <div class="document-checklist">
+            <div class="checklist-grid">
+                ${renderCategory('Identity', 'person-badge', documents.identity)}
+                ${renderCategory('Education', 'mortarboard', documents.education)}
+                ${renderCategory('Language', 'chat-quote', documents.language)}
+                ${renderCategory('Employment', 'briefcase', documents.employment)}
+                ${renderCategory('Financial', 'bank', documents.financial)}
+                ${renderCategory('Admissibility', 'shield-check', documents.admissibility)}
+            </div>
+            <div class="cost-note" style="margin-top: 1rem;">
+                <i class="bi bi-lightbulb"></i> <strong>Tip:</strong> Start gathering documents NOW. Police clearances can take 2-3 months from some countries. Get translations done by certified translators.
+            </div>
+        </div>
+    `;
+}
+
+// Render All Pathways - Comprehensive Overview (Researcher Perspective)
+function renderAllPathways() {
+    const section = document.getElementById('allPathwaysSection');
+    const clb = getLowestCLB();
+    const canExp = answers.canadian_experience !== 'none' ? parseInt(answers.canadian_experience) || 0 : 0;
+    const forExp = answers.foreign_experience !== 'none' ? parseInt(answers.foreign_experience) || 0 : 0;
+    const selectedNOC = selectedOccupation || {};
+
+    // All permanent residence pathways
+    const permanentPathways = {
+        express_entry: {
+            name: 'Express Entry',
+            icon: 'lightning',
+            programs: [
+                { name: 'Federal Skilled Worker (FSW)', eligible: clb >= 7 && forExp >= 1, desc: 'CLB 7+, 1yr foreign exp' },
+                { name: 'Canadian Experience Class (CEC)', eligible: clb >= 5 && canExp >= 1, desc: 'CLB 5+, 1yr Canadian exp' },
+                { name: 'Federal Skilled Trades (FST)', eligible: clb >= 5 && answers.trade_cert !== 'no', desc: 'CLB 5+, trade certificate' },
+            ]
+        },
+        pnp: {
+            name: 'Provincial Nominee Programs',
+            icon: 'geo-alt',
+            programs: [
+                { name: 'Ontario PNP (OINP)', eligible: true, desc: 'Human Capital, Employer Job Offer streams' },
+                { name: 'BC PNP', eligible: true, desc: 'Skills Immigration, Express Entry BC' },
+                { name: 'Alberta AAIP', eligible: true, desc: 'Alberta Opportunity, Express Entry streams' },
+                { name: 'Saskatchewan SINP', eligible: true, desc: 'Occupation In-Demand, Express Entry' },
+                { name: 'Manitoba MPNP', eligible: true, desc: 'Skilled Workers, International Education' },
+                { name: 'Nova Scotia NSNP', eligible: true, desc: 'Labour Market Priorities, Skilled Worker' },
+                { name: 'New Brunswick PNP', eligible: true, desc: 'Skilled Workers, Express Entry' },
+                { name: 'PEI PNP', eligible: true, desc: 'Labour Impact, Business Impact' },
+                { name: 'NL PNP', eligible: true, desc: 'Skilled Worker, Express Entry' },
+            ]
+        },
+        pilot: {
+            name: 'Pilot Programs',
+            icon: 'stars',
+            programs: [
+                { name: 'Atlantic Immigration Program (AIP)', eligible: true, desc: 'Atlantic Canada employer-driven' },
+                { name: 'Rural & Northern Immigration Pilot', eligible: true, desc: 'Community-driven PR' },
+                { name: 'Agri-Food Pilot', eligible: answers.field_of_study === 'agriculture', desc: 'Agriculture sector workers' },
+            ]
+        },
+        family: {
+            name: 'Family Sponsorship',
+            icon: 'people',
+            programs: [
+                { name: 'Spousal Sponsorship', eligible: answers.canadian_spouse === 'yes_citizen' || answers.canadian_spouse === 'yes_pr', desc: 'Spouse in Canada can sponsor' },
+                { name: 'Common-Law Partner', eligible: answers.canadian_spouse === 'yes_citizen' || answers.canadian_spouse === 'yes_pr', desc: '12+ months cohabitation' },
+                { name: 'Parent/Grandparent (PGP)', eligible: false, desc: 'Canadians sponsor parents' },
+            ]
+        },
+        business: {
+            name: 'Business Immigration',
+            icon: 'briefcase',
+            programs: [
+                { name: 'Start-Up Visa', eligible: true, desc: 'Entrepreneurs with innovative business' },
+                { name: 'Self-Employed Persons', eligible: answers.employment_status === 'self_employed', desc: 'Culture/athletics/farming' },
+                { name: 'Quebec Investor', eligible: answers.funds_amount === 'over_60k', desc: 'Business experience + net worth' },
+            ]
+        },
+        quebec: {
+            name: 'Quebec Programs',
+            icon: 'building',
+            programs: [
+                { name: 'Quebec Skilled Worker (QSW)', eligible: true, desc: 'Arrima selection system' },
+                { name: 'Quebec Experience Program (PEQ)', eligible: canExp >= 1, desc: 'Work/study experience in QC' },
+            ]
+        }
+    };
+
+    // All temporary pathways
+    const temporaryPathways = {
+        work: {
+            name: 'Work Permits',
+            icon: 'briefcase',
+            programs: [
+                { name: 'LMIA Work Permit', eligible: true, desc: 'Employer-sponsored, most common' },
+                { name: 'Intra-Company Transfer', eligible: true, desc: 'Transfer within multinational company' },
+                { name: 'CUSMA Professionals', eligible: true, desc: 'US/Mexico citizens, specific occupations' },
+                { name: 'International Experience Canada (IEC)', eligible: answers.age && answers.age.includes('18-') || answers.age === '25-29' || answers.age === '30-34', desc: 'Youth mobility, age 18-35' },
+                { name: 'Post-Graduation Work Permit', eligible: answers.education_country === 'canada', desc: 'Canadian graduate, 1-3 years' },
+                { name: 'Bridging Open Work Permit', eligible: canExp >= 1, desc: 'Between permits, PR pending' },
+                { name: 'Spousal Open Work Permit', eligible: answers.canadian_spouse === 'yes_citizen' || answers.canadian_spouse === 'yes_pr', desc: 'Spouse of Canadian/PR' },
+            ]
+        },
+        study: {
+            name: 'Study Permits',
+            icon: 'mortarboard',
+            programs: [
+                { name: 'Study Permit (DLI)', eligible: true, desc: 'Study at designated institution' },
+                { name: 'Study + Work (Co-op)', eligible: true, desc: 'Program includes work term' },
+                { name: 'Student Direct Stream (SDS)', eligible: true, desc: 'Faster processing, select countries' },
+            ]
+        },
+        visitor: {
+            name: 'Visitor Status',
+            icon: 'airplane',
+            programs: [
+                { name: 'Visitor Visa (TRV)', eligible: true, desc: 'Tourism, family visit, business' },
+                { name: 'Super Visa', eligible: answers.family_in_canada !== 'none', desc: 'Parents/grandparents, 5yr stay' },
+                { name: 'eTA', eligible: true, desc: 'Visa-exempt countries, air travel' },
+            ]
+        }
+    };
+
+    const renderPathwayCategory = (category, data, type) => {
+        const eligibleCount = data.programs.filter(p => p.eligible).length;
+        return `
+            <div class="pathway-type-card">
+                <h4>
+                    <i class="bi bi-${data.icon}"></i> ${data.name}
+                    <span class="badge ${type}">${type === 'pr' ? 'PR' : 'Temp'}</span>
+                    <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: auto;">${eligibleCount}/${data.programs.length} potential</span>
+                </h4>
+                <div class="pathway-list">
+                    ${data.programs.map(p => `
+                        <div class="pathway-item ${p.eligible ? 'eligible' : 'not-eligible'}">
+                            <span>${p.name}</span>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">${p.desc}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    };
+
+    section.innerHTML = `
+        <h3 class="section-title"><i class="bi bi-map"></i> All Immigration Pathways to Canada</h3>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Comprehensive overview of 40+ immigration programs. Eligible pathways highlighted based on your profile.</p>
+
+        <h4 style="color: var(--primary); margin-bottom: 1rem;"><i class="bi bi-house-door"></i> Permanent Residence Programs</h4>
+        <div class="pathways-grid" style="margin-bottom: 2rem;">
+            ${Object.entries(permanentPathways).map(([key, data]) => renderPathwayCategory(key, data, 'pr')).join('')}
+        </div>
+
+        <h4 style="color: var(--primary); margin-bottom: 1rem;"><i class="bi bi-clock-history"></i> Temporary Programs</h4>
+        <div class="pathways-grid">
+            ${Object.entries(temporaryPathways).map(([key, data]) => renderPathwayCategory(key, data, 'temp')).join('')}
+        </div>
+
+        <div class="cost-note" style="margin-top: 1.5rem;">
+            <i class="bi bi-lightbulb"></i> <strong>Strategic Tip:</strong> Many people combine temporary and permanent pathways. Common strategy: Study Permit → PGWP → CEC PR. Or: LMIA Work Permit → Canadian Experience → Express Entry. Choose based on your timeline and financial situation.
+        </div>
+    `;
+}
+
+// Render Timeline Estimator - Processing Time Breakdown
+function renderTimeline() {
+    const section = document.getElementById('timelineSection');
+    const hasECA = answers.eca_status === 'yes';
+    const hasLanguageTest = answers.english_test && answers.english_test !== 'none';
+    const canExp = answers.canadian_experience !== 'none' ? parseInt(answers.canadian_experience) || 0 : 0;
+
+    // Determine primary pathway
+    let primaryPathway = 'FSW';
+    if (canExp >= 1) primaryPathway = 'CEC';
+    if (answers.trade_cert !== 'no') primaryPathway = 'FST';
+
+    const steps = [];
+
+    // Pre-Express Entry steps
+    if (!hasLanguageTest) {
+        steps.push({
+            name: 'Take Language Test',
+            duration: '2-3 months',
+            description: 'Book test, prepare, get results',
+            status: 'future'
+        });
+    }
+
+    if (!hasECA && answers.education_country === 'foreign') {
+        steps.push({
+            name: 'Get ECA Report',
+            duration: '4-8 weeks',
+            description: 'Apply to WES/IQAS, wait for assessment',
+            status: hasECA ? 'completed' : 'future'
+        });
+    }
+
+    // Express Entry steps
+    steps.push({
+        name: 'Create Express Entry Profile',
+        duration: '1-2 weeks',
+        description: 'Submit profile, enter pool',
+        status: 'future'
+    });
+
+    steps.push({
+        name: 'Wait for ITA',
+        duration: '2-12 months',
+        description: 'Based on CRS score and draw frequency',
+        status: 'future'
+    });
+
+    steps.push({
+        name: 'Submit PR Application',
+        duration: '60 days',
+        description: 'Submit all documents after receiving ITA',
+        status: 'future'
+    });
+
+    steps.push({
+        name: 'Application Processing',
+        duration: '5-8 months',
+        description: primaryPathway === 'CEC' ? 'CEC typically 5-6 months' : 'FSW typically 6-8 months',
+        status: 'future'
+    });
+
+    steps.push({
+        name: 'COPR & Landing',
+        duration: '1-2 months',
+        description: 'Receive COPR, complete landing',
+        status: 'future'
+    });
+
+    // Calculate total time range
+    const minMonths = 8;
+    const maxMonths = 24;
+
+    section.innerHTML = `
+        <h3 class="section-title"><i class="bi bi-calendar-event"></i> Estimated Timeline</h3>
+        <div class="timeline-estimator">
+            <div class="timeline-visual">
+                <div class="timeline-line"></div>
+                ${steps.map((step, i) => `
+                    <div class="timeline-step">
+                        <div class="timeline-dot ${step.status}"></div>
+                        <div class="timeline-content">
+                            <h5>${step.name}</h5>
+                            <p>${step.description}</p>
+                        </div>
+                        <span class="timeline-duration">${step.duration}</span>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="total-timeline">
+                <div class="time">${minMonths} - ${maxMonths} months</div>
+                <div class="label">Estimated total time to PR</div>
+            </div>
+            <div class="cost-note" style="margin-top: 1rem;">
+                <i class="bi bi-info-circle"></i> Timeline varies based on your CRS score, draw frequency, and document readiness. Provincial nomination can add 2-4 months but provides +600 CRS points.
+            </div>
         </div>
     `;
 }

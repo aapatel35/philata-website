@@ -487,6 +487,99 @@
         border-radius: 12px; padding: 1.25rem;
     }
     .info-card p { color: var(--text-muted); margin-bottom: 1rem; }
+
+    /* Cost Calculator Styles */
+    .cost-calculator {
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: 16px; padding: 1.5rem;
+    }
+    .cost-breakdown { display: grid; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .cost-item {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 0.75rem 1rem; background: var(--bg); border-radius: 10px;
+    }
+    .cost-item.subtotal { background: rgba(59, 130, 246, 0.1); }
+    .cost-item.total { background: linear-gradient(135deg, #1E3A5F 0%, #0891B2 100%); color: white; }
+    .cost-label { display: flex; align-items: center; gap: 0.5rem; }
+    .cost-label i { color: var(--primary); }
+    .cost-amount { font-weight: 700; font-size: 1.1rem; }
+    .cost-note { font-size: 0.85rem; color: var(--text-muted); margin-top: 1rem; padding: 0.75rem; background: var(--bg); border-radius: 8px; }
+
+    /* Document Checklist Styles */
+    .document-checklist {
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: 16px; padding: 1.5rem;
+    }
+    .checklist-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .checklist-category h4 { font-size: 1rem; color: var(--text); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+    .checklist-category h4 i { color: var(--primary); }
+    .checklist-items { display: flex; flex-direction: column; gap: 0.5rem; }
+    .checklist-item {
+        display: flex; align-items: flex-start; gap: 0.5rem;
+        padding: 0.5rem 0.75rem; background: var(--bg); border-radius: 8px; font-size: 0.9rem;
+    }
+    .checklist-item i { flex-shrink: 0; margin-top: 0.15rem; }
+    .checklist-item i.bi-check-circle-fill { color: #16a34a; }
+    .checklist-item i.bi-circle { color: var(--border); }
+    .checklist-item i.bi-exclamation-circle { color: #f59e0b; }
+    .checklist-item.ready { opacity: 1; }
+    .checklist-item.needed { opacity: 0.8; }
+    .checklist-item.urgent { border-left: 3px solid #dc2626; }
+
+    /* Timeline Estimator Styles */
+    .timeline-estimator {
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: 16px; padding: 1.5rem;
+    }
+    .timeline-visual { position: relative; padding: 1rem 0 1rem 2rem; margin-bottom: 1.5rem; }
+    .timeline-line { position: absolute; left: 8px; top: 0; bottom: 0; width: 3px; background: var(--border); border-radius: 2px; }
+    .timeline-step {
+        position: relative; padding: 0.75rem 0 1.5rem; display: flex; align-items: flex-start; gap: 1rem;
+    }
+    .timeline-step:last-child { padding-bottom: 0; }
+    .timeline-dot {
+        position: absolute; left: -2rem; top: 0.5rem;
+        width: 18px; height: 18px; border-radius: 50%;
+        background: var(--primary); border: 3px solid var(--card);
+        z-index: 1;
+    }
+    .timeline-dot.completed { background: #16a34a; }
+    .timeline-dot.current { background: #f59e0b; }
+    .timeline-dot.future { background: var(--border); }
+    .timeline-content { flex: 1; }
+    .timeline-content h5 { font-size: 0.95rem; color: var(--text); margin-bottom: 0.25rem; }
+    .timeline-content p { font-size: 0.85rem; color: var(--text-muted); }
+    .timeline-duration {
+        background: var(--bg); padding: 0.25rem 0.75rem; border-radius: 6px;
+        font-size: 0.8rem; font-weight: 600; white-space: nowrap;
+    }
+    .total-timeline {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1));
+        border-radius: 10px; padding: 1rem; text-align: center;
+    }
+    .total-timeline .time { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+    .total-timeline .label { font-size: 0.85rem; color: var(--text-muted); }
+
+    /* Comprehensive Pathways Grid */
+    .pathways-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+    .pathway-type-card {
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: 12px; padding: 1.25rem;
+    }
+    .pathway-type-card h4 { font-size: 1rem; color: var(--text); margin-bottom: 0.75rem; }
+    .pathway-type-card .badge {
+        display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px;
+        font-size: 0.7rem; font-weight: 600; margin-left: 0.5rem;
+    }
+    .pathway-type-card .badge.pr { background: #dcfce7; color: #16a34a; }
+    .pathway-type-card .badge.temp { background: #dbeafe; color: #3b82f6; }
+    .pathway-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .pathway-item {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 0.5rem 0.75rem; background: var(--bg); border-radius: 8px; font-size: 0.85rem;
+    }
+    .pathway-item.eligible { border-left: 3px solid #16a34a; }
+    .pathway-item.not-eligible { opacity: 0.6; }
 </style>
 {% endblock %}
 
@@ -574,6 +667,18 @@
 
     <!-- Career Transitions (if applicable) -->
     <div id="careerSection" style="margin-top: 2rem;"></div>
+
+    <!-- NEW: Cost Calculator Section -->
+    <div id="costCalculatorSection" style="margin-top: 2rem;"></div>
+
+    <!-- NEW: Document Checklist Section -->
+    <div id="documentChecklistSection" style="margin-top: 2rem;"></div>
+
+    <!-- NEW: Timeline Estimator Section -->
+    <div id="timelineSection" style="margin-top: 2rem;"></div>
+
+    <!-- NEW: All Pathways Overview (Researcher View) -->
+    <div id="allPathwaysSection" style="margin-top: 2rem;"></div>
 
     <button class="restart-btn" onclick="restartChecker()">
         <i class="bi bi-arrow-counterclockwise"></i> Start Over
