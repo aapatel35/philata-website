@@ -6,23 +6,48 @@ let selectedOccupation = null;
 let formError = null;
 
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', () => renderQuestion());
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        // Check if QUESTIONS is loaded
+        if (typeof QUESTIONS === 'undefined' || !QUESTIONS || QUESTIONS.length === 0) {
+            console.error('QUESTIONS not loaded');
+            document.getElementById('questionContainer').innerHTML = `
+                <div class="question-card">
+                    <div class="question-header">
+                        <h2>Loading Error</h2>
+                        <div class="help-text">Unable to load questions. Please refresh the page.</div>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+        renderQuestion();
+    } catch (error) {
+        console.error('Error initializing eligibility checker:', error);
+    }
+});
 
 function renderQuestion() {
-    // Find next applicable question
-    while (currentQuestion < QUESTIONS.length) {
+    try {
+        // Find next applicable question
+        while (currentQuestion < QUESTIONS.length) {
+            const q = QUESTIONS[currentQuestion];
+            if (!q.condition || q.condition(answers)) break;
+            currentQuestion++;
+        }
+
+        if (currentQuestion >= QUESTIONS.length) {
+            showResults();
+            return;
+        }
+
         const q = QUESTIONS[currentQuestion];
-        if (!q.condition || q.condition(answers)) break;
-        currentQuestion++;
-    }
+        const container = document.getElementById('questionContainer');
 
-    if (currentQuestion >= QUESTIONS.length) {
-        showResults();
-        return;
-    }
-
-    const q = QUESTIONS[currentQuestion];
-    const container = document.getElementById('questionContainer');
+        if (!container) {
+            console.error('Question container not found');
+            return;
+        }
 
     let inputHtml = '';
     if (q.type === 'search') {
@@ -138,6 +163,23 @@ function renderQuestion() {
     }
 
     updateProgress();
+    } catch (error) {
+        console.error('Error rendering question:', error);
+        const container = document.getElementById('questionContainer');
+        if (container) {
+            container.innerHTML = `
+                <div class="question-card">
+                    <div class="question-header">
+                        <h2>Error Loading Question</h2>
+                        <div class="help-text">An error occurred: ${error.message}. Please refresh the page.</div>
+                    </div>
+                    <button class="nav-btn next" onclick="location.reload()">
+                        <i class="bi bi-arrow-clockwise"></i> Refresh Page
+                    </button>
+                </div>
+            `;
+        }
+    }
 }
 
 function showInlineError(message) {

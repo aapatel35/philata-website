@@ -750,9 +750,9 @@
     <div class="last-updated-text">
         <i class="bi bi-calendar-check"></i>
         {% if data and data.last_updated %}
-        <span>Last updated: <strong>{{ data.last_updated[:10] }}</strong> - Based on IRCC official data</span>
+        <span>Last updated: <strong>{{ data.last_updated.split('T')[0] if 'T' in data.last_updated else data.last_updated[:10] }}</strong> - Based on IRCC official data</span>
         {% else %}
-        <span>Last updated: <strong>January 10, 2026</strong> - Based on IRCC official data</span>
+        <span>Last updated: <strong>January 12, 2026</strong> - Based on IRCC official data</span>
         {% endif %}
     </div>
     <a href="https://www.canada.ca/en/immigration-refugees-citizenship/services/application/check-processing-times.html" target="_blank" class="source-link">

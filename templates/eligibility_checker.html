@@ -154,6 +154,24 @@
     .optional-label {
         font-size: 0.8rem; color: var(--text-muted); margin-left: 0.5rem; font-weight: normal;
     }
+    .input-hint {
+        font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem; font-style: italic;
+    }
+
+    /* Error Notification */
+    .error-notification {
+        display: none; padding: 0.75rem 1rem; background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; margin-bottom: 1rem;
+        align-items: center; gap: 0.5rem; color: #dc2626;
+    }
+    .error-notification.shake {
+        animation: shake 0.5s ease-in-out;
+    }
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
 
     /* Navigation */
     .nav-buttons { display: flex; justify-content: space-between; margin-top: 2rem; }

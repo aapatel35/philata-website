@@ -425,7 +425,7 @@
 <div class="current-score-section">
     <div class="score-input-row">
         <label>Enter Your Current CRS Score:</label>
-        <input type="number" id="currentScore" value="450" min="0" max="1200" onchange="updateSimulation()">
+        <input type="number" id="currentScore" value="450" min="0" max="1200" oninput="updateSimulation()" onchange="updateSimulation()">
         <div class="target-score">
             <div class="label">Latest Draw Cutoff</div>
             <div class="value" id="targetScore">520</div>

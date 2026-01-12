@@ -1818,18 +1818,33 @@ function compareAllProvinces() {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
-    // Check for initial province from URL
-    const initialProvince = '{{ initial_province }}' || 'bc';
-    if (initialProvince && PNP_DATA[initialProvince]) {
-        selectProvince(initialProvince);
-    } else {
-        selectProvince('bc');
-    }
+    try {
+        // Check for initial province from URL
+        let initialProvince = '{{ initial_province | default("") }}';
+        if (!initialProvince || !PNP_DATA[initialProvince]) {
+            initialProvince = 'bc';
+        }
 
-    // Show CRS field when EE is checked
-    document.getElementById('hasExpressEntry').addEventListener('change', function() {
-        document.getElementById('crsScoreField').style.display = this.checked ? 'block' : 'none';
-    });
+        // Force initialization with BC by default
+        selectProvince(initialProvince);
+
+        // Ensure the calculator form is visible
+        updateFieldVisibility(initialProvince);
+        calculateScore();
+
+        // Show CRS field when EE is checked
+        const eeCheckbox = document.getElementById('hasExpressEntry');
+        if (eeCheckbox) {
+            eeCheckbox.addEventListener('change', function() {
+                const crsField = document.getElementById('crsScoreField');
+                if (crsField) {
+                    crsField.style.display = this.checked ? 'block' : 'none';
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error initializing PNP calculator:', error);
+    }
 });
 </script>
 {% endblock %}
