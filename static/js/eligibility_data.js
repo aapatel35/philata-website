@@ -190,27 +190,183 @@ const QUESTIONS = [
         { value: 'none', label: 'Not yet / No valid test' }
       ]
     },
-    { id: 'english_clb', category: 'Language Proficiency', step: 5,
-      question: 'What is your overall English CLB level?',
-      condition: ans => ans.english_test !== 'none',
-      helpText: 'CLB 7 = IELTS 6.0 each | CLB 9 = IELTS 7.0-7.5 each',
+    // IELTS-specific scores
+    { id: 'ielts_speaking', category: 'Language Proficiency', step: 5,
+      question: 'What is your IELTS Speaking band score?',
+      condition: ans => ans.english_test === 'ielts',
       options: [
-        { value: '4', label: 'CLB 4', desc: 'IELTS 4.0-4.5' },
-        { value: '5', label: 'CLB 5', desc: 'IELTS 5.0' },
-        { value: '6', label: 'CLB 6', desc: 'IELTS 5.5' },
-        { value: '7', label: 'CLB 7', desc: 'IELTS 6.0' },
-        { value: '8', label: 'CLB 8', desc: 'IELTS 6.5' },
-        { value: '9', label: 'CLB 9', desc: 'IELTS 7.0-7.5' },
-        { value: '10', label: 'CLB 10+', desc: 'IELTS 8.0+' }
+        { value: '4.0', label: '4.0', desc: 'CLB 4' },
+        { value: '5.0', label: '5.0', desc: 'CLB 5' },
+        { value: '5.5', label: '5.5', desc: 'CLB 6' },
+        { value: '6.0', label: '6.0', desc: 'CLB 7' },
+        { value: '6.5', label: '6.5', desc: 'CLB 8' },
+        { value: '7.0', label: '7.0', desc: 'CLB 9' },
+        { value: '7.5', label: '7.5', desc: 'CLB 9' },
+        { value: '8.0+', label: '8.0 or higher', desc: 'CLB 10+' }
+      ]
+    },
+    { id: 'ielts_listening', category: 'Language Proficiency', step: 5,
+      question: 'What is your IELTS Listening band score?',
+      condition: ans => ans.english_test === 'ielts',
+      options: [
+        { value: '4.5', label: '4.5', desc: 'CLB 4' },
+        { value: '5.0', label: '5.0', desc: 'CLB 5' },
+        { value: '5.5', label: '5.5', desc: 'CLB 6' },
+        { value: '6.0', label: '6.0', desc: 'CLB 7' },
+        { value: '7.5', label: '7.5', desc: 'CLB 8' },
+        { value: '8.0', label: '8.0', desc: 'CLB 9' },
+        { value: '8.5+', label: '8.5 or higher', desc: 'CLB 10+' }
+      ]
+    },
+    { id: 'ielts_reading', category: 'Language Proficiency', step: 5,
+      question: 'What is your IELTS Reading band score?',
+      condition: ans => ans.english_test === 'ielts',
+      options: [
+        { value: '3.5', label: '3.5', desc: 'CLB 4' },
+        { value: '4.0', label: '4.0', desc: 'CLB 5' },
+        { value: '5.0', label: '5.0', desc: 'CLB 6' },
+        { value: '6.0', label: '6.0', desc: 'CLB 7' },
+        { value: '6.5', label: '6.5', desc: 'CLB 8' },
+        { value: '7.0', label: '7.0', desc: 'CLB 9' },
+        { value: '8.0+', label: '8.0 or higher', desc: 'CLB 10+' }
+      ]
+    },
+    { id: 'ielts_writing', category: 'Language Proficiency', step: 5,
+      question: 'What is your IELTS Writing band score?',
+      condition: ans => ans.english_test === 'ielts',
+      options: [
+        { value: '4.0', label: '4.0', desc: 'CLB 4' },
+        { value: '5.0', label: '5.0', desc: 'CLB 5' },
+        { value: '5.5', label: '5.5', desc: 'CLB 6' },
+        { value: '6.0', label: '6.0', desc: 'CLB 7' },
+        { value: '6.5', label: '6.5', desc: 'CLB 8' },
+        { value: '7.0', label: '7.0', desc: 'CLB 9' },
+        { value: '7.5+', label: '7.5 or higher', desc: 'CLB 10+' }
+      ]
+    },
+    // CELPIP-specific scores
+    { id: 'celpip_speaking', category: 'Language Proficiency', step: 5,
+      question: 'What is your CELPIP Speaking score?',
+      condition: ans => ans.english_test === 'celpip',
+      options: [
+        { value: '4', label: 'Level 4', desc: 'CLB 4' },
+        { value: '5', label: 'Level 5', desc: 'CLB 5' },
+        { value: '6', label: 'Level 6', desc: 'CLB 6' },
+        { value: '7', label: 'Level 7', desc: 'CLB 7' },
+        { value: '8', label: 'Level 8', desc: 'CLB 8' },
+        { value: '9', label: 'Level 9', desc: 'CLB 9' },
+        { value: '10+', label: 'Level 10-12', desc: 'CLB 10+' }
+      ]
+    },
+    { id: 'celpip_listening', category: 'Language Proficiency', step: 5,
+      question: 'What is your CELPIP Listening score?',
+      condition: ans => ans.english_test === 'celpip',
+      options: [
+        { value: '4', label: 'Level 4', desc: 'CLB 4' },
+        { value: '5', label: 'Level 5', desc: 'CLB 5' },
+        { value: '6', label: 'Level 6', desc: 'CLB 6' },
+        { value: '7', label: 'Level 7', desc: 'CLB 7' },
+        { value: '8', label: 'Level 8', desc: 'CLB 8' },
+        { value: '9', label: 'Level 9', desc: 'CLB 9' },
+        { value: '10+', label: 'Level 10-12', desc: 'CLB 10+' }
+      ]
+    },
+    { id: 'celpip_reading', category: 'Language Proficiency', step: 5,
+      question: 'What is your CELPIP Reading score?',
+      condition: ans => ans.english_test === 'celpip',
+      options: [
+        { value: '4', label: 'Level 4', desc: 'CLB 4' },
+        { value: '5', label: 'Level 5', desc: 'CLB 5' },
+        { value: '6', label: 'Level 6', desc: 'CLB 6' },
+        { value: '7', label: 'Level 7', desc: 'CLB 7' },
+        { value: '8', label: 'Level 8', desc: 'CLB 8' },
+        { value: '9', label: 'Level 9', desc: 'CLB 9' },
+        { value: '10+', label: 'Level 10-12', desc: 'CLB 10+' }
+      ]
+    },
+    { id: 'celpip_writing', category: 'Language Proficiency', step: 5,
+      question: 'What is your CELPIP Writing score?',
+      condition: ans => ans.english_test === 'celpip',
+      options: [
+        { value: '4', label: 'Level 4', desc: 'CLB 4' },
+        { value: '5', label: 'Level 5', desc: 'CLB 5' },
+        { value: '6', label: 'Level 6', desc: 'CLB 6' },
+        { value: '7', label: 'Level 7', desc: 'CLB 7' },
+        { value: '8', label: 'Level 8', desc: 'CLB 8' },
+        { value: '9', label: 'Level 9', desc: 'CLB 9' },
+        { value: '10+', label: 'Level 10-12', desc: 'CLB 10+' }
+      ]
+    },
+    // PTE Core scores
+    { id: 'pte_speaking', category: 'Language Proficiency', step: 5,
+      question: 'What is your PTE Core Speaking score?',
+      condition: ans => ans.english_test === 'pte',
+      options: [
+        { value: '42-50', label: '42-50', desc: 'CLB 4' },
+        { value: '51-58', label: '51-58', desc: 'CLB 5' },
+        { value: '59-67', label: '59-67', desc: 'CLB 6' },
+        { value: '68-75', label: '68-75', desc: 'CLB 7' },
+        { value: '76-83', label: '76-83', desc: 'CLB 8' },
+        { value: '84-88', label: '84-88', desc: 'CLB 9' },
+        { value: '89+', label: '89-90', desc: 'CLB 10+' }
+      ]
+    },
+    { id: 'pte_listening', category: 'Language Proficiency', step: 5,
+      question: 'What is your PTE Core Listening score?',
+      condition: ans => ans.english_test === 'pte',
+      options: [
+        { value: '28-32', label: '28-32', desc: 'CLB 4' },
+        { value: '33-38', label: '33-38', desc: 'CLB 5' },
+        { value: '39-49', label: '39-49', desc: 'CLB 6' },
+        { value: '50-59', label: '50-59', desc: 'CLB 7' },
+        { value: '60-70', label: '60-70', desc: 'CLB 8' },
+        { value: '71-81', label: '71-81', desc: 'CLB 9' },
+        { value: '82+', label: '82-90', desc: 'CLB 10+' }
+      ]
+    },
+    { id: 'pte_reading', category: 'Language Proficiency', step: 5,
+      question: 'What is your PTE Core Reading score?',
+      condition: ans => ans.english_test === 'pte',
+      options: [
+        { value: '33-40', label: '33-40', desc: 'CLB 4' },
+        { value: '41-50', label: '41-50', desc: 'CLB 5' },
+        { value: '51-59', label: '51-59', desc: 'CLB 6' },
+        { value: '60-68', label: '60-68', desc: 'CLB 7' },
+        { value: '69-77', label: '69-77', desc: 'CLB 8' },
+        { value: '78-87', label: '78-87', desc: 'CLB 9' },
+        { value: '88+', label: '88-90', desc: 'CLB 10+' }
+      ]
+    },
+    { id: 'pte_writing', category: 'Language Proficiency', step: 5,
+      question: 'What is your PTE Core Writing score?',
+      condition: ans => ans.english_test === 'pte',
+      options: [
+        { value: '41-50', label: '41-50', desc: 'CLB 4' },
+        { value: '51-59', label: '51-59', desc: 'CLB 5' },
+        { value: '60-68', label: '60-68', desc: 'CLB 6' },
+        { value: '69-78', label: '69-78', desc: 'CLB 7' },
+        { value: '79-87', label: '79-87', desc: 'CLB 8' },
+        { value: '88-89', label: '88-89', desc: 'CLB 9' },
+        { value: '90', label: '90', desc: 'CLB 10' }
+      ]
+    },
+    // French language tests
+    { id: 'french_test', category: 'Language Proficiency', step: 5,
+      question: 'Have you taken a French language test?',
+      options: [
+        { value: 'tef', label: 'TEF Canada' },
+        { value: 'tcf', label: 'TCF Canada' },
+        { value: 'none', label: 'No French test / Not applicable' }
       ]
     },
     { id: 'french_level', category: 'Language Proficiency', step: 5,
-      question: 'Do you have French language proficiency?',
+      question: 'What is your French proficiency level (NCLC)?',
+      condition: ans => ans.french_test !== 'none',
+      helpText: 'NCLC 7+ qualifies you for French category draws with lower cutoffs',
       options: [
-        { value: 'nclc7_plus', label: 'NCLC 7+ (Strong)', desc: 'TEF/TCF with strong scores' },
+        { value: 'nclc7_plus', label: 'NCLC 7+ (Strong)', desc: 'All abilities NCLC 7 or higher' },
         { value: 'nclc5_6', label: 'NCLC 5-6 (Moderate)', desc: 'Basic to intermediate French' },
-        { value: 'below5', label: 'Below NCLC 5', desc: 'Beginner French' },
-        { value: 'none', label: 'No French / Not tested' }
+        { value: 'below5', label: 'Below NCLC 5', desc: 'Beginner French' }
       ]
     },
 

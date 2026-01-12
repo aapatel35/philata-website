@@ -95,6 +95,28 @@
     .nav-btn.next:hover { background: var(--primary-hover); }
     .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
+    /* Inline Error Notification */
+    .error-notification {
+        display: flex; align-items: center; gap: 0.75rem;
+        background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px;
+        padding: 0.875rem 1rem; margin-bottom: 1rem; color: #dc2626;
+        font-weight: 500; font-size: 0.95rem;
+    }
+    .error-notification i { font-size: 1.25rem; flex-shrink: 0; }
+    .error-notification.shake { animation: shake 0.5s ease-in-out; }
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        50% { transform: translateX(5px); }
+        75% { transform: translateX(-5px); }
+    }
+
+    /* Dark mode error notification */
+    [data-theme="dark"] .error-notification {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: rgba(239, 68, 68, 0.3);
+    }
+
     /* Results Section */
     .results-section { display: none; max-width: 1000px; margin: 0 auto; }
     .results-section.show { display: block; }
@@ -160,6 +182,12 @@
         display: inline-flex; align-items: center; gap: 0.25rem;
         color: var(--primary); font-weight: 600; font-size: 0.9rem;
     }
+    .pathway-requirements {
+        font-size: 0.85rem; color: var(--text-muted);
+        padding: 0.75rem; background: var(--bg); border-radius: 8px; margin-bottom: 1rem;
+    }
+    .pathway-card.not-eligible { opacity: 0.7; border-color: #dc2626; }
+    .pathway-card.not-eligible .pathway-match { color: #dc2626; }
 
     /* Improvement Cards */
     .improvement-card {

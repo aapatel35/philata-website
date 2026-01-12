@@ -203,14 +203,16 @@ def fetch_pnp_in_demand():
     return in_demand
 
 def fetch_immigration_targets():
-    """Fetch immigration targets"""
+    """Fetch immigration targets - Updated 2026-2028 levels plan"""
     log("Fetching immigration targets...")
 
+    # Updated based on IRCC 2026-2028 Immigration Levels Plan
     targets = {
-        '2024': {'total': 485000, 'express_entry': 110770, 'pnp': 110000},
-        '2025': {'total': 395000, 'express_entry': 124000, 'pnp': 82000},
-        '2026': {'total': 380000, 'express_entry': 118000, 'pnp': 79000},
-        '2027': {'total': 365000, 'express_entry': 112000, 'pnp': 76000}
+        '2024': {'total': 485000, 'express_entry': 110770, 'pnp': 110000, 'family': 114000, 'refugee': 76000},
+        '2025': {'total': 395000, 'express_entry': 124000, 'pnp': 55000, 'family': 82000, 'refugee': 52000},
+        '2026': {'total': 380000, 'express_entry': 118000, 'pnp': 54000, 'family': 80000, 'refugee': 50000},
+        '2027': {'total': 365000, 'express_entry': 112000, 'pnp': 52000, 'family': 78000, 'refugee': 48000},
+        '2028': {'total': 380000, 'express_entry': 118000, 'pnp': 54000, 'family': 80000, 'refugee': 50000}
     }
 
     log("  Immigration targets ready")

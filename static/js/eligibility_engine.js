@@ -3,6 +3,7 @@
 let currentQuestion = 0;
 let answers = {};
 let selectedOccupation = null;
+let formError = null;
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => renderQuestion());
@@ -59,20 +60,47 @@ function renderQuestion() {
                 <h2>${q.question}</h2>
                 ${q.helpText ? `<div class="help-text">${q.helpText}</div>` : ''}
             </div>
+            <div id="errorNotification" class="error-notification" style="display: none;">
+                <i class="bi bi-exclamation-circle"></i>
+                <span id="errorMessage"></span>
+            </div>
             ${inputHtml}
             <div class="nav-buttons">
                 <button class="nav-btn back" onclick="prevQuestion()" ${currentQuestion === 0 ? 'style="visibility:hidden"' : ''}>
                     <i class="bi bi-arrow-left"></i> Back
                 </button>
-                <button class="nav-btn next" onclick="nextQuestion()" id="nextBtn"
-                    ${!answers[q.id] && q.type !== 'search' ? 'disabled' : ''}>
+                <button class="nav-btn next" onclick="nextQuestion()" id="nextBtn">
                     ${currentQuestion >= QUESTIONS.length - 1 ? 'See Results' : 'Next'} <i class="bi bi-arrow-right"></i>
                 </button>
             </div>
         </div>
     `;
 
+    // Show error if there was one
+    if (formError) {
+        showInlineError(formError);
+        formError = null;
+    }
+
     updateProgress();
+}
+
+function showInlineError(message) {
+    const errorDiv = document.getElementById('errorNotification');
+    const errorMsg = document.getElementById('errorMessage');
+    if (errorDiv && errorMsg) {
+        errorMsg.textContent = message;
+        errorDiv.style.display = 'flex';
+        errorDiv.classList.add('shake');
+        setTimeout(() => errorDiv.classList.remove('shake'), 500);
+    }
+}
+
+function hideInlineError() {
+    const errorDiv = document.getElementById('errorNotification');
+    if (errorDiv) {
+        errorDiv.style.display = 'none';
+    }
 }
 
 function selectOption(questionId, value, element) {
@@ -120,6 +148,24 @@ function selectOccupation(code, title, teer, category) {
 }
 
 function nextQuestion() {
+    // Validate current question
+    const q = QUESTIONS[currentQuestion];
+    if (q) {
+        // Check if this question requires an answer
+        if (q.type === 'search') {
+            if (!answers['occupation']) {
+                showInlineError('Please select your occupation from the list');
+                return;
+            }
+        } else if (!q.multiSelect && !answers[q.id]) {
+            showInlineError('Please select an option to continue');
+            return;
+        } else if (q.multiSelect && (!answers[q.id] || answers[q.id].length === 0)) {
+            // Multi-select is optional, allow continuing without selection
+        }
+    }
+
+    hideInlineError();
     currentQuestion++;
     renderQuestion();
 }
@@ -140,10 +186,46 @@ function updateProgress() {
     });
 }
 
+// Helper: Convert test scores to CLB
+function getLowestCLB() {
+    const test = answers.english_test;
+    if (!test || test === 'none') return 0;
+
+    // Map test scores to CLB
+    const ieltsToClb = { '4.0': 4, '4.5': 4, '5.0': 5, '5.5': 6, '6.0': 7, '6.5': 8, '7.0': 9, '7.5': 9, '8.0': 10, '8.0+': 10, '8.5+': 10, '3.5': 4 };
+    const celpipToClb = { '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10+': 10 };
+    const pteToClb = {
+        // Speaking
+        '42-50': 4, '51-58': 5, '59-67': 6, '68-75': 7, '76-83': 8, '84-88': 9, '89+': 10,
+        // Listening
+        '28-32': 4, '33-38': 5, '39-49': 6, '50-59': 7, '60-70': 8, '71-81': 9, '82+': 10,
+        // Reading
+        '33-40': 4, '41-50': 5, '51-59': 6, '60-68': 7, '69-77': 8, '78-87': 9, '88+': 10,
+        // Writing
+        '41-50': 4, '51-59': 5, '60-68': 6, '69-78': 7, '79-87': 8, '88-89': 9, '90': 10
+    };
+
+    let clbScores = [];
+
+    if (test === 'ielts') {
+        const scores = [answers.ielts_speaking, answers.ielts_listening, answers.ielts_reading, answers.ielts_writing];
+        clbScores = scores.map(s => ieltsToClb[s] || 0).filter(s => s > 0);
+    } else if (test === 'celpip') {
+        const scores = [answers.celpip_speaking, answers.celpip_listening, answers.celpip_reading, answers.celpip_writing];
+        clbScores = scores.map(s => celpipToClb[s] || 0).filter(s => s > 0);
+    } else if (test === 'pte') {
+        const scores = [answers.pte_speaking, answers.pte_listening, answers.pte_reading, answers.pte_writing];
+        clbScores = scores.map(s => pteToClb[s] || 0).filter(s => s > 0);
+    }
+
+    return clbScores.length === 4 ? Math.min(...clbScores) : 0;
+}
+
 // Calculate CRS Score
 function calculateCRS() {
     let score = 0;
     const hasSpouse = answers.spouse_coming === 'yes';
+    const clb = getLowestCLB();
 
     // Age points
     const agePoints = { '18-24': hasSpouse ? 90 : 99, '25-29': hasSpouse ? 100 : 110,
@@ -157,9 +239,9 @@ function calculateCRS() {
         two_degrees: hasSpouse ? 119 : 128, masters: hasSpouse ? 126 : 135, phd: hasSpouse ? 140 : 150 };
     score += eduPoints[answers.education_level] || 0;
 
-    // Language points (simplified)
-    const langPoints = { '4': 24, '5': 32, '6': 40, '7': 60, '8': 76, '9': 100, '10': 124 };
-    score += langPoints[answers.english_clb] || 0;
+    // Language points (based on lowest CLB from all abilities)
+    const langPoints = { 4: 24, 5: 32, 6: 40, 7: 60, 8: 76, 9: 100, 10: 124 };
+    score += langPoints[clb] || 0;
 
     // Canadian experience
     const canExpPoints = { none: 0, '1': 40, '2': 53, '3': 64, '4': 72, '5_plus': 80 };
@@ -215,12 +297,21 @@ function showResults() {
 
 function renderProfileSummary() {
     const grid = document.getElementById('profileGrid');
+    const clb = getLowestCLB();
+
+    // Format language display based on test type
+    let langDisplay = 'No test';
+    if (clb > 0) {
+        const testName = answers.english_test === 'ielts' ? 'IELTS' : answers.english_test === 'celpip' ? 'CELPIP' : answers.english_test === 'pte' ? 'PTE' : '';
+        langDisplay = `${testName} (CLB ${clb})`;
+    }
+
     const items = [
         { label: 'Age', value: answers.age || 'N/A' },
         { label: 'Education', value: answers.education_level?.replace('_', ' ') || 'N/A' },
         { label: 'Field', value: answers.field_of_study || 'N/A' },
         { label: 'Canadian Exp', value: answers.canadian_experience || 'None' },
-        { label: 'English', value: answers.english_clb ? `CLB ${answers.english_clb}` : 'N/A' },
+        { label: 'English', value: langDisplay },
         { label: 'Target Province', value: answers.target_province || 'Any' }
     ];
     grid.innerHTML = items.map(i => `
@@ -231,9 +322,10 @@ function renderProfileSummary() {
 function renderWarnings() {
     const section = document.getElementById('warningsSection');
     const warnings = [];
+    const clb = getLowestCLB();
 
-    if (answers.english_test === 'none') {
-        warnings.push({ type: 'urgent', issue: 'No language test completed', action: 'Language test is REQUIRED for Express Entry. Book IELTS or CELPIP immediately.' });
+    if (answers.english_test === 'none' || clb === 0) {
+        warnings.push({ type: 'urgent', issue: 'No language test completed', action: 'Language test is REQUIRED for Express Entry. Book IELTS, CELPIP, or PTE Core immediately.' });
     }
     if (answers.eca_status === 'no' && answers.education_country === 'foreign') {
         warnings.push({ type: 'urgent', issue: 'No ECA completed', action: 'Educational Credential Assessment is REQUIRED. Apply to WES, IQAS, or other designated organization.' });
@@ -269,7 +361,7 @@ function renderWarnings() {
 
 function renderProgramEligibility(crsScore) {
     const container = document.getElementById('programResults');
-    const clb = parseInt(answers.english_clb) || 0;
+    const clb = getLowestCLB();
     const canExp = answers.canadian_experience !== 'none' ? parseInt(answers.canadian_experience) || 0 : 0;
     const foreignExp = answers.foreign_experience !== 'none' ? parseInt(answers.foreign_experience) || 0 : 0;
     const teer = answers.occupation_teer || 5;
@@ -335,46 +427,185 @@ function renderProvincialPathways() {
     const container = document.getElementById('provincialResults');
     const category = answers.occupation_category || 'other';
     const province = answers.target_province || 'any';
+    const provincialConnections = Array.isArray(answers.provincial_connection) ? answers.provincial_connection : [];
+    const hasStudiedInProvince = provincialConnections.includes('study');
+    const hasWorkedInProvince = provincialConnections.includes('work');
+    const hasFamily = provincialConnections.includes('family');
+    const clb = getLowestCLB();
 
     const pathways = [];
 
-    // Check category matches
+    // Newfoundland & Labrador - Has its own 67-point scoring system
+    if (province === 'newfoundland' || province === 'any') {
+        const nlScore = calculateNLPNPScore();
+        pathways.push({
+            province: 'Newfoundland & Labrador',
+            stream: 'NLPNP Express Entry Skilled Worker',
+            match: nlScore >= 67 ? `Your NLPNP score: ${nlScore}/100 (67+ required)` : `Your NLPNP score: ${nlScore}/100 (Need 67)`,
+            benefit: '+600 CRS, job offer required',
+            eligible: nlScore >= 67,
+            requirements: ['67+ points on NL grid', 'Job offer from NL employer', 'CLB 4+ (higher for some NOCs)']
+        });
+    }
+
+    // Check category matches with province-specific criteria
     if (category === 'STEM') {
-        pathways.push({ province: 'British Columbia', stream: 'BC PNP Tech', match: 'Your occupation is on the BC Tech list', benefit: '+600 CRS, fast processing' });
-        pathways.push({ province: 'Ontario', stream: 'OINP Tech Draw', match: 'Eligible for Ontario Tech draws', benefit: 'Lower CRS cutoffs than general draws' });
+        pathways.push({
+            province: 'British Columbia',
+            stream: 'BC PNP Tech',
+            match: hasStudiedInProvince ? 'Studied in BC + Tech occupation = Strong match' : 'Your occupation is on the BC Tech list',
+            benefit: '+600 CRS, weekly draws, fast processing',
+            eligible: true,
+            requirements: ['Tech occupation on BC list', 'Job offer OR valid work permit', 'CLB 4+']
+        });
+        pathways.push({
+            province: 'Ontario',
+            stream: 'OINP Tech Draw',
+            match: hasStudiedInProvince ? 'Studied in ON + Tech = Priority' : 'Eligible for Ontario Tech draws',
+            benefit: '+600 CRS, lower cutoffs than general',
+            eligible: true,
+            requirements: ['Active Express Entry profile', 'Tech occupation', 'CLB 7+']
+        });
     }
+
     if (category === 'Healthcare') {
-        pathways.push({ province: 'Ontario', stream: 'OINP Health Human Capital', match: 'Healthcare occupation eligible', benefit: '+600 CRS, priority processing' });
-        pathways.push({ province: 'Nova Scotia', stream: 'NSNP Labour Market Priorities', match: 'Healthcare in high demand', benefit: 'No job offer required for some streams' });
+        pathways.push({
+            province: 'Ontario',
+            stream: 'OINP Health Human Capital',
+            match: hasStudiedInProvince ? 'Studied in ON + Healthcare = Strong match' : 'Healthcare occupation eligible',
+            benefit: '+600 CRS, priority processing',
+            eligible: true,
+            requirements: ['Healthcare NOC code', 'Active Express Entry profile', 'CLB 7+']
+        });
+        pathways.push({
+            province: 'Nova Scotia',
+            stream: 'NSNP Labour Market Priorities',
+            match: 'Healthcare in high demand in NS',
+            benefit: 'No job offer required for some streams',
+            eligible: true,
+            requirements: ['In-demand occupation', 'CLB 5+', 'Settlement funds']
+        });
     }
+
     if (category === 'Trades') {
-        pathways.push({ province: 'Alberta', stream: 'AAIP Alberta Opportunity', match: 'Trades in demand in Alberta', benefit: 'No Express Entry needed' });
-        pathways.push({ province: 'Saskatchewan', stream: 'SINP Occupation In-Demand', match: 'Trades on in-demand list', benefit: 'Points-based system, no job offer needed' });
+        pathways.push({
+            province: 'Alberta',
+            stream: 'AAIP Alberta Opportunity',
+            match: hasWorkedInProvince ? 'AB work experience + Trade = Excellent' : 'Trades in demand in Alberta',
+            benefit: 'No Express Entry needed, direct PR pathway',
+            eligible: true,
+            requirements: ['Alberta work experience', 'Valid work permit', 'CLB 4+']
+        });
+        pathways.push({
+            province: 'Saskatchewan',
+            stream: 'SINP Occupation In-Demand',
+            match: 'Trades on in-demand list',
+            benefit: 'Points-based system, no job offer needed',
+            eligible: true,
+            requirements: ['60+ points on SINP grid', 'In-demand occupation', 'CLB 4+']
+        });
+    }
+
+    // Province-specific advantages based on study/work history
+    if (hasStudiedInProvince) {
+        if (province === 'bc' || province === 'any') {
+            pathways.push({
+                province: 'British Columbia',
+                stream: 'BC PNP International Graduate',
+                match: 'Studied in BC = Bonus points on SIRS',
+                benefit: 'BC grads get higher ranking',
+                eligible: true,
+                requirements: ['BC post-secondary degree', 'Job offer in BC', 'CLB 4+']
+            });
+        }
+        if (province === 'ontario' || province === 'any') {
+            pathways.push({
+                province: 'Ontario',
+                stream: 'OINP Masters/PhD Graduate',
+                match: 'Ontario degree = No job offer needed',
+                benefit: 'Direct nomination without job offer',
+                eligible: answers.education_level === 'masters' || answers.education_level === 'phd',
+                requirements: ['Ontario Masters/PhD', 'CLB 7+', 'Lived in ON 1+ year']
+            });
+        }
     }
 
     // Add general PNP option
-    pathways.push({ province: 'Multiple Provinces', stream: 'Express Entry Linked PNP', match: 'Create EE profile, receive provincial nominations', benefit: '+600 CRS points instantly' });
+    pathways.push({
+        province: 'Multiple Provinces',
+        stream: 'Express Entry Linked PNP',
+        match: 'Create EE profile, receive provincial nominations',
+        benefit: '+600 CRS points instantly',
+        eligible: true,
+        requirements: ['Active Express Entry profile', 'Meet provincial criteria']
+    });
 
-    container.innerHTML = pathways.slice(0, 4).map((p, i) => `
-        <div class="pathway-card ${i === 0 ? 'recommended' : ''}">
-            ${i === 0 ? '<div class="pathway-badge">Best Match</div>' : ''}
+    // Sort by eligibility and relevance
+    pathways.sort((a, b) => {
+        if (a.eligible && !b.eligible) return -1;
+        if (!a.eligible && b.eligible) return 1;
+        return 0;
+    });
+
+    container.innerHTML = pathways.slice(0, 5).map((p, i) => `
+        <div class="pathway-card ${i === 0 && p.eligible ? 'recommended' : ''} ${!p.eligible ? 'not-eligible' : ''}">
+            ${i === 0 && p.eligible ? '<div class="pathway-badge">Best Match</div>' : ''}
             <h4>${p.province} - ${p.stream}</h4>
-            <div class="pathway-match"><i class="bi bi-check-circle-fill"></i> ${p.match}</div>
+            <div class="pathway-match"><i class="bi bi-${p.eligible ? 'check-circle-fill' : 'exclamation-circle'}"></i> ${p.match}</div>
             <div class="pathway-benefit"><strong>Benefit:</strong> ${p.benefit}</div>
+            ${p.requirements ? `<div class="pathway-requirements"><strong>Requirements:</strong> ${p.requirements.join(' • ')}</div>` : ''}
             <a href="/tools/pnp-calculator" class="pathway-cta">Calculate PNP Score <i class="bi bi-arrow-right"></i></a>
         </div>
     `).join('');
+}
+
+// Calculate Newfoundland & Labrador PNP Score (67 points required)
+function calculateNLPNPScore() {
+    let score = 0;
+    const clb = getLowestCLB();
+
+    // Age (max 12 points)
+    const agePoints = { '18-24': 10, '25-29': 12, '30-34': 12, '35-39': 10, '40-44': 8, '45-49': 4, '50+': 0 };
+    score += agePoints[answers.age] || 0;
+
+    // Education (max 25 points)
+    const eduPoints = { none: 0, highschool: 5, oneyear: 15, twoyear: 19, bachelors: 21, two_degrees: 23, masters: 23, phd: 25 };
+    score += eduPoints[answers.education_level] || 0;
+
+    // Language (max 25 points) - CLB 7 = 17, CLB 8 = 19, CLB 9+ = 25
+    const langPoints = { 4: 6, 5: 9, 6: 13, 7: 17, 8: 19, 9: 25, 10: 25 };
+    score += langPoints[clb] || 0;
+
+    // Work Experience (max 15 points)
+    const foreignExp = answers.foreign_experience !== 'none' ? parseInt(answers.foreign_experience) || 0 : 0;
+    const canExp = answers.canadian_experience !== 'none' ? parseInt(answers.canadian_experience) || 0 : 0;
+    const totalExp = foreignExp + canExp;
+    const expPoints = totalExp >= 5 ? 15 : totalExp >= 3 ? 11 : totalExp >= 1 ? 7 : 0;
+    score += expPoints;
+
+    // Connection to NL (max 13 points for family)
+    const provincialConnections = Array.isArray(answers.provincial_connection) ? answers.provincial_connection : [];
+    if (provincialConnections.includes('family')) score += 13;
+
+    // Adaptability (up to 10 points for study/work in NL)
+    if (provincialConnections.includes('study')) score += 5;
+    if (provincialConnections.includes('work')) score += 5;
+
+    return score;
 }
 
 function renderImprovements(currentScore) {
     const container = document.getElementById('improvementResults');
     const improvements = [];
 
-    const clb = parseInt(answers.english_clb) || 0;
-    if (clb < 9) {
+    const clb = getLowestCLB();
+    if (clb < 9 && clb > 0) {
         improvements.push({ action: `Improve English to CLB ${clb + 1}`, details: '2-3 months prep, $350 test fee', gain: '+16-24 CRS' });
     }
-    if (answers.french_level === 'none') {
+    if (clb === 0) {
+        improvements.push({ action: 'Complete a language test (IELTS/CELPIP/PTE)', details: 'Required for Express Entry', gain: 'Essential' });
+    }
+    if (answers.french_level === 'none' || !answers.french_level) {
         improvements.push({ action: 'Learn French to NCLC 7', details: '6-12 months study', gain: '+50 CRS + French draws' });
     }
     if (answers.canadian_experience === 'none') {
