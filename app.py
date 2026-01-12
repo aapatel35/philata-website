@@ -2954,6 +2954,14 @@ def clear_all_data():
 
     cleared = []
 
+    # Clear in-memory cache first
+    global _memory_cache
+    with _cache_lock:
+        _memory_cache['articles'] = []
+        _memory_cache['results'] = []
+        _memory_cache['last_fetch'] = None
+    cleared.append('memory_cache')
+
     # Clear all JSON data files
     data_files = {
         'results': RESULTS_FILE,
