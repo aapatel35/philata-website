@@ -397,6 +397,38 @@
     .data-source a {
         color: var(--primary);
     }
+
+    /* Year Tabs */
+    .year-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .year-tab {
+        padding: 0.75rem 1.5rem;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--text-muted);
+        transition: all 0.2s ease;
+        min-width: 80px;
+        text-align: center;
+    }
+
+    .year-tab:hover {
+        border-color: #1E3A5F;
+        color: #111827;
+    }
+
+    .year-tab.active {
+        background: linear-gradient(135deg, #1E3A5F 0%, #0891B2 100%);
+        color: #FFFFFF;
+        border-color: transparent;
+    }
 </style>
 {% endblock %}
 
@@ -407,6 +439,13 @@
         Express Entry Pool Statistics
     </h1>
     <p class="page-subtitle">Understand your position in the Express Entry pool and your chances of receiving an ITA</p>
+</div>
+
+<!-- Year Tabs -->
+<div class="year-tabs">
+    <div class="year-tab" onclick="showYear(2024)">2024</div>
+    <div class="year-tab" onclick="showYear(2025)">2025</div>
+    <div class="year-tab active" onclick="showYear(2026)">2026</div>
 </div>
 
 <div class="stats-overview">
@@ -583,18 +622,152 @@
 
 {% block extra_js %}
 <script>
-// Estimated pool distribution (based on IRCC reports)
-const poolDistribution = {
-    '601-1200': 4700,
-    '501-600': 35250,
-    '451-500': 82250,
-    '401-450': 70500,
-    '351-400': 28200,
-    '0-350': 14100
+// Year-specific data for pool statistics
+const yearData = {
+    2024: {
+        totalPool: 218000,
+        avgScore: 492,
+        latestCutoff: 535,
+        totalITAs: 110000,
+        poolChange: '+12%',
+        poolChangeType: 'up',
+        scoreChange: '+5 points',
+        scoreChangeType: 'up',
+        itaStatus: 'Completed',
+        itaChangeType: 'up',
+        distribution: {
+            '601-1200': 4200,
+            '501-600': 32700,
+            '451-500': 76300,
+            '401-450': 65400,
+            '351-400': 26100,
+            '0-350': 13300
+        },
+        draws: [
+            { date: 'December 18, 2024', type: 'General', score: 535, itas: 3200 },
+            { date: 'December 11, 2024', type: 'French Proficiency', score: 379, itas: 3000 },
+            { date: 'December 4, 2024', type: 'Provincial Nominee', score: 743, itas: 1200 },
+            { date: 'November 27, 2024', type: 'Healthcare', score: 422, itas: 3000 },
+            { date: 'November 20, 2024', type: 'General', score: 524, itas: 4000 }
+        ]
+    },
+    2025: {
+        totalPool: 228000,
+        avgScore: 489,
+        latestCutoff: 399,
+        totalITAs: 124000,
+        poolChange: '+5%',
+        poolChangeType: 'up',
+        scoreChange: '-3 points',
+        scoreChangeType: 'down',
+        itaStatus: 'Completed',
+        itaChangeType: 'up',
+        distribution: {
+            '601-1200': 4500,
+            '501-600': 34200,
+            '451-500': 79800,
+            '401-450': 68400,
+            '351-400': 27300,
+            '0-350': 13800
+        },
+        draws: [
+            { date: 'December 17, 2025', type: 'French Language', score: 399, itas: 6000 },
+            { date: 'December 10, 2025', type: 'General', score: 518, itas: 4200 },
+            { date: 'December 3, 2025', type: 'Provincial Nominee', score: 725, itas: 850 },
+            { date: 'November 26, 2025', type: 'STEM Occupations', score: 481, itas: 3500 },
+            { date: 'November 19, 2025', type: 'CEC', score: 507, itas: 5000 }
+        ]
+    },
+    2026: {
+        totalPool: 235000,
+        avgScore: 486,
+        latestCutoff: 511,
+        totalITAs: 5000,
+        poolChange: '+3%',
+        poolChangeType: 'up',
+        scoreChange: '-3 points',
+        scoreChangeType: 'down',
+        itaStatus: 'On track',
+        itaChangeType: 'up',
+        distribution: {
+            '601-1200': 4700,
+            '501-600': 35250,
+            '451-500': 82250,
+            '401-450': 70500,
+            '351-400': 28200,
+            '0-350': 14100
+        },
+        draws: [
+            { date: 'January 7, 2026', type: 'Canadian Experience Class', score: 511, itas: 8000 },
+            { date: 'January 5, 2026', type: 'Provincial Nominee', score: 711, itas: 574 }
+        ]
+    }
 };
 
-const totalPool = Object.values(poolDistribution).reduce((a, b) => a + b, 0);
-const latestCutoff = 511;
+let currentYear = 2026;
+let poolDistribution = yearData[currentYear].distribution;
+let totalPool = Object.values(poolDistribution).reduce((a, b) => a + b, 0);
+let latestCutoff = yearData[currentYear].latestCutoff;
+
+function showYear(year) {
+    // Update tabs
+    document.querySelectorAll('.year-tab').forEach(tab => tab.classList.remove('active'));
+    event.target.classList.add('active');
+
+    currentYear = year;
+    const data = yearData[year];
+    poolDistribution = data.distribution;
+    totalPool = Object.values(poolDistribution).reduce((a, b) => a + b, 0);
+    latestCutoff = data.latestCutoff;
+
+    // Update stat cards
+    document.getElementById('totalPool').textContent = data.totalPool.toLocaleString();
+    document.getElementById('avgScore').textContent = data.avgScore;
+    document.getElementById('latestCutoff').textContent = data.latestCutoff;
+    document.getElementById('totalITAs').textContent = data.totalITAs.toLocaleString();
+
+    // Update change indicators
+    const poolCard = document.querySelector('.stat-card:nth-child(1) .change');
+    poolCard.innerHTML = `<i class="bi bi-arrow-${data.poolChangeType}"></i> ${data.poolChange} from last year`;
+    poolCard.className = `change ${data.poolChangeType}`;
+
+    const scoreCard = document.querySelector('.stat-card:nth-child(2) .change');
+    scoreCard.innerHTML = `<i class="bi bi-arrow-${data.scoreChangeType}"></i> ${data.scoreChange}`;
+    scoreCard.className = `change ${data.scoreChangeType}`;
+
+    const itaCard = document.querySelector('.stat-card:nth-child(4) .change');
+    itaCard.innerHTML = `<i class="bi bi-arrow-${data.itaChangeType}"></i> ${data.itaStatus}`;
+    itaCard.className = `change ${data.itaChangeType}`;
+
+    // Update ITAs label with year
+    document.querySelector('.stat-card:nth-child(4) .label').textContent = `ITAs Issued (${year})`;
+
+    // Update pool distribution bars
+    const poolBars = document.querySelectorAll('.pool-bar-item');
+    const ranges = ['601-1200', '501-600', '451-500', '401-450', '351-400', '0-350'];
+    const maxCount = Math.max(...Object.values(data.distribution));
+
+    ranges.forEach((range, index) => {
+        const count = data.distribution[range];
+        const percentage = (count / totalPool) * 100 * 2; // Scale for visibility
+        poolBars[index].querySelector('.pool-bar').style.width = Math.min(percentage, 100) + '%';
+        poolBars[index].querySelector('.count').textContent = '~' + count.toLocaleString();
+    });
+
+    // Update draw history table
+    const tbody = document.querySelector('.trend-table tbody');
+    tbody.innerHTML = data.draws.map(draw => `
+        <tr>
+            <td>${draw.date}</td>
+            <td>${draw.type}</td>
+            <td class="score">${draw.score}</td>
+            <td class="itas">${draw.itas.toLocaleString()}</td>
+        </tr>
+    `).join('');
+
+    // Hide position result when switching years
+    document.getElementById('positionResult').classList.remove('show');
+}
 
 function calculatePosition() {
     const score = parseInt(document.getElementById('userScore').value);
@@ -644,9 +817,9 @@ function calculatePosition() {
     document.getElementById('positionResult').classList.add('show');
 }
 
-// Update stats on page load
+// Initialize with 2026 (current year)
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('totalPool').textContent = totalPool.toLocaleString();
+    showYear(2026);
 });
 </script>
 {% endblock %}
