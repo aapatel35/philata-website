@@ -1,0 +1,38 @@
+{
+  "targets": {
+    "2024": {
+      "total": 485000,
+      "economic": 281135,
+      "express_entry": 110770,
+      "pnp": 110000,
+      "family": 114000,
+      "refugee": 76115
+    },
+    "2025": {
+      "total": 395000,
+      "economic": 232000,
+      "express_entry": 124000,
+      "pnp": 82000,
+      "family": 84000,
+      "refugee": 52000
+    },
+    "2026": {
+      "total": 380000,
+      "economic": 220000,
+      "express_entry": 118000,
+      "pnp": 79000,
+      "family": 82000,
+      "refugee": 50500
+    },
+    "2027": {
+      "total": 365000,
+      "economic": 209000,
+      "express_entry": 112000,
+      "pnp": 76000,
+      "family": 80000,
+      "refugee": 48500
+    }
+  },
+  "source": "IRCC Immigration Levels Plan 2025-2027",
+  "updated": "2026-01-12T14:54:45.042384"
+}

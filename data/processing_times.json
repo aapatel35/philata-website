@@ -1,0 +1,57 @@
+{
+  "times": {
+    "express_entry": {
+      "fsw": {
+        "time": "6 months",
+        "status": "normal"
+      },
+      "cec": {
+        "time": "5 months",
+        "status": "normal"
+      },
+      "fst": {
+        "time": "6 months",
+        "status": "normal"
+      },
+      "pnp": {
+        "time": "6 months",
+        "status": "normal"
+      }
+    },
+    "temporary": {
+      "visitor": {
+        "time": "45 days",
+        "status": "delayed"
+      },
+      "study": {
+        "time": "8 weeks",
+        "status": "normal"
+      },
+      "work_lmia": {
+        "time": "12 weeks",
+        "status": "delayed"
+      },
+      "pgwp": {
+        "time": "80 days",
+        "status": "normal"
+      }
+    },
+    "family": {
+      "spouse_inland": {
+        "time": "12 months",
+        "status": "normal"
+      },
+      "spouse_outland": {
+        "time": "12 months",
+        "status": "normal"
+      },
+      "pgp": {
+        "time": "24 months",
+        "status": "backlog"
+      }
+    }
+  },
+  "source": "IRCC Official",
+  "url": "https://www.canada.ca/content/dam/ircc/documents/json/data-ptime-en.json",
+  "updated": "2026-01-12T14:54:45.040728"
+}

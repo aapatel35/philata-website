@@ -1,0 +1,394 @@
+{
+  "draws": [
+    {
+      "date": "2026-01-07",
+      "type": "Canadian Experience Class",
+      "score": 511,
+      "itas": 8000,
+      "year": 2026
+    },
+    {
+      "date": "2026-01-05",
+      "type": "Provincial Nominee Program",
+      "score": 711,
+      "itas": 574,
+      "year": 2026
+    },
+    {
+      "date": "2025-12-17",
+      "type": "French Language Proficiency",
+      "score": 399,
+      "itas": 6000,
+      "year": 2025
+    },
+    {
+      "date": "2025-12-16",
+      "type": "Canadian Experience Class",
+      "score": 515,
+      "itas": 5000,
+      "year": 2025
+    },
+    {
+      "date": "2025-12-15",
+      "type": "Provincial Nominee Program",
+      "score": 731,
+      "itas": 399,
+      "year": 2025
+    },
+    {
+      "date": "2025-12-11",
+      "type": "Healthcare Occupations",
+      "score": 476,
+      "itas": 1000,
+      "year": 2025
+    },
+    {
+      "date": "2025-12-10",
+      "type": "Canadian Experience Class",
+      "score": 520,
+      "itas": 6000,
+      "year": 2025
+    },
+    {
+      "date": "2025-12-08",
+      "type": "Provincial Nominee Program",
+      "score": 729,
+      "itas": 1123,
+      "year": 2025
+    },
+    {
+      "date": "2025-11-28",
+      "type": "French Language Proficiency",
+      "score": 408,
+      "itas": 6000,
+      "year": 2025
+    },
+    {
+      "date": "2025-11-26",
+      "type": "Canadian Experience Class",
+      "score": 531,
+      "itas": 1000,
+      "year": 2025
+    },
+    {
+      "date": "2025-11-25",
+      "type": "Provincial Nominee Program",
+      "score": 699,
+      "itas": 777,
+      "year": 2025
+    },
+    {
+      "date": "2025-11-14",
+      "type": "Healthcare Occupations",
+      "score": 462,
+      "itas": 3500,
+      "year": 2025
+    },
+    {
+      "date": "2025-11-12",
+      "type": "Canadian Experience Class",
+      "score": 533,
+      "itas": 1000,
+      "year": 2025
+    },
+    {
+      "date": "2025-11-10",
+      "type": "Provincial Nominee Program",
+      "score": 738,
+      "itas": 714,
+      "year": 2025
+    },
+    {
+      "date": "2025-10-29",
+      "type": "French Language Proficiency",
+      "score": 416,
+      "itas": 6000,
+      "year": 2025
+    },
+    {
+      "date": "2025-10-28",
+      "type": "Canadian Experience Class",
+      "score": 533,
+      "itas": 1000,
+      "year": 2025
+    },
+    {
+      "date": "2025-10-27",
+      "type": "Provincial Nominee Program",
+      "score": 761,
+      "itas": 302,
+      "year": 2025
+    },
+    {
+      "date": "2025-10-15",
+      "type": "Healthcare Occupations",
+      "score": 472,
+      "itas": 2500,
+      "year": 2025
+    },
+    {
+      "date": "2025-10-14",
+      "type": "Provincial Nominee Program",
+      "score": 778,
+      "itas": 345,
+      "year": 2025
+    },
+    {
+      "date": "2025-10-06",
+      "type": "French Language Proficiency",
+      "score": 432,
+      "itas": 4500,
+      "year": 2025
+    },
+    {
+      "date": "2025-10-01",
+      "type": "Canadian Experience Class",
+      "score": 534,
+      "itas": 1000,
+      "year": 2025
+    },
+    {
+      "date": "2025-09-29",
+      "type": "Provincial Nominee Program",
+      "score": 855,
+      "itas": 291,
+      "year": 2025
+    },
+    {
+      "date": "2025-09-18",
+      "type": "Trade Occupations",
+      "score": 505,
+      "itas": 1250,
+      "year": 2025
+    },
+    {
+      "date": "2025-09-17",
+      "type": "Education occupations (Version 1)",
+      "score": 462,
+      "itas": 2500,
+      "year": 2025
+    },
+    {
+      "date": "2025-09-15",
+      "type": "Provincial Nominee Program",
+      "score": 746,
+      "itas": 228,
+      "year": 2025
+    },
+    {
+      "date": "2025-09-04",
+      "type": "French Language Proficiency",
+      "score": 446,
+      "itas": 4500,
+      "year": 2025
+    },
+    {
+      "date": "2025-09-03",
+      "type": "Canadian Experience Class",
+      "score": 534,
+      "itas": 1000,
+      "year": 2025
+    },
+    {
+      "date": "2025-09-02",
+      "type": "Provincial Nominee Program",
+      "score": 772,
+      "itas": 249,
+      "year": 2025
+    },
+    {
+      "date": "2025-08-19",
+      "type": "Healthcare Occupations",
+      "score": 470,
+      "itas": 2500,
+      "year": 2025
+    },
+    {
+      "date": "2025-08-18",
+      "type": "Provincial Nominee Program",
+      "score": 800,
+      "itas": 192,
+      "year": 2025
+    },
+    {
+      "date": "2025-08-08",
+      "type": "French Language Proficiency",
+      "score": 481,
+      "itas": 2500,
+      "year": 2025
+    },
+    {
+      "date": "2025-08-07",
+      "type": "Canadian Experience Class",
+      "score": 534,
+      "itas": 1000,
+      "year": 2025
+    },
+    {
+      "date": "2025-08-06",
+      "type": "Provincial Nominee Program",
+      "score": 739,
+      "itas": 225,
+      "year": 2025
+    },
+    {
+      "date": "2025-07-22",
+      "type": "Healthcare Occupations",
+      "score": 475,
+      "itas": 4000,
+      "year": 2025
+    },
+    {
+      "date": "2025-07-21",
+      "type": "Provincial Nominee Program",
+      "score": 788,
+      "itas": 202,
+      "year": 2025
+    },
+    {
+      "date": "2025-07-08",
+      "type": "Canadian Experience Class",
+      "score": 518,
+      "itas": 3000,
+      "year": 2025
+    },
+    {
+      "date": "2025-07-07",
+      "type": "Provincial Nominee Program",
+      "score": 750,
+      "itas": 356,
+      "year": 2025
+    },
+    {
+      "date": "2025-06-26",
+      "type": "Canadian Experience Class",
+      "score": 521,
+      "itas": 3000,
+      "year": 2025
+    },
+    {
+      "date": "2025-06-23",
+      "type": "Provincial Nominee Program",
+      "score": 742,
+      "itas": 503,
+      "year": 2025
+    },
+    {
+      "date": "2025-06-12",
+      "type": "Canadian Experience Class",
+      "score": 529,
+      "itas": 3000,
+      "year": 2025
+    },
+    {
+      "date": "2025-06-10",
+      "type": "Provincial Nominee Program",
+      "score": 784,
+      "itas": 125,
+      "year": 2025
+    },
+    {
+      "date": "2025-06-04",
+      "type": "Healthcare Occupations",
+      "score": 504,
+      "itas": 500,
+      "year": 2025
+    },
+    {
+      "date": "2025-06-02",
+      "type": "Provincial Nominee Program",
+      "score": 726,
+      "itas": 277,
+      "year": 2025
+    },
+    {
+      "date": "2025-05-13",
+      "type": "Canadian Experience Class",
+      "score": 547,
+      "itas": 500,
+      "year": 2025
+    },
+    {
+      "date": "2025-05-12",
+      "type": "Provincial Nominee Program",
+      "score": 706,
+      "itas": 511,
+      "year": 2025
+    },
+    {
+      "date": "2025-05-02",
+      "type": "Healthcare Occupations",
+      "score": 510,
+      "itas": 500,
+      "year": 2025
+    },
+    {
+      "date": "2025-05-01",
+      "type": "Education occupations (Version 1)",
+      "score": 479,
+      "itas": 1000,
+      "year": 2025
+    },
+    {
+      "date": "2025-04-28",
+      "type": "Provincial Nominee Program",
+      "score": 727,
+      "itas": 421,
+      "year": 2025
+    },
+    {
+      "date": "2025-04-14",
+      "type": "Provincial Nominee Program",
+      "score": 764,
+      "itas": 825,
+      "year": 2025
+    },
+    {
+      "date": "2025-03-21",
+      "type": "French Language Proficiency",
+      "score": 379,
+      "itas": 7500,
+      "year": 2025
+    }
+  ],
+  "pool_stats": {
+    "2024": {
+      "total_pool": 218000,
+      "avg_score": 492,
+      "distribution": {
+        "601-1200": 4200,
+        "501-600": 32700,
+        "451-500": 76300,
+        "401-450": 65400,
+        "351-400": 26100,
+        "0-350": 13300
+      }
+    },
+    "2025": {
+      "total_pool": 228000,
+      "avg_score": 489,
+      "distribution": {
+        "601-1200": 4500,
+        "501-600": 34200,
+        "451-500": 79800,
+        "401-450": 68400,
+        "351-400": 27360,
+        "0-350": 13740
+      }
+    },
+    "2026": {
+      "total_pool": 235000,
+      "avg_score": 486,
+      "distribution": {
+        "601-1200": 4700,
+        "501-600": 35250,
+        "451-500": 82250,
+        "401-450": 70500,
+        "351-400": 28200,
+        "0-350": 14100
+      }
+    }
+  },
+  "source": "IRCC Express Entry Rounds",
+  "updated": "2026-01-12T14:54:43.981011"
+}

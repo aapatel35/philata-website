@@ -21,6 +21,27 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (compatible; PhilataBot/1.0; +https://philata.ca)'
 }
 
+# Month name to number mapping
+MONTHS = {
+    'january': '01', 'february': '02', 'march': '03', 'april': '04',
+    'may': '05', 'june': '06', 'july': '07', 'august': '08',
+    'september': '09', 'october': '10', 'november': '11', 'december': '12'
+}
+
+def parse_draw_date(date_str):
+    """Parse date like 'January 7, 2026' to '2026-01-07'"""
+    try:
+        # Format: "January 7, 2026"
+        parts = date_str.replace(',', '').split()
+        if len(parts) >= 3:
+            month = MONTHS.get(parts[0].lower(), '01')
+            day = parts[1].zfill(2)
+            year = parts[2]
+            return f"{year}-{month}-{day}"
+    except Exception:
+        pass
+    return datetime.now().strftime('%Y-%m-%d')
+
 # =============================================================================
 # EXPRESS ENTRY DRAWS - Official IRCC JSON endpoint
 # =============================================================================
@@ -36,13 +57,23 @@ def update_express_entry_draws():
         data = response.json()
 
         draws = []
-        for round_item in data.get('rounds', [])[:50]:
+        rounds_data = data.get('rounds', {})
+
+        # IRCC returns rounds as a dict with keys like 'r390', 'r389', etc.
+        # Sort by round number (descending) to get most recent first
+        sorted_keys = sorted(rounds_data.keys(), key=lambda x: int(x[1:]) if x[1:].isdigit() else 0, reverse=True)
+
+        for key in sorted_keys[:50]:
+            round_item = rounds_data[key]
             try:
-                draw_date = round_item.get('drawDate', '')
+                draw_date_full = round_item.get('drawDateFull', '')
                 draw_name = round_item.get('drawName', 'General')
                 crs_score = round_item.get('drawCRS', '')
                 itas = round_item.get('drawSize', '')
                 draw_number = round_item.get('drawNumber', '')
+
+                # Parse date to YYYY-MM-DD format
+                draw_date = parse_draw_date(draw_date_full)
 
                 # Parse CRS score
                 crs_match = re.search(r'(\d+)', str(crs_score))
@@ -64,21 +95,37 @@ def update_express_entry_draws():
                         'itas': itas_int
                     })
             except Exception as e:
-                print(f"  Error parsing draw: {e}")
+                print(f"  Error parsing draw {key}: {e}")
                 continue
 
         # Calculate category averages
         category_cutoffs = calculate_category_averages(draws)
 
-        # Save draws
+        # Convert to website format (type/score instead of category/crs)
+        website_draws = []
+        for d in draws:
+            year = int(d['date'].split('-')[0]) if d['date'] else 2026
+            website_draws.append({
+                'date': d['date'],
+                'type': d['category'],
+                'score': d['crs'],
+                'itas': d['itas'],
+                'year': year
+            })
+
+        # Load existing pool_stats or use defaults
+        existing = load_json('draws.json') or {}
+        pool_stats = existing.get('pool_stats', get_default_pool_stats())
+
+        # Save draws with pool stats
         save_json('draws.json', {
-            'draws': draws,
-            'source': 'IRCC Official',
-            'url': EE_DRAWS_URL,
+            'draws': website_draws,
+            'pool_stats': pool_stats,
+            'source': 'IRCC Express Entry Rounds',
             'updated': now()
         })
 
-        # Save category cutoffs
+        # Save category cutoffs separately for eligibility checker
         save_json('category_cutoffs.json', category_cutoffs)
 
         print(f"  Updated {len(draws)} Express Entry draws")
@@ -331,6 +378,47 @@ def update_immigration_targets():
 # =============================================================================
 # UTILITIES
 # =============================================================================
+def get_default_pool_stats():
+    """Return default pool statistics"""
+    return {
+        "2024": {
+            "total_pool": 218000,
+            "avg_score": 492,
+            "distribution": {
+                "601-1200": 4200,
+                "501-600": 32700,
+                "451-500": 76300,
+                "401-450": 65400,
+                "351-400": 26100,
+                "0-350": 13300
+            }
+        },
+        "2025": {
+            "total_pool": 228000,
+            "avg_score": 489,
+            "distribution": {
+                "601-1200": 4500,
+                "501-600": 34200,
+                "451-500": 79800,
+                "401-450": 68400,
+                "351-400": 27360,
+                "0-350": 13740
+            }
+        },
+        "2026": {
+            "total_pool": 235000,
+            "avg_score": 486,
+            "distribution": {
+                "601-1200": 4700,
+                "501-600": 35250,
+                "451-500": 82250,
+                "401-450": 70500,
+                "351-400": 28200,
+                "0-350": 14100
+            }
+        }
+    }
+
 def save_json(filename, data):
     """Save data to JSON file"""
     os.makedirs(DATA_DIR, exist_ok=True)

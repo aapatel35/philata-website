@@ -1,0 +1,90 @@
+{
+  "provinces": {
+    "bc": {
+      "tech_occupations": [
+        {
+          "noc": "21231",
+          "title": "Software Engineers"
+        },
+        {
+          "noc": "21232",
+          "title": "Software Developers"
+        },
+        {
+          "noc": "21234",
+          "title": "Web Developers"
+        },
+        {
+          "noc": "21211",
+          "title": "Data Scientists"
+        },
+        {
+          "noc": "21222",
+          "title": "Cybersecurity Specialists"
+        },
+        {
+          "noc": "20012",
+          "title": "Computer/IT Managers"
+        }
+      ],
+      "healthcare_occupations": [
+        {
+          "noc": "31301",
+          "title": "Registered Nurses"
+        },
+        {
+          "noc": "31302",
+          "title": "Nurse Practitioners"
+        },
+        {
+          "noc": "32101",
+          "title": "Licensed Practical Nurses"
+        }
+      ],
+      "source_url": "https://www.welcomebc.ca/Immigrate-to-B-C/BC-PNP-Skills-Immigration/BC-PNP-Tech"
+    },
+    "ontario": {
+      "in_demand_categories": [
+        "tech",
+        "healthcare",
+        "trades"
+      ],
+      "tech_draw_eligible": true,
+      "source_url": "https://www.ontario.ca/page/ontario-immigrant-nominee-program-oinp"
+    },
+    "alberta": {
+      "in_demand_categories": [
+        "tech",
+        "healthcare",
+        "trades",
+        "transport"
+      ],
+      "source_url": "https://www.alberta.ca/alberta-advantage-immigration-program"
+    },
+    "saskatchewan": {
+      "in_demand_categories": [
+        "healthcare",
+        "trades",
+        "agriculture"
+      ],
+      "occupation_in_demand_list": true,
+      "source_url": "https://www.saskatchewan.ca/residents/moving-to-saskatchewan/live-in-saskatchewan/by-immigrating/saskatchewan-immigrant-nominee-program"
+    },
+    "manitoba": {
+      "in_demand_categories": [
+        "healthcare",
+        "trades"
+      ],
+      "source_url": "https://immigratemanitoba.com/"
+    },
+    "nova_scotia": {
+      "in_demand_categories": [
+        "healthcare",
+        "trades"
+      ],
+      "labour_market_priorities": true,
+      "source_url": "https://novascotiaimmigration.com/move-here/"
+    }
+  },
+  "updated": "2026-01-12T14:54:45.041879"
+}

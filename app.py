@@ -703,10 +703,18 @@ def processing_times():
 def crs_prediction():
     """CRS Score Prediction page"""
     try:
-        from ircc_scraper import get_cached_processing_times
-        data = get_cached_processing_times()
-        draws = data.get('express_entry', {}).get('draws', []) if data else []
-        avg_crs = data.get('express_entry', {}).get('average_crs', 520) if data else 520
+        # Load draws from auto-updated JSON file
+        draws_file = os.path.join(os.path.dirname(__file__), 'data', 'draws.json')
+        if os.path.exists(draws_file):
+            with open(draws_file, 'r') as f:
+                data = json.load(f)
+            draws = data.get('draws', [])
+            # Calculate average CRS from recent draws
+            crs_scores = [d.get('score', 0) for d in draws[:10] if d.get('score', 0) < 700]
+            avg_crs = round(sum(crs_scores) / len(crs_scores)) if crs_scores else 520
+        else:
+            draws = []
+            avg_crs = 520
     except Exception as e:
         print(f"Error fetching draws: {e}")
         draws = []

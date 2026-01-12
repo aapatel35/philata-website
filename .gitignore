@@ -5,7 +5,14 @@ __pycache__/
 .venv/
 venv/
 *.log
-data/
+# User-generated content in data/
+data/articles.json
+data/results.json
+data/approved.json
+data/ai_decisions.json
+data/guides.json
+data/n8n_logs.json
+# Reference data files (draws.json, processing_times.json, etc.) should be tracked
 static/images/*.png
 static/images/*.jpg
 .DS_Store
