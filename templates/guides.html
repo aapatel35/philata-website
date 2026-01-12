@@ -301,24 +301,25 @@
 
     /* CTA Card */
     .cta-card {
-        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        background: linear-gradient(135deg, #1E3A5F 0%, #0F172A 100%); /* Dark blue gradient */
         border-radius: 16px;
         padding: 40px;
         text-align: center;
-        color: white;
+        color: #FFFFFF;
     }
 
     .cta-title {
         font-size: 22px;
         font-weight: 700;
         margin-bottom: 12px;
+        color: #FFFFFF;
     }
 
     .cta-desc {
-        opacity: 0.9;
         max-width: 500px;
         margin: 0 auto 24px;
         font-size: 14px;
+        color: #D1D5DB; /* gray-300 - visible on dark */
     }
 
     .cta-buttons {
@@ -326,6 +327,43 @@
         gap: 12px;
         justify-content: center;
         flex-wrap: wrap;
+    }
+
+    .cta-card .btn-white {
+        background: #FFFFFF;
+        color: #111827; /* dark text on white button */
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.2s ease;
+    }
+
+    .cta-card .btn-white:hover {
+        background: #F3F4F6;
+        transform: translateY(-2px);
+    }
+
+    .cta-card .btn-outline-white {
+        background: transparent;
+        color: #FFFFFF;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        padding: 10px 22px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.2s ease;
+    }
+
+    .cta-card .btn-outline-white:hover {
+        background: #FFFFFF;
+        color: #111827;
+        border-color: #FFFFFF;
     }
 
     /* Search Box (for guides page) */
