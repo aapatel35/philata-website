@@ -1,0 +1,1526 @@
+{% extends "base.html" %}
+
+{% block title %}PNP Calculator - Provincial Nominee Program Points{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Page Header */
+    .page-header-pnp {
+        margin-bottom: 32px;
+    }
+
+    .page-header-pnp .page-title {
+        font-family: 'Plus Jakarta Sans', var(--font-family);
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .page-header-pnp .page-title i {
+        font-size: 28px;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .page-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+    }
+
+    /* Province Selector */
+    .province-selector {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .selector-title {
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .selector-title i {
+        color: var(--primary);
+    }
+
+    .tab-groups {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .tab-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .tab-group-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .tab-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .province-tab {
+        padding: 0.6rem 1.2rem;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .province-tab:hover {
+        border-color: var(--primary);
+        background: rgba(30, 58, 95, 0.05);
+    }
+
+    .province-tab.active {
+        background: linear-gradient(135deg, #1E3A5F 0%, #0891B2 100%);
+        color: white;
+        border-color: transparent;
+    }
+
+    .province-tab .badge {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(255,255,255,0.2);
+    }
+
+    .province-tab.active .badge {
+        background: rgba(255,255,255,0.3);
+    }
+
+    /* Calculator Grid */
+    .calculator-grid {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    @media (max-width: 1024px) {
+        .calculator-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Input Sections */
+    .inputs-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .input-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .section-header {
+        background: var(--bg);
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .section-header i {
+        color: var(--primary);
+        font-size: 1.1rem;
+    }
+
+    .section-header h3 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .section-body {
+        padding: 1.25rem;
+    }
+
+    /* Form Fields */
+    .form-field {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-field:last-child {
+        margin-bottom: 0;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 500;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .form-sublabel {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-select, .form-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text);
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+    }
+
+    .form-select:focus, .form-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    @media (max-width: 600px) {
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .checkbox-field {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.75rem;
+        background: var(--bg);
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .checkbox-field input {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--primary);
+    }
+
+    .checkbox-field span {
+        font-size: 0.95rem;
+        color: var(--text);
+    }
+
+    /* Results Panel */
+    .results-panel {
+        position: sticky;
+        top: 100px;
+    }
+
+    .score-card {
+        background: linear-gradient(135deg, #1E3A5F 0%, #0891B2 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        color: white;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .score-label {
+        font-size: 0.95rem;
+        opacity: 0.9;
+        margin-bottom: 0.5rem;
+    }
+
+    .score-value {
+        font-size: 4rem;
+        font-weight: 800;
+        line-height: 1;
+    }
+
+    .score-max {
+        font-size: 1rem;
+        opacity: 0.8;
+        margin-top: 0.5rem;
+    }
+
+    .score-status {
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+        background: rgba(255,255,255,0.15);
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    .score-status.competitive {
+        background: rgba(16, 185, 129, 0.3);
+    }
+
+    .score-status.needs-work {
+        background: rgba(245, 158, 11, 0.3);
+    }
+
+    /* Breakdown Card */
+    .breakdown-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+    }
+
+    .breakdown-header {
+        background: var(--bg);
+        padding: 1rem 1.25rem;
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .breakdown-header i {
+        color: var(--primary);
+    }
+
+    .breakdown-body {
+        padding: 1rem 1.25rem;
+    }
+
+    .breakdown-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.6rem 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .breakdown-item:last-child {
+        border-bottom: none;
+    }
+
+    .breakdown-item .label {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .breakdown-item .value {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .breakdown-item .value.highlight {
+        color: var(--primary);
+    }
+
+    /* Eligibility Results */
+    .eligibility-results {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .stream-card {
+        background: var(--card);
+        border: 2px solid var(--border);
+        border-radius: 14px;
+        padding: 1.25rem;
+        transition: all 0.2s ease;
+    }
+
+    .stream-card.eligible {
+        border-color: #10B981;
+        background: rgba(16, 185, 129, 0.03);
+    }
+
+    .stream-card.not-eligible {
+        border-color: var(--border);
+        opacity: 0.7;
+    }
+
+    .stream-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .stream-name {
+        font-weight: 600;
+        color: var(--text);
+        font-size: 1rem;
+    }
+
+    .stream-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .stream-badge.eligible {
+        background: #10B981;
+        color: white;
+    }
+
+    .stream-badge.not-eligible {
+        background: var(--bg);
+        color: var(--text-muted);
+    }
+
+    .requirements-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .req-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+    }
+
+    .req-item.met i {
+        color: #10B981;
+    }
+
+    .req-item.not-met i {
+        color: #EF4444;
+    }
+
+    /* Compare Section */
+    .compare-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .compare-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .compare-header h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .compare-header h3 i {
+        color: var(--primary);
+    }
+
+    .compare-btn {
+        padding: 0.6rem 1.2rem;
+        background: linear-gradient(135deg, #1E3A5F 0%, #0891B2 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .compare-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);
+    }
+
+    .compare-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .compare-card {
+        background: var(--bg);
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+        transition: all 0.2s ease;
+    }
+
+    .compare-card.eligible {
+        border-color: #10B981;
+        background: rgba(16, 185, 129, 0.05);
+    }
+
+    .compare-card .province-name {
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+
+    .compare-card .score {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .compare-card .status {
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+        padding: 4px 10px;
+        border-radius: 12px;
+        display: inline-block;
+    }
+
+    .compare-card .status.eligible {
+        background: #10B981;
+        color: white;
+    }
+
+    .compare-card .status.not-eligible {
+        background: var(--border);
+        color: var(--text-muted);
+    }
+
+    /* Province Info Banner */
+    .province-info {
+        background: linear-gradient(135deg, rgba(30,58,95,0.05), rgba(8,145,178,0.05));
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .province-info-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: var(--gradient-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.25rem;
+    }
+
+    .province-info-text h4 {
+        margin: 0 0 4px 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .province-info-text p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    /* Hidden sections */
+    .calculator-section {
+        display: none;
+    }
+
+    .calculator-section.active {
+        display: block;
+    }
+
+    /* Disclaimer */
+    .disclaimer {
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 2rem;
+        font-size: 0.9rem;
+        color: var(--text);
+    }
+
+    .disclaimer i {
+        color: #D97706;
+        margin-right: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header-pnp">
+    <h1 class="page-title">
+        <i class="bi bi-geo-alt-fill"></i>
+        PNP Calculator
+    </h1>
+    <p class="page-subtitle">Calculate your points for Provincial Nominee Programs across all Canadian provinces</p>
+</div>
+
+<!-- Province Selector -->
+<div class="province-selector">
+    <div class="selector-title">
+        <i class="bi bi-map"></i>
+        Select Province/Territory
+    </div>
+    <div class="tab-groups">
+        <div class="tab-group">
+            <span class="tab-group-label">Points-Based Calculators</span>
+            <div class="tab-buttons">
+                <button class="province-tab active" data-province="bc" onclick="selectProvince('bc')">
+                    <i class="bi bi-calculator"></i> BC PNP
+                    <span class="badge">SIRS</span>
+                </button>
+                <button class="province-tab" data-province="ontario" onclick="selectProvince('ontario')">
+                    <i class="bi bi-calculator"></i> Ontario
+                    <span class="badge">EOI</span>
+                </button>
+            </div>
+        </div>
+        <div class="tab-group">
+            <span class="tab-group-label">Eligibility Checkers</span>
+            <div class="tab-buttons">
+                <button class="province-tab" data-province="alberta" onclick="selectProvince('alberta')">Alberta</button>
+                <button class="province-tab" data-province="saskatchewan" onclick="selectProvince('saskatchewan')">Saskatchewan</button>
+                <button class="province-tab" data-province="manitoba" onclick="selectProvince('manitoba')">Manitoba</button>
+                <button class="province-tab" data-province="nova_scotia" onclick="selectProvince('nova_scotia')">Nova Scotia</button>
+                <button class="province-tab" data-province="new_brunswick" onclick="selectProvince('new_brunswick')">New Brunswick</button>
+                <button class="province-tab" data-province="pei" onclick="selectProvince('pei')">PEI</button>
+                <button class="province-tab" data-province="newfoundland" onclick="selectProvince('newfoundland')">Newfoundland</button>
+                <button class="province-tab" data-province="nwt" onclick="selectProvince('nwt')">NWT</button>
+                <button class="province-tab" data-province="yukon" onclick="selectProvince('yukon')">Yukon</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Calculator Grid -->
+<div class="calculator-grid">
+    <!-- Left: Input Sections -->
+    <div class="inputs-container">
+        <!-- Province Info Banner -->
+        <div class="province-info" id="provinceInfo">
+            <div class="province-info-icon">
+                <i class="bi bi-building"></i>
+            </div>
+            <div class="province-info-text">
+                <h4 id="provinceInfoTitle">British Columbia PNP (SIRS)</h4>
+                <p id="provinceInfoDesc">Skills Immigration Registration System - Points range: 0-200</p>
+            </div>
+        </div>
+
+        <!-- Common Input Sections -->
+        <div class="input-section">
+            <div class="section-header">
+                <i class="bi bi-briefcase"></i>
+                <h3>Job Offer & Employment</h3>
+            </div>
+            <div class="section-body">
+                <div class="form-field">
+                    <label class="checkbox-field">
+                        <input type="checkbox" id="hasJobOffer" onchange="calculateScore()">
+                        <span>I have a valid job offer in the province</span>
+                    </label>
+                </div>
+                <div class="form-field" id="wageField">
+                    <label class="form-label">Hourly Wage (CAD)</label>
+                    <p class="form-sublabel">Enter your job offer's hourly wage rate</p>
+                    <input type="number" class="form-input" id="hourlyWage" placeholder="e.g., 30" min="0" step="0.50" onchange="calculateScore()">
+                </div>
+                <div class="form-field" id="salaryField" style="display:none;">
+                    <label class="form-label">Annual Salary (CAD)</label>
+                    <input type="number" class="form-input" id="annualSalary" placeholder="e.g., 75000" min="0" onchange="calculateScore()">
+                </div>
+                <div class="form-field">
+                    <label class="form-label">NOC TEER Level</label>
+                    <select class="form-select" id="nocTeer" onchange="calculateScore()">
+                        <option value="">Select NOC TEER Level</option>
+                        <option value="0">TEER 0 - Management</option>
+                        <option value="1">TEER 1 - Professional</option>
+                        <option value="2">TEER 2 - Technical</option>
+                        <option value="3">TEER 3 - Skilled Trades</option>
+                        <option value="4">TEER 4 - Intermediate</option>
+                        <option value="5">TEER 5 - Labour</option>
+                    </select>
+                </div>
+                <div class="form-field" id="regionField">
+                    <label class="checkbox-field">
+                        <input type="checkbox" id="outsideMetro" onchange="calculateScore()">
+                        <span id="regionLabel">Job is outside Greater Vancouver/Victoria</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <div class="section-header">
+                <i class="bi bi-clock-history"></i>
+                <h3>Work Experience</h3>
+            </div>
+            <div class="section-body">
+                <div class="form-row">
+                    <div class="form-field">
+                        <label class="form-label">Total Work Experience (Years)</label>
+                        <select class="form-select" id="yearsExperience" onchange="calculateScore()">
+                            <option value="0">0 years</option>
+                            <option value="1">1 year</option>
+                            <option value="2">2 years</option>
+                            <option value="3">3 years</option>
+                            <option value="4">4 years</option>
+                            <option value="5">5+ years</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label class="form-label">Canadian Work Experience (Years)</label>
+                        <select class="form-select" id="canadianYears" onchange="calculateScore()">
+                            <option value="0">0 years</option>
+                            <option value="1">1 year</option>
+                            <option value="2">2 years</option>
+                            <option value="3">3 years</option>
+                            <option value="4">4+ years</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-field" id="provinceExperienceField">
+                    <label class="form-label">Months Working in This Province</label>
+                    <select class="form-select" id="monthsInProvince" onchange="calculateScore()">
+                        <option value="0">0 months</option>
+                        <option value="6">6 months</option>
+                        <option value="12">12 months</option>
+                        <option value="18">18 months</option>
+                        <option value="24">24+ months</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <div class="section-header">
+                <i class="bi bi-mortarboard"></i>
+                <h3>Education</h3>
+            </div>
+            <div class="section-body">
+                <div class="form-field">
+                    <label class="form-label">Highest Level of Education</label>
+                    <select class="form-select" id="education" onchange="calculateScore()">
+                        <option value="">Select Education Level</option>
+                        <option value="high_school">High School Diploma</option>
+                        <option value="diploma_1yr">1-Year Post-Secondary</option>
+                        <option value="diploma_2yr">2-Year Diploma/Certificate</option>
+                        <option value="diploma_3yr">3-Year Diploma/Degree</option>
+                        <option value="bachelors">Bachelor's Degree</option>
+                        <option value="masters">Master's Degree</option>
+                        <option value="phd">Doctoral Degree (PhD)</option>
+                    </select>
+                </div>
+                <div class="form-field" id="canadianEducationField">
+                    <label class="checkbox-field">
+                        <input type="checkbox" id="canadianEducation" onchange="calculateScore()">
+                        <span>I completed education in Canada</span>
+                    </label>
+                </div>
+                <div class="form-field" id="bcEducationField">
+                    <label class="checkbox-field">
+                        <input type="checkbox" id="bcEducation" onchange="calculateScore()">
+                        <span>I have a credential from a BC institution</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <div class="section-header">
+                <i class="bi bi-chat-dots"></i>
+                <h3>Language Proficiency</h3>
+            </div>
+            <div class="section-body">
+                <div class="form-field">
+                    <label class="form-label">English CLB Level</label>
+                    <p class="form-sublabel">Your lowest CLB score across all abilities</p>
+                    <select class="form-select" id="englishClb" onchange="calculateScore()">
+                        <option value="">Select CLB Level</option>
+                        <option value="4">CLB 4</option>
+                        <option value="5">CLB 5</option>
+                        <option value="6">CLB 6</option>
+                        <option value="7">CLB 7</option>
+                        <option value="8">CLB 8</option>
+                        <option value="9">CLB 9</option>
+                        <option value="10">CLB 10+</option>
+                    </select>
+                </div>
+                <div class="form-field" id="frenchField">
+                    <label class="form-label">French NCLC Level (Optional)</label>
+                    <select class="form-select" id="frenchClb" onchange="calculateScore()">
+                        <option value="0">None / Not Applicable</option>
+                        <option value="5">NCLC 5</option>
+                        <option value="6">NCLC 6</option>
+                        <option value="7">NCLC 7+</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <div class="section-header">
+                <i class="bi bi-person-badge"></i>
+                <h3>Immigration Status</h3>
+            </div>
+            <div class="section-body">
+                <div class="form-field">
+                    <label class="checkbox-field">
+                        <input type="checkbox" id="hasWorkPermit" onchange="calculateScore()">
+                        <span>I have a valid work permit</span>
+                    </label>
+                </div>
+                <div class="form-field">
+                    <label class="checkbox-field">
+                        <input type="checkbox" id="hasExpressEntry" onchange="calculateScore()">
+                        <span>I have an active Express Entry profile</span>
+                    </label>
+                </div>
+                <div class="form-field" id="crsScoreField" style="display:none;">
+                    <label class="form-label">CRS Score (if applicable)</label>
+                    <input type="number" class="form-input" id="crsScore" placeholder="e.g., 450" min="0" max="1200" onchange="calculateScore()">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right: Results Panel -->
+    <div class="results-panel">
+        <!-- Points-Based Results (BC/Ontario) -->
+        <div id="pointsResults">
+            <div class="score-card">
+                <div class="score-label" id="scoreLabel">Your BC SIRS Score</div>
+                <div class="score-value" id="totalScore">0</div>
+                <div class="score-max" id="scoreMax">out of 200 points</div>
+                <div class="score-status" id="scoreStatus">Enter your details</div>
+            </div>
+
+            <div class="breakdown-card">
+                <div class="breakdown-header">
+                    <i class="bi bi-list-ul"></i>
+                    Points Breakdown
+                </div>
+                <div class="breakdown-body" id="breakdownBody">
+                    <div class="breakdown-item">
+                        <span class="label">Job Offer</span>
+                        <span class="value" id="jobOfferPoints">0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="label">Work Experience</span>
+                        <span class="value" id="experiencePoints">0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="label">Education</span>
+                        <span class="value" id="educationPoints">0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="label">Language</span>
+                        <span class="value" id="languagePoints">0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="label">Regional Bonus</span>
+                        <span class="value" id="regionalPoints">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Eligibility Results (Other Provinces) -->
+        <div id="eligibilityResults" style="display:none;">
+            <div class="breakdown-card">
+                <div class="breakdown-header">
+                    <i class="bi bi-check2-circle"></i>
+                    Stream Eligibility
+                </div>
+                <div class="breakdown-body eligibility-results" id="streamResults">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips Card -->
+        <div class="breakdown-card">
+            <div class="breakdown-header">
+                <i class="bi bi-lightbulb"></i>
+                Tips to Improve
+            </div>
+            <div class="breakdown-body" id="tipsBody">
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    Fill in your details to see personalized tips for improving your score.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Compare All Provinces -->
+<div class="compare-section">
+    <div class="compare-header">
+        <h3><i class="bi bi-grid-3x3-gap"></i> Compare All Provinces</h3>
+        <button class="compare-btn" onclick="compareAllProvinces()">
+            <i class="bi bi-search"></i> Check My Eligibility Everywhere
+        </button>
+    </div>
+    <div class="compare-grid" id="compareGrid" style="display:none;">
+        <!-- Dynamically populated -->
+    </div>
+</div>
+
+<!-- Disclaimer -->
+<div class="disclaimer">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    <strong>Disclaimer:</strong> This calculator provides estimates based on publicly available information.
+    Provincial programs change frequently. Always verify requirements on official provincial immigration websites
+    before making decisions. This tool is for informational purposes only.
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Province Data
+const PNP_DATA = {
+    bc: {
+        name: 'British Columbia',
+        fullName: 'British Columbia PNP (SIRS)',
+        description: 'Skills Immigration Registration System - Points range: 0-200',
+        type: 'points',
+        maxPoints: 200,
+        competitiveScore: 100,
+        url: 'https://www.welcomebc.ca/Immigrate-to-B-C/BC-PNP-Skills-Immigration'
+    },
+    ontario: {
+        name: 'Ontario',
+        fullName: 'Ontario OINP (EOI)',
+        description: 'Expression of Interest System - Points range: 0-66',
+        type: 'points',
+        maxPoints: 66,
+        competitiveScore: 45,
+        url: 'https://www.ontario.ca/page/ontario-immigrant-nominee-program-oinp'
+    },
+    alberta: {
+        name: 'Alberta',
+        fullName: 'Alberta AAIP',
+        description: 'Stream-based eligibility - 6 immigration streams',
+        type: 'eligibility',
+        streams: {
+            opportunity: { name: 'Alberta Opportunity Stream', jobRequired: true, minClb: 4, minMonths: 12 },
+            express_entry: { name: 'Alberta Express Entry', eeRequired: true, minCrs: 300 },
+            rural_renewal: { name: 'Rural Renewal Stream', jobRequired: true, rural: true },
+            tech: { name: 'Accelerated Tech Pathway', jobRequired: true, techJob: true }
+        },
+        url: 'https://www.alberta.ca/alberta-advantage-immigration-program'
+    },
+    saskatchewan: {
+        name: 'Saskatchewan',
+        fullName: 'Saskatchewan SINP',
+        description: 'Stream-based eligibility - 5 immigration streams',
+        type: 'eligibility',
+        streams: {
+            international_worker: { name: 'International Skilled Worker', jobRequired: true, minClb: 4 },
+            express_entry: { name: 'Express Entry', eeRequired: true, minPoints: 60 },
+            occupation_in_demand: { name: 'Occupation In-Demand', inDemandNoc: true, minClb: 4 },
+            hard_to_fill: { name: 'Hard-to-Fill Skills Pilot', jobRequired: true }
+        },
+        url: 'https://www.saskatchewan.ca/residents/moving-to-saskatchewan/immigrating-to-saskatchewan/saskatchewan-immigrant-nominee-program'
+    },
+    manitoba: {
+        name: 'Manitoba',
+        fullName: 'Manitoba MPNP',
+        description: 'Stream-based eligibility - 4 immigration streams',
+        type: 'eligibility',
+        streams: {
+            skilled_worker_overseas: { name: 'Skilled Worker Overseas', connectionRequired: true, minClb: 5 },
+            skilled_worker_manitoba: { name: 'Skilled Worker in Manitoba', jobRequired: true, minClb: 5, minMonths: 6 },
+            international_education: { name: 'International Education', manitobaGrad: true, jobRequired: true }
+        },
+        url: 'https://immigratemanitoba.com/'
+    },
+    nova_scotia: {
+        name: 'Nova Scotia',
+        fullName: 'Nova Scotia NSNP',
+        description: 'Stream-based eligibility - 3 immigration streams',
+        type: 'eligibility',
+        streams: {
+            skilled_worker: { name: 'Skilled Worker', jobRequired: true, minClb: 5 },
+            labour_market: { name: 'Labour Market Priorities', eeRequired: true, nsConnection: true },
+            physician: { name: 'Physician Stream', physician: true }
+        },
+        url: 'https://novascotiaimmigration.com/move-here/'
+    },
+    new_brunswick: {
+        name: 'New Brunswick',
+        fullName: 'New Brunswick NBPNP',
+        description: 'Stream-based eligibility - 4 immigration streams',
+        type: 'eligibility',
+        streams: {
+            skilled_worker_ee: { name: 'Express Entry Labour Market', eeRequired: true, jobRequired: true },
+            skilled_worker: { name: 'Skilled Worker with Employer Support', jobRequired: true, minClb: 4 },
+            strategic_initiative: { name: 'Strategic Initiative', frenchRequired: true }
+        },
+        url: 'https://www.welcomenb.ca/content/wel-bien/en/immigrating/content/HowToImmigrate/NBProvincialNomineeProgram.html'
+    },
+    pei: {
+        name: 'PEI',
+        fullName: 'Prince Edward Island PNP',
+        description: 'Stream-based eligibility - 3 immigration streams',
+        type: 'eligibility',
+        streams: {
+            labour_impact: { name: 'Labour Impact', jobRequired: true, minClb: 4 },
+            express_entry: { name: 'PEI Express Entry', eeRequired: true },
+            business_impact: { name: 'Business Impact', businessOwner: true }
+        },
+        url: 'https://www.princeedwardisland.ca/en/topic/office-immigration'
+    },
+    newfoundland: {
+        name: 'Newfoundland',
+        fullName: 'Newfoundland & Labrador NLPNP',
+        description: 'Stream-based eligibility - 3 immigration streams',
+        type: 'eligibility',
+        streams: {
+            skilled_worker: { name: 'Skilled Worker', jobRequired: true, minClb: 5 },
+            express_entry: { name: 'Express Entry Skilled Worker', eeRequired: true, jobRequired: true },
+            international_graduate: { name: 'International Graduate', nlGrad: true, jobRequired: true }
+        },
+        url: 'https://www.gov.nl.ca/immigration/immigrating-to-newfoundland-and-labrador/provincial-nominee-program/'
+    },
+    nwt: {
+        name: 'NWT',
+        fullName: 'Northwest Territories NTNP',
+        description: 'Stream-based eligibility - 4 immigration streams',
+        type: 'eligibility',
+        streams: {
+            employer_driven: { name: 'Employer Driven', jobRequired: true, minClb: 4, minMonths: 12 },
+            express_entry: { name: 'NWT Express Entry', eeRequired: true, nwtConnection: true },
+            critical_impact: { name: 'Critical Impact Worker', jobRequired: true, minClb: 4 }
+        },
+        url: 'https://www.immigratenwt.ca/en/northwest-territories-nominee-program'
+    },
+    yukon: {
+        name: 'Yukon',
+        fullName: 'Yukon YNP',
+        description: 'Stream-based eligibility - 2 immigration streams',
+        type: 'eligibility',
+        streams: {
+            skilled_worker: { name: 'Skilled Worker', jobRequired: true, minClb: 4 },
+            express_entry: { name: 'Yukon Express Entry', eeRequired: true, yukonConnection: true }
+        },
+        url: 'https://yukon.ca/en/doing-business/business-supports-and-financing/yukon-nominee-program'
+    }
+};
+
+let currentProvince = 'bc';
+
+// Province Selection
+function selectProvince(province) {
+    currentProvince = province;
+
+    // Update tabs
+    document.querySelectorAll('.province-tab').forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.dataset.province === province) {
+            tab.classList.add('active');
+        }
+    });
+
+    // Update province info
+    const info = PNP_DATA[province];
+    document.getElementById('provinceInfoTitle').textContent = info.fullName;
+    document.getElementById('provinceInfoDesc').textContent = info.description;
+
+    // Show/hide fields based on province type
+    updateFieldVisibility(province);
+
+    // Calculate score
+    calculateScore();
+}
+
+function updateFieldVisibility(province) {
+    const info = PNP_DATA[province];
+
+    // Show points results for BC/Ontario, eligibility for others
+    if (info.type === 'points') {
+        document.getElementById('pointsResults').style.display = 'block';
+        document.getElementById('eligibilityResults').style.display = 'none';
+
+        // Update score card
+        document.getElementById('scoreLabel').textContent = `Your ${info.name} Score`;
+        document.getElementById('scoreMax').textContent = `out of ${info.maxPoints} points`;
+    } else {
+        document.getElementById('pointsResults').style.display = 'none';
+        document.getElementById('eligibilityResults').style.display = 'block';
+    }
+
+    // BC-specific fields
+    document.getElementById('bcEducationField').style.display = province === 'bc' ? 'block' : 'none';
+
+    // Wage vs Salary field
+    document.getElementById('wageField').style.display = province === 'bc' ? 'block' : 'none';
+    document.getElementById('salaryField').style.display = province === 'ontario' ? 'block' : 'none';
+
+    // Region label
+    if (province === 'bc') {
+        document.getElementById('regionLabel').textContent = 'Job is outside Greater Vancouver/Victoria';
+    } else if (province === 'ontario') {
+        document.getElementById('regionLabel').textContent = 'Job is outside Greater Toronto Area (GTA)';
+    } else {
+        document.getElementById('regionLabel').textContent = 'Job is in a rural/northern region';
+    }
+
+    // CRS score field for EE-linked provinces
+    const showCrs = document.getElementById('hasExpressEntry').checked;
+    document.getElementById('crsScoreField').style.display = showCrs ? 'block' : 'none';
+}
+
+// Scoring Functions
+function calculateScore() {
+    const province = currentProvince;
+    const info = PNP_DATA[province];
+
+    if (info.type === 'points') {
+        if (province === 'bc') {
+            calculateBCScore();
+        } else if (province === 'ontario') {
+            calculateOntarioScore();
+        }
+    } else {
+        calculateEligibility(province);
+    }
+
+    updateTips();
+}
+
+function calculateBCScore() {
+    let total = 0;
+    const breakdown = {
+        jobOffer: 0,
+        experience: 0,
+        education: 0,
+        language: 0,
+        regional: 0
+    };
+
+    // Job Offer (max 60 points) - wage-based
+    if (document.getElementById('hasJobOffer').checked) {
+        const wage = parseFloat(document.getElementById('hourlyWage').value) || 0;
+        const medianWage = 27.50; // BC median
+
+        if (wage >= medianWage * 1.5) breakdown.jobOffer = 60;
+        else if (wage >= medianWage * 1.25) breakdown.jobOffer = 25;
+        else if (wage >= medianWage) breakdown.jobOffer = 10;
+        else if (wage > 0) breakdown.jobOffer = 5;
+
+        // NOC bonus
+        const noc = document.getElementById('nocTeer').value;
+        if (noc === '0' || noc === '1') breakdown.jobOffer += 25;
+        else if (noc === '2') breakdown.jobOffer += 10;
+        else if (noc === '3') breakdown.jobOffer += 5;
+    }
+
+    // Work Experience (max 25 points)
+    const years = parseInt(document.getElementById('yearsExperience').value) || 0;
+    breakdown.experience = Math.min(years * 5, 25);
+
+    // Canadian experience bonus
+    const canadianYears = parseInt(document.getElementById('canadianYears').value) || 0;
+    if (canadianYears > 0) breakdown.experience = Math.min(breakdown.experience + 10, 35);
+
+    // Education (max 25 points)
+    const edu = document.getElementById('education').value;
+    const eduPoints = {
+        'high_school': 0, 'diploma_1yr': 11, 'diploma_2yr': 16,
+        'diploma_3yr': 19, 'bachelors': 21, 'masters': 23, 'phd': 25
+    };
+    breakdown.education = eduPoints[edu] || 0;
+
+    // BC credential bonus
+    if (document.getElementById('bcEducation').checked) {
+        breakdown.education = Math.min(breakdown.education + 5, 30);
+    }
+
+    // Language (max 30 points)
+    const clb = parseInt(document.getElementById('englishClb').value) || 0;
+    const langPoints = { 4: 0, 5: 5, 6: 10, 7: 15, 8: 20, 9: 25, 10: 30 };
+    breakdown.language = langPoints[clb] || 0;
+
+    // Regional bonus (max 10 points)
+    if (document.getElementById('outsideMetro').checked) {
+        breakdown.regional = 10;
+    }
+
+    // Calculate total
+    total = breakdown.jobOffer + breakdown.experience + breakdown.education + breakdown.language + breakdown.regional;
+
+    // Update UI
+    document.getElementById('totalScore').textContent = total;
+    document.getElementById('jobOfferPoints').textContent = breakdown.jobOffer;
+    document.getElementById('experiencePoints').textContent = breakdown.experience;
+    document.getElementById('educationPoints').textContent = breakdown.education;
+    document.getElementById('languagePoints').textContent = breakdown.language;
+    document.getElementById('regionalPoints').textContent = breakdown.regional;
+
+    // Update status
+    const status = document.getElementById('scoreStatus');
+    if (total >= 100) {
+        status.textContent = 'Competitive Score!';
+        status.className = 'score-status competitive';
+    } else if (total >= 70) {
+        status.textContent = 'Good Progress';
+        status.className = 'score-status';
+    } else {
+        status.textContent = 'Needs Improvement';
+        status.className = 'score-status needs-work';
+    }
+}
+
+function calculateOntarioScore() {
+    let total = 0;
+    const breakdown = {
+        jobOffer: 0,
+        experience: 0,
+        education: 0,
+        language: 0,
+        regional: 0
+    };
+
+    // Job Offer NOC (max 10 points)
+    if (document.getElementById('hasJobOffer').checked) {
+        const noc = document.getElementById('nocTeer').value;
+        const nocPoints = { '0': 10, '1': 10, '2': 8, '3': 5, '4': 0, '5': 0 };
+        breakdown.jobOffer = nocPoints[noc] || 0;
+    }
+
+    // Earnings (max 3 points) - using salary field
+    const salary = parseFloat(document.getElementById('annualSalary').value) || 0;
+    if (salary >= 100000) breakdown.jobOffer += 3;
+    else if (salary >= 80000) breakdown.jobOffer += 2;
+    else if (salary >= 40000) breakdown.jobOffer += 1;
+
+    // Canadian Work Experience (max 4 points)
+    const canadianYears = parseInt(document.getElementById('canadianYears').value) || 0;
+    breakdown.experience = Math.min(canadianYears, 4);
+
+    // Education (max 10 points)
+    const edu = document.getElementById('education').value;
+    const eduPoints = {
+        'high_school': 0, 'diploma_1yr': 4, 'diploma_2yr': 5,
+        'diploma_3yr': 6, 'bachelors': 7, 'masters': 8, 'phd': 10
+    };
+    breakdown.education = eduPoints[edu] || 0;
+
+    // Language (max 10 points)
+    const clb = parseInt(document.getElementById('englishClb').value) || 0;
+    if (clb >= 9) breakdown.language = 10;
+    else if (clb >= 8) breakdown.language = 6;
+    else if (clb >= 7) breakdown.language = 4;
+    else if (clb >= 6) breakdown.language = 2;
+
+    // Outside GTA (max 10 points)
+    if (document.getElementById('outsideMetro').checked) {
+        breakdown.regional = 10;
+    }
+
+    // French bonus (part of strategic priorities)
+    const frenchClb = parseInt(document.getElementById('frenchClb').value) || 0;
+    if (frenchClb >= 7) breakdown.regional += 10;
+
+    // Calculate total (capped at 66)
+    total = Math.min(breakdown.jobOffer + breakdown.experience + breakdown.education + breakdown.language + breakdown.regional, 66);
+
+    // Update UI
+    document.getElementById('totalScore').textContent = total;
+    document.getElementById('jobOfferPoints').textContent = breakdown.jobOffer;
+    document.getElementById('experiencePoints').textContent = breakdown.experience;
+    document.getElementById('educationPoints').textContent = breakdown.education;
+    document.getElementById('languagePoints').textContent = breakdown.language;
+    document.getElementById('regionalPoints').textContent = breakdown.regional;
+
+    // Update status
+    const status = document.getElementById('scoreStatus');
+    if (total >= 45) {
+        status.textContent = 'Competitive Score!';
+        status.className = 'score-status competitive';
+    } else if (total >= 35) {
+        status.textContent = 'Good Progress';
+        status.className = 'score-status';
+    } else {
+        status.textContent = 'Needs Improvement';
+        status.className = 'score-status needs-work';
+    }
+}
+
+function calculateEligibility(province) {
+    const info = PNP_DATA[province];
+    const streams = info.streams;
+    const results = [];
+
+    // Get user inputs
+    const hasJobOffer = document.getElementById('hasJobOffer').checked;
+    const hasWorkPermit = document.getElementById('hasWorkPermit').checked;
+    const hasEE = document.getElementById('hasExpressEntry').checked;
+    const clb = parseInt(document.getElementById('englishClb').value) || 0;
+    const monthsInProvince = parseInt(document.getElementById('monthsInProvince').value) || 0;
+    const crsScore = parseInt(document.getElementById('crsScore').value) || 0;
+
+    // Check each stream
+    Object.entries(streams).forEach(([key, stream]) => {
+        const checks = [];
+        let eligible = true;
+
+        // Job offer requirement
+        if (stream.jobRequired) {
+            const met = hasJobOffer;
+            checks.push({ label: 'Job offer required', met });
+            if (!met) eligible = false;
+        }
+
+        // Work permit requirement
+        if (stream.workPermitRequired) {
+            const met = hasWorkPermit;
+            checks.push({ label: 'Work permit required', met });
+            if (!met) eligible = false;
+        }
+
+        // Express Entry requirement
+        if (stream.eeRequired) {
+            const met = hasEE;
+            checks.push({ label: 'Express Entry profile required', met });
+            if (!met) eligible = false;
+        }
+
+        // CLB minimum
+        if (stream.minClb) {
+            const met = clb >= stream.minClb;
+            checks.push({ label: `CLB ${stream.minClb}+ required`, met });
+            if (!met) eligible = false;
+        }
+
+        // Months in province
+        if (stream.minMonths) {
+            const met = monthsInProvince >= stream.minMonths;
+            checks.push({ label: `${stream.minMonths}+ months in province`, met });
+            if (!met) eligible = false;
+        }
+
+        // CRS minimum
+        if (stream.minCrs) {
+            const met = crsScore >= stream.minCrs;
+            checks.push({ label: `CRS ${stream.minCrs}+ required`, met });
+            if (!met) eligible = false;
+        }
+
+        results.push({
+            name: stream.name,
+            eligible,
+            checks
+        });
+    });
+
+    // Update UI
+    const container = document.getElementById('streamResults');
+    container.innerHTML = results.map(stream => `
+        <div class="stream-card ${stream.eligible ? 'eligible' : 'not-eligible'}">
+            <div class="stream-header">
+                <span class="stream-name">${stream.name}</span>
+                <span class="stream-badge ${stream.eligible ? 'eligible' : 'not-eligible'}">
+                    ${stream.eligible ? 'Eligible' : 'Not Eligible'}
+                </span>
+            </div>
+            <div class="requirements-list">
+                ${stream.checks.map(check => `
+                    <div class="req-item ${check.met ? 'met' : 'not-met'}">
+                        <i class="bi bi-${check.met ? 'check-circle-fill' : 'x-circle-fill'}"></i>
+                        ${check.label}
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateTips() {
+    const tips = [];
+    const province = currentProvince;
+    const info = PNP_DATA[province];
+
+    // Common tips
+    if (!document.getElementById('hasJobOffer').checked) {
+        tips.push('Getting a job offer significantly increases your chances');
+    }
+
+    const clb = parseInt(document.getElementById('englishClb').value) || 0;
+    if (clb < 7) {
+        tips.push('Improving your language score to CLB 7+ adds substantial points');
+    }
+
+    if (!document.getElementById('outsideMetro').checked) {
+        tips.push(`Jobs outside major cities (${province === 'ontario' ? 'GTA' : 'Vancouver/Victoria'}) earn bonus points`);
+    }
+
+    if (!document.getElementById('hasExpressEntry').checked) {
+        tips.push('Creating an Express Entry profile opens more PNP streams');
+    }
+
+    const container = document.getElementById('tipsBody');
+    if (tips.length > 0) {
+        container.innerHTML = tips.map(tip => `
+            <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 0.75rem;">
+                <i class="bi bi-lightbulb" style="color: var(--accent); flex-shrink: 0;"></i>
+                <span style="font-size: 0.9rem; color: var(--text);">${tip}</span>
+            </div>
+        `).join('');
+    } else {
+        container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">Great job! You\'re well-positioned for this province.</p>';
+    }
+}
+
+// Compare All Provinces
+function compareAllProvinces() {
+    const grid = document.getElementById('compareGrid');
+    grid.style.display = 'grid';
+
+    const results = [];
+
+    Object.entries(PNP_DATA).forEach(([key, province]) => {
+        let score = 0;
+        let eligible = false;
+        let status = '';
+
+        if (province.type === 'points') {
+            // Calculate points
+            const originalProvince = currentProvince;
+            currentProvince = key;
+
+            if (key === 'bc') {
+                // Quick BC calculation
+                let total = 0;
+                if (document.getElementById('hasJobOffer').checked) {
+                    const wage = parseFloat(document.getElementById('hourlyWage').value) || 0;
+                    if (wage >= 41.25) total += 60;
+                    else if (wage >= 34.38) total += 25;
+                    else if (wage >= 27.50) total += 10;
+                }
+                const years = parseInt(document.getElementById('yearsExperience').value) || 0;
+                total += Math.min(years * 5, 25);
+                const clb = parseInt(document.getElementById('englishClb').value) || 0;
+                const langPoints = { 4: 0, 5: 5, 6: 10, 7: 15, 8: 20, 9: 25, 10: 30 };
+                total += langPoints[clb] || 0;
+                if (document.getElementById('outsideMetro').checked) total += 10;
+
+                score = total;
+                eligible = total >= 100;
+                status = eligible ? 'Competitive' : 'Building';
+            } else if (key === 'ontario') {
+                // Quick Ontario calculation
+                let total = 0;
+                const canadianYears = parseInt(document.getElementById('canadianYears').value) || 0;
+                total += Math.min(canadianYears, 4);
+                const clb = parseInt(document.getElementById('englishClb').value) || 0;
+                if (clb >= 9) total += 10;
+                else if (clb >= 8) total += 6;
+                else if (clb >= 7) total += 4;
+                if (document.getElementById('outsideMetro').checked) total += 10;
+
+                score = total;
+                eligible = total >= 45;
+                status = eligible ? 'Competitive' : 'Building';
+            }
+
+            currentProvince = originalProvince;
+        } else {
+            // Check eligibility streams
+            const hasJobOffer = document.getElementById('hasJobOffer').checked;
+            const hasEE = document.getElementById('hasExpressEntry').checked;
+            const clb = parseInt(document.getElementById('englishClb').value) || 0;
+
+            // Simple eligibility check - at least one stream
+            Object.values(province.streams).forEach(stream => {
+                let streamEligible = true;
+                if (stream.jobRequired && !hasJobOffer) streamEligible = false;
+                if (stream.eeRequired && !hasEE) streamEligible = false;
+                if (stream.minClb && clb < stream.minClb) streamEligible = false;
+                if (streamEligible) eligible = true;
+            });
+
+            status = eligible ? 'Eligible' : 'Not Eligible';
+            score = eligible ? '✓' : '✗';
+        }
+
+        results.push({
+            key,
+            name: province.name,
+            type: province.type,
+            score,
+            eligible,
+            status
+        });
+    });
+
+    // Render comparison grid
+    grid.innerHTML = results.map(r => `
+        <div class="compare-card ${r.eligible ? 'eligible' : ''}" onclick="selectProvince('${r.key}')">
+            <div class="province-name">${r.name}</div>
+            <div class="score">${r.type === 'points' ? r.score : r.score}</div>
+            <span class="status ${r.eligible ? 'eligible' : 'not-eligible'}">${r.status}</span>
+        </div>
+    `).join('');
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Check for initial province from URL
+    const initialProvince = '{{ initial_province }}' || 'bc';
+    if (initialProvince && PNP_DATA[initialProvince]) {
+        selectProvince(initialProvince);
+    } else {
+        selectProvince('bc');
+    }
+
+    // Show CRS field when EE is checked
+    document.getElementById('hasExpressEntry').addEventListener('change', function() {
+        document.getElementById('crsScoreField').style.display = this.checked ? 'block' : 'none';
+    });
+});
+</script>
+{% endblock %}

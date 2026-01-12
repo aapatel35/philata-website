@@ -764,6 +764,13 @@ def pool_stats():
     return render_template('pool_stats.html')
 
 
+@app.route('/tools/pnp-calculator')
+@app.route('/tools/pnp-calculator/<province_id>')
+def pnp_calculator(province_id=None):
+    """Provincial Nominee Program Calculator - Points & Eligibility"""
+    return render_template('pnp_calculator.html', initial_province=province_id)
+
+
 @app.route('/api/processing-times')
 def api_processing_times():
     """API endpoint for processing times data"""
