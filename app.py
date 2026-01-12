@@ -536,6 +536,9 @@ def profile():
     # Get user's latest CRS score
     latest_score = get_latest_user_score(current_user.id)
 
+    # Get user's score history
+    score_history = get_user_scores(current_user.id, limit=10)
+
     # Get user's saved articles
     saved = get_saved_articles(current_user.id)
 
@@ -544,6 +547,7 @@ def profile():
 
     return render_template('auth/profile.html',
                          latest_score=latest_score,
+                         score_history=score_history,
                          saved_articles=saved,
                          checklists=checklists)
 
@@ -783,6 +787,30 @@ def api_draws():
 def pnp_calculator(province_id=None):
     """Provincial Nominee Program Calculator - Points & Eligibility"""
     return render_template('pnp_calculator.html', initial_province=province_id)
+
+
+@app.route('/tools/lico-calculator')
+def lico_calculator():
+    """LICO Calculator - Income requirements for PGP sponsorship"""
+    return render_template('lico_calculator.html')
+
+
+@app.route('/tools/physical-presence-calculator')
+def physical_presence_calculator():
+    """Physical Presence Calculator - Citizenship requirements"""
+    return render_template('physical_presence_calculator.html')
+
+
+@app.route('/tools/student-solvency')
+def student_solvency():
+    """Student Solvency Validator - Study permit financial requirements"""
+    return render_template('student_solvency.html')
+
+
+@app.route('/tools/dli-search')
+def dli_search():
+    """DLI Search - Find PGWP-eligible schools"""
+    return render_template('dli_search.html')
 
 
 @app.route('/api/processing-times')

@@ -475,42 +475,145 @@
 
     .compare-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 1rem;
+        margin-bottom: 2rem;
     }
 
     .compare-card {
-        background: var(--bg);
+        background: var(--card);
         border: 2px solid var(--border);
-        border-radius: 12px;
-        padding: 1rem;
-        text-align: center;
+        border-radius: 16px;
+        padding: 1.25rem;
+        text-align: left;
         transition: all 0.2s ease;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .compare-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
     }
 
     .compare-card.eligible {
         border-color: #10B981;
-        background: rgba(16, 185, 129, 0.05);
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(16, 185, 129, 0.02));
+    }
+
+    .compare-card.top-pick {
+        border-color: #F59E0B;
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.03));
+    }
+
+    .compare-card.top-pick::before {
+        content: '⭐ Best Match';
+        position: absolute;
+        top: -10px;
+        right: 12px;
+        background: linear-gradient(135deg, #F59E0B, #D97706);
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 10px;
+    }
+
+    .compare-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.75rem;
     }
 
     .compare-card .province-name {
-        font-weight: 600;
+        font-weight: 700;
+        font-size: 1.1rem;
         color: var(--text);
-        margin-bottom: 0.5rem;
+        margin-bottom: 0;
     }
 
-    .compare-card .score {
-        font-size: 1.5rem;
+    .compare-card .province-region {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+
+    .compare-card .score-badge {
+        background: var(--primary);
+        color: white;
+        font-size: 0.9rem;
         font-weight: 700;
-        color: var(--primary);
+        padding: 6px 12px;
+        border-radius: 10px;
+        min-width: 50px;
+        text-align: center;
+    }
+
+    .compare-card.not-eligible .score-badge {
+        background: var(--border);
+        color: var(--text-muted);
+    }
+
+    .compare-card .streams-list {
+        margin: 0.75rem 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .compare-card .streams-list li {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        padding: 3px 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .compare-card .streams-list li.eligible-stream {
+        color: #10B981;
+    }
+
+    .compare-card .streams-list li.eligible-stream i {
+        color: #10B981;
+    }
+
+    .compare-card .streams-list li i {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+    }
+
+    .compare-card .requirements {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 0.75rem;
+    }
+
+    .compare-card .req-tag {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+        border-radius: 6px;
+        background: var(--bg);
+        color: var(--text-muted);
+    }
+
+    .compare-card .req-tag.met {
+        background: rgba(16, 185, 129, 0.15);
+        color: #059669;
+    }
+
+    .compare-card .req-tag.unmet {
+        background: rgba(239, 68, 68, 0.1);
+        color: #DC2626;
     }
 
     .compare-card .status {
         font-size: 0.8rem;
-        margin-top: 0.5rem;
-        padding: 4px 10px;
-        border-radius: 12px;
+        margin-top: 0.75rem;
+        padding: 6px 12px;
+        border-radius: 8px;
         display: inline-block;
+        font-weight: 500;
     }
 
     .compare-card .status.eligible {
@@ -518,9 +621,68 @@
         color: white;
     }
 
+    .compare-card .status.competitive {
+        background: linear-gradient(135deg, #10B981, #059669);
+        color: white;
+    }
+
+    .compare-card .status.building {
+        background: #F59E0B;
+        color: white;
+    }
+
     .compare-card .status.not-eligible {
         background: var(--border);
         color: var(--text-muted);
+    }
+
+    .compare-summary {
+        background: linear-gradient(135deg, rgba(30,58,95,0.08), rgba(8,145,178,0.05));
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .compare-summary h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .compare-summary h4 i {
+        color: var(--primary);
+    }
+
+    .compare-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+    }
+
+    .compare-stat {
+        text-align: center;
+    }
+
+    .compare-stat .stat-value {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: var(--primary);
+    }
+
+    .compare-stat .stat-label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+
+    @media (max-width: 768px) {
+        .compare-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
     }
 
     /* Province Info Banner */
@@ -903,6 +1065,30 @@
             <i class="bi bi-search"></i> Check My Eligibility Everywhere
         </button>
     </div>
+
+    <!-- Summary Stats -->
+    <div class="compare-summary" id="compareSummary" style="display:none;">
+        <h4><i class="bi bi-bar-chart-fill"></i> Your Provincial Eligibility Summary</h4>
+        <div class="compare-stats">
+            <div class="compare-stat">
+                <div class="stat-value" id="eligibleCount">0</div>
+                <div class="stat-label">Eligible Provinces</div>
+            </div>
+            <div class="compare-stat">
+                <div class="stat-value" id="competitiveCount">0</div>
+                <div class="stat-label">Competitive</div>
+            </div>
+            <div class="compare-stat">
+                <div class="stat-value" id="buildingCount">0</div>
+                <div class="stat-label">Building Score</div>
+            </div>
+            <div class="compare-stat">
+                <div class="stat-value" id="streamsCount">0</div>
+                <div class="stat-label">Available Streams</div>
+            </div>
+        </div>
+    </div>
+
     <div class="compare-grid" id="compareGrid" style="display:none;">
         <!-- Dynamically populated -->
     </div>
@@ -1418,93 +1604,216 @@ function updateTips() {
 // Compare All Provinces
 function compareAllProvinces() {
     const grid = document.getElementById('compareGrid');
+    const summary = document.getElementById('compareSummary');
     grid.style.display = 'grid';
+    summary.style.display = 'block';
 
     const results = [];
+    let totalStreams = 0;
+
+    // Get user inputs
+    const hasJobOffer = document.getElementById('hasJobOffer').checked;
+    const hasEE = document.getElementById('hasExpressEntry').checked;
+    const clb = parseInt(document.getElementById('englishClb').value) || 0;
+    const years = parseInt(document.getElementById('yearsExperience').value) || 0;
+    const canadianYears = parseInt(document.getElementById('canadianYears').value) || 0;
+    const wage = parseFloat(document.getElementById('hourlyWage').value) || 0;
+    const outsideMetro = document.getElementById('outsideMetro').checked;
+
+    // Region mapping for provinces
+    const regions = {
+        'bc': 'Western Canada',
+        'alberta': 'Western Canada',
+        'saskatchewan': 'Prairie',
+        'manitoba': 'Prairie',
+        'ontario': 'Central Canada',
+        'quebec': 'Central Canada',
+        'nova_scotia': 'Atlantic',
+        'new_brunswick': 'Atlantic',
+        'pei': 'Atlantic',
+        'newfoundland': 'Atlantic',
+        'yukon': 'Northern'
+    };
 
     Object.entries(PNP_DATA).forEach(([key, province]) => {
         let score = 0;
         let eligible = false;
         let status = '';
+        let statusClass = 'not-eligible';
+        let eligibleStreams = [];
+        let requirements = [];
 
         if (province.type === 'points') {
-            // Calculate points
-            const originalProvince = currentProvince;
-            currentProvince = key;
-
+            // Calculate points for points-based systems
             if (key === 'bc') {
-                // Quick BC calculation
                 let total = 0;
-                if (document.getElementById('hasJobOffer').checked) {
-                    const wage = parseFloat(document.getElementById('hourlyWage').value) || 0;
+                if (hasJobOffer) {
                     if (wage >= 41.25) total += 60;
                     else if (wage >= 34.38) total += 25;
                     else if (wage >= 27.50) total += 10;
                 }
-                const years = parseInt(document.getElementById('yearsExperience').value) || 0;
                 total += Math.min(years * 5, 25);
-                const clb = parseInt(document.getElementById('englishClb').value) || 0;
                 const langPoints = { 4: 0, 5: 5, 6: 10, 7: 15, 8: 20, 9: 25, 10: 30 };
                 total += langPoints[clb] || 0;
-                if (document.getElementById('outsideMetro').checked) total += 10;
+                if (outsideMetro) total += 10;
 
                 score = total;
-                eligible = total >= 100;
-                status = eligible ? 'Competitive' : 'Building';
+                eligible = total >= 60;
+                if (total >= 100) {
+                    status = 'Competitive';
+                    statusClass = 'competitive';
+                } else if (total >= 60) {
+                    status = 'Eligible';
+                    statusClass = 'eligible';
+                } else {
+                    status = 'Building';
+                    statusClass = 'building';
+                }
+
+                // Requirements check
+                requirements.push({ text: 'Job Offer', met: hasJobOffer });
+                requirements.push({ text: 'CLB 4+', met: clb >= 4 });
+                requirements.push({ text: 'Work Exp', met: years >= 1 });
+
+                if (eligible) {
+                    eligibleStreams.push('Skills Immigration');
+                    if (hasEE) eligibleStreams.push('Express Entry BC');
+                    totalStreams += eligibleStreams.length;
+                }
             } else if (key === 'ontario') {
-                // Quick Ontario calculation
                 let total = 0;
-                const canadianYears = parseInt(document.getElementById('canadianYears').value) || 0;
                 total += Math.min(canadianYears, 4);
-                const clb = parseInt(document.getElementById('englishClb').value) || 0;
                 if (clb >= 9) total += 10;
                 else if (clb >= 8) total += 6;
                 else if (clb >= 7) total += 4;
-                if (document.getElementById('outsideMetro').checked) total += 10;
+                if (outsideMetro) total += 10;
 
                 score = total;
-                eligible = total >= 45;
-                status = eligible ? 'Competitive' : 'Building';
+                eligible = canadianYears >= 1 || hasJobOffer;
+                if (total >= 45 && eligible) {
+                    status = 'Competitive';
+                    statusClass = 'competitive';
+                } else if (eligible) {
+                    status = 'Eligible';
+                    statusClass = 'eligible';
+                } else {
+                    status = 'Building';
+                    statusClass = 'building';
+                }
+
+                requirements.push({ text: 'CDN Exp', met: canadianYears >= 1 });
+                requirements.push({ text: 'CLB 7+', met: clb >= 7 });
+                requirements.push({ text: 'Job Offer', met: hasJobOffer });
+
+                if (eligible) {
+                    if (hasEE) eligibleStreams.push('Human Capital');
+                    if (hasJobOffer) eligibleStreams.push('Employer Job Offer');
+                    totalStreams += eligibleStreams.length;
+                }
             }
-
-            currentProvince = originalProvince;
         } else {
-            // Check eligibility streams
-            const hasJobOffer = document.getElementById('hasJobOffer').checked;
-            const hasEE = document.getElementById('hasExpressEntry').checked;
-            const clb = parseInt(document.getElementById('englishClb').value) || 0;
-
-            // Simple eligibility check - at least one stream
-            Object.values(province.streams).forEach(stream => {
+            // Check eligibility streams for other provinces
+            Object.entries(province.streams || {}).forEach(([streamKey, stream]) => {
                 let streamEligible = true;
                 if (stream.jobRequired && !hasJobOffer) streamEligible = false;
                 if (stream.eeRequired && !hasEE) streamEligible = false;
                 if (stream.minClb && clb < stream.minClb) streamEligible = false;
-                if (streamEligible) eligible = true;
+                if (stream.minExp && years < stream.minExp) streamEligible = false;
+
+                if (streamEligible) {
+                    eligible = true;
+                    eligibleStreams.push(stream.name || streamKey);
+                    totalStreams++;
+                }
             });
 
-            status = eligible ? 'Eligible' : 'Not Eligible';
-            score = eligible ? '✓' : '✗';
+            if (eligible) {
+                status = 'Eligible';
+                statusClass = 'eligible';
+                score = eligibleStreams.length;
+            } else {
+                status = 'Not Eligible';
+                statusClass = 'not-eligible';
+                score = 0;
+            }
+
+            // Common requirements
+            requirements.push({ text: 'Express Entry', met: hasEE });
+            requirements.push({ text: 'Job Offer', met: hasJobOffer });
+            requirements.push({ text: 'CLB 5+', met: clb >= 5 });
         }
 
         results.push({
             key,
             name: province.name,
+            region: regions[key] || 'Canada',
             type: province.type,
             score,
             eligible,
-            status
+            status,
+            statusClass,
+            eligibleStreams,
+            requirements
         });
     });
 
-    // Render comparison grid
+    // Sort: eligible first, then by score
+    results.sort((a, b) => {
+        if (a.eligible && !b.eligible) return -1;
+        if (!a.eligible && b.eligible) return 1;
+        if (typeof a.score === 'number' && typeof b.score === 'number') {
+            return b.score - a.score;
+        }
+        return 0;
+    });
+
+    // Mark top pick
+    if (results.length > 0 && results[0].eligible) {
+        results[0].isTopPick = true;
+    }
+
+    // Update summary stats
+    const eligibleCount = results.filter(r => r.eligible).length;
+    const competitiveCount = results.filter(r => r.statusClass === 'competitive').length;
+    const buildingCount = results.filter(r => r.statusClass === 'building').length;
+
+    document.getElementById('eligibleCount').textContent = eligibleCount;
+    document.getElementById('competitiveCount').textContent = competitiveCount;
+    document.getElementById('buildingCount').textContent = buildingCount;
+    document.getElementById('streamsCount').textContent = totalStreams;
+
+    // Render comparison grid with enhanced cards
     grid.innerHTML = results.map(r => `
-        <div class="compare-card ${r.eligible ? 'eligible' : ''}" onclick="selectProvince('${r.key}')">
-            <div class="province-name">${r.name}</div>
-            <div class="score">${r.type === 'points' ? r.score : r.score}</div>
-            <span class="status ${r.eligible ? 'eligible' : 'not-eligible'}">${r.status}</span>
+        <div class="compare-card ${r.eligible ? 'eligible' : 'not-eligible'} ${r.isTopPick ? 'top-pick' : ''}" onclick="selectProvince('${r.key}')">
+            <div class="compare-card-header">
+                <div>
+                    <div class="province-name">${r.name}</div>
+                    <div class="province-region">${r.region}</div>
+                </div>
+                <div class="score-badge">${r.type === 'points' ? r.score + ' pts' : (r.score > 0 ? r.score + ' streams' : '—')}</div>
+            </div>
+
+            ${r.eligibleStreams.length > 0 ? `
+            <ul class="streams-list">
+                ${r.eligibleStreams.slice(0, 3).map(s => `
+                    <li class="eligible-stream"><i class="bi bi-check-circle-fill"></i> ${s}</li>
+                `).join('')}
+                ${r.eligibleStreams.length > 3 ? `<li><i class="bi bi-plus-circle"></i> +${r.eligibleStreams.length - 3} more</li>` : ''}
+            </ul>
+            ` : '<ul class="streams-list"><li><i class="bi bi-x-circle"></i> No eligible streams</li></ul>'}
+
+            <div class="requirements">
+                ${r.requirements.map(req => `
+                    <span class="req-tag ${req.met ? 'met' : 'unmet'}">${req.met ? '✓' : '✗'} ${req.text}</span>
+                `).join('')}
+            </div>
+
+            <span class="status ${r.statusClass}">${r.status}</span>
         </div>
     `).join('');
+
+    // Scroll to comparison section
+    summary.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // Initialize

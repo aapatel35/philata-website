@@ -260,6 +260,63 @@
         opacity: 0.5;
     }
 
+    /* Score History Styles */
+    .score-history-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .history-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.875rem;
+        background: var(--bg);
+        border-radius: 10px;
+        transition: all 0.2s;
+    }
+
+    .history-item:hover {
+        background: var(--border);
+    }
+
+    .history-score {
+        min-width: 70px;
+        text-align: center;
+        padding: 0.5rem;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+        border-radius: 8px;
+    }
+
+    .history-score .score-value {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .history-score .score-label {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+    }
+
+    .history-details {
+        flex: 1;
+    }
+
+    .history-breakdown {
+        font-size: 0.85rem;
+        color: var(--text);
+        margin-bottom: 0.25rem;
+    }
+
+    .history-date {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
     /* Quick Links */
     .quick-links {
         display: grid;
@@ -445,6 +502,44 @@
                 <a href="{{ url_for('crs_calculator') }}" class="btn btn-primary">Calculate Score</a>
                 <a href="{{ url_for('points_simulator') }}" class="btn btn-secondary">Improve Score</a>
             </div>
+        </div>
+
+        <!-- Score History Card -->
+        <div class="dashboard-card">
+            <h2><i class="bi bi-clock-history"></i> Score History</h2>
+            {% if score_history and score_history|length > 0 %}
+                <div class="score-history-list">
+                    {% for score in score_history[:5] %}
+                    <div class="history-item">
+                        <div class="history-score">
+                            <span class="score-value">{{ score.score }}</span>
+                            <span class="score-label">CRS</span>
+                        </div>
+                        <div class="history-details">
+                            <div class="history-breakdown">
+                                Core: {{ score.breakdown.core if score.breakdown else '-' }} |
+                                Skill: {{ score.breakdown.skill if score.breakdown else '-' }} |
+                                Add: {{ score.breakdown.additional if score.breakdown else '-' }}
+                            </div>
+                            <div class="history-date">
+                                {{ score.created_at.strftime('%b %d, %Y at %I:%M %p') if score.created_at else 'Date unknown' }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if score_history|length > 5 %}
+                <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">
+                    Showing 5 of {{ score_history|length }} saved scores
+                </p>
+                {% endif %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="bi bi-graph-up"></i>
+                    <p>No score history yet</p>
+                    <a href="{{ url_for('crs_calculator') }}" style="color: var(--primary);">Calculate your first score</a>
+                </div>
+            {% endif %}
         </div>
 
         <!-- Immigration Stage -->

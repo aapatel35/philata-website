@@ -1304,7 +1304,23 @@
                         <span id="scoreStatusText">Complete the form to see your score</span>
                     </div>
 
-                    <a href="/guides/express-entry/express-entry-overview" class="btn btn-primary w-100 mt-4">
+                    <!-- Action Buttons -->
+                    <div class="score-actions mt-4">
+                        {% if current_user.is_authenticated %}
+                        <button class="btn btn-success w-100 mb-2" onclick="saveScore()">
+                            <i class="bi bi-bookmark-plus me-2"></i>Save to My Profile
+                        </button>
+                        {% else %}
+                        <a href="{{ url_for('login') }}?next={{ request.path }}" class="btn btn-success w-100 mb-2">
+                            <i class="bi bi-bookmark-plus me-2"></i>Login to Save Score
+                        </a>
+                        {% endif %}
+                        <button class="btn btn-outline-secondary w-100 mb-2" onclick="emailResults()">
+                            <i class="bi bi-envelope me-2"></i>Email Me Results
+                        </button>
+                    </div>
+
+                    <a href="/guides/express-entry/express-entry-overview" class="btn btn-primary w-100 mt-2">
                         <i class="bi bi-book me-2"></i>Express Entry Guide
                     </a>
                     <a href="#" id="detailedPredictionLink" class="btn btn-outline-primary w-100 mt-2" onclick="goToDetailedPrediction()">
@@ -1845,6 +1861,90 @@ function resetCalculator() {
     document.querySelector('input[name="sibling"][value="no"]').checked = true;
 
     updateScore();
+}
+
+// Save Score to Profile
+function saveScore() {
+    const totalScore = parseInt(document.getElementById('totalScore').textContent) || 0;
+
+    if (totalScore === 0) {
+        alert('Please calculate your score first');
+        return;
+    }
+
+    const scoreData = {
+        total: totalScore,
+        breakdown: {
+            core: parseInt(document.getElementById('corePoints').textContent) || 0,
+            spouse: parseInt(document.getElementById('spouseTotalPoints').textContent) || 0,
+            skill: parseInt(document.getElementById('skillPoints').textContent) || 0,
+            additional: parseInt(document.getElementById('additionalTotalPoints').textContent) || 0
+        },
+        factors: {
+            age: document.getElementById('age').value,
+            education: document.getElementById('education').value,
+            canadianEducation: document.getElementById('canadianEducation').value,
+            englishSpeaking: document.getElementById('lang1Speaking').value,
+            canadianWork: document.getElementById('canadianWork').value,
+            foreignWork: document.getElementById('foreignWork').value
+        }
+    };
+
+    fetch('/api/user/save-score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(scoreData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Show success feedback
+            const btn = event.target.closest('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="bi bi-check-circle me-2"></i>Saved!';
+            btn.disabled = true;
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 2000);
+        } else {
+            alert('Failed to save: ' + (data.message || 'Please try again'));
+        }
+    })
+    .catch(err => {
+        console.error('Save error:', err);
+        alert('Failed to save. Please try again.');
+    });
+}
+
+// Email Results
+function emailResults() {
+    const totalScore = parseInt(document.getElementById('totalScore').textContent) || 0;
+
+    if (totalScore === 0) {
+        alert('Please calculate your score first');
+        return;
+    }
+
+    const resultData = {
+        score: totalScore,
+        breakdown: {
+            core: document.getElementById('corePoints').textContent,
+            spouse: document.getElementById('spouseTotalPoints').textContent,
+            skill: document.getElementById('skillPoints').textContent,
+            additional: document.getElementById('additionalTotalPoints').textContent
+        },
+        status: document.getElementById('scoreStatusText').textContent,
+        predictedCutoff: document.getElementById('predictedCutoff').textContent,
+        itaChance: document.getElementById('itaChanceText').textContent
+    };
+
+    // Show email modal from base template
+    if (typeof showEmailModal === 'function') {
+        showEmailModal('crs', resultData);
+    } else {
+        alert('Email feature is temporarily unavailable');
+    }
 }
 
 // Initialize

@@ -1,0 +1,857 @@
+{% extends "base.html" %}
+
+{% block title %}DLI Search - Find PGWP-Eligible Schools{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        margin-bottom: 32px;
+    }
+
+    .page-header .page-title {
+        font-family: 'Plus Jakarta Sans', var(--font-family);
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .page-header .page-title i {
+        font-size: 28px;
+        color: var(--primary);
+    }
+
+    .page-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+    }
+
+    /* Info Alert */
+    .info-alert {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-alert h4 {
+        color: var(--primary);
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .info-alert p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* Search Container */
+    .search-container {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .search-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr auto;
+        gap: 1rem;
+        align-items: end;
+    }
+
+    @media (max-width: 900px) {
+        .search-row {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .search-row {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .search-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .search-group label {
+        font-weight: 500;
+        color: var(--text);
+        font-size: 0.9rem;
+    }
+
+    .search-group input,
+    .search-group select {
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 1rem;
+        background: var(--bg);
+        transition: border-color 0.2s;
+    }
+
+    .search-group input:focus,
+    .search-group select:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+
+    .search-btn {
+        padding: 0.75rem 1.5rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+        height: fit-content;
+    }
+
+    .search-btn:hover {
+        background: var(--primary-hover);
+        transform: translateY(-1px);
+    }
+
+    /* Filter Tags */
+    .filter-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .filter-tag {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .filter-tag:hover,
+    .filter-tag.active {
+        border-color: var(--primary);
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--primary);
+    }
+
+    .filter-tag input {
+        display: none;
+    }
+
+    .filter-tag i {
+        font-size: 1rem;
+    }
+
+    /* Results Stats */
+    .results-stats {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background: var(--bg);
+        border-radius: 10px;
+    }
+
+    .results-count {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .results-count span {
+        color: var(--primary);
+    }
+
+    .sort-select {
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--card);
+        font-size: 0.9rem;
+    }
+
+    /* DLI Card */
+    .dli-grid {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .dli-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.25rem;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 1rem;
+        align-items: start;
+        transition: all 0.2s;
+    }
+
+    .dli-card:hover {
+        border-color: var(--primary);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .dli-card.pgwp-eligible {
+        border-left: 4px solid #10B981;
+    }
+
+    .dli-card.pgwp-partial {
+        border-left: 4px solid #F59E0B;
+    }
+
+    .dli-card.pgwp-none {
+        border-left: 4px solid #EF4444;
+        opacity: 0.8;
+    }
+
+    .dli-info h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+
+    .dli-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .dli-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    .dli-meta-item i {
+        color: var(--primary);
+    }
+
+    .dli-number {
+        font-family: monospace;
+        font-size: 0.8rem;
+        padding: 0.25rem 0.5rem;
+        background: var(--bg);
+        border-radius: 4px;
+        color: var(--text-muted);
+    }
+
+    .dli-badges {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-end;
+    }
+
+    .pgwp-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .pgwp-badge.eligible {
+        background: rgba(16, 185, 129, 0.15);
+        color: #059669;
+    }
+
+    .pgwp-badge.partial {
+        background: rgba(245, 158, 11, 0.15);
+        color: #D97706;
+    }
+
+    .pgwp-badge.none {
+        background: rgba(239, 68, 68, 0.15);
+        color: #DC2626;
+    }
+
+    .inst-type-badge {
+        padding: 0.35rem 0.65rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: var(--bg);
+        color: var(--text-muted);
+    }
+
+    .inst-type-badge.public {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--primary);
+    }
+
+    .inst-type-badge.private {
+        background: rgba(139, 92, 246, 0.1);
+        color: #7C3AED;
+    }
+
+    /* PGWP Info Box */
+    .pgwp-info-box {
+        background: linear-gradient(135deg, rgba(30,58,95,0.08), rgba(8,145,178,0.05));
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .pgwp-info-box h3 {
+        font-size: 1rem;
+        color: var(--text);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .pgwp-info-box h3 i {
+        color: var(--primary);
+    }
+
+    .pgwp-rules {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1rem;
+    }
+
+    .pgwp-rule {
+        display: flex;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        background: var(--card);
+        border-radius: 8px;
+    }
+
+    .pgwp-rule i {
+        color: var(--primary);
+        font-size: 1.25rem;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .pgwp-rule-content h4 {
+        font-size: 0.9rem;
+        color: var(--text);
+        margin-bottom: 0.25rem;
+    }
+
+    .pgwp-rule-content p {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--text-muted);
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        color: var(--border);
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+
+    /* Loading */
+    .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+        color: var(--text-muted);
+    }
+
+    .loading-spinner {
+        width: 24px;
+        height: 24px;
+        border: 3px solid var(--border);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-right: 0.75rem;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+    }
+
+    .page-btn {
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--card);
+        color: var(--text);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .page-btn:hover,
+    .page-btn.active {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: white;
+    }
+
+    .page-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">
+            <i class="bi bi-building"></i>
+            DLI Search
+        </h1>
+        <p class="page-subtitle">Search Designated Learning Institutions and check PGWP eligibility</p>
+    </div>
+
+    <!-- Info Alert -->
+    <div class="info-alert">
+        <h4><i class="bi bi-info-circle"></i> What is a DLI?</h4>
+        <p>A <strong>Designated Learning Institution (DLI)</strong> is a school approved by a provincial or territorial government to host international students. Only students graduating from PGWP-eligible DLIs can apply for a Post-Graduation Work Permit. Not all DLIs are PGWP-eligible - check the status below.</p>
+    </div>
+
+    <!-- PGWP Rules -->
+    <div class="pgwp-info-box">
+        <h3><i class="bi bi-award"></i> PGWP Eligibility Rules (2025)</h3>
+        <div class="pgwp-rules">
+            <div class="pgwp-rule">
+                <i class="bi bi-clock"></i>
+                <div class="pgwp-rule-content">
+                    <h4>Program Length</h4>
+                    <p>8+ months for certificate. 2+ years for 3-year PGWP.</p>
+                </div>
+            </div>
+            <div class="pgwp-rule">
+                <i class="bi bi-building"></i>
+                <div class="pgwp-rule-content">
+                    <h4>Institution Type</h4>
+                    <p>Public colleges/universities always eligible. Private institutions vary.</p>
+                </div>
+            </div>
+            <div class="pgwp-rule">
+                <i class="bi bi-geo-alt"></i>
+                <div class="pgwp-rule-content">
+                    <h4>Provincial Rules</h4>
+                    <p>Quebec, BC, Ontario have specific eligibility criteria.</p>
+                </div>
+            </div>
+            <div class="pgwp-rule">
+                <i class="bi bi-book"></i>
+                <div class="pgwp-rule-content">
+                    <h4>Field of Study</h4>
+                    <p>As of Nov 2024, field of study may affect PGWP eligibility.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Container -->
+    <div class="search-container">
+        <div class="search-row">
+            <div class="search-group">
+                <label>School Name or City</label>
+                <input type="text" id="searchQuery" placeholder="e.g., University of Toronto, Vancouver..." oninput="debounceSearch()">
+            </div>
+            <div class="search-group">
+                <label>Province</label>
+                <select id="provinceFilter" onchange="searchDLIs()">
+                    <option value="">All Provinces</option>
+                    <option value="ON">Ontario</option>
+                    <option value="BC">British Columbia</option>
+                    <option value="QC">Quebec</option>
+                    <option value="AB">Alberta</option>
+                    <option value="MB">Manitoba</option>
+                    <option value="SK">Saskatchewan</option>
+                    <option value="NS">Nova Scotia</option>
+                    <option value="NB">New Brunswick</option>
+                    <option value="NL">Newfoundland & Labrador</option>
+                    <option value="PE">Prince Edward Island</option>
+                    <option value="NT">Northwest Territories</option>
+                    <option value="YT">Yukon</option>
+                    <option value="NU">Nunavut</option>
+                </select>
+            </div>
+            <div class="search-group">
+                <label>Institution Type</label>
+                <select id="typeFilter" onchange="searchDLIs()">
+                    <option value="">All Types</option>
+                    <option value="public">Public</option>
+                    <option value="private">Private</option>
+                </select>
+            </div>
+            <button class="search-btn" onclick="searchDLIs()">
+                <i class="bi bi-search"></i> Search
+            </button>
+        </div>
+        <div class="filter-tags">
+            <label class="filter-tag" id="pgwpFilter">
+                <input type="checkbox" onchange="searchDLIs()">
+                <i class="bi bi-check-circle"></i>
+                PGWP Eligible Only
+            </label>
+            <label class="filter-tag" id="universityFilter">
+                <input type="checkbox" onchange="searchDLIs()">
+                <i class="bi bi-mortarboard"></i>
+                Universities Only
+            </label>
+            <label class="filter-tag" id="collegeFilter">
+                <input type="checkbox" onchange="searchDLIs()">
+                <i class="bi bi-book"></i>
+                Colleges Only
+            </label>
+        </div>
+    </div>
+
+    <!-- Results Stats -->
+    <div class="results-stats" id="resultsStats">
+        <div class="results-count">
+            Showing <span id="resultCount">0</span> institutions
+        </div>
+        <select class="sort-select" id="sortBy" onchange="searchDLIs()">
+            <option value="name">Sort by Name</option>
+            <option value="province">Sort by Province</option>
+            <option value="pgwp">Sort by PGWP Status</option>
+        </select>
+    </div>
+
+    <!-- Results Grid -->
+    <div id="resultsContainer">
+        <div class="loading" id="loadingState" style="display: none;">
+            <div class="loading-spinner"></div>
+            Searching institutions...
+        </div>
+        <div class="dli-grid" id="dliResults"></div>
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <i class="bi bi-search"></i>
+            <h3>No Results Found</h3>
+            <p>Try adjusting your search criteria or filters</p>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Sample DLI Database - In production, this would come from IRCC API/database
+const DLI_DATABASE = [
+    // Ontario - Public Universities
+    { dli: 'O19375962503', name: 'University of Toronto', city: 'Toronto', province: 'ON', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19616114427', name: 'York University', city: 'Toronto', province: 'ON', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19361242832', name: 'University of Waterloo', city: 'Waterloo', province: 'ON', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19332666122', name: 'McMaster University', city: 'Hamilton', province: 'ON', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19394833986', name: 'Western University', city: 'London', province: 'ON', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19319182932', name: 'Queen\'s University', city: 'Kingston', province: 'ON', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19395200342', name: 'University of Ottawa', city: 'Ottawa', province: 'ON', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19385727892', name: 'Carleton University', city: 'Ottawa', province: 'ON', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19249592217', name: 'University of Guelph', city: 'Guelph', province: 'ON', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19530459762', name: 'Ontario Tech University', city: 'Oshawa', province: 'ON', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19347932187', name: 'Ryerson University', city: 'Toronto', province: 'ON', type: 'public', category: 'university', pgwp: 'eligible' },
+
+    // Ontario - Public Colleges
+    { dli: 'O19359211682', name: 'George Brown College', city: 'Toronto', province: 'ON', type: 'public', category: 'college', pgwp: 'eligible' },
+    { dli: 'O19376013442', name: 'Seneca College', city: 'Toronto', province: 'ON', type: 'public', category: 'college', pgwp: 'eligible' },
+    { dli: 'O19376011232', name: 'Humber College', city: 'Toronto', province: 'ON', type: 'public', category: 'college', pgwp: 'eligible' },
+    { dli: 'O19376012147', name: 'Centennial College', city: 'Toronto', province: 'ON', type: 'public', category: 'college', pgwp: 'eligible' },
+    { dli: 'O19395871272', name: 'Sheridan College', city: 'Oakville', province: 'ON', type: 'public', category: 'college', pgwp: 'eligible' },
+    { dli: 'O19375934972', name: 'Conestoga College', city: 'Kitchener', province: 'ON', type: 'public', category: 'college', pgwp: 'eligible' },
+    { dli: 'O19359128712', name: 'Fanshawe College', city: 'London', province: 'ON', type: 'public', category: 'college', pgwp: 'eligible' },
+    { dli: 'O19376087432', name: 'Mohawk College', city: 'Hamilton', province: 'ON', type: 'public', category: 'college', pgwp: 'eligible' },
+    { dli: 'O19394921382', name: 'Algonquin College', city: 'Ottawa', province: 'ON', type: 'public', category: 'college', pgwp: 'eligible' },
+    { dli: 'O19303782112', name: 'Niagara College', city: 'Niagara Falls', province: 'ON', type: 'public', category: 'college', pgwp: 'eligible' },
+
+    // Ontario - Private (Limited PGWP)
+    { dli: 'O19283947128', name: 'Toronto Film School', city: 'Toronto', province: 'ON', type: 'private', category: 'college', pgwp: 'partial' },
+    { dli: 'O19847293812', name: 'CDI College', city: 'Toronto', province: 'ON', type: 'private', category: 'college', pgwp: 'none' },
+
+    // British Columbia - Public
+    { dli: 'O19274892382', name: 'University of British Columbia', city: 'Vancouver', province: 'BC', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19372981723', name: 'Simon Fraser University', city: 'Burnaby', province: 'BC', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19284729182', name: 'University of Victoria', city: 'Victoria', province: 'BC', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19372918237', name: 'British Columbia Institute of Technology', city: 'Burnaby', province: 'BC', type: 'public', category: 'college', pgwp: 'eligible' },
+    { dli: 'O19382719283', name: 'Douglas College', city: 'New Westminster', province: 'BC', type: 'public', category: 'college', pgwp: 'eligible' },
+    { dli: 'O19472918372', name: 'Langara College', city: 'Vancouver', province: 'BC', type: 'public', category: 'college', pgwp: 'eligible' },
+    { dli: 'O19283719287', name: 'Kwantlen Polytechnic University', city: 'Surrey', province: 'BC', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19372918273', name: 'Capilano University', city: 'North Vancouver', province: 'BC', type: 'public', category: 'university', pgwp: 'eligible' },
+
+    // BC - Private
+    { dli: 'O19472819373', name: 'Vancouver Film School', city: 'Vancouver', province: 'BC', type: 'private', category: 'college', pgwp: 'partial' },
+
+    // Quebec
+    { dli: 'O19283918273', name: 'McGill University', city: 'Montreal', province: 'QC', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19382719283', name: 'Concordia University', city: 'Montreal', province: 'QC', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19473918273', name: 'Université de Montréal', city: 'Montreal', province: 'QC', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19382719283', name: 'Université Laval', city: 'Quebec City', province: 'QC', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19283719283', name: 'Dawson College', city: 'Montreal', province: 'QC', type: 'public', category: 'college', pgwp: 'eligible' },
+    { dli: 'O19472819273', name: 'LaSalle College', city: 'Montreal', province: 'QC', type: 'private', category: 'college', pgwp: 'partial' },
+
+    // Alberta
+    { dli: 'O19283918237', name: 'University of Alberta', city: 'Edmonton', province: 'AB', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19372918237', name: 'University of Calgary', city: 'Calgary', province: 'AB', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19283719287', name: 'Mount Royal University', city: 'Calgary', province: 'AB', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19382719287', name: 'NAIT', city: 'Edmonton', province: 'AB', type: 'public', category: 'college', pgwp: 'eligible' },
+    { dli: 'O19472819287', name: 'SAIT', city: 'Calgary', province: 'AB', type: 'public', category: 'college', pgwp: 'eligible' },
+    { dli: 'O19283718237', name: 'MacEwan University', city: 'Edmonton', province: 'AB', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19372819287', name: 'Bow Valley College', city: 'Calgary', province: 'AB', type: 'public', category: 'college', pgwp: 'eligible' },
+
+    // Manitoba
+    { dli: 'O19283918287', name: 'University of Manitoba', city: 'Winnipeg', province: 'MB', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19372918287', name: 'University of Winnipeg', city: 'Winnipeg', province: 'MB', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19283719287', name: 'Red River College', city: 'Winnipeg', province: 'MB', type: 'public', category: 'college', pgwp: 'eligible' },
+
+    // Saskatchewan
+    { dli: 'O19283918247', name: 'University of Saskatchewan', city: 'Saskatoon', province: 'SK', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19372918247', name: 'University of Regina', city: 'Regina', province: 'SK', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19283719247', name: 'Saskatchewan Polytechnic', city: 'Saskatoon', province: 'SK', type: 'public', category: 'college', pgwp: 'eligible' },
+
+    // Nova Scotia
+    { dli: 'O19283918257', name: 'Dalhousie University', city: 'Halifax', province: 'NS', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19372918257', name: 'Saint Mary\'s University', city: 'Halifax', province: 'NS', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19283719257', name: 'NSCC', city: 'Halifax', province: 'NS', type: 'public', category: 'college', pgwp: 'eligible' },
+
+    // New Brunswick
+    { dli: 'O19283918267', name: 'University of New Brunswick', city: 'Fredericton', province: 'NB', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19372918267', name: 'Université de Moncton', city: 'Moncton', province: 'NB', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19283719267', name: 'NBCC', city: 'Fredericton', province: 'NB', type: 'public', category: 'college', pgwp: 'eligible' },
+
+    // Newfoundland
+    { dli: 'O19283918277', name: 'Memorial University', city: 'St. John\'s', province: 'NL', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19283719277', name: 'College of the North Atlantic', city: 'St. John\'s', province: 'NL', type: 'public', category: 'college', pgwp: 'eligible' },
+
+    // PEI
+    { dli: 'O19283918297', name: 'University of Prince Edward Island', city: 'Charlottetown', province: 'PE', type: 'public', category: 'university', pgwp: 'eligible' },
+    { dli: 'O19283719297', name: 'Holland College', city: 'Charlottetown', province: 'PE', type: 'public', category: 'college', pgwp: 'eligible' }
+];
+
+let currentPage = 1;
+const resultsPerPage = 12;
+let searchTimeout = null;
+let filteredResults = [];
+
+function debounceSearch() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(searchDLIs, 300);
+}
+
+function searchDLIs() {
+    const query = document.getElementById('searchQuery').value.toLowerCase();
+    const province = document.getElementById('provinceFilter').value;
+    const type = document.getElementById('typeFilter').value;
+    const sortBy = document.getElementById('sortBy').value;
+
+    const pgwpOnly = document.querySelector('#pgwpFilter input').checked;
+    const universitiesOnly = document.querySelector('#universityFilter input').checked;
+    const collegesOnly = document.querySelector('#collegeFilter input').checked;
+
+    // Filter
+    filteredResults = DLI_DATABASE.filter(dli => {
+        // Text search
+        if (query && !dli.name.toLowerCase().includes(query) && !dli.city.toLowerCase().includes(query)) {
+            return false;
+        }
+
+        // Province filter
+        if (province && dli.province !== province) return false;
+
+        // Type filter
+        if (type && dli.type !== type) return false;
+
+        // PGWP filter
+        if (pgwpOnly && dli.pgwp !== 'eligible') return false;
+
+        // Category filters
+        if (universitiesOnly && dli.category !== 'university') return false;
+        if (collegesOnly && dli.category !== 'college') return false;
+
+        return true;
+    });
+
+    // Sort
+    filteredResults.sort((a, b) => {
+        if (sortBy === 'province') return a.province.localeCompare(b.province);
+        if (sortBy === 'pgwp') {
+            const order = { 'eligible': 0, 'partial': 1, 'none': 2 };
+            return order[a.pgwp] - order[b.pgwp];
+        }
+        return a.name.localeCompare(b.name);
+    });
+
+    currentPage = 1;
+    renderResults();
+}
+
+function renderResults() {
+    const container = document.getElementById('dliResults');
+    const countSpan = document.getElementById('resultCount');
+    const emptyState = document.getElementById('emptyState');
+
+    countSpan.textContent = filteredResults.length;
+
+    if (filteredResults.length === 0) {
+        container.innerHTML = '';
+        emptyState.style.display = 'block';
+        document.getElementById('pagination').innerHTML = '';
+        return;
+    }
+
+    emptyState.style.display = 'none';
+
+    // Paginate
+    const startIndex = (currentPage - 1) * resultsPerPage;
+    const pageResults = filteredResults.slice(startIndex, startIndex + resultsPerPage);
+
+    container.innerHTML = pageResults.map(dli => `
+        <div class="dli-card pgwp-${dli.pgwp}">
+            <div class="dli-info">
+                <h3>${dli.name}</h3>
+                <div class="dli-meta">
+                    <div class="dli-meta-item">
+                        <i class="bi bi-geo-alt"></i> ${dli.city}, ${getProvinceName(dli.province)}
+                    </div>
+                    <div class="dli-meta-item">
+                        <span class="dli-number">${dli.dli}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="dli-badges">
+                <span class="pgwp-badge ${dli.pgwp}">
+                    <i class="bi bi-${dli.pgwp === 'eligible' ? 'check-circle' : dli.pgwp === 'partial' ? 'exclamation-triangle' : 'x-circle'}"></i>
+                    ${getPgwpLabel(dli.pgwp)}
+                </span>
+                <span class="inst-type-badge ${dli.type}">
+                    ${dli.type === 'public' ? 'Public' : 'Private'} ${dli.category === 'university' ? 'University' : 'College'}
+                </span>
+            </div>
+        </div>
+    `).join('');
+
+    renderPagination();
+}
+
+function renderPagination() {
+    const totalPages = Math.ceil(filteredResults.length / resultsPerPage);
+    const pagination = document.getElementById('pagination');
+
+    if (totalPages <= 1) {
+        pagination.innerHTML = '';
+        return;
+    }
+
+    let html = '';
+
+    // Previous button
+    html += `<button class="page-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+        <i class="bi bi-chevron-left"></i>
+    </button>`;
+
+    // Page numbers
+    for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+            html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+        } else if (i === currentPage - 2 || i === currentPage + 2) {
+            html += `<span style="padding: 0.5rem;">...</span>`;
+        }
+    }
+
+    // Next button
+    html += `<button class="page-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+        <i class="bi bi-chevron-right"></i>
+    </button>`;
+
+    pagination.innerHTML = html;
+}
+
+function goToPage(page) {
+    currentPage = page;
+    renderResults();
+    window.scrollTo({ top: 400, behavior: 'smooth' });
+}
+
+function getProvinceName(code) {
+    const provinces = {
+        'ON': 'Ontario', 'BC': 'British Columbia', 'QC': 'Quebec', 'AB': 'Alberta',
+        'MB': 'Manitoba', 'SK': 'Saskatchewan', 'NS': 'Nova Scotia', 'NB': 'New Brunswick',
+        'NL': 'Newfoundland', 'PE': 'PEI', 'NT': 'Northwest Territories', 'YT': 'Yukon', 'NU': 'Nunavut'
+    };
+    return provinces[code] || code;
+}
+
+function getPgwpLabel(status) {
+    const labels = {
+        'eligible': 'PGWP Eligible',
+        'partial': 'Some Programs',
+        'none': 'Not Eligible'
+    };
+    return labels[status] || status;
+}
+
+// Toggle filter tag active state
+document.querySelectorAll('.filter-tag').forEach(tag => {
+    tag.addEventListener('click', function() {
+        const checkbox = this.querySelector('input');
+        this.classList.toggle('active', checkbox.checked);
+    });
+});
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    searchDLIs();
+});
+</script>
+{% endblock %}

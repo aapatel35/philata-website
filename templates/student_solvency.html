@@ -1,0 +1,919 @@
+{% extends "base.html" %}
+
+{% block title %}Student Solvency Validator - Financial Requirements{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        margin-bottom: 32px;
+    }
+
+    .page-header .page-title {
+        font-family: 'Plus Jakarta Sans', var(--font-family);
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .page-header .page-title i {
+        font-size: 28px;
+        color: var(--primary);
+    }
+
+    .page-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+    }
+
+    .calculator-grid {
+        display: grid;
+        grid-template-columns: 1fr 420px;
+        gap: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+        .calculator-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Alert Boxes */
+    .info-alert {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-alert h4 {
+        color: var(--primary);
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .info-alert p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .warning-alert {
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .warning-alert h4 {
+        color: #D97706;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .warning-alert p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    /* Input Sections */
+    .input-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .input-section h3 {
+        font-size: 1.1rem;
+        color: var(--text);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .input-section h3 i {
+        color: var(--primary);
+    }
+
+    .input-group {
+        margin-bottom: 1rem;
+    }
+
+    .input-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .input-group label {
+        display: block;
+        font-weight: 500;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+
+    .input-group select,
+    .input-group input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 1rem;
+        background: var(--bg);
+        transition: border-color 0.2s;
+    }
+
+    .input-group select:focus,
+    .input-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+
+    .input-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .help-text {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-top: 0.5rem;
+    }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        background: var(--bg);
+        border-radius: 8px;
+        cursor: pointer;
+        margin-bottom: 0.5rem;
+    }
+
+    .checkbox-group input {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--primary);
+    }
+
+    .checkbox-group span {
+        flex: 1;
+        font-size: 0.95rem;
+    }
+
+    /* Results Panel */
+    .results-panel {
+        position: sticky;
+        top: 100px;
+    }
+
+    .solvency-card {
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .solvency-card.sufficient {
+        background: linear-gradient(135deg, #059669 0%, #10B981 100%);
+        color: white;
+    }
+
+    .solvency-card.insufficient {
+        background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%);
+        color: white;
+    }
+
+    .solvency-card.pending {
+        background: linear-gradient(135deg, #6B7280 0%, #9CA3AF 100%);
+        color: white;
+    }
+
+    .solvency-card .icon {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .solvency-card .status {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .solvency-card .message {
+        opacity: 0.9;
+        font-size: 0.95rem;
+    }
+
+    /* Amount Display */
+    .amount-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .amount-card h4 {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+    }
+
+    .amount-display {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary);
+    }
+
+    .amount-display.required {
+        color: #EF4444;
+    }
+
+    .amount-display.available {
+        color: #10B981;
+    }
+
+    .amount-subtitle {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-top: 0.25rem;
+    }
+
+    /* Breakdown Card */
+    .breakdown-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+    }
+
+    .breakdown-header {
+        padding: 1.25rem 1.5rem;
+        background: var(--bg);
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .breakdown-header i {
+        color: var(--primary);
+    }
+
+    .breakdown-body {
+        padding: 1rem 1.5rem;
+    }
+
+    .breakdown-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .breakdown-item:last-child {
+        border-bottom: none;
+    }
+
+    .breakdown-item .label {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .breakdown-item .value {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .breakdown-item .value.positive {
+        color: #10B981;
+    }
+
+    .breakdown-item .value.negative {
+        color: #EF4444;
+    }
+
+    .breakdown-item.total {
+        border-top: 2px solid var(--border);
+        padding-top: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .breakdown-item.total .label {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .breakdown-item.total .value {
+        font-size: 1.1rem;
+        color: var(--primary);
+    }
+
+    /* GIC Info */
+    .gic-info {
+        background: linear-gradient(135deg, rgba(30,58,95,0.08), rgba(8,145,178,0.05));
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+
+    .gic-info h5 {
+        font-size: 0.9rem;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .gic-info h5 i {
+        color: var(--primary);
+    }
+
+    .gic-info p {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    /* Province Badge */
+    .province-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        background: var(--bg);
+        border-radius: 8px;
+        font-size: 0.85rem;
+        color: var(--text);
+        margin-top: 0.5rem;
+    }
+
+    .province-badge.quebec {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--primary);
+    }
+
+    /* Year Duration Selector */
+    .duration-selector {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .duration-btn {
+        flex: 1;
+        padding: 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+    }
+
+    .duration-btn:hover {
+        border-color: var(--primary);
+    }
+
+    .duration-btn.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+
+    /* IRCC Reference Table */
+    .reference-table {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        margin-top: 2rem;
+    }
+
+    .reference-table-header {
+        padding: 1.25rem 1.5rem;
+        background: var(--bg);
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .reference-table table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .reference-table th,
+    .reference-table td {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .reference-table th {
+        background: var(--bg);
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    .reference-table td {
+        font-size: 0.9rem;
+    }
+
+    .reference-table tr.highlight {
+        background: rgba(59, 130, 246, 0.08);
+    }
+
+    .reference-table tr.highlight td {
+        font-weight: 600;
+        color: var(--primary);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">
+            <i class="bi bi-mortarboard"></i>
+            Student Solvency Validator
+        </h1>
+        <p class="page-subtitle">Check if you meet the financial requirements for a Canadian study permit (2025 standards)</p>
+    </div>
+
+    <!-- Warning Alert for Updated Requirements -->
+    <div class="warning-alert">
+        <h4><i class="bi bi-exclamation-triangle"></i> Updated Requirements (January 2024)</h4>
+        <p>IRCC increased the cost of living requirement from $10,000 to <strong>$20,635 CAD</strong> per year. This is in addition to your first year of tuition and travel costs. Make sure your financial documents reflect these updated amounts.</p>
+    </div>
+
+    <div class="calculator-grid">
+        <!-- Input Section -->
+        <div class="inputs-column">
+            <!-- Study Location -->
+            <div class="input-section">
+                <h3><i class="bi bi-geo-alt"></i> Study Location</h3>
+                <div class="input-group">
+                    <label>Province of Study</label>
+                    <select id="province" onchange="calculateSolvency()">
+                        <option value="other">Outside Quebec</option>
+                        <option value="quebec">Quebec</option>
+                    </select>
+                    <p class="help-text">Quebec has different financial requirements (CAQ required)</p>
+                </div>
+            </div>
+
+            <!-- Program Details -->
+            <div class="input-section">
+                <h3><i class="bi bi-book"></i> Program Details</h3>
+                <div class="input-group">
+                    <label>Program Duration</label>
+                    <div class="duration-selector">
+                        <button class="duration-btn active" data-months="12" onclick="setDuration(12)">1 Year</button>
+                        <button class="duration-btn" data-months="24" onclick="setDuration(24)">2 Years</button>
+                        <button class="duration-btn" data-months="36" onclick="setDuration(36)">3 Years</button>
+                        <button class="duration-btn" data-months="48" onclick="setDuration(48)">4 Years</button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>First Year Tuition (CAD)</label>
+                    <input type="number" id="tuition" placeholder="e.g., 25000" oninput="calculateSolvency()">
+                    <p class="help-text">Enter the tuition amount stated in your Letter of Acceptance</p>
+                </div>
+            </div>
+
+            <!-- Family Members -->
+            <div class="input-section">
+                <h3><i class="bi bi-people"></i> Accompanying Family</h3>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Spouse/Partner</label>
+                        <select id="spouse" onchange="calculateSolvency()">
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Children</label>
+                        <select id="children" onchange="calculateSolvency()">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4+</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Available Funds -->
+            <div class="input-section">
+                <h3><i class="bi bi-cash-stack"></i> Available Funds</h3>
+
+                <div class="input-group">
+                    <label>Bank Balance / Savings (CAD)</label>
+                    <input type="number" id="bankBalance" placeholder="e.g., 30000" oninput="calculateSolvency()">
+                </div>
+
+                <label class="checkbox-group">
+                    <input type="checkbox" id="hasGic" onchange="toggleGic()">
+                    <span>I have purchased a GIC (Guaranteed Investment Certificate)</span>
+                </label>
+
+                <div id="gicSection" style="display: none;">
+                    <div class="input-group">
+                        <label>GIC Amount (CAD)</label>
+                        <input type="number" id="gicAmount" placeholder="e.g., 20635" oninput="calculateSolvency()">
+                    </div>
+                    <div class="gic-info">
+                        <h5><i class="bi bi-info-circle"></i> About GIC</h5>
+                        <p>A GIC from a participating Canadian financial institution is a reliable way to prove you have funds for living expenses. The minimum GIC amount is $20,635 CAD for 2025.</p>
+                    </div>
+                </div>
+
+                <label class="checkbox-group" style="margin-top: 0.5rem;">
+                    <input type="checkbox" id="hasScholarship" onchange="toggleScholarship()">
+                    <span>I have a scholarship or financial award</span>
+                </label>
+
+                <div id="scholarshipSection" style="display: none;">
+                    <div class="input-group">
+                        <label>Scholarship Amount (CAD)</label>
+                        <input type="number" id="scholarshipAmount" placeholder="e.g., 10000" oninput="calculateSolvency()">
+                    </div>
+                </div>
+
+                <label class="checkbox-group" style="margin-top: 0.5rem;">
+                    <input type="checkbox" id="hasSponsor" onchange="toggleSponsor()">
+                    <span>I have a financial sponsor</span>
+                </label>
+
+                <div id="sponsorSection" style="display: none;">
+                    <div class="input-group">
+                        <label>Sponsor's Contribution (CAD)</label>
+                        <input type="number" id="sponsorAmount" placeholder="e.g., 15000" oninput="calculateSolvency()">
+                        <p class="help-text">You'll need a signed sponsorship letter and proof of their funds</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Panel -->
+        <div class="results-panel">
+            <!-- Solvency Status -->
+            <div class="solvency-card pending" id="solvencyCard">
+                <div class="icon"><i class="bi bi-calculator"></i></div>
+                <div class="status" id="solvencyStatus">Enter Your Details</div>
+                <div class="message" id="solvencyMessage">Fill in your tuition and available funds to check if you meet the requirements</div>
+            </div>
+
+            <!-- Required Amount -->
+            <div class="amount-card">
+                <h4>Minimum Required</h4>
+                <div class="amount-display required" id="requiredAmount">$0</div>
+                <div class="amount-subtitle">First year of study</div>
+            </div>
+
+            <!-- Your Funds -->
+            <div class="amount-card">
+                <h4>Your Available Funds</h4>
+                <div class="amount-display available" id="availableFunds">$0</div>
+                <div class="amount-subtitle">Total documented funds</div>
+            </div>
+
+            <!-- Breakdown -->
+            <div class="breakdown-card">
+                <div class="breakdown-header">
+                    <i class="bi bi-list-ul"></i> Requirements Breakdown
+                </div>
+                <div class="breakdown-body">
+                    <div class="breakdown-item">
+                        <span class="label">First Year Tuition</span>
+                        <span class="value" id="tuitionDisplay">$0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="label">Living Expenses (You)</span>
+                        <span class="value" id="livingDisplay">$20,635</span>
+                    </div>
+                    <div class="breakdown-item" id="spouseLivingRow" style="display: none;">
+                        <span class="label">Living Expenses (Spouse)</span>
+                        <span class="value" id="spouseLivingDisplay">$0</span>
+                    </div>
+                    <div class="breakdown-item" id="childrenLivingRow" style="display: none;">
+                        <span class="label">Living Expenses (Children)</span>
+                        <span class="value" id="childrenLivingDisplay">$0</span>
+                    </div>
+                    <div class="breakdown-item total">
+                        <span class="label">Total Required</span>
+                        <span class="value" id="totalRequired">$20,635</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Funds Breakdown -->
+            <div class="breakdown-card">
+                <div class="breakdown-header">
+                    <i class="bi bi-wallet2"></i> Your Funds Breakdown
+                </div>
+                <div class="breakdown-body">
+                    <div class="breakdown-item">
+                        <span class="label">Bank Balance</span>
+                        <span class="value positive" id="bankDisplay">$0</span>
+                    </div>
+                    <div class="breakdown-item" id="gicRow" style="display: none;">
+                        <span class="label">GIC Amount</span>
+                        <span class="value positive" id="gicDisplay">$0</span>
+                    </div>
+                    <div class="breakdown-item" id="scholarshipRow" style="display: none;">
+                        <span class="label">Scholarship</span>
+                        <span class="value positive" id="scholarshipDisplay">$0</span>
+                    </div>
+                    <div class="breakdown-item" id="sponsorRow" style="display: none;">
+                        <span class="label">Sponsor Support</span>
+                        <span class="value positive" id="sponsorDisplay">$0</span>
+                    </div>
+                    <div class="breakdown-item total">
+                        <span class="label">Total Available</span>
+                        <span class="value" id="totalAvailable">$0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shortfall/Surplus -->
+            <div class="breakdown-card" id="differenceCard">
+                <div class="breakdown-header" id="differenceHeader">
+                    <i class="bi bi-graph-up"></i> <span id="differenceLabel">Difference</span>
+                </div>
+                <div class="breakdown-body">
+                    <div class="breakdown-item">
+                        <span class="label" id="differenceText">You need</span>
+                        <span class="value" id="differenceAmount">$0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reference Table -->
+    <div class="reference-table">
+        <div class="reference-table-header">
+            <i class="bi bi-table"></i> 2025 IRCC Living Expense Requirements
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Family Composition</th>
+                    <th>Outside Quebec</th>
+                    <th>Quebec</th>
+                </tr>
+            </thead>
+            <tbody id="referenceTableBody">
+                <tr>
+                    <td>Student only</td>
+                    <td>$20,635</td>
+                    <td>$14,866</td>
+                </tr>
+                <tr>
+                    <td>Student + Spouse</td>
+                    <td>$25,690</td>
+                    <td>$19,318</td>
+                </tr>
+                <tr>
+                    <td>Student + Spouse + 1 Child</td>
+                    <td>$28,256</td>
+                    <td>$22,118</td>
+                </tr>
+                <tr>
+                    <td>Student + Spouse + 2 Children</td>
+                    <td>$30,822</td>
+                    <td>$24,918</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 2025 IRCC Living Expense Requirements
+const LIVING_COSTS = {
+    other: {
+        student: 20635,
+        spouse: 5055,    // Additional for spouse
+        child: 2566      // Additional per child
+    },
+    quebec: {
+        student: 14866,
+        spouse: 4452,
+        child: 2800
+    }
+};
+
+let programMonths = 12;
+
+function setDuration(months) {
+    programMonths = months;
+    document.querySelectorAll('.duration-btn').forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.months) === months);
+    });
+    calculateSolvency();
+}
+
+function toggleGic() {
+    const show = document.getElementById('hasGic').checked;
+    document.getElementById('gicSection').style.display = show ? 'block' : 'none';
+    document.getElementById('gicRow').style.display = show ? 'flex' : 'none';
+    if (!show) document.getElementById('gicAmount').value = '';
+    calculateSolvency();
+}
+
+function toggleScholarship() {
+    const show = document.getElementById('hasScholarship').checked;
+    document.getElementById('scholarshipSection').style.display = show ? 'block' : 'none';
+    document.getElementById('scholarshipRow').style.display = show ? 'flex' : 'none';
+    if (!show) document.getElementById('scholarshipAmount').value = '';
+    calculateSolvency();
+}
+
+function toggleSponsor() {
+    const show = document.getElementById('hasSponsor').checked;
+    document.getElementById('sponsorSection').style.display = show ? 'block' : 'none';
+    document.getElementById('sponsorRow').style.display = show ? 'flex' : 'none';
+    if (!show) document.getElementById('sponsorAmount').value = '';
+    calculateSolvency();
+}
+
+function formatCurrency(amount) {
+    return '$' + Math.round(amount).toLocaleString('en-CA');
+}
+
+function calculateSolvency() {
+    const province = document.getElementById('province').value;
+    const tuition = parseFloat(document.getElementById('tuition').value) || 0;
+    const hasSpouse = document.getElementById('spouse').value === '1';
+    const numChildren = parseInt(document.getElementById('children').value) || 0;
+
+    const bankBalance = parseFloat(document.getElementById('bankBalance').value) || 0;
+    const gicAmount = document.getElementById('hasGic').checked ?
+        (parseFloat(document.getElementById('gicAmount').value) || 0) : 0;
+    const scholarshipAmount = document.getElementById('hasScholarship').checked ?
+        (parseFloat(document.getElementById('scholarshipAmount').value) || 0) : 0;
+    const sponsorAmount = document.getElementById('hasSponsor').checked ?
+        (parseFloat(document.getElementById('sponsorAmount').value) || 0) : 0;
+
+    // Calculate living expenses
+    const costs = LIVING_COSTS[province];
+    let livingExpenses = costs.student;
+
+    if (hasSpouse) {
+        livingExpenses += costs.spouse;
+    }
+
+    if (numChildren > 0) {
+        livingExpenses += costs.child * numChildren;
+    }
+
+    // Total required
+    const totalRequired = tuition + livingExpenses;
+
+    // Total available
+    const totalAvailable = bankBalance + gicAmount + scholarshipAmount + sponsorAmount;
+
+    // Update displays
+    document.getElementById('tuitionDisplay').textContent = formatCurrency(tuition);
+    document.getElementById('livingDisplay').textContent = formatCurrency(costs.student);
+
+    // Spouse row
+    const spouseRow = document.getElementById('spouseLivingRow');
+    if (hasSpouse) {
+        spouseRow.style.display = 'flex';
+        document.getElementById('spouseLivingDisplay').textContent = formatCurrency(costs.spouse);
+    } else {
+        spouseRow.style.display = 'none';
+    }
+
+    // Children row
+    const childrenRow = document.getElementById('childrenLivingRow');
+    if (numChildren > 0) {
+        childrenRow.style.display = 'flex';
+        document.getElementById('childrenLivingDisplay').textContent = formatCurrency(costs.child * numChildren);
+    } else {
+        childrenRow.style.display = 'none';
+    }
+
+    document.getElementById('totalRequired').textContent = formatCurrency(totalRequired);
+
+    // Funds breakdown
+    document.getElementById('bankDisplay').textContent = formatCurrency(bankBalance);
+    document.getElementById('gicDisplay').textContent = formatCurrency(gicAmount);
+    document.getElementById('scholarshipDisplay').textContent = formatCurrency(scholarshipAmount);
+    document.getElementById('sponsorDisplay').textContent = formatCurrency(sponsorAmount);
+    document.getElementById('totalAvailable').textContent = formatCurrency(totalAvailable);
+
+    // Main displays
+    document.getElementById('requiredAmount').textContent = formatCurrency(totalRequired);
+    document.getElementById('availableFunds').textContent = formatCurrency(totalAvailable);
+
+    // Difference
+    const difference = totalAvailable - totalRequired;
+    const differenceCard = document.getElementById('differenceCard');
+    const differenceAmount = document.getElementById('differenceAmount');
+    const differenceText = document.getElementById('differenceText');
+    const differenceLabel = document.getElementById('differenceLabel');
+
+    if (difference >= 0) {
+        differenceLabel.textContent = 'Surplus';
+        differenceText.textContent = 'Extra funds';
+        differenceAmount.textContent = '+' + formatCurrency(difference);
+        differenceAmount.className = 'value positive';
+    } else {
+        differenceLabel.textContent = 'Shortfall';
+        differenceText.textContent = 'You need';
+        differenceAmount.textContent = formatCurrency(Math.abs(difference));
+        differenceAmount.className = 'value negative';
+    }
+
+    // Update solvency status
+    updateSolvencyStatus(tuition, totalRequired, totalAvailable);
+
+    // Highlight reference table row
+    highlightReferenceRow(province, hasSpouse, numChildren);
+}
+
+function updateSolvencyStatus(tuition, required, available) {
+    const card = document.getElementById('solvencyCard');
+    const status = document.getElementById('solvencyStatus');
+    const message = document.getElementById('solvencyMessage');
+    const icon = card.querySelector('.icon i');
+
+    if (!tuition) {
+        card.className = 'solvency-card pending';
+        icon.className = 'bi bi-calculator';
+        status.textContent = 'Enter Tuition';
+        message.textContent = 'Enter your first year tuition to calculate requirements';
+    } else if (available >= required) {
+        card.className = 'solvency-card sufficient';
+        icon.className = 'bi bi-check-circle';
+        status.textContent = 'Sufficient Funds!';
+        const surplus = available - required;
+        message.textContent = surplus > 0 ?
+            `You have ${formatCurrency(surplus)} more than required` :
+            'You meet the minimum requirements exactly';
+    } else {
+        card.className = 'solvency-card insufficient';
+        icon.className = 'bi bi-x-circle';
+        status.textContent = 'Insufficient Funds';
+        const shortfall = required - available;
+        message.textContent = `You need ${formatCurrency(shortfall)} more to meet requirements`;
+    }
+}
+
+function highlightReferenceRow(province, hasSpouse, numChildren) {
+    // Determine which row to highlight
+    let rowIndex = 0;
+    if (hasSpouse && numChildren >= 2) rowIndex = 3;
+    else if (hasSpouse && numChildren === 1) rowIndex = 2;
+    else if (hasSpouse) rowIndex = 1;
+
+    const tbody = document.getElementById('referenceTableBody');
+    const rows = tbody.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+        row.classList.toggle('highlight', index === rowIndex);
+    });
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    calculateSolvency();
+});
+</script>
+{% endblock %}

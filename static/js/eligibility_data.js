@@ -2,7 +2,20 @@
 // All questions, NOC database, and recommendation data
 
 const QUESTIONS = [
-    // Step 1: Personal Information
+    // Step 1: Personal Information (with lead capture)
+    { id: 'email', category: 'Personal Information', step: 1,
+      question: 'What is your email address?',
+      type: 'email',
+      placeholder: 'your@email.com',
+      helpText: 'We\'ll send your personalized results and pathway recommendations to this email'
+    },
+    { id: 'phone', category: 'Personal Information', step: 1,
+      question: 'What is your phone number? (Optional)',
+      type: 'phone',
+      placeholder: '+1 (555) 123-4567',
+      optional: true,
+      helpText: 'For priority updates on immigration draw alerts and deadline reminders'
+    },
     { id: 'age', category: 'Personal Information', step: 1,
       question: 'What is your age?',
       options: [
@@ -36,6 +49,27 @@ const QUESTIONS = [
       options: [
         { value: 'in_canada', label: 'Currently in Canada' },
         { value: 'outside', label: 'Outside Canada' }
+      ]
+    },
+    { id: 'employment_status', category: 'Personal Information', step: 1,
+      question: 'What is your current employment status?',
+      options: [
+        { value: 'employed_fulltime', label: 'Employed full-time' },
+        { value: 'employed_parttime', label: 'Employed part-time' },
+        { value: 'self_employed', label: 'Self-employed / Business owner' },
+        { value: 'unemployed', label: 'Currently unemployed' },
+        { value: 'student', label: 'Currently a student' },
+        { value: 'retired', label: 'Retired' }
+      ]
+    },
+    { id: 'dependents_count', category: 'Personal Information', step: 1,
+      question: 'How many dependent children (under 22) do you have?',
+      options: [
+        { value: '0', label: 'No dependents' },
+        { value: '1', label: '1 child' },
+        { value: '2', label: '2 children' },
+        { value: '3', label: '3 children' },
+        { value: '4_plus', label: '4 or more children' }
       ]
     },
 
@@ -350,6 +384,23 @@ const QUESTIONS = [
         { value: '90', label: '90', desc: 'CLB 10' }
       ]
     },
+    // Language test date & validity
+    { id: 'english_test_date', category: 'Language Proficiency', step: 5,
+      question: 'When did you take your English test?',
+      condition: ans => ans.english_test && ans.english_test !== 'none',
+      type: 'date',
+      helpText: 'Language tests are valid for 2 years from the test date. We\'ll check if yours is still valid.'
+    },
+    { id: 'planning_to_improve_english', category: 'Language Proficiency', step: 5,
+      question: 'Are you planning to retake your English test to improve your score?',
+      condition: ans => ans.english_test && ans.english_test !== 'none',
+      helpText: 'Higher language scores can add 20-50+ CRS points',
+      options: [
+        { value: 'yes_soon', label: 'Yes, within 3 months' },
+        { value: 'yes_later', label: 'Yes, planning to eventually' },
+        { value: 'no', label: 'No, satisfied with current score' }
+      ]
+    },
     // French language tests
     { id: 'french_test', category: 'Language Proficiency', step: 5,
       question: 'Have you taken a French language test?',
@@ -418,6 +469,40 @@ const QUESTIONS = [
         { value: 'other', label: 'Other territory' }
       ]
     },
+    { id: 'job_salary', category: 'Job Offer', step: 6,
+      question: 'What is the annual salary offered?',
+      condition: ans => ans.job_offer === 'yes',
+      type: 'salary',
+      placeholder: 'e.g., 75000',
+      helpText: 'Some PNP streams require minimum salary thresholds (e.g., BC PNP Tech needs median wage)'
+    },
+    { id: 'job_hours', category: 'Job Offer', step: 6,
+      question: 'Is the job offer for full-time work (30+ hours/week)?',
+      condition: ans => ans.job_offer === 'yes',
+      options: [
+        { value: 'fulltime', label: 'Yes, full-time (30+ hours/week)', desc: 'Required for most immigration programs' },
+        { value: 'parttime', label: 'No, part-time', desc: 'May not qualify for CRS points' }
+      ]
+    },
+    { id: 'job_permanent', category: 'Job Offer', step: 6,
+      question: 'Is the job offer permanent or temporary?',
+      condition: ans => ans.job_offer === 'yes',
+      options: [
+        { value: 'permanent', label: 'Permanent / Indeterminate', desc: 'Required for Express Entry points' },
+        { value: 'contract', label: 'Fixed-term contract (1+ year)' },
+        { value: 'temporary', label: 'Temporary / Seasonal', desc: 'May not qualify for points' }
+      ]
+    },
+    { id: 'job_start_date', category: 'Job Offer', step: 6,
+      question: 'When is your expected start date?',
+      condition: ans => ans.job_offer === 'yes',
+      options: [
+        { value: 'already_working', label: 'Already working there' },
+        { value: 'within_3_months', label: 'Within 3 months' },
+        { value: '3_6_months', label: '3-6 months from now' },
+        { value: 'over_6_months', label: 'More than 6 months away' }
+      ]
+    },
     { id: 'provincial_connection', category: 'Job Offer', step: 6,
       question: 'Do you have any connections to a specific province? (Select all that apply)',
       multiSelect: true,
@@ -451,6 +536,52 @@ const QUESTIONS = [
         { value: 'exceed', label: 'Yes, I exceed the requirement' },
         { value: 'can_arrange', label: 'No, but I can arrange it' },
         { value: 'difficult', label: 'No, it will be difficult' }
+      ]
+    },
+    { id: 'funds_amount', category: 'Family & Financial', step: 7,
+      question: 'Approximately how much do you have in liquid funds (CAD)?',
+      type: 'funds',
+      helpText: 'Bank balance + investments that can be liquidated',
+      options: [
+        { value: 'under_10k', label: 'Under $10,000 CAD' },
+        { value: '10k_15k', label: '$10,000 - $15,000 CAD' },
+        { value: '15k_25k', label: '$15,000 - $25,000 CAD' },
+        { value: '25k_40k', label: '$25,000 - $40,000 CAD' },
+        { value: '40k_60k', label: '$40,000 - $60,000 CAD' },
+        { value: 'over_60k', label: 'Over $60,000 CAD' }
+      ]
+    },
+    { id: 'funds_source', category: 'Family & Financial', step: 7,
+      question: 'What is the main source of your settlement funds?',
+      options: [
+        { value: 'savings', label: 'Personal savings' },
+        { value: 'salary', label: 'Current salary/income' },
+        { value: 'property_sale', label: 'Property/asset sale' },
+        { value: 'family_support', label: 'Family support' },
+        { value: 'loan', label: 'Personal loan' },
+        { value: 'investment', label: 'Investment returns' }
+      ]
+    },
+    { id: 'bank_statements_ready', category: 'Family & Financial', step: 7,
+      question: 'Do you have 6 months of recent bank statements available?',
+      helpText: 'Required to prove your funds have been legitimately accumulated',
+      options: [
+        { value: 'yes_ready', label: 'Yes, ready to submit' },
+        { value: 'partial', label: 'Some statements, not all 6 months' },
+        { value: 'no', label: 'No, need to gather them' }
+      ]
+    },
+    { id: 'documents_ready', category: 'Family & Financial', step: 7,
+      question: 'Do you have these essential documents ready?',
+      multiSelect: true,
+      helpText: 'Select all documents you currently have',
+      options: [
+        { value: 'passport', label: 'Valid passport (6+ months remaining)' },
+        { value: 'eca', label: 'Educational Credential Assessment (ECA)' },
+        { value: 'language_test', label: 'Language test results' },
+        { value: 'reference_letters', label: 'Employment reference letters' },
+        { value: 'police_clearance', label: 'Police clearance certificate' },
+        { value: 'medical', label: 'Medical exam completed' }
       ]
     },
 
@@ -494,6 +625,52 @@ const QUESTIONS = [
         { value: 'no', label: 'No, never refused' },
         { value: 'once', label: 'Yes, once' },
         { value: 'multiple', label: 'Yes, multiple times' }
+      ]
+    },
+    { id: 'refusal_type', category: 'Admissibility', step: 9,
+      question: 'What type of application was refused?',
+      condition: ans => ans.previous_refusal === 'once' || ans.previous_refusal === 'multiple',
+      options: [
+        { value: 'visitor', label: 'Visitor Visa / TRV' },
+        { value: 'study', label: 'Study Permit' },
+        { value: 'work', label: 'Work Permit' },
+        { value: 'pr', label: 'Permanent Residence' },
+        { value: 'multiple_types', label: 'Multiple types' }
+      ]
+    },
+    { id: 'refusal_reason', category: 'Admissibility', step: 9,
+      question: 'What was the main reason for refusal?',
+      condition: ans => ans.previous_refusal === 'once' || ans.previous_refusal === 'multiple',
+      helpText: 'Knowing the reason helps identify if it\'s been resolved',
+      options: [
+        { value: 'funds', label: 'Insufficient funds', desc: 'Financial documentation issues' },
+        { value: 'ties', label: 'Insufficient ties to home country', desc: 'Dual intent concerns' },
+        { value: 'purpose', label: 'Purpose of travel not clear' },
+        { value: 'incomplete', label: 'Incomplete application' },
+        { value: 'misrep', label: 'Misrepresentation concern', desc: 'Serious - may require legal help' },
+        { value: 'not_sure', label: 'Not sure / GCMS not ordered' }
+      ]
+    },
+    { id: 'refusal_recency', category: 'Admissibility', step: 9,
+      question: 'When was your most recent refusal?',
+      condition: ans => ans.previous_refusal === 'once' || ans.previous_refusal === 'multiple',
+      options: [
+        { value: 'within_1_year', label: 'Within the last year' },
+        { value: '1_2_years', label: '1-2 years ago' },
+        { value: '2_5_years', label: '2-5 years ago' },
+        { value: 'over_5_years', label: 'Over 5 years ago' }
+      ]
+    },
+    { id: 'other_country_refusal', category: 'Admissibility', step: 9,
+      question: 'Have you been refused a visa to any OTHER country (USA, UK, Australia, etc.)?',
+      helpText: 'Canada shares biometric data with the "Migration 5" countries (US, UK, Australia, NZ)',
+      options: [
+        { value: 'no', label: 'No, never refused by any country' },
+        { value: 'usa', label: 'Yes, USA' },
+        { value: 'uk', label: 'Yes, UK' },
+        { value: 'australia', label: 'Yes, Australia/NZ' },
+        { value: 'schengen', label: 'Yes, Schengen/EU' },
+        { value: 'multiple', label: 'Yes, multiple countries' }
       ]
     },
     { id: 'medical_issues', category: 'Admissibility', step: 9,

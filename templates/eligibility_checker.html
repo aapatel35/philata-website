@@ -83,6 +83,78 @@
     .search-result-item .noc-title { color: var(--text); }
     .search-result-item .noc-teer { font-size: 0.8rem; color: var(--text-muted); }
 
+    /* Text Input (Email, Phone, Date) */
+    .text-input-container { margin-bottom: 1rem; }
+    .text-input {
+        width: 100%; padding: 1rem; border: 2px solid var(--border); border-radius: 12px;
+        font-size: 1rem; background: var(--bg); color: var(--text); transition: all 0.2s;
+    }
+    .text-input:focus { outline: none; border-color: var(--primary); }
+    .text-input::placeholder { color: var(--text-muted); }
+    .text-input.error { border-color: #dc2626; }
+
+    /* Currency/Salary Input */
+    .currency-input-container { display: flex; align-items: stretch; margin-bottom: 1rem; }
+    .currency-prefix {
+        padding: 1rem; background: var(--bg); border: 2px solid var(--border);
+        border-right: none; border-radius: 12px 0 0 12px;
+        font-weight: 600; color: var(--text-muted); display: flex; align-items: center;
+    }
+    .currency-input {
+        flex: 1; padding: 1rem; border: 2px solid var(--border); border-radius: 0 12px 12px 0;
+        font-size: 1rem; background: var(--bg); color: var(--text); transition: all 0.2s;
+    }
+    .currency-input:focus { outline: none; border-color: var(--primary); }
+    .currency-input-container:focus-within .currency-prefix { border-color: var(--primary); }
+    .currency-input::placeholder { color: var(--text-muted); }
+
+    /* Multi-Select Checkboxes */
+    .option-btn.checkbox .radio {
+        border-radius: 6px;
+    }
+    .option-btn.checkbox.selected .radio {
+        background: var(--primary);
+        border-color: var(--primary);
+    }
+    .option-btn.checkbox.selected .radio::after {
+        content: '\2713';
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 0;
+        background: transparent;
+        width: auto;
+        height: auto;
+    }
+    .multi-select-hint {
+        font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;
+        display: flex; align-items: center; gap: 0.5rem;
+    }
+    .multi-select-hint i { color: var(--primary); }
+
+    /* Date Input */
+    .date-input {
+        width: 100%; padding: 1rem; border: 2px solid var(--border); border-radius: 12px;
+        font-size: 1rem; background: var(--bg); color: var(--text); transition: all 0.2s;
+    }
+    .date-input:focus { outline: none; border-color: var(--primary); }
+    .date-warning {
+        margin-top: 0.5rem; padding: 0.75rem; background: rgba(234, 179, 8, 0.1);
+        border: 1px solid rgba(234, 179, 8, 0.3); border-radius: 8px;
+        font-size: 0.85rem; color: #ca8a04; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .date-warning.expired {
+        background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: #dc2626;
+    }
+    .date-warning.valid {
+        background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.3); color: #16a34a;
+    }
+
+    /* Input with Optional Label */
+    .optional-label {
+        font-size: 0.8rem; color: var(--text-muted); margin-left: 0.5rem; font-weight: normal;
+    }
+
     /* Navigation */
     .nav-buttons { display: flex; justify-content: space-between; margin-top: 2rem; }
     .nav-btn {

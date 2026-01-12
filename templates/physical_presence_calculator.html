@@ -1,0 +1,1026 @@
+{% extends "base.html" %}
+
+{% block title %}Physical Presence Calculator - Citizenship Requirements{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        margin-bottom: 32px;
+    }
+
+    .page-header .page-title {
+        font-family: 'Plus Jakarta Sans', var(--font-family);
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .page-header .page-title i {
+        font-size: 28px;
+        color: var(--primary);
+    }
+
+    .page-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+    }
+
+    .calculator-grid {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+        .calculator-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Info Alert */
+    .info-alert {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-alert h4 {
+        color: var(--primary);
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .info-alert p, .info-alert ul {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .info-alert ul {
+        margin-top: 0.5rem;
+        padding-left: 1.25rem;
+    }
+
+    .info-alert li {
+        margin-bottom: 0.25rem;
+    }
+
+    /* Input Sections */
+    .input-section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .input-section h3 {
+        font-size: 1.1rem;
+        color: var(--text);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .input-section h3 i {
+        color: var(--primary);
+    }
+
+    .input-group {
+        margin-bottom: 1rem;
+    }
+
+    .input-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .input-group label {
+        display: block;
+        font-weight: 500;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+
+    .input-group select,
+    .input-group input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 1rem;
+        background: var(--bg);
+        transition: border-color 0.2s;
+    }
+
+    .input-group select:focus,
+    .input-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+
+    .input-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .help-text {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin-top: 0.5rem;
+    }
+
+    /* Period Entry */
+    .period-entry {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        position: relative;
+    }
+
+    .period-entry:last-child {
+        margin-bottom: 0;
+    }
+
+    .period-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .period-title {
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .period-title .badge {
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+    }
+
+    .period-title .badge.pr {
+        background: #10B981;
+        color: white;
+    }
+
+    .period-title .badge.temp {
+        background: #F59E0B;
+        color: white;
+    }
+
+    .period-title .badge.absence {
+        background: #EF4444;
+        color: white;
+    }
+
+    .period-remove {
+        width: 28px;
+        height: 28px;
+        border: none;
+        background: rgba(239, 68, 68, 0.1);
+        color: #EF4444;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+
+    .period-remove:hover {
+        background: #EF4444;
+        color: white;
+    }
+
+    .period-dates {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .add-period-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px dashed var(--border);
+        border-radius: 10px;
+        background: transparent;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 1rem;
+    }
+
+    .add-period-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: rgba(30, 58, 95, 0.05);
+    }
+
+    /* Results Panel */
+    .results-panel {
+        position: sticky;
+        top: 100px;
+    }
+
+    .eligibility-card {
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .eligibility-card.eligible {
+        background: linear-gradient(135deg, #059669 0%, #10B981 100%);
+        color: white;
+    }
+
+    .eligibility-card.not-eligible {
+        background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%);
+        color: white;
+    }
+
+    .eligibility-card.pending {
+        background: linear-gradient(135deg, #6B7280 0%, #9CA3AF 100%);
+        color: white;
+    }
+
+    .eligibility-card.close {
+        background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
+        color: white;
+    }
+
+    .eligibility-card .icon {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .eligibility-card .status {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .eligibility-card .message {
+        opacity: 0.9;
+        font-size: 0.95rem;
+    }
+
+    /* Days Counter */
+    .days-counter {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .days-counter h4 {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .days-display {
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .days-current {
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--primary);
+    }
+
+    .days-required {
+        font-size: 1.25rem;
+        color: var(--text-muted);
+    }
+
+    .days-progress {
+        margin-top: 1rem;
+    }
+
+    .progress-bar {
+        height: 12px;
+        background: var(--bg);
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), #0891B2);
+        border-radius: 6px;
+        transition: width 0.3s ease;
+    }
+
+    .progress-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    /* Breakdown Card */
+    .breakdown-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+    }
+
+    .breakdown-header {
+        padding: 1.25rem 1.5rem;
+        background: var(--bg);
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .breakdown-header i {
+        color: var(--primary);
+    }
+
+    .breakdown-body {
+        padding: 1rem 1.5rem;
+    }
+
+    .breakdown-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .breakdown-item:last-child {
+        border-bottom: none;
+    }
+
+    .breakdown-item .label {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .breakdown-item .value {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .breakdown-item .value.highlight {
+        color: var(--primary);
+    }
+
+    .breakdown-item .value.negative {
+        color: #EF4444;
+    }
+
+    .breakdown-item .value.positive {
+        color: #10B981;
+    }
+
+    /* Timeline Visual */
+    .timeline-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .timeline-card h4 {
+        font-size: 1rem;
+        color: var(--text);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .timeline-card h4 i {
+        color: var(--primary);
+    }
+
+    .timeline-bar {
+        height: 40px;
+        background: var(--bg);
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+
+    .timeline-segment {
+        position: absolute;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: white;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding: 0 4px;
+    }
+
+    .timeline-segment.pr {
+        background: #10B981;
+    }
+
+    .timeline-segment.temp {
+        background: #F59E0B;
+    }
+
+    .timeline-segment.absence {
+        background: #EF4444;
+    }
+
+    .timeline-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+    }
+
+    .legend-dot.pr { background: #10B981; }
+    .legend-dot.temp { background: #F59E0B; }
+    .legend-dot.absence { background: #EF4444; }
+
+    /* Quick Add Buttons */
+    .quick-add {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .quick-add-btn {
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--bg);
+        color: var(--text);
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .quick-add-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .quick-add-btn.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">
+            <i class="bi bi-calendar-check"></i>
+            Physical Presence Calculator
+        </h1>
+        <p class="page-subtitle">Calculate if you meet the physical presence requirement for Canadian citizenship</p>
+    </div>
+
+    <!-- Info Alert -->
+    <div class="info-alert">
+        <h4><i class="bi bi-info-circle"></i> Citizenship Physical Presence Requirements</h4>
+        <p>To become a Canadian citizen, you must have been physically present in Canada for at least <strong>1,095 days (3 years)</strong> within the <strong>5 years</strong> before you apply. Here's how days are counted:</p>
+        <ul>
+            <li><strong>As a Permanent Resident:</strong> Each day counts as 1 full day</li>
+            <li><strong>As a Temporary Resident/Protected Person:</strong> Each day counts as 0.5 days (max 365 days credit)</li>
+            <li><strong>Absences from Canada:</strong> Days outside Canada don't count</li>
+        </ul>
+    </div>
+
+    <div class="calculator-grid">
+        <!-- Input Section -->
+        <div class="inputs-column">
+            <!-- Application Date -->
+            <div class="input-section">
+                <h3><i class="bi bi-calendar-event"></i> Application Date</h3>
+                <div class="input-group">
+                    <label>When do you plan to apply for citizenship?</label>
+                    <input type="date" id="applicationDate" onchange="calculatePresence()">
+                    <p class="help-text">We'll calculate your 5-year qualifying period based on this date</p>
+                </div>
+                <div class="input-row" style="margin-top: 1rem;">
+                    <div class="input-group">
+                        <label>5-Year Period Starts</label>
+                        <input type="text" id="periodStart" readonly style="background: var(--bg);">
+                    </div>
+                    <div class="input-group">
+                        <label>5-Year Period Ends</label>
+                        <input type="text" id="periodEnd" readonly style="background: var(--bg);">
+                    </div>
+                </div>
+            </div>
+
+            <!-- PR Status -->
+            <div class="input-section">
+                <h3><i class="bi bi-person-badge"></i> Permanent Resident Status</h3>
+                <div class="input-group">
+                    <label>When did you become a Permanent Resident?</label>
+                    <input type="date" id="prDate" onchange="calculatePresence()">
+                    <p class="help-text">Enter your PR landing date (as shown on your PR card)</p>
+                </div>
+            </div>
+
+            <!-- Time as PR in Canada -->
+            <div class="input-section">
+                <h3><i class="bi bi-house-check"></i> Time in Canada as PR</h3>
+                <p class="help-text" style="margin-top: -0.5rem; margin-bottom: 1rem;">Add periods when you were physically present in Canada as a PR. Days as PR count as 1:1.</p>
+
+                <div id="prPeriodsContainer">
+                    <div class="period-entry" data-type="pr">
+                        <div class="period-header">
+                            <span class="period-title">
+                                <span class="badge pr">PR Period</span>
+                                Period #1
+                            </span>
+                        </div>
+                        <div class="period-dates">
+                            <div class="input-group">
+                                <label>From</label>
+                                <input type="date" class="pr-from" onchange="calculatePresence()">
+                            </div>
+                            <div class="input-group">
+                                <label>To</label>
+                                <input type="date" class="pr-to" onchange="calculatePresence()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="add-period-btn" onclick="addPeriod('pr')">
+                    <i class="bi bi-plus-circle"></i> Add Another PR Period
+                </button>
+            </div>
+
+            <!-- Temporary Resident Time -->
+            <div class="input-section">
+                <h3><i class="bi bi-clock-history"></i> Time Before PR (Optional)</h3>
+                <p class="help-text" style="margin-top: -0.5rem; margin-bottom: 1rem;">Days as a temporary resident (work/study permit) or protected person before becoming PR count as 0.5 days, up to max 365 days credit.</p>
+
+                <div id="tempPeriodsContainer">
+                    <!-- Periods added dynamically -->
+                </div>
+
+                <button class="add-period-btn" onclick="addPeriod('temp')">
+                    <i class="bi bi-plus-circle"></i> Add Pre-PR Period (Work/Study Permit)
+                </button>
+            </div>
+
+            <!-- Absences -->
+            <div class="input-section">
+                <h3><i class="bi bi-airplane"></i> Absences from Canada</h3>
+                <p class="help-text" style="margin-top: -0.5rem; margin-bottom: 1rem;">Add any periods you were outside Canada (vacations, business trips, etc.)</p>
+
+                <div id="absencePeriodsContainer">
+                    <!-- Periods added dynamically -->
+                </div>
+
+                <button class="add-period-btn" onclick="addPeriod('absence')">
+                    <i class="bi bi-plus-circle"></i> Add Absence Period
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Panel -->
+        <div class="results-panel">
+            <!-- Eligibility Status -->
+            <div class="eligibility-card pending" id="eligibilityCard">
+                <div class="icon"><i class="bi bi-calendar-check"></i></div>
+                <div class="status" id="eligibilityStatus">Enter Your Dates</div>
+                <div class="message" id="eligibilityMessage">Fill in your PR date and presence information to check eligibility</div>
+            </div>
+
+            <!-- Days Counter -->
+            <div class="days-counter">
+                <h4>Days Toward Citizenship</h4>
+                <div class="days-display">
+                    <span class="days-current" id="totalDays">0</span>
+                    <span class="days-required">/ 1,095 days required</span>
+                </div>
+                <div class="days-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                    </div>
+                    <div class="progress-labels">
+                        <span>0 days</span>
+                        <span id="progressPercent">0%</span>
+                        <span>1,095 days</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Breakdown -->
+            <div class="breakdown-card">
+                <div class="breakdown-header">
+                    <i class="bi bi-list-ul"></i> Days Breakdown
+                </div>
+                <div class="breakdown-body">
+                    <div class="breakdown-item">
+                        <span class="label">Days as PR in Canada</span>
+                        <span class="value positive" id="prDays">0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="label">Pre-PR Days (at 0.5x)</span>
+                        <span class="value" id="prePrDays">0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="label">Pre-PR Credit Applied</span>
+                        <span class="value highlight" id="prePrCredit">0 / 365 max</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="label">Absence Days Deducted</span>
+                        <span class="value negative" id="absenceDays">0</span>
+                    </div>
+                    <div class="breakdown-item" style="border-top: 2px solid var(--border); padding-top: 1rem; margin-top: 0.5rem;">
+                        <span class="label"><strong>Total Qualifying Days</strong></span>
+                        <span class="value highlight" id="qualifyingDays">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Requirements -->
+            <div class="breakdown-card">
+                <div class="breakdown-header">
+                    <i class="bi bi-check2-square"></i> Other Requirements
+                </div>
+                <div class="breakdown-body">
+                    <div class="breakdown-item">
+                        <span class="label">Tax Filing (3 of 5 years)</span>
+                        <span class="value"><i class="bi bi-info-circle text-muted"></i></span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="label">Language Requirement</span>
+                        <span class="value"><i class="bi bi-info-circle text-muted"></i></span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="label">Citizenship Test (18-54)</span>
+                        <span class="value"><i class="bi bi-info-circle text-muted"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Visual -->
+            <div class="timeline-card" id="timelineCard" style="display: none;">
+                <h4><i class="bi bi-clock-history"></i> Your 5-Year Timeline</h4>
+                <div class="timeline-bar" id="timelineBar">
+                    <!-- Segments added dynamically -->
+                </div>
+                <div class="timeline-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot pr"></div>
+                        <span>PR in Canada</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot temp"></div>
+                        <span>Pre-PR (0.5x)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot absence"></div>
+                        <span>Absence</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let periodCounters = { pr: 1, temp: 0, absence: 0 };
+
+// Set default application date to today
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date();
+    document.getElementById('applicationDate').value = formatDateForInput(today);
+    calculatePresence();
+});
+
+function formatDateForInput(date) {
+    return date.toISOString().split('T')[0];
+}
+
+function formatDateDisplay(date) {
+    return date.toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function daysBetween(start, end) {
+    const oneDay = 24 * 60 * 60 * 1000;
+    return Math.round((end - start) / oneDay);
+}
+
+function addPeriod(type) {
+    periodCounters[type]++;
+    const container = document.getElementById(type + 'PeriodsContainer');
+
+    const badges = {
+        pr: '<span class="badge pr">PR Period</span>',
+        temp: '<span class="badge temp">Pre-PR</span>',
+        absence: '<span class="badge absence">Absence</span>'
+    };
+
+    const entry = document.createElement('div');
+    entry.className = 'period-entry';
+    entry.dataset.type = type;
+    entry.innerHTML = `
+        <div class="period-header">
+            <span class="period-title">
+                ${badges[type]}
+                Period #${periodCounters[type]}
+            </span>
+            <button class="period-remove" onclick="removePeriod(this)">
+                <i class="bi bi-x"></i>
+            </button>
+        </div>
+        <div class="period-dates">
+            <div class="input-group">
+                <label>From</label>
+                <input type="date" class="${type}-from" onchange="calculatePresence()">
+            </div>
+            <div class="input-group">
+                <label>To</label>
+                <input type="date" class="${type}-to" onchange="calculatePresence()">
+            </div>
+        </div>
+    `;
+
+    container.appendChild(entry);
+}
+
+function removePeriod(btn) {
+    const entry = btn.closest('.period-entry');
+    entry.remove();
+    calculatePresence();
+}
+
+function calculatePresence() {
+    const appDateStr = document.getElementById('applicationDate').value;
+    const prDateStr = document.getElementById('prDate').value;
+
+    if (!appDateStr) return;
+
+    const appDate = new Date(appDateStr);
+    const periodEnd = new Date(appDate);
+    const periodStart = new Date(appDate);
+    periodStart.setFullYear(periodStart.getFullYear() - 5);
+
+    // Display period dates
+    document.getElementById('periodStart').value = formatDateDisplay(periodStart);
+    document.getElementById('periodEnd').value = formatDateDisplay(periodEnd);
+
+    let prDaysTotal = 0;
+    let prePrDaysRaw = 0;
+    let absenceDaysTotal = 0;
+
+    const prDate = prDateStr ? new Date(prDateStr) : null;
+
+    // Calculate PR periods (within qualifying period)
+    document.querySelectorAll('#prPeriodsContainer .period-entry').forEach(entry => {
+        const fromStr = entry.querySelector('.pr-from').value;
+        const toStr = entry.querySelector('.pr-to').value;
+
+        if (fromStr && toStr) {
+            let from = new Date(fromStr);
+            let to = new Date(toStr);
+
+            // Clamp to qualifying period
+            if (from < periodStart) from = new Date(periodStart);
+            if (to > periodEnd) to = new Date(periodEnd);
+
+            // Only count if PR date is before the period
+            if (prDate && from >= prDate && from < to) {
+                prDaysTotal += daysBetween(from, to) + 1;
+            }
+        }
+    });
+
+    // Calculate pre-PR periods (count at 0.5x)
+    document.querySelectorAll('#tempPeriodsContainer .period-entry').forEach(entry => {
+        const fromStr = entry.querySelector('.temp-from').value;
+        const toStr = entry.querySelector('.temp-to').value;
+
+        if (fromStr && toStr) {
+            let from = new Date(fromStr);
+            let to = new Date(toStr);
+
+            // Clamp to qualifying period and before PR date
+            if (from < periodStart) from = new Date(periodStart);
+            if (to > periodEnd) to = new Date(periodEnd);
+            if (prDate && to > prDate) to = new Date(prDate);
+
+            if (from < to) {
+                prePrDaysRaw += daysBetween(from, to);
+            }
+        }
+    });
+
+    // Calculate absences (subtract from PR days)
+    document.querySelectorAll('#absencePeriodsContainer .period-entry').forEach(entry => {
+        const fromStr = entry.querySelector('.absence-from').value;
+        const toStr = entry.querySelector('.absence-to').value;
+
+        if (fromStr && toStr) {
+            let from = new Date(fromStr);
+            let to = new Date(toStr);
+
+            // Clamp to qualifying period
+            if (from < periodStart) from = new Date(periodStart);
+            if (to > periodEnd) to = new Date(periodEnd);
+
+            if (from < to) {
+                absenceDaysTotal += daysBetween(from, to) + 1;
+            }
+        }
+    });
+
+    // Apply pre-PR credit (max 365 days)
+    const prePrCredit = Math.min(Math.floor(prePrDaysRaw * 0.5), 365);
+
+    // Net PR days after absences
+    const netPrDays = Math.max(0, prDaysTotal - absenceDaysTotal);
+
+    // Total qualifying days
+    const totalDays = netPrDays + prePrCredit;
+
+    // Update UI
+    document.getElementById('prDays').textContent = prDaysTotal.toLocaleString();
+    document.getElementById('prePrDays').textContent = prePrDaysRaw.toLocaleString() + ' raw';
+    document.getElementById('prePrCredit').textContent = prePrCredit + ' / 365 max';
+    document.getElementById('absenceDays').textContent = '-' + absenceDaysTotal.toLocaleString();
+    document.getElementById('qualifyingDays').textContent = totalDays.toLocaleString();
+
+    // Update total display
+    document.getElementById('totalDays').textContent = totalDays.toLocaleString();
+    const percent = Math.min(100, Math.round((totalDays / 1095) * 100));
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('progressPercent').textContent = percent + '%';
+
+    // Update eligibility status
+    updateEligibilityStatus(totalDays, prDate, periodStart);
+
+    // Update timeline visual
+    updateTimeline(periodStart, periodEnd, prDate);
+}
+
+function updateEligibilityStatus(totalDays, prDate, periodStart) {
+    const card = document.getElementById('eligibilityCard');
+    const status = document.getElementById('eligibilityStatus');
+    const message = document.getElementById('eligibilityMessage');
+    const icon = card.querySelector('.icon i');
+
+    const required = 1095;
+    const shortage = required - totalDays;
+
+    if (!prDate) {
+        card.className = 'eligibility-card pending';
+        icon.className = 'bi bi-calendar-check';
+        status.textContent = 'Enter PR Date';
+        message.textContent = 'Enter your PR landing date to calculate your physical presence';
+    } else if (totalDays >= required) {
+        card.className = 'eligibility-card eligible';
+        icon.className = 'bi bi-check-circle';
+        status.textContent = 'You Qualify!';
+        message.textContent = `You have ${totalDays.toLocaleString()} days, which exceeds the 1,095 day requirement`;
+    } else if (totalDays >= required * 0.9) {
+        card.className = 'eligibility-card close';
+        icon.className = 'bi bi-hourglass-split';
+        status.textContent = 'Almost There!';
+        message.textContent = `You need ${shortage} more days. You're ${Math.round((totalDays/required)*100)}% of the way there`;
+    } else {
+        card.className = 'eligibility-card not-eligible';
+        icon.className = 'bi bi-x-circle';
+        status.textContent = 'Not Yet Eligible';
+        message.textContent = `You need ${shortage.toLocaleString()} more days in Canada to meet the requirement`;
+    }
+}
+
+function updateTimeline(periodStart, periodEnd, prDate) {
+    const timelineCard = document.getElementById('timelineCard');
+    const timelineBar = document.getElementById('timelineBar');
+
+    if (!prDate) {
+        timelineCard.style.display = 'none';
+        return;
+    }
+
+    timelineCard.style.display = 'block';
+    const totalDays = daysBetween(periodStart, periodEnd);
+
+    let segments = [];
+
+    // Collect all periods
+    document.querySelectorAll('#tempPeriodsContainer .period-entry').forEach(entry => {
+        const fromStr = entry.querySelector('.temp-from').value;
+        const toStr = entry.querySelector('.temp-to').value;
+        if (fromStr && toStr) {
+            segments.push({
+                type: 'temp',
+                from: new Date(fromStr),
+                to: new Date(toStr)
+            });
+        }
+    });
+
+    document.querySelectorAll('#prPeriodsContainer .period-entry').forEach(entry => {
+        const fromStr = entry.querySelector('.pr-from').value;
+        const toStr = entry.querySelector('.pr-to').value;
+        if (fromStr && toStr) {
+            segments.push({
+                type: 'pr',
+                from: new Date(fromStr),
+                to: new Date(toStr)
+            });
+        }
+    });
+
+    document.querySelectorAll('#absencePeriodsContainer .period-entry').forEach(entry => {
+        const fromStr = entry.querySelector('.absence-from').value;
+        const toStr = entry.querySelector('.absence-to').value;
+        if (fromStr && toStr) {
+            segments.push({
+                type: 'absence',
+                from: new Date(fromStr),
+                to: new Date(toStr)
+            });
+        }
+    });
+
+    // Clamp and calculate positions
+    let html = '';
+    segments.forEach(seg => {
+        let from = new Date(Math.max(seg.from, periodStart));
+        let to = new Date(Math.min(seg.to, periodEnd));
+
+        if (from < to) {
+            const leftDays = daysBetween(periodStart, from);
+            const widthDays = daysBetween(from, to);
+
+            const left = (leftDays / totalDays) * 100;
+            const width = (widthDays / totalDays) * 100;
+
+            if (width > 0) {
+                html += `<div class="timeline-segment ${seg.type}" style="left: ${left}%; width: ${width}%;">${widthDays}d</div>`;
+            }
+        }
+    });
+
+    timelineBar.innerHTML = html;
+}
+</script>
+{% endblock %}

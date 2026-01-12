@@ -38,6 +38,61 @@ function renderQuestion() {
                 <span id="selectedOccDetails" style="color: var(--text-muted); font-size: 0.9rem;"></span>
             </div>
         `;
+    } else if (q.type === 'email') {
+        inputHtml = `
+            <div class="text-input-container">
+                <input type="email" class="text-input" id="emailInput"
+                    placeholder="${q.placeholder || ''}"
+                    value="${answers[q.id] || ''}"
+                    oninput="answers['${q.id}'] = this.value">
+            </div>
+        `;
+    } else if (q.type === 'phone') {
+        inputHtml = `
+            <div class="text-input-container">
+                <input type="tel" class="text-input" id="phoneInput"
+                    placeholder="${q.placeholder || ''}"
+                    value="${answers[q.id] || ''}"
+                    oninput="answers['${q.id}'] = this.value">
+                ${q.optional ? '<p class="input-hint">This field is optional</p>' : ''}
+            </div>
+        `;
+    } else if (q.type === 'salary' || q.type === 'funds') {
+        inputHtml = `
+            <div class="currency-input-container">
+                <span class="currency-prefix">CAD $</span>
+                <input type="number" class="currency-input" id="numberInput"
+                    placeholder="${q.placeholder || '0'}"
+                    value="${answers[q.id] || ''}"
+                    min="0"
+                    oninput="answers['${q.id}'] = this.value">
+            </div>
+        `;
+    } else if (q.type === 'date') {
+        inputHtml = `
+            <div class="text-input-container">
+                <input type="date" class="date-input" id="dateInput"
+                    value="${answers[q.id] || ''}"
+                    oninput="answers['${q.id}'] = this.value; checkDateValidity('${q.id}', this.value)">
+                <div id="dateWarning" class="date-warning" style="display: none;"></div>
+            </div>
+        `;
+    } else if (q.multiSelect) {
+        const selectedValues = answers[q.id] || [];
+        inputHtml = `
+            <div class="multi-select-hint"><i class="bi bi-info-circle"></i> Select all that apply</div>
+            <div class="options-grid">
+            ${q.options.map(opt => `
+                <button class="option-btn checkbox ${selectedValues.includes(opt.value) ? 'selected' : ''}"
+                    onclick="toggleMultiOption('${q.id}', '${opt.value}', this)">
+                    <div class="radio"></div>
+                    <div class="option-text">
+                        <div class="option-title">${opt.label}</div>
+                        ${opt.desc ? `<div class="option-desc">${opt.desc}</div>` : ''}
+                    </div>
+                </button>
+            `).join('')}
+        </div>`;
     } else {
         inputHtml = `<div class="options-grid">
             ${q.options.map(opt => `
@@ -110,6 +165,32 @@ function selectOption(questionId, value, element) {
     document.getElementById('nextBtn').disabled = false;
 }
 
+function toggleMultiOption(questionId, value, element) {
+    if (!answers[questionId]) answers[questionId] = [];
+
+    const index = answers[questionId].indexOf(value);
+    if (index > -1) {
+        answers[questionId].splice(index, 1);
+        element.classList.remove('selected');
+    } else {
+        // If selecting "none", clear other selections
+        if (value === 'none') {
+            answers[questionId] = ['none'];
+            element.parentElement.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+            element.classList.add('selected');
+        } else {
+            // Remove "none" if selecting something else
+            const noneIndex = answers[questionId].indexOf('none');
+            if (noneIndex > -1) {
+                answers[questionId].splice(noneIndex, 1);
+                element.parentElement.querySelector('[onclick*="none"]')?.classList.remove('selected');
+            }
+            answers[questionId].push(value);
+            element.classList.add('selected');
+        }
+    }
+}
+
 function searchOccupations(query) {
     const results = document.getElementById('searchResults');
     if (query.length < 2) { results.classList.remove('show'); return; }
@@ -151,23 +232,109 @@ function nextQuestion() {
     // Validate current question
     const q = QUESTIONS[currentQuestion];
     if (q) {
+        // Skip validation for optional fields
+        if (q.optional && !answers[q.id]) {
+            hideInlineError();
+            currentQuestion++;
+            renderQuestion();
+            return;
+        }
+
         // Check if this question requires an answer
         if (q.type === 'search') {
             if (!answers['occupation']) {
                 showInlineError('Please select your occupation from the list');
                 return;
             }
-        } else if (!q.multiSelect && !answers[q.id]) {
+        } else if (q.type === 'email') {
+            const email = answers[q.id] || '';
+            if (!email) {
+                showInlineError('Please enter your email address');
+                return;
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showInlineError('Please enter a valid email address');
+                return;
+            }
+        } else if (q.type === 'phone') {
+            // Phone is typically optional, but validate format if provided
+            const phone = answers[q.id] || '';
+            if (phone && phone.length < 7) {
+                showInlineError('Please enter a valid phone number');
+                return;
+            }
+        } else if (q.type === 'salary' || q.type === 'funds') {
+            const amount = answers[q.id] || '';
+            if (!q.optional && !amount) {
+                showInlineError('Please enter an amount');
+                return;
+            }
+            if (amount && (isNaN(amount) || parseFloat(amount) < 0)) {
+                showInlineError('Please enter a valid amount');
+                return;
+            }
+        } else if (q.type === 'date') {
+            const date = answers[q.id] || '';
+            if (!q.optional && !date) {
+                showInlineError('Please select a date');
+                return;
+            }
+        } else if (q.multiSelect) {
+            // Multi-select is optional, allow continuing without selection
+        } else if (!answers[q.id]) {
             showInlineError('Please select an option to continue');
             return;
-        } else if (q.multiSelect && (!answers[q.id] || answers[q.id].length === 0)) {
-            // Multi-select is optional, allow continuing without selection
         }
     }
 
     hideInlineError();
     currentQuestion++;
     renderQuestion();
+}
+
+// Check date validity for language test expiry (2 year validity)
+function checkDateValidity(questionId, dateValue) {
+    const warningDiv = document.getElementById('dateWarning');
+    if (!warningDiv || !dateValue) {
+        if (warningDiv) warningDiv.style.display = 'none';
+        return;
+    }
+
+    const testDate = new Date(dateValue);
+    const today = new Date();
+    const twoYearsAgo = new Date();
+    twoYearsAgo.setFullYear(today.getFullYear() - 2);
+
+    const expiryDate = new Date(testDate);
+    expiryDate.setFullYear(testDate.getFullYear() + 2);
+
+    if (testDate > today) {
+        warningDiv.className = 'date-warning';
+        warningDiv.innerHTML = '<i class="bi bi-exclamation-circle"></i> Future date entered - please enter when you took the test';
+        warningDiv.style.display = 'flex';
+    } else if (testDate < twoYearsAgo) {
+        warningDiv.className = 'date-warning expired';
+        warningDiv.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Your test has EXPIRED. Language tests are valid for 2 years only. You need to retake the test.';
+        warningDiv.style.display = 'flex';
+        answers['test_expired'] = true;
+    } else {
+        const monthsRemaining = Math.floor((expiryDate - today) / (1000 * 60 * 60 * 24 * 30));
+        answers['test_expired'] = false;
+        if (monthsRemaining <= 3) {
+            warningDiv.className = 'date-warning';
+            warningDiv.innerHTML = `<i class="bi bi-exclamation-circle"></i> Your test expires in ${monthsRemaining} month${monthsRemaining !== 1 ? 's' : ''}. Submit your application soon or book a new test.`;
+            warningDiv.style.display = 'flex';
+        } else if (monthsRemaining <= 6) {
+            warningDiv.className = 'date-warning valid';
+            warningDiv.innerHTML = `<i class="bi bi-check-circle"></i> Valid for ${monthsRemaining} more months (expires ${expiryDate.toLocaleDateString()})`;
+            warningDiv.style.display = 'flex';
+        } else {
+            warningDiv.className = 'date-warning valid';
+            warningDiv.innerHTML = `<i class="bi bi-check-circle"></i> Valid until ${expiryDate.toLocaleDateString()}`;
+            warningDiv.style.display = 'flex';
+        }
+    }
 }
 
 function prevQuestion() {
@@ -304,19 +471,94 @@ function renderProfileSummary() {
     if (clb > 0) {
         const testName = answers.english_test === 'ielts' ? 'IELTS' : answers.english_test === 'celpip' ? 'CELPIP' : answers.english_test === 'pte' ? 'PTE' : '';
         langDisplay = `${testName} (CLB ${clb})`;
+        if (answers.test_expired) langDisplay += ' (EXPIRED)';
+    }
+
+    // Format job offer display
+    let jobOfferDisplay = 'None';
+    if (answers.job_offer === 'yes') {
+        const lmiaStatus = answers.job_lmia === 'lmia_approved' ? 'LMIA' :
+                          answers.job_lmia === 'lmia_exempt' ? 'Exempt' : 'No LMIA';
+        jobOfferDisplay = `Yes (${lmiaStatus})`;
+        if (answers.job_salary) {
+            jobOfferDisplay += ` - $${parseInt(answers.job_salary).toLocaleString()}/yr`;
+        }
+    } else if (answers.job_offer === 'in_progress') {
+        jobOfferDisplay = 'In progress';
+    }
+
+    // Format occupation display
+    let occupationDisplay = answers.occupation_category || 'N/A';
+    if (selectedOccupation) {
+        occupationDisplay = `${selectedOccupation.title} (TEER ${selectedOccupation.teer})`;
     }
 
     const items = [
         { label: 'Age', value: answers.age || 'N/A' },
-        { label: 'Education', value: answers.education_level?.replace('_', ' ') || 'N/A' },
-        { label: 'Field', value: answers.field_of_study || 'N/A' },
-        { label: 'Canadian Exp', value: answers.canadian_experience || 'None' },
+        { label: 'Education', value: formatEducation(answers.education_level) },
+        { label: 'Occupation', value: occupationDisplay },
+        { label: 'Canadian Exp', value: formatExperience(answers.canadian_experience) },
+        { label: 'Foreign Exp', value: formatExperience(answers.foreign_experience) },
         { label: 'English', value: langDisplay },
-        { label: 'Target Province', value: answers.target_province || 'Any' }
+        { label: 'French', value: formatFrench(answers.french_level) },
+        { label: 'Job Offer', value: jobOfferDisplay },
+        { label: 'Target Province', value: formatProvince(answers.target_province) }
     ];
+
+    // Add email if provided (for lead capture display)
+    if (answers.email) {
+        items.unshift({ label: 'Email', value: answers.email });
+    }
+
     grid.innerHTML = items.map(i => `
         <div class="profile-item"><div class="label">${i.label}</div><div class="value">${i.value}</div></div>
     `).join('');
+}
+
+function formatEducation(level) {
+    const labels = {
+        none: 'Less than high school',
+        highschool: 'High school',
+        oneyear: '1-year certificate',
+        twoyear: '2-year diploma',
+        bachelors: "Bachelor's degree",
+        two_degrees: 'Two degrees',
+        masters: "Master's degree",
+        phd: 'Doctoral (PhD)'
+    };
+    return labels[level] || level || 'N/A';
+}
+
+function formatExperience(exp) {
+    if (!exp || exp === 'none') return 'None';
+    if (exp === '5_plus' || exp === '6_plus') return '5+ years';
+    return `${exp} year${exp !== '1' ? 's' : ''}`;
+}
+
+function formatFrench(level) {
+    const labels = {
+        nclc7_plus: 'NCLC 7+ (Strong)',
+        nclc5_6: 'NCLC 5-6 (Moderate)',
+        below_nclc5: 'Below NCLC 5',
+        none: 'None'
+    };
+    return labels[level] || 'Not tested';
+}
+
+function formatProvince(prov) {
+    const labels = {
+        bc: 'British Columbia',
+        ontario: 'Ontario',
+        alberta: 'Alberta',
+        saskatchewan: 'Saskatchewan',
+        manitoba: 'Manitoba',
+        nova_scotia: 'Nova Scotia',
+        new_brunswick: 'New Brunswick',
+        pei: 'Prince Edward Island',
+        newfoundland: 'Newfoundland & Labrador',
+        any: 'Open to any'
+    };
+    return labels[prov] || prov || 'Any';
 }
 
 function renderWarnings() {
@@ -324,20 +566,108 @@ function renderWarnings() {
     const warnings = [];
     const clb = getLowestCLB();
 
+    // Language test warnings
     if (answers.english_test === 'none' || clb === 0) {
         warnings.push({ type: 'urgent', issue: 'No language test completed', action: 'Language test is REQUIRED for Express Entry. Book IELTS, CELPIP, or PTE Core immediately.' });
+    } else if (answers.test_expired) {
+        warnings.push({ type: 'urgent', issue: 'Your language test has EXPIRED', action: 'Language tests are valid for 2 years only. Book a new test immediately before submitting any application.' });
+    } else if (answers.english_test_date) {
+        // Check if test is expiring soon
+        const testDate = new Date(answers.english_test_date);
+        const today = new Date();
+        const expiryDate = new Date(testDate);
+        expiryDate.setFullYear(testDate.getFullYear() + 2);
+        const monthsRemaining = Math.floor((expiryDate - today) / (1000 * 60 * 60 * 24 * 30));
+
+        if (monthsRemaining <= 3 && monthsRemaining > 0) {
+            warnings.push({
+                type: 'concern',
+                issue: `Your language test expires in ${monthsRemaining} month${monthsRemaining !== 1 ? 's' : ''}`,
+                action: 'Submit your Express Entry profile soon, or book a new test to avoid delays in your application.'
+            });
+        }
     }
+
+    // ECA warning
     if (answers.eca_status === 'no' && answers.education_country === 'foreign') {
         warnings.push({ type: 'urgent', issue: 'No ECA completed', action: 'Educational Credential Assessment is REQUIRED. Apply to WES, IQAS, or other designated organization.' });
     }
-    if (answers.criminal_history !== 'no') {
-        warnings.push({ type: 'concern', issue: 'Criminal history may affect admissibility', action: 'Consult an immigration lawyer. You may need a Rehabilitation application or Criminal Record Suspension.' });
+
+    // Criminal history with specific details
+    if (answers.criminal_history && answers.criminal_history !== 'no') {
+        let criminalAction = 'Consult an immigration lawyer.';
+        if (answers.criminal_severity === 'minor') {
+            criminalAction = 'Minor offenses may require a Rehabilitation application if >5 years have passed, or Criminal Record Suspension.';
+        } else if (answers.criminal_severity === 'serious') {
+            criminalAction = 'Serious offenses may make you inadmissible. You may need to apply for Criminal Rehabilitation (min 5 years since completion of sentence).';
+        } else if (answers.criminal_severity === 'dui') {
+            criminalAction = 'DUI is considered a serious offense in Canada. You may need a Temporary Resident Permit or Criminal Rehabilitation.';
+        }
+        warnings.push({ type: 'concern', issue: 'Criminal history may affect admissibility', action: criminalAction });
     }
-    if (answers.previous_refusal !== 'no') {
-        warnings.push({ type: 'concern', issue: 'Previous visa refusal on record', action: 'Address refusal reasons in your new application. Consider hiring a licensed RCIC.' });
+
+    // Previous refusals with details
+    if (answers.previous_refusal && answers.previous_refusal !== 'no') {
+        let refusalAction = 'Address refusal reasons in your new application. Consider hiring a licensed RCIC.';
+        if (answers.refusal_type === 'study_permit') {
+            refusalAction = 'Study permit refusal usually cites insufficient ties to home country or inadequate finances. Strengthen these areas in your new application.';
+        } else if (answers.refusal_type === 'work_permit') {
+            refusalAction = 'Work permit refusals may be due to LMIA issues or job offer concerns. Ensure your employer follows proper procedures.';
+        } else if (answers.refusal_type === 'visitor_visa') {
+            refusalAction = 'Visitor visa refusals are common. Focus on proving strong ties to home country and sufficient funds for return.';
+        } else if (answers.refusal_type === 'pr') {
+            refusalAction = 'PR refusals are serious. Review your GCMS notes and address specific concerns with professional help.';
+        }
+
+        if (answers.refusal_recency === 'recent') {
+            refusalAction += ' Recent refusals (within 6 months) may require waiting or significant profile changes.';
+        }
+
+        if (answers.other_country_refusal === 'yes') {
+            refusalAction += ' Refusals from US, UK, Australia, or Schengen may be shared and could affect your Canadian application.';
+        }
+
+        warnings.push({ type: 'concern', issue: `Previous ${answers.refusal_type?.replace('_', ' ') || 'visa'} refusal on record`, action: refusalAction });
     }
+
+    // Medical issues
+    if (answers.medical_issues && answers.medical_issues !== 'no') {
+        warnings.push({
+            type: 'concern',
+            issue: 'Medical conditions may affect admissibility',
+            action: 'Conditions requiring excessive healthcare costs (>$24,057/year) may cause medical inadmissibility. Consult an immigration medical practitioner.'
+        });
+    }
+
+    // Occupation TEER level
     if (answers.occupation_teer >= 4) {
         warnings.push({ type: 'info', issue: 'Your occupation (TEER 4/5) is NOT eligible for Express Entry', action: 'See Career Transition recommendations below, or consider Study → Work permit pathway.' });
+    }
+
+    // Settlement funds warning
+    if (answers.settlement_funds === 'difficult' || answers.funds_source === 'loans') {
+        warnings.push({
+            type: 'info',
+            issue: 'Settlement funds may be insufficient',
+            action: 'You need proof of funds (single: ~$14,690 CAD, family of 4: ~$27,315 CAD). Loans are NOT accepted as proof of funds.'
+        });
+    }
+
+    // Documents not ready warning
+    const docsReady = answers.documents_ready || [];
+    const criticalDocs = ['passport', 'eca', 'language_test'];
+    const missingCritical = criticalDocs.filter(doc => !docsReady.includes(doc));
+    if (missingCritical.length > 0 && answers.english_test && answers.english_test !== 'none') {
+        const docNames = {
+            passport: 'Valid passport',
+            eca: 'ECA report',
+            language_test: 'Language test results'
+        };
+        warnings.push({
+            type: 'info',
+            issue: 'Critical documents not ready',
+            action: `Missing: ${missingCritical.map(d => docNames[d]).join(', ')}. Ensure these are ready before creating your Express Entry profile.`
+        });
     }
 
     if (warnings.length === 0) {

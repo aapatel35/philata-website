@@ -1397,6 +1397,22 @@
                         <i class="bi bi-currency-dollar"></i>
                         <span>Cost Calculator</span>
                     </a>
+                    <a href="/tools/lico-calculator" class="nav-item {% if '/tools/lico-calculator' in request.path %}active{% endif %}">
+                        <i class="bi bi-piggy-bank"></i>
+                        <span>LICO Calculator</span>
+                    </a>
+                    <a href="/tools/physical-presence-calculator" class="nav-item {% if '/tools/physical-presence-calculator' in request.path %}active{% endif %}">
+                        <i class="bi bi-calendar-check"></i>
+                        <span>Physical Presence</span>
+                    </a>
+                    <a href="/tools/student-solvency" class="nav-item {% if '/tools/student-solvency' in request.path %}active{% endif %}">
+                        <i class="bi bi-mortarboard"></i>
+                        <span>Student Solvency</span>
+                    </a>
+                    <a href="/tools/dli-search" class="nav-item {% if '/tools/dli-search' in request.path %}active{% endif %}">
+                        <i class="bi bi-building"></i>
+                        <span>DLI Search</span>
+                    </a>
                     <a href="/tools/cost-of-living" class="nav-item {% if '/tools/cost-of-living' in request.path %}active{% endif %}">
                         <i class="bi bi-geo-alt"></i>
                         <span>Cost of Living</span>
@@ -1574,6 +1590,290 @@
         }, { threshold: 0.5 });
 
         document.querySelectorAll('[data-counter]').forEach(el => counterObserver.observe(el));
+    </script>
+
+    <!-- Email Capture Popup Modal -->
+    <div id="emailCaptureModal" class="email-modal" style="display: none;">
+        <div class="email-modal-overlay" onclick="closeEmailModal()"></div>
+        <div class="email-modal-content">
+            <button class="email-modal-close" onclick="closeEmailModal()">
+                <i class="bi bi-x-lg"></i>
+            </button>
+            <div class="email-modal-icon">
+                <i class="bi bi-envelope-paper"></i>
+            </div>
+            <h3 class="email-modal-title">Save Your Results</h3>
+            <p class="email-modal-subtitle" id="emailModalSubtitle">Get your personalized results sent directly to your inbox</p>
+
+            <form id="emailCaptureForm" onsubmit="submitEmailCapture(event)">
+                <div class="email-form-group">
+                    <input type="email" id="captureEmail" name="email" placeholder="Enter your email address" required>
+                </div>
+                <div class="email-form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" id="subscribeNews" checked>
+                        <span>Send me Express Entry draw updates & immigration news</span>
+                    </label>
+                </div>
+                <button type="submit" class="email-submit-btn">
+                    <i class="bi bi-send"></i> Send My Results
+                </button>
+            </form>
+
+            <p class="email-privacy-note">
+                <i class="bi bi-shield-check"></i> We respect your privacy. Unsubscribe anytime.
+            </p>
+        </div>
+    </div>
+
+    <style>
+        /* Email Capture Modal Styles */
+        .email-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .email-modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+        }
+
+        .email-modal-content {
+            position: relative;
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .email-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: #f4f4f5;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #71717a;
+            transition: all 0.2s;
+        }
+
+        .email-modal-close:hover {
+            background: #e4e4e7;
+            color: #18181b;
+        }
+
+        .email-modal-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #1E3A5F 0%, #0891B2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .email-modal-icon i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .email-modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #18181b;
+            margin-bottom: 0.5rem;
+        }
+
+        .email-modal-subtitle {
+            color: #71717a;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .email-form-group {
+            margin-bottom: 1rem;
+        }
+
+        .email-form-group input[type="email"] {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e4e4e7;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .email-form-group input[type="email"]:focus {
+            outline: none;
+            border-color: #0891B2;
+            box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1);
+        }
+
+        .email-form-group.checkbox-group {
+            text-align: left;
+        }
+
+        .email-form-group.checkbox-group label {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: #52525b;
+            cursor: pointer;
+        }
+
+        .email-form-group.checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            accent-color: #0891B2;
+        }
+
+        .email-submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #1E3A5F 0%, #0891B2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .email-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(30, 58, 95, 0.3);
+        }
+
+        .email-submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .email-privacy-note {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #a1a1aa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .email-success-message {
+            padding: 1rem;
+            background: #ecfdf5;
+            border-radius: 12px;
+            color: #047857;
+            font-weight: 500;
+        }
+    </style>
+
+    <script>
+        // Email Capture Modal Functions
+        var pendingEmailData = null;
+
+        function showEmailModal(toolName, resultData) {
+            pendingEmailData = { tool: toolName, data: resultData };
+            var modal = document.getElementById('emailCaptureModal');
+            var subtitle = document.getElementById('emailModalSubtitle');
+
+            // Customize message based on tool
+            var messages = {
+                'crs': 'Get your CRS score breakdown and improvement tips sent to your email',
+                'pnp': 'Receive your provincial eligibility results and recommendations',
+                'eligibility': 'Get your complete pathway analysis delivered to your inbox',
+                'default': 'Get your personalized results sent directly to your inbox'
+            };
+
+            subtitle.textContent = messages[toolName] || messages['default'];
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+
+            // Pre-fill email if user is logged in
+            {% if current_user.is_authenticated %}
+            document.getElementById('captureEmail').value = '{{ current_user.email }}';
+            {% endif %}
+        }
+
+        function closeEmailModal() {
+            var modal = document.getElementById('emailCaptureModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+            pendingEmailData = null;
+        }
+
+        function submitEmailCapture(event) {
+            event.preventDefault();
+            var email = document.getElementById('captureEmail').value;
+            var subscribe = document.getElementById('subscribeNews').checked;
+            var btn = event.target.querySelector('button[type="submit"]');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Sending...';
+
+            // Send to backend
+            fetch('/api/capture-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: email,
+                    subscribe_news: subscribe,
+                    tool: pendingEmailData ? pendingEmailData.tool : 'unknown',
+                    data: pendingEmailData ? pendingEmailData.data : {}
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Show success
+                var form = document.getElementById('emailCaptureForm');
+                form.innerHTML = '<div class="email-success-message"><i class="bi bi-check-circle"></i> Results sent! Check your inbox.</div>';
+
+                setTimeout(closeEmailModal, 2000);
+            })
+            .catch(err => {
+                // Still show success (we'll capture email even if send fails)
+                var form = document.getElementById('emailCaptureForm');
+                form.innerHTML = '<div class="email-success-message"><i class="bi bi-check-circle"></i> Thank you! We\'ll be in touch.</div>';
+                setTimeout(closeEmailModal, 2000);
+            });
+        }
     </script>
 
     <!-- Development Disclaimer Modal -->
