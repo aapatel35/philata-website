@@ -443,13 +443,13 @@ const QUESTIONS = [
     { id: 'job_noc_teer', category: 'Job Offer', step: 6,
       question: 'What NOC TEER level is the job offer?',
       condition: ans => ans.job_offer === 'yes',
-      helpText: 'Not sure? <a href="/tools/noc-finder" target="_blank">Use our NOC Finder</a> to find your job\'s TEER level',
+      helpText: 'Note: Job offer CRS points were removed in March 2025. Job offers still help with FSW/FST eligibility and PNP applications. <a href="/tools/noc-finder" target="_blank">Use NOC Finder</a>',
       options: [
-        { value: '0', label: 'TEER 0 - Senior Management', desc: '+200 CRS points' },
-        { value: '1', label: 'TEER 1 - Professional', desc: '+50 CRS points' },
-        { value: '2', label: 'TEER 2 - Technical', desc: '+50 CRS points' },
-        { value: '3', label: 'TEER 3 - Skilled Trades', desc: '+50 CRS points' },
-        { value: '4_5', label: 'TEER 4 or 5', desc: 'No CRS points for job offer' },
+        { value: '0', label: 'TEER 0 - Senior Management', desc: 'Executive/senior roles' },
+        { value: '1', label: 'TEER 1 - Professional', desc: 'University degree required' },
+        { value: '2', label: 'TEER 2 - Technical', desc: 'College diploma/apprenticeship' },
+        { value: '3', label: 'TEER 3 - Skilled Trades', desc: 'Secondary school + training' },
+        { value: '4_5', label: 'TEER 4 or 5', desc: 'On-the-job training' },
         { value: 'not_sure', label: 'Not sure', desc: 'Use NOC Finder to check' }
       ]
     },
@@ -530,7 +530,7 @@ const QUESTIONS = [
     },
     { id: 'settlement_funds', category: 'Family & Financial', step: 7,
       question: 'Do you have proof of settlement funds?',
-      helpText: 'Single: ~$14,690 CAD | Family of 4: ~$27,315 CAD',
+      helpText: 'Single: ~$15,263 CAD | Family of 4: ~$28,370 CAD (Updated July 2025). Not required for CEC or if you have valid Canadian job offer.',
       options: [
         { value: 'yes', label: 'Yes, I meet the requirement' },
         { value: 'exceed', label: 'Yes, I exceed the requirement' },

@@ -479,10 +479,10 @@ function calculateCRS() {
     if (answers.french_level === 'nclc7_plus') score += 50;
     else if (answers.french_level === 'nclc5_6') score += 25;
 
-    // Job offer bonus
-    if (answers.job_offer === 'yes' && (answers.job_lmia === 'lmia_approved' || answers.job_lmia === 'lmia_exempt')) {
-        score += answers.job_noc_teer === '0' ? 200 : 50;
-    }
+    // NOTE: Job offer points were REMOVED from CRS as of March 25, 2025
+    // Job offers no longer add 50-200 CRS points (previously: TEER 0 = 200pts, others = 50pts)
+    // Source: https://www.canada.ca/en/immigration-refugees-citizenship/news/2024/12/canada-removes-arranged-employment-points-from-express-entry.html
+    // Job offers still count for program eligibility (FSW/FST) but NOT for CRS ranking
 
     return Math.min(score, 1200);
 }
@@ -1299,12 +1299,14 @@ function renderImprovements(currentScore) {
         improvements.push({ action: 'Learn French to NCLC 7', details: '6-12 months study', gain: '+50 CRS + French draws' });
     }
     if (answers.canadian_experience === 'none') {
-        improvements.push({ action: 'Get 1 year Canadian work experience', details: 'PGWP, LMIA, or IEC', gain: '+40 CRS' });
+        improvements.push({ action: 'Get 1 year Canadian work experience', details: 'PGWP, LMIA work permit, or IEC', gain: '+40-80 CRS' });
     }
+    // Note: Job offer points were removed March 2025, but job offers still help with:
+    // - FSW/FST eligibility, PNP applications, and getting work permits
     if (answers.job_offer !== 'yes') {
-        improvements.push({ action: 'Obtain LMIA-supported job offer', details: 'Apply to Canadian employers', gain: '+50-200 CRS' });
+        improvements.push({ action: 'Obtain a job offer', details: 'Helps with PNP streams (no CRS points since Mar 2025)', gain: 'PNP eligibility' });
     }
-    improvements.push({ action: 'Provincial Nomination', details: 'Apply to PNP programs', gain: '+600 CRS' });
+    improvements.push({ action: 'Provincial Nomination (PNP)', details: 'Apply to provincial programs - guaranteed ITA', gain: '+600 CRS' });
 
     container.innerHTML = improvements.slice(0, 5).map(imp => `
         <div class="improvement-card">
@@ -1730,18 +1732,19 @@ function renderCostCalculator() {
     const hasSpouse = answers.spouse_coming === 'yes';
     const dependents = parseInt(answers.dependents_count) || 0;
 
-    // Government fees (2025 rates)
+    // Government fees (2025-2026 rates - Updated Jan 2026)
+    // Source: https://ircc.canada.ca/english/information/fees/fees.asp
     const fees = {
-        application: 850,
-        rightOfPR: 515,
-        biometrics: 85,
-        spouseApplication: hasSpouse ? 850 : 0,
-        spouseRightOfPR: hasSpouse ? 515 : 0,
-        dependentApplication: dependents * 230,
-        dependentRightOfPR: dependents * 515,
-        medical: hasSpouse ? 450 : 250,
-        policeCheck: 50,
-        eca: answers.education_country === 'foreign' && answers.eca_status !== 'yes' ? 250 : 0,
+        application: 950,           // Principal applicant processing fee
+        rightOfPR: 575,             // Right of Permanent Residence fee
+        biometrics: 85,             // Per person ($170 max for family)
+        spouseApplication: hasSpouse ? 950 : 0,
+        spouseRightOfPR: hasSpouse ? 575 : 0,
+        dependentApplication: dependents * 260,  // Child processing fee (no RPRF)
+        dependentRightOfPR: 0,      // No RPRF for dependent children
+        medical: hasSpouse ? 450 : 250,  // Varies by country/clinic
+        policeCheck: 75,            // Varies by country
+        eca: answers.education_country === 'foreign' && answers.eca_status !== 'yes' ? 300 : 0,
         languageTest: answers.english_test === 'none' ? 350 : 0
     };
 
@@ -1907,9 +1910,9 @@ function renderAllPathways() {
             name: 'Express Entry',
             icon: 'lightning',
             programs: [
-                { name: 'Federal Skilled Worker (FSW)', eligible: clb >= 7 && forExp >= 1, desc: 'CLB 7+, 1yr foreign exp' },
-                { name: 'Canadian Experience Class (CEC)', eligible: clb >= 5 && canExp >= 1, desc: 'CLB 5+, 1yr Canadian exp' },
-                { name: 'Federal Skilled Trades (FST)', eligible: clb >= 5 && answers.trade_cert !== 'no', desc: 'CLB 5+, trade certificate' },
+                { name: 'Federal Skilled Worker (FSW)', eligible: clb >= 7 && forExp >= 1, desc: 'CLB 7+, 1yr foreign skilled work' },
+                { name: 'Canadian Experience Class (CEC)', eligible: canExp >= 1 && ((selectedNOC.teer <= 1 && clb >= 7) || (selectedNOC.teer >= 2 && clb >= 5) || clb >= 7), desc: 'CLB 7 (TEER 0-1) or CLB 5 (TEER 2-3)' },
+                { name: 'Federal Skilled Trades (FST)', eligible: clb >= 5 && answers.trade_cert !== 'no', desc: 'CLB 5+, Red Seal/trade cert' },
             ]
         },
         pnp: {
