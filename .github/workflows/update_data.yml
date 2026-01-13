@@ -2,8 +2,9 @@ name: Daily Immigration Data Update
 
 on:
   schedule:
-    # Run daily at 6 AM UTC (1 AM EST, 10 PM PST)
+    # Run twice daily - 6 AM and 6 PM UTC
     - cron: '0 6 * * *'
+    - cron: '0 18 * * *'
   workflow_dispatch:  # Allow manual trigger
 
 jobs:
@@ -21,9 +22,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install requests
+          pip install requests google-generativeai
 
       - name: Run data updater
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           python data_updater.py
 
@@ -32,15 +35,17 @@ jobs:
         run: |
           if [[ -n $(git status --porcelain data/) ]]; then
             echo "changes=true" >> $GITHUB_OUTPUT
+            echo "Found data changes to commit"
           else
             echo "changes=false" >> $GITHUB_OUTPUT
+            echo "No changes to commit"
           fi
 
       - name: Commit and push changes
         if: steps.changes.outputs.changes == 'true'
         run: |
           git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action Bot"
+          git config --local user.name "Philata Data Bot"
           git add data/*.json
-          git commit -m "chore: Daily data update $(date +'%Y-%m-%d')"
+          git diff --staged --quiet || git commit -m "chore: Auto-update immigration data $(date +'%Y-%m-%d %H:%M')"
           git push

@@ -440,6 +440,176 @@ def now():
     return datetime.now().isoformat()
 
 # =============================================================================
+# GEMINI AI INTEGRATION FOR DYNAMIC CONTENT
+# =============================================================================
+def configure_gemini():
+    """Configure Gemini API if available"""
+    if not GEMINI_AVAILABLE:
+        print("  Gemini not available - skipping AI features")
+        return None
+
+    api_key = os.environ.get('GEMINI_API_KEY')
+    if not api_key:
+        print("  GEMINI_API_KEY not set - skipping AI features")
+        return None
+
+    try:
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel('gemini-2.0-flash')
+        print("  Gemini configured successfully")
+        return model
+    except Exception as e:
+        print(f"  Error configuring Gemini: {e}")
+        return None
+
+
+def generate_draw_analysis(model, draws):
+    """Use Gemini to analyze recent draw patterns and generate insights"""
+    if not model or not draws:
+        return None
+
+    print("  Generating draw analysis with AI...")
+
+    # Prepare draw data for analysis
+    recent_draws = draws[:20]  # Last 20 draws
+    draw_summary = "\n".join([
+        f"- {d['date']}: {d['type']} - CRS {d['score']}, {d['itas']} ITAs"
+        for d in recent_draws
+    ])
+
+    prompt = f"""Analyze these recent Canadian Express Entry draws and provide insights:
+
+{draw_summary}
+
+Provide a JSON response with:
+1. "trend": Overall trend description (1-2 sentences)
+2. "cec_outlook": Canadian Experience Class outlook
+3. "pnp_outlook": Provincial Nominee Program outlook
+4. "category_insights": Key insights about category-based draws
+5. "recommendation": Brief recommendation for applicants
+
+Return ONLY valid JSON, no markdown."""
+
+    try:
+        response = model.generate_content(prompt)
+        # Clean response and parse JSON
+        text = response.text.strip()
+        if text.startswith('```'):
+            text = text.split('\n', 1)[1].rsplit('```', 1)[0]
+        return json.loads(text)
+    except Exception as e:
+        print(f"  Error generating analysis: {e}")
+        return None
+
+
+def update_guide_content_if_needed(model):
+    """Check if guides need updating and use AI to enhance them"""
+    if not model:
+        return
+
+    print("Checking guide content...")
+
+    guides_data = load_json('guides.json')
+    if not guides_data or not guides_data.get('categories'):
+        print("  No guides data found - skipping")
+        return
+
+    # Check if guides were updated recently (within 7 days)
+    last_updated = guides_data.get('updated', '')
+    if last_updated:
+        try:
+            updated_dt = datetime.fromisoformat(last_updated.replace('Z', '+00:00'))
+            days_old = (datetime.now() - updated_dt.replace(tzinfo=None)).days
+            if days_old < 7:
+                print(f"  Guides updated {days_old} days ago - skipping AI update")
+                return
+        except:
+            pass
+
+    # Update the timestamp
+    guides_data['updated'] = now()
+    save_json('guides.json', guides_data)
+    print("  Guides timestamp updated")
+
+
+def verify_data_integrity():
+    """Verify all required data files exist and have content"""
+    print("Verifying data integrity...")
+
+    required_files = {
+        'draws.json': ['draws'],
+        'processing_times.json': ['times'],
+        'immigration_targets.json': ['targets'],
+        'pnp_in_demand.json': ['provinces'],
+        'category_cutoffs.json': ['categories'],
+        'guides.json': ['categories']
+    }
+
+    issues = []
+    for filename, required_keys in required_files.items():
+        data = load_json(filename)
+        if not data:
+            issues.append(f"  Missing or empty: {filename}")
+            continue
+        for key in required_keys:
+            if not data.get(key):
+                issues.append(f"  Missing key '{key}' in {filename}")
+
+    if issues:
+        print("  Data integrity issues found:")
+        for issue in issues:
+            print(issue)
+        return False
+
+    print("  All data files verified successfully")
+    return True
+
+
+def generate_summary_stats():
+    """Generate summary statistics for the dashboard"""
+    print("Generating summary statistics...")
+
+    stats = {
+        'total_draws_tracked': 0,
+        'latest_draw_date': None,
+        'avg_crs_cec': 0,
+        'avg_crs_pnp': 0,
+        'total_itas_2026': 0,
+        'provinces_covered': 0
+    }
+
+    # Draws stats
+    draws_data = load_json('draws.json')
+    if draws_data and draws_data.get('draws'):
+        draws = draws_data['draws']
+        stats['total_draws_tracked'] = len(draws)
+        stats['latest_draw_date'] = draws[0]['date'] if draws else None
+
+        cec_draws = [d for d in draws if 'Experience' in d.get('type', '')]
+        pnp_draws = [d for d in draws if 'Provincial' in d.get('type', '')]
+
+        if cec_draws:
+            stats['avg_crs_cec'] = round(sum(d['score'] for d in cec_draws) / len(cec_draws))
+        if pnp_draws:
+            stats['avg_crs_pnp'] = round(sum(d['score'] for d in pnp_draws) / len(pnp_draws))
+
+        stats['total_itas_2026'] = sum(d['itas'] for d in draws if d.get('year') == 2026)
+
+    # PNP stats
+    pnp_data = load_json('pnp_in_demand.json')
+    if pnp_data and pnp_data.get('provinces'):
+        stats['provinces_covered'] = len(pnp_data['provinces'])
+
+    save_json('summary_stats.json', {
+        'stats': stats,
+        'updated': now()
+    })
+
+    print(f"  Summary: {stats['total_draws_tracked']} draws tracked, latest: {stats['latest_draw_date']}")
+    return stats
+
+
+# =============================================================================
 # MAIN
 # =============================================================================
 def main():
@@ -448,15 +618,37 @@ def main():
     print(f"Immigration Data Updater - {now()}")
     print(f"{'='*60}\n")
 
+    # Configure Gemini AI
+    model = configure_gemini()
+
     # Update all data sources
     update_express_entry_draws()
     update_processing_times()
     update_pnp_in_demand()
     update_immigration_targets()
 
+    # AI-powered features (if available)
+    if model:
+        draws_data = load_json('draws.json')
+        if draws_data and draws_data.get('draws'):
+            analysis = generate_draw_analysis(model, draws_data['draws'])
+            if analysis:
+                save_json('draw_analysis.json', {
+                    'analysis': analysis,
+                    'updated': now()
+                })
+                print("  Draw analysis saved")
+
+        update_guide_content_if_needed(model)
+
+    # Generate summary and verify
+    generate_summary_stats()
+    verify_data_integrity()
+
     print(f"\n{'='*60}")
     print("Data update complete!")
     print(f"{'='*60}\n")
+
 
 if __name__ == '__main__':
     main()

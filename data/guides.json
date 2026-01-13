@@ -1,1 +1,718 @@
-{"categories": {}}
+{
+  "categories": {
+    "express_entry": {
+      "id": "express-entry",
+      "title": "Express Entry",
+      "description": "Canada's fastest pathway to permanent residence for skilled workers. Learn about CRS scoring, draw patterns, and application strategies.",
+      "icon": "bi-lightning-charge",
+      "color": "#22C55E",
+      "guides": [
+        {
+          "id": "overview",
+          "title": "Express Entry Complete Guide",
+          "subtitle": "Everything you need to know about Canada's flagship immigration system",
+          "icon": "🚀",
+          "difficulty": "Beginner",
+          "reading_time": "15 min read",
+          "overview": "Express Entry is Canada's premier immigration system for skilled workers, managing applications for three federal economic immigration programs. Since 2015, it has become the fastest pathway to Canadian permanent residence, with processing times of 6 months or less.",
+          "sections": [
+            {
+              "title": "What is Express Entry?",
+              "content": "Express Entry is an online system that manages applications for permanent residence under three federal economic immigration programs: Federal Skilled Worker (FSW), Federal Skilled Trades (FST), and Canadian Experience Class (CEC). Candidates create profiles, receive Comprehensive Ranking System (CRS) scores, and are ranked against each other in the Express Entry pool."
+            },
+            {
+              "title": "How It Works",
+              "content": "1. Check your eligibility for one or more Express Entry programs\n2. Gather required documents (ECA, language tests, work experience letters)\n3. Create your Express Entry profile\n4. Receive your CRS score and enter the pool\n5. Receive an Invitation to Apply (ITA) if your score is above the cutoff\n6. Submit your complete application within 60 days\n7. Receive your PR decision (typically within 6 months)"
+            },
+            {
+              "title": "CRS Score Factors",
+              "content": "Your CRS score is calculated based on: Age (max 110 points), Education (max 150 points), Language proficiency (max 160 points), Canadian work experience (max 80 points), Spouse factors (if applicable), Transferability factors, and Additional points for provincial nomination (+600), job offer (+50-200), Canadian education (+15-30), or French proficiency (+25-50)."
+            }
+          ]
+        },
+        {
+          "id": "crs-scoring",
+          "title": "CRS Scoring Deep Dive",
+          "subtitle": "Understand exactly how your CRS score is calculated",
+          "icon": "📊",
+          "difficulty": "Intermediate",
+          "reading_time": "12 min read",
+          "overview": "The Comprehensive Ranking System (CRS) is the points-based system used to rank Express Entry candidates. Understanding how each factor contributes to your score is essential for maximizing your chances of receiving an ITA."
+        },
+        {
+          "id": "improve-score",
+          "title": "How to Improve Your CRS Score",
+          "subtitle": "Proven strategies to boost your score and get an ITA faster",
+          "icon": "📈",
+          "difficulty": "Intermediate",
+          "reading_time": "10 min read",
+          "overview": "If your CRS score is below recent draw cutoffs, there are several proven strategies to improve your ranking. From retaking language tests to gaining Canadian experience, learn the most effective ways to increase your score."
+        },
+        {
+          "id": "category-draws",
+          "title": "Category-Based Draws Explained",
+          "subtitle": "Healthcare, STEM, French, and Trade occupation draws",
+          "icon": "🎯",
+          "difficulty": "Intermediate",
+          "reading_time": "8 min read",
+          "overview": "Since 2023, IRCC has been conducting category-based draws targeting specific occupations and skills. These draws often have significantly lower CRS cutoffs than general draws, making them an excellent opportunity for eligible candidates."
+        }
+      ]
+    },
+    "provincial_programs": {
+      "id": "pnp",
+      "title": "Provincial Nominee Programs",
+      "description": "Explore immigration streams from all 13 Canadian provinces and territories. A provincial nomination adds 600 CRS points to your Express Entry score.",
+      "icon": "bi-geo-alt",
+      "color": "#6366F1",
+      "provinces": [
+        {
+          "id": "ontario",
+          "name": "Ontario",
+          "code": "ON",
+          "program_name": "Ontario Immigrant Nominee Program (OINP)",
+          "capital": "Toronto",
+          "population": "15.8 million",
+          "description": "Canada's largest province with a diverse economy and the most Express Entry-aligned PNP streams.",
+          "streams": [
+            {
+              "name": "Human Capital Priorities",
+              "type": "Express Entry",
+              "description": "For candidates with Express Entry profiles in in-demand occupations"
+            },
+            {
+              "name": "Skilled Trades",
+              "type": "Express Entry",
+              "description": "For skilled tradespeople with Ontario job offers or work experience"
+            },
+            {
+              "name": "French-Speaking Skilled Worker",
+              "type": "Express Entry",
+              "description": "For French-speaking candidates with strong English proficiency"
+            },
+            {
+              "name": "Tech Draw",
+              "type": "Express Entry",
+              "description": "Periodic draws targeting tech occupations"
+            },
+            {
+              "name": "Employer Job Offer",
+              "type": "Non-Express Entry",
+              "description": "For candidates with valid job offers from Ontario employers"
+            },
+            {
+              "name": "Masters Graduate",
+              "type": "Non-Express Entry",
+              "description": "For graduates of Ontario master's programs"
+            },
+            {
+              "name": "PhD Graduate",
+              "type": "Non-Express Entry",
+              "description": "For graduates of Ontario PhD programs"
+            }
+          ]
+        },
+        {
+          "id": "british-columbia",
+          "name": "British Columbia",
+          "code": "BC",
+          "program_name": "BC Provincial Nominee Program (BC PNP)",
+          "capital": "Victoria",
+          "population": "5.4 million",
+          "description": "Home to Canada's tech hub in Vancouver with dedicated streams for tech workers.",
+          "streams": [
+            {
+              "name": "BC PNP Tech",
+              "type": "Express Entry",
+              "description": "Priority processing for 29 in-demand tech occupations"
+            },
+            {
+              "name": "Skilled Worker",
+              "type": "Express Entry/Direct",
+              "description": "For skilled workers with BC job offers"
+            },
+            {
+              "name": "Healthcare Professional",
+              "type": "Direct",
+              "description": "For doctors, nurses, and allied health professionals"
+            },
+            {
+              "name": "International Graduate",
+              "type": "Express Entry/Direct",
+              "description": "For recent graduates from Canadian post-secondary institutions"
+            },
+            {
+              "name": "Entry Level and Semi-Skilled",
+              "type": "Direct",
+              "description": "For workers in tourism, hospitality, and food processing in specific regions"
+            }
+          ]
+        },
+        {
+          "id": "alberta",
+          "name": "Alberta",
+          "code": "AB",
+          "program_name": "Alberta Advantage Immigration Program (AAIP)",
+          "capital": "Edmonton",
+          "population": "4.6 million",
+          "description": "Strong economy driven by energy, agriculture, and a growing tech sector.",
+          "streams": [
+            {
+              "name": "Alberta Express Entry",
+              "type": "Express Entry",
+              "description": "For Express Entry candidates with ties to Alberta"
+            },
+            {
+              "name": "Alberta Opportunity Stream",
+              "type": "Non-Express Entry",
+              "description": "For foreign workers already employed in Alberta"
+            },
+            {
+              "name": "Rural Renewal Stream",
+              "type": "Non-Express Entry",
+              "description": "For workers in rural Alberta communities"
+            },
+            {
+              "name": "Tourism and Hospitality Stream",
+              "type": "Non-Express Entry",
+              "description": "For workers in Alberta's tourism sector"
+            }
+          ]
+        },
+        {
+          "id": "saskatchewan",
+          "name": "Saskatchewan",
+          "code": "SK",
+          "program_name": "Saskatchewan Immigrant Nominee Program (SINP)",
+          "capital": "Regina",
+          "population": "1.2 million",
+          "description": "Agriculture and resource-based economy with strong demand for skilled workers.",
+          "streams": [
+            {
+              "name": "International Skilled Worker",
+              "type": "Express Entry/Direct",
+              "description": "For skilled workers with occupation on in-demand list"
+            },
+            {
+              "name": "Saskatchewan Experience",
+              "type": "Non-Express Entry",
+              "description": "For foreign workers with Saskatchewan work experience"
+            },
+            {
+              "name": "Entrepreneur",
+              "type": "Business",
+              "description": "For entrepreneurs wanting to start or buy a business in SK"
+            }
+          ]
+        },
+        {
+          "id": "manitoba",
+          "name": "Manitoba",
+          "code": "MB",
+          "program_name": "Manitoba Provincial Nominee Program (MPNP)",
+          "capital": "Winnipeg",
+          "population": "1.4 million",
+          "description": "Diverse economy with strong settlement support and community connections.",
+          "streams": [
+            {
+              "name": "Skilled Worker in Manitoba",
+              "type": "Non-Express Entry",
+              "description": "For workers with ongoing employment in Manitoba"
+            },
+            {
+              "name": "Skilled Worker Overseas",
+              "type": "Non-Express Entry",
+              "description": "For overseas workers with strong Manitoba connections"
+            },
+            {
+              "name": "International Education Stream",
+              "type": "Non-Express Entry",
+              "description": "For graduates of Manitoba post-secondary institutions"
+            }
+          ]
+        },
+        {
+          "id": "nova-scotia",
+          "name": "Nova Scotia",
+          "code": "NS",
+          "program_name": "Nova Scotia Nominee Program (NSNP)",
+          "capital": "Halifax",
+          "population": "1.0 million",
+          "description": "Atlantic province with growing tech and healthcare sectors.",
+          "streams": [
+            {
+              "name": "Labour Market Priorities",
+              "type": "Express Entry",
+              "description": "For Express Entry candidates with in-demand skills"
+            },
+            {
+              "name": "Skilled Worker",
+              "type": "Non-Express Entry",
+              "description": "For workers with Nova Scotia job offers"
+            },
+            {
+              "name": "Physician Stream",
+              "type": "Non-Express Entry",
+              "description": "For doctors with job offers from NS health authorities"
+            }
+          ]
+        },
+        {
+          "id": "new-brunswick",
+          "name": "New Brunswick",
+          "code": "NB",
+          "program_name": "New Brunswick Provincial Nominee Program (NBPNP)",
+          "capital": "Fredericton",
+          "population": "820,000",
+          "description": "Bilingual Atlantic province with growing immigration targets.",
+          "streams": [
+            {
+              "name": "Express Entry Labour Market",
+              "type": "Express Entry",
+              "description": "For Express Entry candidates with NB job offers or work experience"
+            },
+            {
+              "name": "Skilled Worker with Employer Support",
+              "type": "Non-Express Entry",
+              "description": "For workers with NB job offers"
+            },
+            {
+              "name": "Post-Graduate Entrepreneurial",
+              "type": "Non-Express Entry",
+              "description": "For NB graduates wanting to start businesses"
+            }
+          ]
+        },
+        {
+          "id": "prince-edward-island",
+          "name": "Prince Edward Island",
+          "code": "PE",
+          "program_name": "PEI Provincial Nominee Program (PEI PNP)",
+          "capital": "Charlottetown",
+          "population": "170,000",
+          "description": "Canada's smallest province with welcoming communities.",
+          "streams": [
+            {
+              "name": "Labour Impact",
+              "type": "Non-Express Entry",
+              "description": "For skilled workers and critical workers with PEI job offers"
+            },
+            {
+              "name": "Express Entry",
+              "type": "Express Entry",
+              "description": "For Express Entry candidates with PEI job offers"
+            }
+          ]
+        },
+        {
+          "id": "newfoundland",
+          "name": "Newfoundland and Labrador",
+          "code": "NL",
+          "program_name": "Newfoundland and Labrador PNP (NLPNP)",
+          "capital": "St. John's",
+          "population": "540,000",
+          "description": "Atlantic province with resource-based economy and growing tech sector.",
+          "streams": [
+            {
+              "name": "Express Entry Skilled Worker",
+              "type": "Express Entry",
+              "description": "For Express Entry candidates with NL job offers"
+            },
+            {
+              "name": "Skilled Worker",
+              "type": "Non-Express Entry",
+              "description": "For skilled workers with NL job offers"
+            },
+            {
+              "name": "International Graduate",
+              "type": "Non-Express Entry",
+              "description": "For graduates from NL post-secondary institutions"
+            }
+          ]
+        },
+        {
+          "id": "yukon",
+          "name": "Yukon",
+          "code": "YT",
+          "program_name": "Yukon Nominee Program (YNP)",
+          "capital": "Whitehorse",
+          "population": "45,000",
+          "description": "Northern territory with unique lifestyle and strong demand for workers.",
+          "streams": [
+            {
+              "name": "Skilled Worker",
+              "type": "Non-Express Entry",
+              "description": "For skilled workers with Yukon job offers"
+            },
+            {
+              "name": "Critical Impact Worker",
+              "type": "Non-Express Entry",
+              "description": "For essential workers in critical sectors"
+            },
+            {
+              "name": "Express Entry",
+              "type": "Express Entry",
+              "description": "For Express Entry candidates with Yukon connections"
+            }
+          ]
+        },
+        {
+          "id": "northwest-territories",
+          "name": "Northwest Territories",
+          "code": "NT",
+          "program_name": "Northwest Territories Nominee Program (NTNP)",
+          "capital": "Yellowknife",
+          "population": "45,000",
+          "description": "Northern territory with resource industry and unique opportunities.",
+          "streams": [
+            {
+              "name": "Employer Driven",
+              "type": "Non-Express Entry",
+              "description": "For workers with NWT job offers"
+            },
+            {
+              "name": "Express Entry",
+              "type": "Express Entry",
+              "description": "For Express Entry candidates with NWT job offers"
+            }
+          ]
+        },
+        {
+          "id": "nunavut",
+          "name": "Nunavut",
+          "code": "NU",
+          "program_name": "No active PNP",
+          "capital": "Iqaluit",
+          "population": "40,000",
+          "description": "Canada's newest and largest territory. Currently does not have an active PNP.",
+          "streams": []
+        }
+      ]
+    },
+    "study_permit": {
+      "id": "study-permit",
+      "title": "Study in Canada",
+      "description": "Complete guides to studying in Canada, from application to post-graduation work permits and pathways to permanent residence.",
+      "icon": "bi-mortarboard",
+      "color": "#10B981",
+      "guides": [
+        {
+          "id": "overview",
+          "title": "Study Permit Application Guide",
+          "subtitle": "Step-by-step guide to applying for your Canadian study permit",
+          "icon": "🎓",
+          "difficulty": "Beginner",
+          "reading_time": "15 min read",
+          "overview": "A study permit allows you to study at a designated learning institution (DLI) in Canada. This comprehensive guide covers eligibility, required documents, application process, and tips for approval."
+        },
+        {
+          "id": "dli-selection",
+          "title": "Choosing the Right DLI",
+          "subtitle": "How to select a Designated Learning Institution",
+          "icon": "🏫",
+          "difficulty": "Beginner",
+          "reading_time": "10 min read",
+          "overview": "Not all Canadian schools qualify you for a study permit or post-graduation work permit. Learn how to verify DLI status and choose programs that support your immigration goals."
+        },
+        {
+          "id": "pgwp",
+          "title": "Post-Graduation Work Permit (PGWP)",
+          "subtitle": "Work in Canada after your studies",
+          "icon": "💼",
+          "difficulty": "Intermediate",
+          "reading_time": "12 min read",
+          "overview": "The PGWP allows you to work in Canada for up to 3 years after graduation. Learn about eligibility requirements, application timing, and how it leads to permanent residence."
+        },
+        {
+          "id": "student-to-pr",
+          "title": "Student to PR Pathway",
+          "subtitle": "Your complete roadmap from student to permanent resident",
+          "icon": "🛤️",
+          "difficulty": "Intermediate",
+          "reading_time": "15 min read",
+          "overview": "The student pathway is one of the most popular routes to Canadian PR. Learn how to maximize your chances by choosing the right program, province, and gaining Canadian experience."
+        },
+        {
+          "id": "sds",
+          "title": "Student Direct Stream (SDS)",
+          "subtitle": "Faster study permit processing for eligible countries",
+          "icon": "⚡",
+          "difficulty": "Beginner",
+          "reading_time": "8 min read",
+          "overview": "The Student Direct Stream offers faster processing (typically 20 days) for applicants from eligible countries who meet specific requirements. Learn if you qualify and how to apply."
+        }
+      ]
+    },
+    "work_permit": {
+      "id": "work-permit",
+      "title": "Work Permits",
+      "description": "Understand the different types of Canadian work permits, from LMIA-based permits to open work permits and LMIA-exempt categories.",
+      "icon": "bi-briefcase",
+      "color": "#F59E0B",
+      "guides": [
+        {
+          "id": "overview",
+          "title": "Work Permit Overview",
+          "subtitle": "Understanding Canadian work permit categories",
+          "icon": "📋",
+          "difficulty": "Beginner",
+          "reading_time": "12 min read",
+          "overview": "Canadian work permits come in many forms: LMIA-based, LMIA-exempt, open, and employer-specific. This guide helps you understand which type applies to your situation."
+        },
+        {
+          "id": "lmia",
+          "title": "LMIA Work Permits",
+          "subtitle": "Employer-sponsored work permits with Labour Market Impact Assessment",
+          "icon": "📄",
+          "difficulty": "Intermediate",
+          "reading_time": "15 min read",
+          "overview": "An LMIA is a document that a Canadian employer may need to obtain before hiring a foreign worker. Learn about the LMIA process, exemptions, and how it affects your work permit."
+        },
+        {
+          "id": "open-work-permit",
+          "title": "Open Work Permits",
+          "subtitle": "Work for any employer in Canada",
+          "icon": "🔓",
+          "difficulty": "Beginner",
+          "reading_time": "10 min read",
+          "overview": "Open work permits allow you to work for any Canadian employer without needing a specific job offer. Learn about eligibility categories including spouse permits, bridging permits, and PGWP."
+        },
+        {
+          "id": "iec",
+          "title": "International Experience Canada (IEC)",
+          "subtitle": "Working Holiday, Young Professionals, and Co-op programs",
+          "icon": "🌎",
+          "difficulty": "Beginner",
+          "reading_time": "10 min read",
+          "overview": "IEC allows young people from partner countries to work and travel in Canada. Learn about the three categories, eligibility requirements, and how to apply."
+        },
+        {
+          "id": "intra-company-transfer",
+          "title": "Intra-Company Transfers (ICT)",
+          "subtitle": "For multinational company employees",
+          "icon": "🏢",
+          "difficulty": "Intermediate",
+          "reading_time": "10 min read",
+          "overview": "ICT work permits allow employees of multinational companies to transfer to Canadian branches. Learn about the eligibility requirements and application process."
+        }
+      ]
+    },
+    "credentials": {
+      "id": "credentials",
+      "title": "Credential Evaluation",
+      "description": "Educational Credential Assessment (ECA) guides for Express Entry and professional licensing in Canada.",
+      "icon": "bi-award",
+      "color": "#8B5CF6",
+      "guides": [
+        {
+          "id": "wes",
+          "title": "WES ECA Guide",
+          "subtitle": "Step-by-step World Education Services credential evaluation",
+          "icon": "📜",
+          "difficulty": "Beginner",
+          "reading_time": "15 min read",
+          "overview": "WES is the most popular credential evaluation service for Express Entry. This guide covers the application process, document requirements, and expected timelines."
+        },
+        {
+          "id": "eca-overview",
+          "title": "ECA Overview",
+          "subtitle": "Understanding Educational Credential Assessments",
+          "icon": "🎓",
+          "difficulty": "Beginner",
+          "reading_time": "10 min read",
+          "overview": "An ECA compares your foreign education to Canadian standards. Learn which organizations are designated by IRCC and how to choose the right one for your situation."
+        },
+        {
+          "id": "professional-licensing",
+          "title": "Professional Licensing in Canada",
+          "subtitle": "Getting your credentials recognized for regulated professions",
+          "icon": "⚕️",
+          "difficulty": "Advanced",
+          "reading_time": "20 min read",
+          "overview": "Many professions in Canada are regulated, requiring additional licensing beyond an ECA. Learn about the process for engineers, nurses, doctors, accountants, and other regulated professions."
+        }
+      ]
+    },
+    "forms": {
+      "id": "forms",
+      "title": "Immigration Forms",
+      "description": "Step-by-step guides for filling out IRCC immigration forms correctly. Avoid common mistakes that lead to application refusals.",
+      "icon": "bi-file-earmark-text",
+      "color": "#EC4899",
+      "guides": [
+        {
+          "id": "imm-0008",
+          "title": "IMM 0008 Generic Application Form",
+          "subtitle": "The main application form for permanent residence",
+          "icon": "📝",
+          "difficulty": "Intermediate",
+          "reading_time": "20 min read",
+          "overview": "IMM 0008 is the generic application form for Canadian permanent residence. This guide covers every section with examples and tips to avoid common mistakes."
+        },
+        {
+          "id": "imm-5669",
+          "title": "IMM 5669 Schedule A",
+          "subtitle": "Background and personal history declaration",
+          "icon": "📋",
+          "difficulty": "Intermediate",
+          "reading_time": "15 min read",
+          "overview": "Schedule A (IMM 5669) is a detailed form about your background, education, employment, and travel history. Learn how to complete it accurately."
+        },
+        {
+          "id": "imm-5406",
+          "title": "IMM 5406 Additional Family Information",
+          "subtitle": "Family information form for immigration applications",
+          "icon": "👨‍👩‍👧",
+          "difficulty": "Beginner",
+          "reading_time": "10 min read",
+          "overview": "IMM 5406 collects information about your family members. Learn who needs to be included and how to complete each section."
+        },
+        {
+          "id": "imm-1294",
+          "title": "IMM 1294 Application for Study Permit",
+          "subtitle": "Study permit application form guide",
+          "icon": "🎓",
+          "difficulty": "Intermediate",
+          "reading_time": "15 min read",
+          "overview": "Complete guide to filling out the study permit application form, including tips for a successful application."
+        },
+        {
+          "id": "imm-1295",
+          "title": "IMM 1295 Application for Work Permit",
+          "subtitle": "Work permit application form guide",
+          "icon": "💼",
+          "difficulty": "Intermediate",
+          "reading_time": "15 min read",
+          "overview": "Step-by-step guide to the work permit application form for both LMIA-based and LMIA-exempt work permits."
+        }
+      ]
+    },
+    "language_tests": {
+      "id": "language-tests",
+      "title": "Language Tests",
+      "description": "Comprehensive guides for IELTS, CELPIP, TEF, and TCF language tests required for Canadian immigration.",
+      "icon": "bi-chat-dots",
+      "color": "#0EA5E9",
+      "guides": [
+        {
+          "id": "ielts",
+          "title": "IELTS General Training Guide",
+          "subtitle": "Prepare for the IELTS test for Canadian immigration",
+          "icon": "📝",
+          "difficulty": "Beginner",
+          "reading_time": "15 min read",
+          "overview": "IELTS General Training is one of the most popular English tests for Canadian immigration. Learn about the test format, scoring, and how it converts to CLB levels."
+        },
+        {
+          "id": "celpip",
+          "title": "CELPIP General Guide",
+          "subtitle": "Canadian English Language Proficiency Index Program",
+          "icon": "🍁",
+          "difficulty": "Beginner",
+          "reading_time": "12 min read",
+          "overview": "CELPIP is a Canadian English test taken entirely on computer. Learn about the test format, advantages, and preparation strategies."
+        },
+        {
+          "id": "pte-core",
+          "title": "PTE Core Guide",
+          "subtitle": "Pearson Test of English for Canadian immigration",
+          "icon": "💻",
+          "difficulty": "Beginner",
+          "reading_time": "10 min read",
+          "overview": "PTE Core is the newest IRCC-approved English test. Learn about its unique computer-based format and rapid results delivery."
+        },
+        {
+          "id": "french-tests",
+          "title": "French Language Tests (TEF/TCF)",
+          "subtitle": "French proficiency tests for Canadian immigration",
+          "icon": "🇫🇷",
+          "difficulty": "Intermediate",
+          "reading_time": "12 min read",
+          "overview": "French proficiency can significantly boost your CRS score. Learn about TEF Canada and TCF Canada tests, scoring, and the benefits of French proficiency."
+        },
+        {
+          "id": "clb-conversion",
+          "title": "CLB Score Conversion Guide",
+          "subtitle": "Convert your test scores to Canadian Language Benchmark levels",
+          "icon": "🔄",
+          "difficulty": "Beginner",
+          "reading_time": "8 min read",
+          "overview": "Canadian immigration uses CLB (Canadian Language Benchmarks) levels. Learn how to convert your IELTS, CELPIP, PTE, or French test scores to CLB/NCLC levels."
+        }
+      ]
+    },
+    "family": {
+      "id": "family",
+      "title": "Family Sponsorship",
+      "description": "Guides for sponsoring family members to Canada, including spouses, parents, grandparents, and dependent children.",
+      "icon": "bi-people",
+      "color": "#F43F5E",
+      "guides": [
+        {
+          "id": "spouse",
+          "title": "Spousal Sponsorship Guide",
+          "subtitle": "Sponsor your spouse or common-law partner for PR",
+          "icon": "💑",
+          "difficulty": "Intermediate",
+          "reading_time": "20 min read",
+          "overview": "Spousal sponsorship allows Canadian citizens and permanent residents to sponsor their spouse, common-law partner, or conjugal partner for permanent residence. Learn about inland vs outland applications."
+        },
+        {
+          "id": "pgp",
+          "title": "Parents and Grandparents Program (PGP)",
+          "subtitle": "Sponsor your parents or grandparents for PR",
+          "icon": "👴👵",
+          "difficulty": "Intermediate",
+          "reading_time": "15 min read",
+          "overview": "The PGP allows Canadian citizens and permanent residents to sponsor their parents and grandparents. Learn about the lottery system, income requirements, and Super Visa alternatives."
+        },
+        {
+          "id": "super-visa",
+          "title": "Super Visa for Parents/Grandparents",
+          "subtitle": "Long-term visitor visa for parents and grandparents",
+          "icon": "✈️",
+          "difficulty": "Beginner",
+          "reading_time": "10 min read",
+          "overview": "The Super Visa allows parents and grandparents to visit Canada for up to 5 years at a time. Learn about requirements and how it differs from regular visitor visas."
+        },
+        {
+          "id": "dependent-children",
+          "title": "Sponsoring Dependent Children",
+          "subtitle": "Including children in your immigration application",
+          "icon": "👶",
+          "difficulty": "Beginner",
+          "reading_time": "10 min read",
+          "overview": "Learn how to include dependent children in your immigration application, age limits, and requirements for adopted children."
+        }
+      ]
+    },
+    "refugees": {
+      "id": "refugees",
+      "title": "Refugees & Protected Persons",
+      "description": "Information about Canada's refugee protection system and pathways for protected persons.",
+      "icon": "bi-shield-check",
+      "color": "#14B8A6",
+      "guides": [
+        {
+          "id": "refugee-claim",
+          "title": "Making a Refugee Claim",
+          "subtitle": "Understanding Canada's refugee protection process",
+          "icon": "🛡️",
+          "difficulty": "Intermediate",
+          "reading_time": "15 min read",
+          "overview": "Canada provides protection to people who fear persecution in their home country. Learn about the refugee claim process, eligibility, and what to expect."
+        },
+        {
+          "id": "protected-person-pr",
+          "title": "Protected Person to PR",
+          "subtitle": "Pathway to permanent residence for protected persons",
+          "icon": "📄",
+          "difficulty": "Intermediate",
+          "reading_time": "12 min read",
+          "overview": "Once you're recognized as a protected person in Canada, you can apply for permanent residence. Learn about the application process and requirements."
+        }
+      ]
+    }
+  },
+  "updated": "2026-01-13T00:00:00.000000"
+}
