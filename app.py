@@ -295,6 +295,8 @@ def load_articles():
                     'stat_cards': r.get('stat_cards', []),
                     'verification': r.get('verification', {}),
                     'sources': r.get('sources', {}),
+                    # Social media captions
+                    'captions': r.get('captions', {}),
                 }
                 articles.append(article)
 
