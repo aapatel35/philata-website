@@ -298,8 +298,13 @@ def load_articles():
                     'stat_cards': r.get('stat_cards', []),
                     'verification': r.get('verification', {}),
                     'sources': r.get('sources', {}),
-                    # Social media captions
-                    'captions': r.get('captions', {}),
+                    # Social media captions - normalize both nested and flat formats
+                    'captions': r.get('captions', {}) if r.get('captions') else {
+                        'instagram': r.get('caption_instagram', ''),
+                        'facebook': r.get('caption_facebook', ''),
+                        'linkedin': r.get('caption_linkedin', ''),
+                        'twitter': r.get('caption_twitter', ''),
+                    },
                 }
                 articles.append(article)
 
@@ -878,6 +883,15 @@ def practice_tests():
 def dashboard():
     """Content dashboard"""
     results = load_results()
+    # Normalize caption formats for dashboard display
+    for r in results:
+        if not r.get('captions'):
+            r['captions'] = {
+                'instagram': r.get('caption_instagram', ''),
+                'facebook': r.get('caption_facebook', ''),
+                'linkedin': r.get('caption_linkedin', ''),
+                'twitter': r.get('caption_twitter', ''),
+            }
     return render_template('dashboard.html', results=results)
 
 
@@ -1443,8 +1457,13 @@ def add_article():
             "filename": data.get('filename', ''),
             "image_credit": data.get('image_credit'),
 
-            # Social media captions
-            "captions": data.get('captions', {}),
+            # Social media captions - normalize both nested and flat formats
+            "captions": data.get('captions', {}) if data.get('captions') else {
+                'instagram': data.get('caption_instagram', ''),
+                'facebook': data.get('caption_facebook', ''),
+                'linkedin': data.get('caption_linkedin', ''),
+                'twitter': data.get('caption_twitter', ''),
+            },
 
             # Verification
             "verification": data.get('verification', {
@@ -1804,7 +1823,12 @@ def add_result():
             "content_type": data.get('content_type', 'news'),
             "image_url": convert_image_url(data.get('image_url', '')),
             "filename": data.get('filename', ''),
-            "captions": data.get('captions', {}),
+            "captions": data.get('captions', {}) if data.get('captions') else {
+                'instagram': data.get('caption_instagram', ''),
+                'facebook': data.get('caption_facebook', ''),
+                'linkedin': data.get('caption_linkedin', ''),
+                'twitter': data.get('caption_twitter', ''),
+            },
             "full_article": data.get('full_article', ''),
             "source": data.get('source', ''),
             "source_url": data.get('source_url', ''),
