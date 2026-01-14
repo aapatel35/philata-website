@@ -1571,6 +1571,19 @@
             }
         });
 
+        // Reset body state when navigating back (bfcache)
+        window.addEventListener('pageshow', function(e) {
+            if (e.persisted) {
+                // Page was restored from bfcache (back/forward navigation)
+                document.body.style.opacity = '1';
+                document.body.style.pointerEvents = 'auto';
+            }
+        });
+
+        // Also reset on regular load to be safe
+        document.body.style.opacity = '1';
+        document.body.style.pointerEvents = 'auto';
+
         // Open external links in new tab
         document.querySelectorAll('a[href^="http"]:not([href*="' + window.location.hostname + '"])').forEach(function(link) {
             link.setAttribute('target', '_blank');
