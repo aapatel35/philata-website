@@ -307,11 +307,20 @@ def load_articles():
         # Only if article doesn't already have a valid image_url
         for article in articles:
             existing_image = article.get('image_url', '')
-            # Skip if article already has a Cloudinary or valid image URL
-            if existing_image and ('cloudinary.com' in existing_image or 'web-production' in existing_image):
+            # Skip if article already has a valid image (Cloudinary, Railway, or base64 Gemini)
+            has_valid_image = existing_image and (
+                'cloudinary.com' in existing_image or
+                'web-production' in existing_image or
+                existing_image.startswith('data:image')  # Base64 Gemini-generated images
+            )
+            if has_valid_image:
                 # Keep existing image, just add thumbnail
-                article['image_thumb'] = existing_image.replace('/upload/', '/upload/w_400,h_300,c_fill/')
-                article['image_credit'] = 'Philata'
+                if existing_image.startswith('data:image'):
+                    # For base64 images, use the same image as thumbnail
+                    article['image_thumb'] = existing_image
+                else:
+                    article['image_thumb'] = existing_image.replace('/upload/', '/upload/w_400,h_300,c_fill/')
+                article['image_credit'] = 'Philata AI'
                 article['image_credit_link'] = 'https://philata.com'
             else:
                 # Fall back to Unsplash for articles without custom images
@@ -1426,7 +1435,8 @@ def add_article():
             "comparison_tables": data.get('comparison_tables', []),
 
             # Image
-            "image_url": convert_image_url(data.get('image_url', '')),
+            "image_url": convert_image_url(data.get('image_url', '')),  # Branded image for social media
+            "featured_image": convert_image_url(data.get('featured_image', '')),  # Raw AI image for article hero
             "filename": data.get('filename', ''),
             "image_credit": data.get('image_credit'),
 
@@ -1486,6 +1496,7 @@ def add_article():
                 "source_url": article.get('source_url', ''),
                 "official_source_url": article.get('official_source_url', ''),
                 "image_url": article.get('image_url', ''),
+                "featured_image": article.get('featured_image', ''),
                 "filename": article.get('filename', ''),
                 "captions": article.get('captions', {}),
                 "verified": article.get('verification', {}).get('status') == 'verified',
