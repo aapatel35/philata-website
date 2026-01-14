@@ -2,6 +2,7 @@
 Philata.ca - Canadian Immigration Content Hub
 Dashboard for viewing and approving generated content
 Comprehensive Immigration Guides
+Deploy trigger: 2026-01-14 - Clear all data
 """
 
 # Load environment variables first (before other imports)
