@@ -450,10 +450,20 @@
             color: #9ca3af;
             text-decoration: none;
             transition: color var(--duration-fast);
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+            padding: 4px 8px;
+            border-radius: 4px;
         }
 
         .sidebar-meta a:hover {
             color: #e5e7eb;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .sidebar-meta a:active {
+            transform: scale(0.95);
         }
 
         /* Main Wrapper */
@@ -1103,6 +1113,12 @@
             }
         }
 
+        @keyframes highlight-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(30, 58, 95, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(30, 58, 95, 0.2); }
+            100% { box-shadow: 0 0 0 0 rgba(30, 58, 95, 0); }
+        }
+
         .animate-fade-in {
             animation: fadeIn var(--duration-normal) var(--ease-out) forwards;
         }
@@ -1456,14 +1472,14 @@
             </nav>
 
             <div class="sidebar-footer">
-                <div class="sidebar-cta">
+                <a href="/premium" class="sidebar-cta" style="display: block; text-decoration: none;">
                     <div class="sidebar-cta-title">Premium Intelligence</div>
                     <div class="sidebar-cta-text">Real-time immigration insights</div>
-                </div>
+                </a>
                 <div class="sidebar-meta">
-                    <a href="/about">About</a>
-                    <a href="/contact">Contact</a>
-                    <a href="/privacy-policy">Privacy</a>
+                    <a href="/about" onclick="event.stopPropagation();">About</a>
+                    <a href="/contact" onclick="event.stopPropagation();">Contact</a>
+                    <a href="/privacy-policy" onclick="event.stopPropagation();">Privacy</a>
                 </div>
             </div>
         </aside>
@@ -1543,6 +1559,23 @@
                 sidebarOverlay.classList.remove('open');
             });
         }
+
+        // Page loading indicator for navigation
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('a');
+            if (link && link.href && !link.target && !link.href.includes('#') && link.href.startsWith(window.location.origin)) {
+                // Internal link - show loading
+                const body = document.body;
+                body.style.opacity = '0.7';
+                body.style.pointerEvents = 'none';
+            }
+        });
+
+        // Open external links in new tab
+        document.querySelectorAll('a[href^="http"]:not([href*="' + window.location.hostname + '"])').forEach(function(link) {
+            link.setAttribute('target', '_blank');
+            link.setAttribute('rel', 'noopener noreferrer');
+        });
 
         // Scroll animations
         const animateElements = document.querySelectorAll('[data-animate]');
