@@ -296,6 +296,7 @@ def load_articles():
                     # Enhanced fields
                     'key_takeaways': r.get('key_takeaways', []),
                     'stat_cards': r.get('stat_cards', []),
+                    'charts': r.get('charts', []),
                     'verification': r.get('verification', {}),
                     'sources': r.get('sources', {}),
                     # Social media captions - normalize both nested and flat formats

@@ -467,6 +467,51 @@
         }
     }
 
+    /* Charts Section */
+    .article-charts {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 32px;
+    }
+
+    .charts-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .charts-title i {
+        color: var(--accent);
+        font-size: 1.2rem;
+    }
+
+    .charts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+    }
+
+    .chart-container {
+        background: var(--bg-secondary);
+        border-radius: 12px;
+        padding: 20px;
+        min-height: 280px;
+    }
+
+    .chart-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 16px;
+        text-align: center;
+    }
+
     @media (max-width: 768px) {
         .article-title {
             font-size: 1.75rem;
@@ -484,6 +529,14 @@
 
         .sidebar-card {
             min-width: 100%;
+        }
+
+        .charts-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .chart-container {
+            min-height: 240px;
         }
     }
 </style>
@@ -553,6 +606,21 @@
         </div>
         {% endif %}
 
+        <!-- Charts Section -->
+        {% if article.charts and article.charts|length > 0 %}
+        <div class="article-charts" data-animate>
+            <h3 class="charts-title"><i class="bi bi-bar-chart-line"></i> Data Visualization</h3>
+            <div class="charts-grid">
+                {% for chart in article.charts %}
+                <div class="chart-container">
+                    <h4 class="chart-title">{{ chart.title }}</h4>
+                    <canvas id="chart-{{ loop.index }}"></canvas>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
         <!-- Article Body -->
         <div class="article-body" data-animate>
             {% if '<h2>' in article.full_article or '<p>' in article.full_article %}
@@ -611,4 +679,90 @@
         </div>
     </aside>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{% if article.charts and article.charts|length > 0 %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chartsData = {{ article.charts | tojson | safe }};
+
+    // Theme colors
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const textColor = isDark ? '#E5E7EB' : '#374151';
+    const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+
+    // Brand colors for datasets
+    const brandColors = [
+        { bg: 'rgba(20, 184, 166, 0.2)', border: '#14B8A6' },  // Teal
+        { bg: 'rgba(59, 130, 246, 0.2)', border: '#3B82F6' },  // Blue
+        { bg: 'rgba(239, 68, 68, 0.2)', border: '#EF4444' },   // Red
+        { bg: 'rgba(139, 92, 246, 0.2)', border: '#8B5CF6' },  // Purple
+        { bg: 'rgba(245, 158, 11, 0.2)', border: '#F59E0B' },  // Amber
+    ];
+
+    chartsData.forEach((chartConfig, index) => {
+        const ctx = document.getElementById('chart-' + (index + 1));
+        if (!ctx) return;
+
+        // Apply brand colors to datasets
+        const datasets = chartConfig.datasets.map((dataset, i) => ({
+            ...dataset,
+            backgroundColor: chartConfig.type === 'line'
+                ? brandColors[i % brandColors.length].bg
+                : brandColors.map(c => c.bg),
+            borderColor: chartConfig.type === 'line'
+                ? brandColors[i % brandColors.length].border
+                : brandColors.map(c => c.border),
+            borderWidth: 2,
+            tension: 0.3,
+            fill: chartConfig.type === 'line',
+            pointBackgroundColor: brandColors[i % brandColors.length].border,
+            pointRadius: 4,
+            pointHoverRadius: 6
+        }));
+
+        new Chart(ctx, {
+            type: chartConfig.type || 'line',
+            data: {
+                labels: chartConfig.labels,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: datasets.length > 1,
+                        position: 'top',
+                        labels: { color: textColor, padding: 12 }
+                    },
+                    tooltip: {
+                        backgroundColor: isDark ? '#1F2937' : '#FFFFFF',
+                        titleColor: textColor,
+                        bodyColor: textColor,
+                        borderColor: gridColor,
+                        borderWidth: 1,
+                        padding: 12,
+                        displayColors: true
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: gridColor },
+                        ticks: { color: textColor }
+                    },
+                    y: {
+                        grid: { color: gridColor },
+                        ticks: { color: textColor },
+                        beginAtZero: chartConfig.type === 'bar'
+                    }
+                }
+            }
+        });
+    });
+});
+</script>
+{% endif %}
 {% endblock %}
