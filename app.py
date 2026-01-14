@@ -247,22 +247,22 @@ def load_articles():
                         _memory_cache['last_fetch'] = datetime.now()
                         # Also save to local file for future deployments
                         try:
-                            with open('data/results.json', 'w') as f:
+                            with open(RESULTS_FILE, 'w') as f:
                                 json.dump(raw_results, f, indent=2)
-                        except:
-                            pass
+                        except Exception as e:
+                            print(f"Error saving results to file: {e}")
         except Exception as e:
             print(f"Error fetching from API: {e}")
 
     # Fallback to local results.json
     if not raw_results:
         try:
-            with open('data/results.json', 'r') as f:
+            with open(RESULTS_FILE, 'r') as f:
                 local_data = json.load(f)
                 if local_data:  # Only use if not empty
                     raw_results = local_data
-        except:
-            pass
+        except Exception as e:
+            print(f"Error loading local results: {e}")
 
     # Final fallback to cached memory (even if expired)
     if not raw_results:
@@ -291,6 +291,8 @@ def load_articles():
                     'reading_time': max(1, len(r.get('full_article', '').split()) // 200),
                     # Image - preserve Cloudinary URLs from n8n pipeline
                     'image_url': r.get('image_url', ''),
+                    # Featured image - raw Gemini AI image for article hero (no overlay)
+                    'featured_image': r.get('featured_image', ''),
                     # Enhanced fields
                     'key_takeaways': r.get('key_takeaways', []),
                     'stat_cards': r.get('stat_cards', []),
