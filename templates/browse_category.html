@@ -268,7 +268,7 @@
         <div class="articles-grid">
             {% for article in articles %}
             <a href="/articles/{{ article.slug or article.id }}" class="article-card">
-                <div class="article-card-image" style="background-image: url('{{ article.image_url or 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=600&q=80' }}');">
+                <div class="article-card-image" style="background-image: url('{{ article.featured_image or article.image_url or 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=600&q=80' }}');">
                     <span class="article-category-badge">{{ article.category | replace('_', ' ') }}</span>
                 </div>
                 <div class="article-card-content">

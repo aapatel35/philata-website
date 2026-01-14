@@ -744,8 +744,9 @@
                 document.getElementById('featured-main').href = '/articles/' + mainSlug;
                 document.getElementById('featured-title').textContent = main.title;
                 document.getElementById('featured-excerpt').textContent = main.summary || main.title;
-                if (main.image_url) {
-                    document.querySelector('.featured-main-bg').style.backgroundImage = `url('${main.image_url}')`;
+                const mainImage = main.featured_image || main.image_url;
+                if (mainImage) {
+                    document.querySelector('.featured-main-bg').style.backgroundImage = `url('${mainImage}')`;
                 }
 
                 // Update sidebar
@@ -771,7 +772,7 @@
                     const slug = article.slug || article.title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/[\s_]+/g, '-').substring(0, 80);
                     const category = (article.category || 'news').replace(/_/g, ' ');
                     const readTime = Math.max(1, Math.floor((article.full_article || '').split(' ').length / 200));
-                    const imageUrl = article.image_url || 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=400&q=70';
+                    const imageUrl = article.featured_image || article.image_url || 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=400&q=70';
                     const badgeClass = 'badge-' + (article.category || 'news').replace(/_/g, '-');
                     return `
                         <a href="/articles/${slug}" class="article-card">

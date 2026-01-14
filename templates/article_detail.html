@@ -124,6 +124,36 @@
         border-radius: 12px;
     }
 
+    /* Subheadline Box */
+    .article-subheadline {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 20px 24px;
+        margin-bottom: 32px;
+    }
+
+    .article-subheadline p {
+        font-size: 17px;
+        line-height: 1.7;
+        color: var(--text-secondary);
+        margin: 0;
+        font-style: italic;
+    }
+
+    .article-subheadline .guide-label {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--gold) 0%, #d4a853 100%);
+        color: #000;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 6px 12px;
+        border-radius: 4px;
+        margin-bottom: 12px;
+    }
+
     /* Key Takeaways */
     .key-takeaways {
         background: var(--bg-secondary);
@@ -471,9 +501,20 @@
             </div>
         </header>
 
-        <!-- Featured Image -->
-        {% if article.image_url %}
-        <div class="article-featured-image" style="background-image: url('{{ article.image_url }}');" data-animate></div>
+        <!-- Featured Image (use raw AI image if available, fallback to branded) -->
+        {% set hero_image = article.featured_image or article.image_url %}
+        {% if hero_image %}
+        <div class="article-featured-image" style="background-image: url('{{ hero_image }}');" data-animate></div>
+        {% endif %}
+
+        <!-- Subheadline/Summary Box -->
+        {% if article.subheadline or article.hook %}
+        <div class="article-subheadline" data-animate>
+            {% if article.category in ['educational', 'forms', 'policy'] or 'guide' in article.title|lower or 'complete' in article.title|lower %}
+            <span class="guide-label">Complete Guide</span>
+            {% endif %}
+            <p>{{ article.subheadline or article.hook }}</p>
+        </div>
         {% endif %}
 
         <!-- Key Takeaways -->

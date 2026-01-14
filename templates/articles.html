@@ -398,7 +398,7 @@
             {% if loop.first and not category %}
             <!-- Featured Article -->
             <a href="/articles/{{ article.slug or article.id }}" class="featured-article" data-animate>
-                <div class="featured-article-image" style="background-image: url('{{ article.image_url or 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=600&q=70' }}');"></div>
+                <div class="featured-article-image" style="background-image: url('{{ article.featured_image or article.image_url or 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=600&q=70' }}');"></div>
                 <div class="featured-article-content">
                     <span class="featured-article-badge">{{ article.category | replace('_', ' ') | title }}</span>
                     <h2 class="featured-article-title">{{ article.title }}</h2>
@@ -413,7 +413,7 @@
             {% else %}
             <!-- Regular Article Card -->
             <a href="/articles/{{ article.slug or article.id }}" class="article-card" data-animate>
-                <div class="article-card-image" style="background-image: url('{{ article.image_url or 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=400&q=70' }}');">
+                <div class="article-card-image" style="background-image: url('{{ article.featured_image or article.image_url or 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=400&q=70' }}');">
                     <span class="article-card-badge">{{ article.category | replace('_', ' ') | title }}</span>
                 </div>
                 <div class="article-card-body">
