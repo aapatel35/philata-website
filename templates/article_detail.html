@@ -108,20 +108,30 @@
     /* Featured Image */
     .article-featured-image {
         width: 100%;
-        height: 400px;
+        height: 500px;
+        min-height: 400px;
         background-size: cover;
-        background-position: center;
-        border-radius: 12px;
+        background-position: center top;
+        background-repeat: no-repeat;
+        border-radius: 16px;
         margin-bottom: 40px;
         position: relative;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    /* For square/portrait images, contain instead of cover */
+    .article-featured-image.contain-image {
+        background-size: contain;
+        background-color: var(--bg-elevated);
     }
 
     .article-featured-image::after {
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.2) 100%);
-        border-radius: 12px;
+        background: linear-gradient(180deg, transparent 70%, rgba(0,0,0,0.15) 100%);
+        border-radius: 16px;
+        pointer-events: none;
     }
 
     /* Subheadline Box */
@@ -452,7 +462,8 @@
         }
 
         .article-featured-image {
-            height: 280px;
+            height: 380px;
+            min-height: 320px;
         }
     }
 
@@ -467,7 +478,8 @@
         }
 
         .article-featured-image {
-            height: 220px;
+            height: 320px;
+            min-height: 260px;
         }
 
         .sidebar-card {
