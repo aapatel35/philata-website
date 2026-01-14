@@ -1,455 +1,57 @@
 {
-  "last_updated": "2026-01-13T02:34:51.614090",
-  "source": "IRCC Official Website",
-  "express_entry": {
-    "draws": [
-      {
-        "draw_number": "390",
-        "date": "January 7, 2026",
-        "category": "Canadian Experience Class",
-        "crs_score": 511,
-        "itas": "8,000"
-      },
-      {
-        "draw_number": "389",
-        "date": "January 5, 2026",
-        "category": "Provincial Nominee Program",
-        "crs_score": 711,
-        "itas": "574"
-      },
-      {
-        "draw_number": "388",
-        "date": "December 17, 2025",
-        "category": "French Language Proficiency",
-        "crs_score": 399,
-        "itas": "6,000"
-      },
-      {
-        "draw_number": "387",
-        "date": "December 16, 2025",
-        "category": "Canadian Experience Class",
-        "crs_score": 515,
-        "itas": "5,000"
-      },
-      {
-        "draw_number": "386",
-        "date": "December 15, 2025",
-        "category": "Provincial Nominee Program",
-        "crs_score": 731,
-        "itas": "399"
-      },
-      {
-        "draw_number": "385",
-        "date": "December 11, 2025",
-        "category": "Healthcare Occupations",
-        "crs_score": 476,
-        "itas": "1,000"
-      },
-      {
-        "draw_number": "384",
-        "date": "December 10, 2025",
-        "category": "Canadian Experience Class",
-        "crs_score": 520,
-        "itas": "6,000"
-      },
-      {
-        "draw_number": "383",
-        "date": "December 8, 2025",
-        "category": "Provincial Nominee Program",
-        "crs_score": 729,
-        "itas": "1,123"
-      },
-      {
-        "draw_number": "382",
-        "date": "November 28, 2025",
-        "category": "French Language Proficiency",
-        "crs_score": 408,
-        "itas": "6,000"
-      },
-      {
-        "draw_number": "381",
-        "date": "November 26, 2025",
-        "category": "Canadian Experience Class",
-        "crs_score": 531,
-        "itas": "1,000"
-      }
-    ],
-    "average_crs": 520,
-    "predicted_next_cutoff": 520,
-    "programs": [
-      {
-        "name": "Federal Skilled Worker (FSW)",
-        "code": "Express Entry - IMM 0008",
-        "time_value": 6,
-        "time_unit": "months",
-        "status": "normal",
-        "status_text": "On Track",
-        "progress": 85,
-        "note": "80% of applications processed in 6 months"
-      },
-      {
-        "name": "Canadian Experience Class (CEC)",
-        "code": "Express Entry - IMM 0008",
-        "time_value": 5,
-        "time_unit": "months",
-        "status": "normal",
-        "status_text": "On Track",
-        "progress": 90,
-        "note": "80% of applications processed in 5 months"
-      },
-      {
-        "name": "Federal Skilled Trades (FST)",
-        "code": "Express Entry - IMM 0008",
-        "time_value": 6,
-        "time_unit": "months",
-        "status": "normal",
-        "status_text": "On Track",
-        "progress": 80,
-        "note": "80% of applications processed in 6 months"
-      }
-    ]
-  },
-  "temporary": {
-    "programs": [
-      {
-        "name": "Visitor Visa (TRV)",
-        "code": "IMM 5257 - Outside Canada",
-        "time_value": 45,
-        "time_unit": "days",
-        "status": "delayed",
-        "status_text": "Delays",
-        "progress": 60,
-        "note": "Varies by country of application"
-      },
-      {
-        "name": "Study Permit",
-        "code": "IMM 1294 - Outside Canada",
-        "time_value": 8,
-        "time_unit": "weeks",
-        "status": "normal",
-        "status_text": "On Track",
-        "progress": 70,
-        "note": "80% processed within 8 weeks"
-      },
-      {
-        "name": "Work Permit (Employer-specific)",
-        "code": "IMM 1295 - LMIA Required",
-        "time_value": 12,
-        "time_unit": "weeks",
-        "status": "delayed",
-        "status_text": "Delays",
-        "progress": 55,
-        "note": "LMIA processing adds 2-4 weeks"
-      },
-      {
-        "name": "Open Work Permit (PGWP)",
-        "code": "Post-Graduation Work Permit",
-        "time_value": 80,
-        "time_unit": "days",
-        "status": "normal",
-        "status_text": "On Track",
-        "progress": 65,
-        "note": "80% processed within 80 days"
-      },
-      {
-        "name": "Visitor Record Extension",
-        "code": "IMM 5708 - Inside Canada",
-        "time_value": 120,
-        "time_unit": "days",
-        "status": "backlog",
-        "status_text": "Backlog",
-        "progress": 40,
-        "note": "Significant processing delays"
-      }
-    ]
-  },
-  "family": {
-    "programs": [
-      {
-        "name": "Spouse/Partner (Inside Canada)",
-        "code": "IMM 1344 - Inland Sponsorship",
-        "time_value": 12,
-        "time_unit": "months",
-        "status": "normal",
-        "status_text": "On Track",
-        "progress": 70,
-        "note": "80% processed within 12 months"
-      },
-      {
-        "name": "Spouse/Partner (Outside Canada)",
-        "code": "IMM 1344 - Outland Sponsorship",
-        "time_value": 12,
-        "time_unit": "months",
-        "status": "normal",
-        "status_text": "On Track",
-        "progress": 70,
-        "note": "80% processed within 12 months"
-      },
-      {
-        "name": "Parents & Grandparents (PGP)",
-        "code": "IMM 1344 - PGP Sponsorship",
-        "time_value": 24,
-        "time_unit": "months",
-        "status": "backlog",
-        "status_text": "Backlog",
-        "progress": 45,
-        "note": "Limited annual intake - lottery system"
-      },
-      {
-        "name": "Super Visa (Parents/Grandparents)",
-        "code": "IMM 5257 - Super Visa",
-        "time_value": 60,
-        "time_unit": "days",
-        "status": "normal",
-        "status_text": "On Track",
-        "progress": 75,
-        "note": "Faster alternative to PGP"
-      }
-    ]
-  },
-  "pnp": {
-    "programs": [
-      {
-        "name": "PNP (Express Entry Stream)",
-        "code": "Enhanced Nomination - EE Linked",
-        "time_value": 6,
-        "time_unit": "months",
-        "status": "normal",
-        "status_text": "On Track",
-        "progress": 85,
-        "note": "Processed with Express Entry"
-      },
-      {
-        "name": "PNP (Base/Paper-based)",
-        "code": "Non-EE Provincial Nomination",
-        "time_value": 18,
-        "time_unit": "months",
-        "status": "delayed",
-        "status_text": "Delays",
-        "progress": 50,
-        "note": "Paper-based processing slower"
-      },
-      {
-        "name": "Ontario PNP (OINP)",
-        "code": "Ontario Immigrant Nominee Program",
-        "time_value": 4,
-        "time_unit": "months",
-        "status": "normal",
-        "status_text": "On Track",
-        "progress": 70,
-        "note": "Provincial nomination stage"
-      },
-      {
-        "name": "BC PNP",
-        "code": "British Columbia Provincial Nominee",
-        "time_value": 3,
-        "time_unit": "months",
-        "status": "normal",
-        "status_text": "On Track",
-        "progress": 80,
-        "note": "Provincial nomination stage"
-      },
-      {
-        "name": "Alberta PNP (AAIP)",
-        "code": "Alberta Advantage Immigration Program",
-        "time_value": 4,
-        "time_unit": "months",
-        "status": "normal",
-        "status_text": "On Track",
-        "progress": 75,
-        "note": "Provincial nomination stage"
-      }
-    ]
-  },
-  "countries": {
-    "India": {
-      "code": "IN",
-      "region": "asia",
-      "visitor": "67 days",
-      "study": "9 weeks",
-      "work": "18 weeks"
-    },
-    "China": {
-      "code": "CN",
-      "region": "asia",
-      "visitor": "38 days",
-      "study": "7 weeks",
-      "work": "14 weeks"
-    },
-    "Philippines": {
-      "code": "PH",
-      "region": "asia",
-      "visitor": "72 days",
-      "study": "10 weeks",
-      "work": "16 weeks"
-    },
-    "Pakistan": {
-      "code": "PK",
-      "region": "asia",
-      "visitor": "89 days",
-      "study": "12 weeks",
-      "work": "20 weeks"
-    },
-    "Nigeria": {
-      "code": "NG",
-      "region": "africa",
-      "visitor": "95 days",
-      "study": "14 weeks",
-      "work": "22 weeks"
-    },
-    "United States": {
-      "code": "US",
-      "region": "americas",
-      "visitor": "14 days",
-      "study": "3 weeks",
-      "work": "6 weeks"
-    },
-    "Mexico": {
-      "code": "MX",
-      "region": "americas",
-      "visitor": "21 days",
-      "study": "4 weeks",
-      "work": "10 weeks"
-    },
-    "Brazil": {
-      "code": "BR",
-      "region": "americas",
-      "visitor": "28 days",
-      "study": "6 weeks",
-      "work": "12 weeks"
-    },
-    "United Kingdom": {
-      "code": "GB",
-      "region": "europe",
-      "visitor": "12 days",
-      "study": "3 weeks",
-      "work": "5 weeks"
-    },
-    "France": {
-      "code": "FR",
-      "region": "europe",
-      "visitor": "10 days",
-      "study": "3 weeks",
-      "work": "5 weeks"
-    },
-    "Germany": {
-      "code": "DE",
-      "region": "europe",
-      "visitor": "11 days",
-      "study": "3 weeks",
-      "work": "5 weeks"
-    },
-    "Australia": {
-      "code": "AU",
-      "region": "oceania",
-      "visitor": "9 days",
-      "study": "2 weeks",
-      "work": "4 weeks"
-    },
-    "UAE": {
-      "code": "AE",
-      "region": "asia",
-      "visitor": "25 days",
-      "study": "4 weeks",
-      "work": "8 weeks"
-    },
-    "South Korea": {
-      "code": "KR",
-      "region": "asia",
-      "visitor": "15 days",
-      "study": "4 weeks",
-      "work": "7 weeks"
-    },
-    "South Africa": {
-      "code": "ZA",
-      "region": "africa",
-      "visitor": "42 days",
-      "study": "8 weeks",
-      "work": "14 weeks"
-    }
-  },
-  "stats": {
-    "immigration_target_2025": 485000,
-    "immigration_target_2026": 395000,
-    "express_entry_target_2025": 110770,
-    "express_entry_target_2026": 109000,
-    "pnp_target": 117500,
-    "family_class_target": 82000,
-    "active_profiles": "2.5M+",
-    "average_crs_cutoff": 515
-  },
-  "official_sources": {
+  "times": {
     "express_entry": {
-      "name": "Express Entry Rounds of Invitations",
-      "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/submit-profile/rounds-invitations.html",
-      "data_url": "https://www.canada.ca/content/dam/ircc/documents/json/ee_rounds_4_en.json",
-      "description": "Official IRCC Express Entry draw history"
+      "fsw": {
+        "time": "6 months",
+        "status": "normal"
+      },
+      "cec": {
+        "time": "5 months",
+        "status": "normal"
+      },
+      "fst": {
+        "time": "6 months",
+        "status": "normal"
+      },
+      "pnp": {
+        "time": "6 months",
+        "status": "normal"
+      }
     },
-    "processing_times": {
-      "name": "Check Processing Times",
-      "url": "https://www.canada.ca/en/immigration-refugees-citizenship/services/application/check-processing-times.html",
-      "description": "Official IRCC processing times tool"
+    "temporary": {
+      "visitor": {
+        "time": "45 days",
+        "status": "delayed"
+      },
+      "study": {
+        "time": "8 weeks",
+        "status": "normal"
+      },
+      "work_lmia": {
+        "time": "12 weeks",
+        "status": "delayed"
+      },
+      "pgwp": {
+        "time": "80 days",
+        "status": "normal"
+      }
     },
-    "immigration_levels": {
-      "name": "Immigration Levels Plan",
-      "url": "https://www.canada.ca/en/immigration-refugees-citizenship/news/notices/supplementary-immigration-levels-2025-2027.html",
-      "description": "Canada Immigration Levels Plan 2025-2027"
-    },
-    "pnp_programs": {
-      "ontario": {
-        "name": "Ontario Immigrant Nominee Program (OINP)",
-        "url": "https://www.ontario.ca/page/ontario-immigrant-nominee-program-oinp",
-        "draws_url": "https://www.ontario.ca/page/2024-ontario-immigrant-nominee-program-updates",
-        "api_url": null
+    "family": {
+      "spouse_inland": {
+        "time": "12 months",
+        "status": "normal"
       },
-      "bc": {
-        "name": "BC Provincial Nominee Program (BC PNP)",
-        "url": "https://www.welcomebc.ca/Immigrate-to-B-C/BC-PNP-Skills-Immigration",
-        "draws_url": "https://www.welcomebc.ca/Immigrate-to-B-C/BC-PNP-Skills-Immigration/Invitations-to-Apply",
-        "api_url": null
+      "spouse_outland": {
+        "time": "12 months",
+        "status": "normal"
       },
-      "alberta": {
-        "name": "Alberta Advantage Immigration Program (AAIP)",
-        "url": "https://www.alberta.ca/alberta-advantage-immigration-program",
-        "draws_url": "https://www.alberta.ca/aaip-processing-times",
-        "api_url": null
-      },
-      "saskatchewan": {
-        "name": "Saskatchewan Immigrant Nominee Program (SINP)",
-        "url": "https://www.saskatchewan.ca/residents/moving-to-saskatchewan/immigrating-to-saskatchewan/saskatchewan-immigrant-nominee-program",
-        "draws_url": "https://www.saskatchewan.ca/residents/moving-to-saskatchewan/immigrating-to-saskatchewan/saskatchewan-immigrant-nominee-program/browse-sinp-programs",
-        "api_url": null
-      },
-      "manitoba": {
-        "name": "Manitoba Provincial Nominee Program (MPNP)",
-        "url": "https://immigratemanitoba.com/",
-        "draws_url": "https://immigratemanitoba.com/immigrate-to-manitoba/",
-        "api_url": null
-      },
-      "nova_scotia": {
-        "name": "Nova Scotia Nominee Program (NSNP)",
-        "url": "https://novascotiaimmigration.com/move-here/",
-        "draws_url": "https://novascotiaimmigration.com/move-here/",
-        "api_url": null
-      },
-      "new_brunswick": {
-        "name": "New Brunswick Provincial Nominee Program (NBPNP)",
-        "url": "https://www.welcomenb.ca/content/wel-bien/en/immigrating/content/HowToImmigrate/NBProvincialNomineeProgram.html",
-        "draws_url": null,
-        "api_url": null
-      },
-      "pei": {
-        "name": "PEI Provincial Nominee Program (PEI PNP)",
-        "url": "https://www.princeedwardisland.ca/en/topic/office-immigration",
-        "draws_url": "https://www.princeedwardisland.ca/en/information/office-of-immigration/pei-pnp-expression-of-interest-draws",
-        "api_url": null
-      },
-      "yukon": {
-        "name": "Yukon Nominee Program (YNP)",
-        "url": "https://yukon.ca/en/immigrate-yukon",
-        "draws_url": null,
-        "api_url": null
+      "pgp": {
+        "time": "24 months",
+        "status": "backlog"
       }
     }
-  }
+  },
+  "source": "IRCC Official",
+  "url": "https://www.canada.ca/content/dam/ircc/documents/json/data-ptime-en.json",
+  "updated": "2026-01-13T02:44:05.249066"
 }
