@@ -27,7 +27,13 @@ from flask_cors import CORS
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 app = Flask(__name__)
-CORS(app)
+# CORS: Only allow requests from Philata domains
+CORS(app, origins=[
+    'https://www.philata.com',
+    'https://philata.com',
+    'https://philata-website-production.up.railway.app',
+    'http://localhost:5000'  # Development
+])
 
 # Secret key for sessions (CHANGE IN PRODUCTION)
 app.secret_key = os.environ.get('SECRET_KEY', 'philata-dev-secret-key-change-in-production')
