@@ -564,7 +564,33 @@
           "icon": "🛤️",
           "difficulty": "Intermediate",
           "reading_time": "15 min read",
-          "overview": "The student pathway is one of the most popular routes to Canadian PR. Learn how to maximize your chances by choosing the right program, province, and gaining Canadian experience."
+          "overview": "The student pathway is one of the most popular routes to Canadian PR. Learn how to maximize your chances by choosing the right program, province, and gaining Canadian experience.",
+          "sections": [
+            {
+              "title": "The Student Pathway Timeline",
+              "content": "Typical journey: Year 1-2: Study permit and education (1-2 year diploma or 4-year degree). Post-graduation: Apply for PGWP. Year 3-4: Work in Canada gaining experience. Year 4-5: Apply for PR through Express Entry (CEC) or PNP. Total timeline: 3-5 years from starting studies to PR. Planning from day one is crucial."
+            },
+            {
+              "title": "Choosing the Right Program",
+              "content": "For PR purposes, consider: Program length (2+ years = 3-year PGWP). Field of study (STEM, healthcare, trades have category-based draw advantages). NOC code of resulting occupation (TEER 0/1/2/3 required for CEC). Province (some have easier PNP pathways). Public vs private (public DLIs generally offer more PGWP options)."
+            },
+            {
+              "title": "Building Canadian Experience",
+              "content": "Your PGWP years are critical: Work in a skilled occupation (NOC TEER 0/1/2/3). Accumulate at least 1 year of Canadian experience for CEC eligibility. Choose jobs that help you develop skills in demand. Consider working in provinces with favorable PNP streams. Keep detailed records of your work (pay stubs, job duties, reference letters)."
+            },
+            {
+              "title": "Provincial Advantages",
+              "content": "Some provinces offer easier pathways for students: Ontario: OINP International Graduate streams. BC: BC PNP International Graduate and International Post-Graduate. Alberta: Alberta Opportunity Stream for graduates. Saskatchewan: SINP International Student Category. Atlantic Canada: Atlantic Immigration Program for graduates. Consider studying in provinces with streams targeting local graduates."
+            },
+            {
+              "title": "Express Entry vs PNP",
+              "content": "Two main PR pathways: Express Entry (CEC): Need 1 year Canadian experience + CLB 7+. CRS score must meet draw cutoff (typically 460-500). Faster processing (6 months). Provincial Nominee Program: Can supplement Express Entry with +600 points. Or apply directly through non-EE PNP streams. May have lower requirements but longer processing."
+            },
+            {
+              "title": "Common Mistakes to Avoid",
+              "content": "Don't choose a program just because it's cheap or short. Don't work in low-skilled jobs during PGWP (won't count for CEC). Don't neglect language test preparation. Don't wait until PGWP expires to apply for PR. Don't forget to obtain proper documentation (reference letters) from employers. Start PR planning during your studies, not after graduation."
+            }
+          ]
         },
         {
           "id": "sds",
@@ -626,7 +652,33 @@
           "icon": "📄",
           "difficulty": "Intermediate",
           "reading_time": "15 min read",
-          "overview": "An LMIA is a document that a Canadian employer may need to obtain before hiring a foreign worker. Learn about the LMIA process, exemptions, and how it affects your work permit."
+          "overview": "An LMIA is a document that a Canadian employer may need to obtain before hiring a foreign worker. Learn about the LMIA process, exemptions, and how it affects your work permit.",
+          "sections": [
+            {
+              "title": "What is an LMIA?",
+              "content": "A Labour Market Impact Assessment (LMIA) is a document from Employment and Social Development Canada (ESDC) that allows Canadian employers to hire foreign workers. A positive LMIA proves that no Canadian worker is available for the job and hiring a foreign worker won't negatively impact the Canadian labour market."
+            },
+            {
+              "title": "Employer's Responsibilities",
+              "content": "The employer must: Advertise the position for at least 4 weeks on Job Bank and 2 other platforms, prove they couldn't find a Canadian/PR worker, offer wages at or above prevailing wage for the position, pay a $1,000 LMIA processing fee per position, demonstrate the business is legitimate, and provide a transition plan showing commitment to hiring Canadians long-term."
+            },
+            {
+              "title": "LMIA Categories",
+              "content": "High-wage positions: Above provincial median wage, requires transition plan. Low-wage positions: Below median wage, cap on number of TFWs. Global Talent Stream: Fast-track for tech workers (2-week processing). Agricultural workers: Seasonal programs with specific requirements. Caregivers: In-home childcare or eldercare positions."
+            },
+            {
+              "title": "LMIA for Express Entry",
+              "content": "A valid LMIA can add CRS points to your Express Entry profile: LMIA for NOC TEER 0 occupation = 200 points. LMIA for NOC TEER 1/2/3 occupation = 50 points. Note: As of March 2025, job offer points have been removed. However, LMIA-based work permits still allow you to gain Canadian experience, which helps qualify for CEC."
+            },
+            {
+              "title": "Processing Times",
+              "content": "Standard LMIA: 2-3 months. Global Talent Stream (Category A/B): 2 weeks. Agricultural workers: 2-3 months. Processing time starts when complete application received. Some provinces have higher processing times due to volume. Check ESDC website for current processing times."
+            },
+            {
+              "title": "After LMIA Approval",
+              "content": "Once employer receives positive LMIA: Employer provides you with LMIA number and job offer letter. You apply for work permit (online or at port of entry). Include LMIA number in work permit application. Work permit is employer-specific (can only work for that employer at that location). Work permit duration matches LMIA validity (usually 1-2 years)."
+            }
+          ]
         },
         {
           "id": "open-work-permit",
@@ -635,7 +687,33 @@
           "icon": "🔓",
           "difficulty": "Beginner",
           "reading_time": "10 min read",
-          "overview": "Open work permits allow you to work for any Canadian employer without needing a specific job offer. Learn about eligibility categories including spouse permits, bridging permits, and PGWP."
+          "overview": "Open work permits allow you to work for any Canadian employer without needing a specific job offer. Learn about eligibility categories including spouse permits, bridging permits, and PGWP.",
+          "sections": [
+            {
+              "title": "What is an Open Work Permit?",
+              "content": "An Open Work Permit (OWP) allows you to work for any employer anywhere in Canada without needing a job offer or LMIA. Unlike employer-specific permits, you're free to change jobs, work multiple jobs, or work in any occupation. OWPs are available through specific programs and eligibility categories."
+            },
+            {
+              "title": "Spousal Open Work Permit",
+              "content": "Spouses/common-law partners of certain workers can get OWPs: Spouse of skilled worker (NOC TEER 0/1/2/3) with valid work permit. Spouse of international student at public DLI (graduate level) or designated private college. Validity matches principal applicant's permit. Allows spouse to work while supporting family during immigration process."
+            },
+            {
+              "title": "Bridging Open Work Permit (BOWP)",
+              "content": "Available to PR applicants awaiting decision: Must have submitted PR application under economic class (Express Entry, PNP). Must have received Acknowledgement of Receipt (AOR). Current work permit must be expiring within 4 months. Allows you to continue working while PR application is processed. Valid until PR decision."
+            },
+            {
+              "title": "Post-Graduation Work Permit (PGWP)",
+              "content": "The most common OWP for international students: Available after graduating from eligible Canadian DLI. Valid for 8 months to 3 years depending on program length. Must apply within 180 days of completing studies. Cannot be renewed or extended. Essential pathway to gaining Canadian experience for PR."
+            },
+            {
+              "title": "Other OWP Categories",
+              "content": "Vulnerable Worker OWP: For workers experiencing abuse or exploitation. Interim Federal Health Program recipients: Refugees and protected persons. Francophone Mobility: For French-speaking workers outside Quebec. International Experience Canada: Working Holiday category provides OWP. CUSMA: Spouses of intra-company transferees."
+            },
+            {
+              "title": "Application Process",
+              "content": "1) Determine your eligibility category, 2) Gather supporting documents (proof of relationship, study completion, PR application, etc.), 3) Apply online through IRCC portal, 4) Pay fees ($155 work permit + $100 OWP holder fee + $85 biometrics), 5) Submit biometrics, 6) Wait for processing (varies by category). Processing times range from 2 weeks to 3 months."
+            }
+          ]
         },
         {
           "id": "iec",
