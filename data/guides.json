@@ -809,7 +809,33 @@
           "icon": "🏢",
           "difficulty": "Intermediate",
           "reading_time": "10 min read",
-          "overview": "ICT work permits allow employees of multinational companies to transfer to Canadian branches. Learn about the eligibility requirements and application process."
+          "overview": "ICT work permits allow employees of multinational companies to transfer to Canadian branches. Learn about the eligibility requirements and application process.",
+          "sections": [
+            {
+              "title": "What is an ICT?",
+              "content": "Intra-Company Transfer (ICT) is an LMIA-exempt work permit allowing employees of multinational companies to transfer to their Canadian parent, subsidiary, branch, or affiliate. Uses LMIA exemption code C12. Three categories: Executives (C12), Senior Managers (C12), and Specialized Knowledge workers (C12). No LMIA required - faster processing than regular work permits."
+            },
+            {
+              "title": "Employee Eligibility",
+              "content": "You must: Have worked for the company outside Canada for at least 1 year full-time in the last 3 years. Be transferring to a position as executive, senior manager, or specialized knowledge worker. Have a legitimate job offer from the Canadian entity. Continue working for the same organization (parent, branch, subsidiary, or affiliate). Not have been hired specifically for transfer."
+            },
+            {
+              "title": "Company Requirements",
+              "content": "The Canadian company must: Have a qualifying relationship with the foreign entity (parent, subsidiary, branch, affiliate). Be actively doing business in Canada (more than just having an agent). Be able to support the position (executive, managerial, or specialized knowledge). Demonstrate the company in both countries will remain in operation."
+            },
+            {
+              "title": "ICT Categories Explained",
+              "content": "Executive: Directs management of organization, establishes goals/policies, broad decision-making authority. Senior Manager: Manages organization or major function, supervises other managers/professionals, has authority to hire/fire. Specialized Knowledge: Has proprietary knowledge of company products/services, or advanced expertise in company processes. Each category has different documentation requirements."
+            },
+            {
+              "title": "Application Process",
+              "content": "1) Company prepares support letter describing relationship between entities and employee role. 2) Gather employment history documents (contracts, pay stubs, organizational charts). 3) Apply for work permit online or at port of entry (if visa-exempt). 4) No LMIA needed - use exemption code C12. 5) Processing time: 2-8 weeks online, or same day at port of entry if approved. Duration: Up to 3 years initially, renewable."
+            },
+            {
+              "title": "ICT to PR Pathway",
+              "content": "ICT work experience counts for Canadian Experience Class (CEC). After 1 year of skilled Canadian work, you may qualify for Express Entry. Some provinces have PNP streams for ICT workers with job offers. ICT allows you to build Canadian experience without needing an LMIA. Company may later support LMIA for additional CRS points."
+            }
+          ]
         }
       ]
     },
