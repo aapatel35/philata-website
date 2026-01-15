@@ -723,7 +723,9 @@
                 </div>
             </div>
             <div class="article-verification">
-                {% if 'ircc' in (article.source|lower) or 'canada.ca' in (article.source_url|lower) if article.source_url else false %}
+                {% set source_lower = (article.source or '')|lower %}
+                {% set url_lower = (article.source_url or '')|lower %}
+                {% if 'ircc' in source_lower or 'canada.ca' in url_lower or 'gov' in url_lower %}
                 <span class="verification-badge official">
                     <i class="bi bi-patch-check-fill"></i> Official Source
                 </span>
