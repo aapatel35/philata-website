@@ -923,7 +923,33 @@
           "icon": "⚕️",
           "difficulty": "Advanced",
           "reading_time": "20 min read",
-          "overview": "Many professions in Canada are regulated, requiring additional licensing beyond an ECA. Learn about the process for engineers, nurses, doctors, accountants, and other regulated professions."
+          "overview": "Many professions in Canada are regulated, requiring additional licensing beyond an ECA. Learn about the process for engineers, nurses, doctors, accountants, and other regulated professions.",
+          "sections": [
+            {
+              "title": "Regulated vs Non-Regulated Professions",
+              "content": "Regulated professions require a license to work in Canada (nursing, medicine, engineering, law, accounting, teaching). Non-regulated professions don't require licensing but may benefit from credential assessment. About 20% of jobs in Canada are regulated. Regulation is provincial - requirements vary by province."
+            },
+            {
+              "title": "Common Regulated Professions",
+              "content": "Healthcare: Doctors (MCC), Nurses (NNAS), Pharmacists (PEBC). Engineering: Engineers Canada (P.Eng designation required). Legal: NCA assessment for lawyers. Accounting: CPA Canada. Trades: Red Seal certification. Teaching: Provincial teacher certification. Each has specific regulatory body and assessment process."
+            },
+            {
+              "title": "Licensing Process Steps",
+              "content": "1) Research your profession's regulatory body in your target province. 2) Submit credential assessment to the regulatory body (NOT WES - different from ECA for Express Entry). 3) Complete any required bridging courses or exams. 4) Pass licensing exams. 5) Complete supervised practice if required. 6) Apply for full license. Timeline: 6 months to 3+ years depending on profession."
+            },
+            {
+              "title": "Healthcare Professionals",
+              "content": "Doctors: Must pass MCCQE Parts 1 and 2, complete residency match (very competitive). Nurses: NNAS assessment, NCLEX exam, provincial registration. Pharmacists: PEBC evaluating exam and qualifying exam. Medical Laboratory Technologists: CSMLS certification. All require English/French language proficiency proof."
+            },
+            {
+              "title": "Engineers and Trades",
+              "content": "Engineers: Apply to provincial engineering association (e.g., PEO in Ontario), may need to write technical exams, 1 year Canadian experience often required. Trades: Red Seal certification recognized nationally. May need to write provincial certification exams. Trade experience assessment through provincial apprenticeship authorities."
+            },
+            {
+              "title": "Tips for Success",
+              "content": "Start the licensing process BEFORE immigrating if possible. Research provincial differences - some provinces have faster/easier processes. Consider bridging programs offered by Canadian institutions. Network with professionals in your field already in Canada. Budget for exams, courses, and potential gaps in employment. Some provinces offer loans/grants for licensing costs."
+            }
+          ]
         }
       ]
     },
@@ -1065,7 +1091,33 @@
           "icon": "💻",
           "difficulty": "Beginner",
           "reading_time": "10 min read",
-          "overview": "PTE Core is the newest IRCC-approved English test. Learn about its unique computer-based format and rapid results delivery."
+          "overview": "PTE Core is the newest IRCC-approved English test. Learn about its unique computer-based format and rapid results delivery.",
+          "sections": [
+            {
+              "title": "What is PTE Core?",
+              "content": "PTE Core is Pearson's English test designed specifically for Canadian immigration (launched 2024). It's 100% computer-based, taken at authorized test centers. Results typically available within 48 hours - faster than IELTS or CELPIP. Accepted for Express Entry, IRCC applications, and Canadian citizenship."
+            },
+            {
+              "title": "Test Format",
+              "content": "PTE Core has 4 sections testing integrated skills: Speaking & Writing (54-67 min) - Read aloud, repeat sentences, describe images, written essays. Reading (29-30 min) - Multiple choice, reorder paragraphs, fill in blanks. Listening (30-43 min) - Summarize spoken text, multiple choice, highlight incorrect words. Total: ~2 hours in one sitting."
+            },
+            {
+              "title": "Scoring and CLB Conversion",
+              "content": "PTE Core uses a score range of 10-90 per skill. CLB conversion: 10-21=CLB3, 22-28=CLB4, 29-33=CLB5, 34-41=CLB6, 42-50=CLB7, 51-58=CLB8, 59-67=CLB9, 68-90=CLB10. Each skill (Speaking, Writing, Reading, Listening) converts separately. You get an overall score plus individual skill scores."
+            },
+            {
+              "title": "PTE Core vs IELTS vs CELPIP",
+              "content": "PTE Core advantages: Fastest results (48 hours), fully computer-based, multiple test dates available. IELTS: More widely known, paper option available. CELPIP: Canadian content, also computer-based. All three are equally accepted by IRCC. Choose based on your testing preference and timeline needs."
+            },
+            {
+              "title": "Test Booking and Cost",
+              "content": "Cost: Approximately CAD $400-430. Book online at pearsonpte.com. Available at Pearson test centers in most major cities worldwide. Test dates usually available within 1-2 weeks. Bring valid passport (only ID accepted). Results sent directly to IRCC electronically."
+            },
+            {
+              "title": "Preparation Tips",
+              "content": "Practice with official Pearson PTE Core materials. Get comfortable speaking into a microphone (AI-scored). Practice typing speed for written sections. Use the official practice test to understand computer interface. Focus on pronunciation clarity for speaking sections. PTE rewards natural, conversational speech over memorized responses."
+            }
+          ]
         },
         {
           "id": "french-tests",
@@ -1074,7 +1126,33 @@
           "icon": "🇫🇷",
           "difficulty": "Intermediate",
           "reading_time": "12 min read",
-          "overview": "French proficiency can significantly boost your CRS score. Learn about TEF Canada and TCF Canada tests, scoring, and the benefits of French proficiency."
+          "overview": "French proficiency can significantly boost your CRS score. Learn about TEF Canada and TCF Canada tests, scoring, and the benefits of French proficiency.",
+          "sections": [
+            {
+              "title": "Why French Matters",
+              "content": "French proficiency provides major CRS bonuses: +25 points for NCLC 7+ French with CLB 4 English, or +50 points for NCLC 7+ French with CLB 5+ English. French category-based draws have lower cutoffs (379-435 vs 500+ general). Quebec has separate programs requiring French. Francophone Mobility allows LMIA-exempt work permits outside Quebec."
+            },
+            {
+              "title": "TEF Canada vs TCF Canada",
+              "content": "Both are accepted by IRCC. TEF Canada: Offered by Paris Chamber of Commerce (CCIP). Computer-based, results in 2-3 weeks. TCF Canada: Offered by France Education International. Paper-based, results in 4 weeks. Both test the same 4 skills and use NCLC (Niveaux de compétence linguistique canadiens) scoring equivalent to CLB."
+            },
+            {
+              "title": "Test Components",
+              "content": "Both tests cover 4 mandatory sections: Compréhension orale (Listening) - 40 min, 60 questions. Compréhension écrite (Reading) - 60 min, 60 questions. Expression orale (Speaking) - 15 min, with examiner. Expression écrite (Writing) - 60 min, 3 tasks. You must complete all 4 sections for IRCC purposes."
+            },
+            {
+              "title": "NCLC Score Requirements",
+              "content": "For Express Entry French points: Minimum NCLC 7 in all 4 abilities. NCLC levels roughly equal to CLB: NCLC 5 = CLB 5, NCLC 7 = CLB 7, etc. TEF Canada score to NCLC: Listening 249-279=NCLC7, Reading 207-232=NCLC7, Writing 310-348=NCLC7, Speaking 310-348=NCLC7. Check conversion tables for exact scores."
+            },
+            {
+              "title": "Test Booking and Cost",
+              "content": "TEF Canada: CAD $400-500, book through authorized centers. TCF Canada: CAD $350-450, book through Alliance Française. Both offered in major Canadian cities and internationally. Test dates less frequent than English tests - book 1-2 months ahead. Results valid for 2 years."
+            },
+            {
+              "title": "Preparation Strategies",
+              "content": "If you have basic French: Focus on reaching NCLC 7 in all skills. Use TV5Monde and Radio-Canada for listening practice. Practice writing formal French (different from conversational). Join French conversation groups. Consider intensive French courses. Alliance Française offers preparation courses worldwide."
+            }
+          ]
         },
         {
           "id": "clb-conversion",
@@ -1083,7 +1161,33 @@
           "icon": "🔄",
           "difficulty": "Beginner",
           "reading_time": "8 min read",
-          "overview": "Canadian immigration uses CLB (Canadian Language Benchmarks) levels. Learn how to convert your IELTS, CELPIP, PTE, or French test scores to CLB/NCLC levels."
+          "overview": "Canadian immigration uses CLB (Canadian Language Benchmarks) levels. Learn how to convert your IELTS, CELPIP, PTE, or French test scores to CLB/NCLC levels.",
+          "sections": [
+            {
+              "title": "What is CLB?",
+              "content": "Canadian Language Benchmarks (CLB) is the national standard for measuring English proficiency. It has 12 levels (1-12), with CLB 4-5 being basic, CLB 6-7 intermediate, CLB 8-9 advanced, CLB 10+ expert. NCLC (Niveaux de compétence linguistique canadiens) is the French equivalent. IRCC uses CLB to assess language ability for immigration."
+            },
+            {
+              "title": "IELTS to CLB Conversion",
+              "content": "IELTS General Training to CLB (per ability): Listening: 4.5=CLB4, 5.0=CLB5, 5.5=CLB6, 6.0=CLB7, 7.5=CLB8, 8.0=CLB9, 8.5=CLB10. Reading: 3.5=CLB4, 4.0=CLB5, 5.0=CLB6, 6.0=CLB7, 6.5=CLB8, 7.0=CLB9, 8.0=CLB10. Writing: 4.0=CLB4, 5.0=CLB5, 5.5=CLB6, 6.0=CLB7, 6.5=CLB8, 7.0=CLB9, 7.5=CLB10. Speaking: 4.0=CLB4, 5.0=CLB5, 5.5=CLB6, 6.0=CLB7, 6.5=CLB8, 7.0=CLB9, 7.5=CLB10."
+            },
+            {
+              "title": "CELPIP to CLB Conversion",
+              "content": "CELPIP-General scores convert directly to CLB: CELPIP M=Less than CLB 4, CELPIP 4=CLB4, CELPIP 5=CLB5, CELPIP 6=CLB6, CELPIP 7=CLB7, CELPIP 8=CLB8, CELPIP 9=CLB9, CELPIP 10-12=CLB10. The direct 1:1 conversion makes CELPIP scoring easy to understand."
+            },
+            {
+              "title": "PTE Core to CLB Conversion",
+              "content": "PTE Core scores (10-90) to CLB: 10-21=CLB3, 22-28=CLB4, 29-33=CLB5, 34-41=CLB6, 42-50=CLB7, 51-58=CLB8, 59-67=CLB9, 68-90=CLB10. Each of the four skills converts separately. Check your individual skill scores against these ranges."
+            },
+            {
+              "title": "French NCLC Conversion",
+              "content": "TEF Canada and TCF Canada use NCLC (French equivalent of CLB). TEF to NCLC (approximate): Listening 145-180=NCLC5, 181-216=NCLC6, 217-248=NCLC7, 249-279=NCLC8. Reading 121-150=NCLC5, 151-180=NCLC6, 181-206=NCLC7, 207-232=NCLC8. Writing/Speaking: 226-270=NCLC5, 271-309=NCLC6, 310-348=NCLC7, 349-370=NCLC8."
+            },
+            {
+              "title": "CLB Requirements by Program",
+              "content": "Federal Skilled Worker (FSW): Minimum CLB 7 all abilities. Canadian Experience Class (CEC): CLB 7 for NOC TEER 0/1, CLB 5 for NOC TEER 2/3. Provincial Nominee Programs: Varies, typically CLB 4-7. Atlantic Immigration: CLB 5 for high-skilled, CLB 4 for intermediate. Category-based draws: CLB 7+ French for French category."
+            }
+          ]
         }
       ]
     },
