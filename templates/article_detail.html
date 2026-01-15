@@ -15,7 +15,7 @@
 <meta property="og:url" content="https://www.philata.com/articles/{{ article.slug or article.id }}">
 <meta property="og:title" content="{{ article.title }}">
 <meta property="og:description" content="{{ article.full_article[:200] | striptags }}">
-<meta property="og:image" content="{{ article.featured_image or article.image_url }}">
+<meta property="og:image" content="{{ article.image_url or article.featured_image }}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:site_name" content="Philata - Canadian Immigration News">
@@ -29,7 +29,7 @@
 <meta name="twitter:site" content="@PhilataCA">
 <meta name="twitter:title" content="{{ article.title }}">
 <meta name="twitter:description" content="{{ article.full_article[:200] | striptags }}">
-<meta name="twitter:image" content="{{ article.featured_image or article.image_url }}">
+<meta name="twitter:image" content="{{ article.image_url or article.featured_image }}">
 
 <!-- NewsArticle Schema.org Structured Data (E-E-A-T optimized) -->
 <script type="application/ld+json">
@@ -44,7 +44,7 @@
     "description": "{{ article.full_article[:200] | striptags | replace('"', '\\"') | replace('\n', ' ') }}",
     "image": {
         "@type": "ImageObject",
-        "url": "{{ article.featured_image or article.image_url }}",
+        "url": "{{ article.image_url or article.featured_image }}",
         "width": 1200,
         "height": 630
     },
