@@ -625,7 +625,33 @@
           "icon": "⚡",
           "difficulty": "Beginner",
           "reading_time": "8 min read",
-          "overview": "The Student Direct Stream offers faster processing (typically 20 days) for applicants from eligible countries who meet specific requirements. Learn if you qualify and how to apply."
+          "overview": "The Student Direct Stream offers faster processing (typically 20 days) for applicants from eligible countries who meet specific requirements. Learn if you qualify and how to apply.",
+          "sections": [
+            {
+              "title": "What is SDS?",
+              "content": "The Student Direct Stream (SDS) is a faster study permit processing pathway for applicants from certain countries. Target processing time: 20 calendar days (vs months for regular stream). Available to applicants from: India, China, Vietnam, Philippines, Morocco, Pakistan, Senegal, Brazil, Colombia, Costa Rica, Peru, Trinidad and Tobago, and Antigua and Barbuda."
+            },
+            {
+              "title": "SDS Requirements",
+              "content": "To qualify for SDS you must: Have acceptance from a post-secondary DLI. Have IELTS 6.0+ in all bands (or equivalent in other accepted tests). Show proof of GIC (Guaranteed Investment Certificate) of $20,635 CAD. Have paid first year's tuition in full OR have adequate funds. Provide medical exam results upfront. Have no inadmissibility issues."
+            },
+            {
+              "title": "GIC Requirement",
+              "content": "A Guaranteed Investment Certificate (GIC) is a Canadian bank investment proving you have living expense funds. Amount required: $20,635 CAD (as of 2024). Available from: Scotiabank, CIBC, BMO, RBC, ICICI Canada, SBI Canada. Process: Apply online, transfer funds from home country. Monthly releases: You receive $2,000 first month, then equal monthly payments. Shows IRCC you can support yourself."
+            },
+            {
+              "title": "Language Test Scores",
+              "content": "Minimum scores for SDS: IELTS General/Academic: 6.0 in each ability. TOEFL iBT: 83+ overall (minimum 20 in each). CAEL: 60+ in each ability. PTE Academic: 60+ overall. For French: TEF Canada or TCF Canada with NCLC 7+ in each ability. Results must be less than 2 years old. Language tests not required if program is in a language you have studied in."
+            },
+            {
+              "title": "Application Process",
+              "content": "1) Get accepted to a DLI and receive acceptance letter. 2) Take English/French test and achieve minimum scores. 3) Purchase GIC from approved bank. 4) Pay first year tuition (or prove funds). 5) Complete medical exam through panel physician. 6) Apply online and indicate SDS. 7) Processing typically 20 days. 8) Receive study permit or request for additional documents."
+            },
+            {
+              "title": "SDS vs Regular Stream",
+              "content": "SDS advantages: Much faster processing (weeks vs months). Higher approval rates for qualified applicants. Clear requirements reduce uncertainty. SDS disadvantages: Stricter requirements. Need funds upfront (GIC + tuition). Not available from all countries. If you don't qualify for SDS, apply through regular stream - approval is still possible, just slower."
+            }
+          ]
         }
       ]
     },
@@ -836,7 +862,33 @@
           "icon": "🎓",
           "difficulty": "Beginner",
           "reading_time": "10 min read",
-          "overview": "An ECA compares your foreign education to Canadian standards. Learn which organizations are designated by IRCC and how to choose the right one for your situation."
+          "overview": "An ECA compares your foreign education to Canadian standards. Learn which organizations are designated by IRCC and how to choose the right one for your situation.",
+          "sections": [
+            {
+              "title": "What is an ECA?",
+              "content": "An Educational Credential Assessment (ECA) is a report from a designated organization that confirms your foreign education is valid and equivalent to a Canadian credential. Required for Express Entry if you completed education outside Canada. The ECA compares your degree to a Canadian equivalent (e.g., bachelor's degree, master's degree)."
+            },
+            {
+              "title": "Designated ECA Organizations",
+              "content": "IRCC accepts ECAs from these organizations: WES (World Education Services) - most popular, fastest. IQAS (International Qualifications Assessment Service - Alberta). ICAS (International Credential Assessment Service - Ontario). WES (World Education Services). BCIT (British Columbia Institute of Technology). PEBC (Pharmacy Examining Board of Canada) - pharmacists only. MCC (Medical Council of Canada) - physicians only."
+            },
+            {
+              "title": "Which ECA to Choose?",
+              "content": "WES: Most popular choice, fastest processing (7-20 days), online tracking, widely recognized. IQAS: Good for Alberta residents, slightly cheaper. ICAS: Ontario-based, comprehensive assessments. For regulated professions: Use specialized bodies (PEBC for pharmacy, MCC for medicine). Most applicants choose WES due to speed and ease of use."
+            },
+            {
+              "title": "ECA for CRS Points",
+              "content": "Your ECA determines your education points in Express Entry. Canadian equivalency matters: PhD = 150 points, Master's = 135 points, Bachelor's/3+ year = 120 points, 2-year diploma = 98 points, 1-year diploma = 90 points. Higher education = more points. If you have multiple credentials, having two credentials (one 3+ years) gives 128 points."
+            },
+            {
+              "title": "ECA Validity",
+              "content": "ECA reports are valid for 5 years from the date of issue for immigration purposes. Keep your ECA report safe - you'll need it for your Express Entry profile and PR application. If your ECA expires, you'll need to obtain a new one before submitting your PR application. The ECA number is linked to your Express Entry profile."
+            },
+            {
+              "title": "Tips for ECA Success",
+              "content": "Start early - the process takes 4-8 weeks including document delivery. Request extra official transcripts from your institution. Keep copies of all documents. Track your application online. If ECA result is lower than expected, you can appeal or try a different organization. Some credentials may be assessed differently by different organizations."
+            }
+          ]
         },
         {
           "id": "professional-licensing",
