@@ -520,7 +520,33 @@
           "icon": "🏫",
           "difficulty": "Beginner",
           "reading_time": "10 min read",
-          "overview": "Not all Canadian schools qualify you for a study permit or post-graduation work permit. Learn how to verify DLI status and choose programs that support your immigration goals."
+          "overview": "Not all Canadian schools qualify you for a study permit or post-graduation work permit. Learn how to verify DLI status and choose programs that support your immigration goals.",
+          "sections": [
+            {
+              "title": "What is a DLI?",
+              "content": "A Designated Learning Institution (DLI) is a school approved by a provincial/territorial government to host international students. Only DLIs can issue acceptance letters valid for study permit applications. Each DLI has a unique DLI number (e.g., O123456789). Public colleges and universities are typically DLIs; private schools must apply for designation."
+            },
+            {
+              "title": "Verifying DLI Status",
+              "content": "Always verify your school is a DLI before applying: Use IRCC's online DLI list at canada.ca. Search by province, city, or institution name. Verify the DLI number matches your acceptance letter. Note: DLI status can be revoked - check close to your application date. Not all DLI programs qualify for PGWP - verify PGWP eligibility separately."
+            },
+            {
+              "title": "Public vs Private DLIs",
+              "content": "Public institutions (universities, colleges): Generally all programs PGWP-eligible. More scholarship opportunities. Often better recognized by employers. Spouse may qualify for open work permit. Private institutions: Not all programs are PGWP-eligible. Must verify specific program eligibility. May offer more flexible scheduling. Often lower tuition. Quebec private DLIs have different rules."
+            },
+            {
+              "title": "PGWP-Eligible Programs",
+              "content": "To qualify for PGWP after graduation: Public post-secondary: Most programs eligible. Private institution: Only degree programs (bachelor's, master's, doctorate) are eligible. Private in Quebec: May be eligible if program is publicly funded. Minimum 8 months. Language training and professional development programs generally NOT eligible."
+            },
+            {
+              "title": "Factors to Consider",
+              "content": "When choosing a DLI, consider: Location (affects cost of living, job opportunities). Program length (affects PGWP duration). Field of study (aligns with NOC codes for category-based draws). Provincial immigration pathways (some provinces favor local graduates). Tuition and living costs. Co-op/internship opportunities. Graduation and employment rates."
+            },
+            {
+              "title": "Provincial Attestation Letter (PAL)",
+              "content": "Since January 2024, most provinces require a PAL to apply for a study permit. Your DLI must issue this letter confirming they have space for you within the provincial cap. Process: Accept offer from DLI → DLI issues PAL → Include PAL with study permit application. Some programs exempt from PAL requirement (master's, PhD, K-12)."
+            }
+          ]
         },
         {
           "id": "pgwp",
@@ -1067,7 +1093,33 @@
           "icon": "✈️",
           "difficulty": "Beginner",
           "reading_time": "10 min read",
-          "overview": "The Super Visa allows parents and grandparents to visit Canada for up to 5 years at a time. Learn about requirements and how it differs from regular visitor visas."
+          "overview": "The Super Visa allows parents and grandparents to visit Canada for up to 5 years at a time. Learn about requirements and how it differs from regular visitor visas.",
+          "sections": [
+            {
+              "title": "Super Visa vs Regular Visitor Visa",
+              "content": "Super Visa advantages: Stay up to 5 years per entry (vs 6 months for regular). Valid for up to 10 years (multiple entry). Specifically designed for parents/grandparents of Canadian citizens or PRs. No need to extend status every 6 months. Disadvantage: Cannot work in Canada and must have private medical insurance."
+            },
+            {
+              "title": "Eligibility Requirements",
+              "content": "Your child/grandchild in Canada must: Be a Canadian citizen or permanent resident. Meet minimum income requirement (LICO) for 1 year. Provide a letter of invitation. The parent/grandparent must: Pass a medical examination. Have valid medical insurance from Canadian company. Have no inadmissibility issues (criminality, security, health)."
+            },
+            {
+              "title": "Medical Insurance Requirement",
+              "content": "Medical insurance must: Be from a Canadian insurance company. Cover healthcare, hospitalization, and repatriation. Be valid for at least 1 year from entry date. Have minimum coverage of $100,000 CAD. Popular providers include: Manulife, Blue Cross, TuGo, Allianz. Cost ranges from $1,000-$5,000+ per year depending on age and health."
+            },
+            {
+              "title": "Income Requirements",
+              "content": "The sponsor must meet LICO (Low Income Cut-Off) for 1 tax year: 2 persons = $43,082. 3 persons = $52,965. 4 persons = $64,306. 5 persons = $72,927. Income sources: employment, self-employment, EI, pensions. Provide Notice of Assessment (NOA) and employment letter as proof."
+            },
+            {
+              "title": "Application Process",
+              "content": "1) Gather documents: invitation letter, sponsor's proof of status, sponsor's income proof, medical exam results, insurance proof. 2) Apply online or at VAC. 3) Pay fees ($100 visitor visa + $85 biometrics). 4) Submit biometrics. 5) Wait for processing (varies by country, typically 2-8 weeks). 6) Receive Super Visa stamp in passport."
+            },
+            {
+              "title": "After Arrival in Canada",
+              "content": "Upon entry: Show Super Visa, insurance proof, and invitation letter to CBSA officer. Officer stamps entry for up to 5 years. Keep insurance valid throughout stay. Can extend stay without leaving Canada (if insurance maintained). To stay beyond 5 years: apply for extension before status expires. Cannot work - visit only."
+            }
+          ]
         },
         {
           "id": "dependent-children",
