@@ -735,7 +735,33 @@
           "icon": "📝",
           "difficulty": "Beginner",
           "reading_time": "15 min read",
-          "overview": "IELTS General Training is one of the most popular English tests for Canadian immigration. Learn about the test format, scoring, and how it converts to CLB levels."
+          "overview": "IELTS General Training is one of the most popular English tests for Canadian immigration. Learn about the test format, scoring, and how it converts to CLB levels.",
+          "sections": [
+            {
+              "title": "IELTS for Immigration",
+              "content": "For Canadian immigration, you need IELTS General Training (NOT Academic). Results are valid for 2 years from the test date. The test measures four abilities: Listening (30 min), Reading (60 min), Writing (60 min), and Speaking (11-14 min). You receive band scores from 0-9 for each ability, which convert to Canadian Language Benchmark (CLB) levels."
+            },
+            {
+              "title": "CLB Conversion Chart",
+              "content": "IELTS to CLB conversion: Listening - 4.5=CLB4, 5.0=CLB5, 5.5=CLB6, 6.0=CLB7, 7.5=CLB8, 8.0=CLB9, 8.5=CLB10. Reading - 3.5=CLB4, 4.0=CLB5, 5.0=CLB6, 6.0=CLB7, 6.5=CLB8, 7.0=CLB9, 8.0=CLB10. Writing - 4.0=CLB4, 5.0=CLB5, 5.5=CLB6, 6.0=CLB7, 6.5=CLB8, 7.0=CLB9, 7.5=CLB10. Speaking - 4.0=CLB4, 5.0=CLB5, 5.5=CLB6, 6.0=CLB7, 6.5=CLB8, 7.0=CLB9, 7.5=CLB10."
+            },
+            {
+              "title": "Test Format",
+              "content": "Listening: 4 sections, 40 questions, recordings of native speakers. Reading: 3 sections, 40 questions, texts from books, magazines, newspapers. Writing: Task 1 (150 words minimum) - write a letter; Task 2 (250 words minimum) - essay responding to a point of view. Speaking: Face-to-face interview in 3 parts (introduction, long turn, discussion)."
+            },
+            {
+              "title": "Target Scores for Immigration",
+              "content": "Express Entry minimum: CLB 7 for FSW (IELTS 6.0 in each). CEC and PNP often require CLB 5-7 depending on NOC level. For maximum CRS points, aim for CLB 9+ (IELTS 7.0+ Reading, 8.0+ Listening, 7.0+ Writing/Speaking). Each CLB level above 7 significantly increases your score. CLB 9 in all abilities = 124 points vs 68 points at CLB 7."
+            },
+            {
+              "title": "Test Booking and Cost",
+              "content": "IELTS costs approximately CAD $310-350 depending on location. Book online through British Council, IDP, or local test centers. Book 2-4 weeks in advance as popular dates fill quickly. Results available online after 13 days (paper-based) or 5-7 days (computer-delivered). You can send results directly to IRCC electronically."
+            },
+            {
+              "title": "Preparation Tips",
+              "content": "Practice with official Cambridge IELTS books. Take timed practice tests to build stamina. For Listening: practice note-taking and predicting answers. For Reading: skim and scan techniques, time management (20 min per section). For Writing: learn essay structures, use formal language, address all parts of the task. For Speaking: practice fluency over perfection, expand your answers, use idioms naturally."
+            }
+          ]
         },
         {
           "id": "celpip",
@@ -789,7 +815,33 @@
           "icon": "💑",
           "difficulty": "Intermediate",
           "reading_time": "20 min read",
-          "overview": "Spousal sponsorship allows Canadian citizens and permanent residents to sponsor their spouse, common-law partner, or conjugal partner for permanent residence. Learn about inland vs outland applications."
+          "overview": "Spousal sponsorship allows Canadian citizens and permanent residents to sponsor their spouse, common-law partner, or conjugal partner for permanent residence. Learn about inland vs outland applications.",
+          "sections": [
+            {
+              "title": "Who Can Sponsor",
+              "content": "You can sponsor if you are: A Canadian citizen or permanent resident, at least 18 years old, and can prove you can support your spouse financially. You cannot sponsor if: you are on social assistance (except disability), you have an unremoved deportation order, you are in prison, you were sponsored as a spouse yourself and became PR less than 5 years ago, or you are in default on family support obligations."
+            },
+            {
+              "title": "Who Can Be Sponsored",
+              "content": "You can sponsor your: Spouse (legally married), Common-law partner (lived together in conjugal relationship for at least 12 continuous months), or Conjugal partner (in committed relationship for 1+ year but could not live together or marry due to immigration barriers or persecution). Your partner must be 18 or older. Same-sex relationships are recognized."
+            },
+            {
+              "title": "Inland vs Outland Applications",
+              "content": "Inland: Sponsored person is already in Canada with valid status. Can apply for Open Work Permit while waiting (usually granted in ~4 months). Cannot leave Canada while processing without abandoning application. Processing time: ~12-15 months. Outland: Sponsored person is outside Canada. They continue living abroad during processing. Can visit Canada on visitor visa. Processing time: ~12-24 months depending on country."
+            },
+            {
+              "title": "Required Documents",
+              "content": "Key documents include: Proof of sponsor's status (citizenship or PR card), Marriage certificate or proof of common-law relationship, Relationship history and photos together, Joint financial documents (lease, bank accounts, bills), Communication history (messages, call logs), Forms: IMM 1344, IMM 0008, IMM 5669, IMM 5406, IMM 5532. Police certificates from all countries lived in 6+ months since age 18."
+            },
+            {
+              "title": "Processing Times and Fees",
+              "content": "Current processing time: 12-15 months (inland), 12-24 months (outland). Fees: $1,080 sponsorship fee + $500 PR processing fee + $85 biometrics + $500 RPRF (Right of Permanent Residence Fee) = ~$2,165 total. Additional fees may apply for translations, police certificates, and medical exams."
+            },
+            {
+              "title": "Proving Genuine Relationship",
+              "content": "IRCC looks for evidence your relationship is genuine: Photos together over time (dates, occasions), Joint financial commitments (lease, bills, accounts), Travel together, Communication records, Wedding photos/video, Affidavits from friends/family. Red flags include: large age gaps, no common language, brief courtship, financial incentives, inconsistent interview answers."
+            }
+          ]
         },
         {
           "id": "pgp",
