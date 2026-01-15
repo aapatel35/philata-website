@@ -76,7 +76,33 @@
           "icon": "📈",
           "difficulty": "Intermediate",
           "reading_time": "10 min read",
-          "overview": "If your CRS score is below recent draw cutoffs, there are several proven strategies to improve your ranking. From retaking language tests to gaining Canadian experience, learn the most effective ways to increase your score."
+          "overview": "If your CRS score is below recent draw cutoffs, there are several proven strategies to improve your ranking. From retaking language tests to gaining Canadian experience, learn the most effective ways to increase your score.",
+          "sections": [
+            {
+              "title": "Improve Your Language Scores",
+              "content": "Language proficiency offers the highest point potential. Retake your English test (IELTS, CELPIP, PTE Core) aiming for CLB 9+ in all abilities. Each CLB level above 7 adds significant points: CLB 8 vs CLB 7 is +24 points (6 per ability). CLB 9 vs CLB 8 is +32 points. CLB 10 vs CLB 9 is +12 points. Focus on your weakest ability first."
+            },
+            {
+              "title": "Learn French",
+              "content": "French proficiency provides major bonus points: 25 points for CLB 7+ French with CLB 4 English, or 50 points for CLB 7+ in both French AND CLB 5+ English. TEF Canada and TCF Canada are the accepted French tests. Even intermediate French (NCLC 5-6) helps you qualify for French category-based draws with lower cutoffs (often 400-435)."
+            },
+            {
+              "title": "Get a Provincial Nomination",
+              "content": "A provincial nomination (PNP) adds 600 CRS points - the single most valuable boost. This virtually guarantees an ITA. Research PNP streams you qualify for: Ontario's Human Capital Priorities, BC PNP Tech, Alberta Express Entry, Saskatchewan SINP. Many provinces don't require job offers for Express Entry-linked streams."
+            },
+            {
+              "title": "Gain Canadian Experience",
+              "content": "One year of Canadian work experience (NOC TEER 0, 1, 2, or 3) adds 40 points for singles, plus skill transferability bonuses. Options include: working on a PGWP after Canadian studies, getting an employer-specific work permit (LMIA), or working under IEC (Working Holiday). Canadian experience also qualifies you for Canadian Experience Class (CEC) draws."
+            },
+            {
+              "title": "Complete Canadian Education",
+              "content": "A Canadian credential adds 15-30 points: 15 points for a 1-2 year program, 30 points for 3+ years. It also provides skill transferability points when combined with strong language scores. Consider a 1-year college diploma or graduate certificate in a field related to your occupation. Bonus: This leads to a PGWP for Canadian experience."
+            },
+            {
+              "title": "Leverage Category-Based Draws",
+              "content": "Since 2023, IRCC conducts targeted draws with lower cutoffs: Healthcare (nurses, doctors, allied health), STEM occupations, Trades (electricians, plumbers, carpenters), French language proficiency, Transport, Agriculture. Check if your NOC code qualifies. French and trades draws have had cutoffs as low as 388-435 vs 500+ for general draws."
+            }
+          ]
         },
         {
           "id": "category-draws",
@@ -85,7 +111,33 @@
           "icon": "🎯",
           "difficulty": "Intermediate",
           "reading_time": "8 min read",
-          "overview": "Since 2023, IRCC has been conducting category-based draws targeting specific occupations and skills. These draws often have significantly lower CRS cutoffs than general draws, making them an excellent opportunity for eligible candidates."
+          "overview": "Since 2023, IRCC has been conducting category-based draws targeting specific occupations and skills. These draws often have significantly lower CRS cutoffs than general draws, making them an excellent opportunity for eligible candidates.",
+          "sections": [
+            {
+              "title": "What Are Category-Based Draws?",
+              "content": "Category-based draws are targeted Express Entry rounds that invite candidates based on specific attributes rather than just CRS score. Introduced in 2023, these draws allow IRCC to select candidates who fill labor market gaps in key sectors. Categories include: Healthcare, STEM, Trades, Transport, Agriculture, and French language proficiency."
+            },
+            {
+              "title": "Healthcare Category",
+              "content": "Healthcare draws target medical professionals. Eligible NOC codes include: 31102 (Family physicians), 31301 (Registered nurses), 31302 (Nurse practitioners), 32101 (Licensed practical nurses), 32120 (Medical laboratory technologists), and many allied health professions. Cutoffs have ranged from 420-480. Must have valid ECA for foreign credentials."
+            },
+            {
+              "title": "STEM Category",
+              "content": "STEM (Science, Technology, Engineering, Math) draws target tech workers and engineers. Key NOC codes: 21211 (Data scientists), 21231 (Software engineers), 21232 (Software developers), 21300-21399 (Engineers), 21220 (Cybersecurity specialists). Cutoffs typically 480-520. Valid work experience in STEM field required within last 3 years."
+            },
+            {
+              "title": "Trades Category",
+              "content": "Trade occupation draws have had some of the lowest cutoffs (388-436). Eligible NOCs include: 72310 (Carpenters), 72400 (Electricians), 72410 (Plumbers), 73200 (Residential installers), 73400 (Heavy equipment operators). Must have 6 months continuous full-time work experience in the trade within last 3 years."
+            },
+            {
+              "title": "French Language Category",
+              "content": "French proficiency draws have seen the most invitations and lowest cutoffs (379-435). To qualify you need: NCLC 7+ in all four French abilities (speaking, listening, reading, writing). No specific occupation required. French test results (TEF Canada or TCF Canada) must be valid. This is often the easiest category to qualify for."
+            },
+            {
+              "title": "How to Check Your Eligibility",
+              "content": "1. Find your NOC code using the NOC Finder tool. 2. Check if your NOC is in the eligible list for any category. 3. Ensure you have qualifying work experience (usually 6 months to 1 year in last 3 years). 4. For French: take TEF or TCF and achieve NCLC 7+. 5. Update your Express Entry profile to reflect qualifying factors. 6. Monitor draw announcements on the IRCC website."
+            }
+          ]
         }
       ]
     },
@@ -433,7 +485,33 @@
           "icon": "🎓",
           "difficulty": "Beginner",
           "reading_time": "15 min read",
-          "overview": "A study permit allows you to study at a designated learning institution (DLI) in Canada. This comprehensive guide covers eligibility, required documents, application process, and tips for approval."
+          "overview": "A study permit allows you to study at a designated learning institution (DLI) in Canada. This comprehensive guide covers eligibility, required documents, application process, and tips for approval.",
+          "sections": [
+            {
+              "title": "Study Permit Basics",
+              "content": "A study permit is a document that allows foreign nationals to study at a Designated Learning Institution (DLI) in Canada. It is NOT a visa - you may also need a visitor visa or eTA to enter Canada. Study permits are typically valid for the length of your program plus 90 days. You can work up to 20 hours/week during academic sessions and full-time during scheduled breaks."
+            },
+            {
+              "title": "Eligibility Requirements",
+              "content": "To qualify for a study permit you must: 1) Have an acceptance letter from a DLI, 2) Prove you have enough money to pay tuition, living expenses, and return transportation (approximately CAD $20,635/year for living expenses outside Quebec), 3) Be a law-abiding citizen with no criminal record, 4) Be in good health (may require medical exam), 5) Convince an officer you will leave Canada when your permit expires."
+            },
+            {
+              "title": "Required Documents",
+              "content": "Standard documents include: Valid passport, Acceptance letter from a DLI, Proof of financial support (bank statements, GIC, scholarship letters, sponsor letters), Letter of explanation stating your purpose and ties to home country, Provincial Attestation Letter (PAL) for most provinces since 2024, Passport-size photos meeting IRCC specifications, Language test results (if required), and Police clearance certificates."
+            },
+            {
+              "title": "Provincial Attestation Letter (PAL)",
+              "content": "Since January 2024, most study permit applications require a Provincial Attestation Letter (PAL). This letter confirms your province/territory has allocated a spot for you within their international student cap. Each province has its own PAL issuance process - typically provided by your DLI after you accept your offer. Exemptions include master's, doctoral, and some K-12 programs."
+            },
+            {
+              "title": "Application Process",
+              "content": "1) Get accepted to a DLI and obtain PAL, 2) Gather all required documents, 3) Create an IRCC account online, 4) Complete the application forms (IMM 1294), 5) Pay the fees ($150 CAD processing + $85 biometrics), 6) Submit biometrics at a VAC or ASC within 30 days, 7) Wait for processing (varies by country, typically 4-12 weeks), 8) If approved, travel to Canada and obtain your permit at the port of entry."
+            },
+            {
+              "title": "Tips for Approval",
+              "content": "Show strong ties to your home country (property, job, family). Explain why you chose Canada and this specific program. Demonstrate sufficient funds that are readily accessible. Choose a program aligned with your past education/career. Avoid previously refused applications or overstays. Submit complete documentation the first time. Consider applying from countries with higher approval rates if you have legal status there."
+            }
+          ]
         },
         {
           "id": "dli-selection",
@@ -487,7 +565,33 @@
           "icon": "📋",
           "difficulty": "Beginner",
           "reading_time": "12 min read",
-          "overview": "Canadian work permits come in many forms: LMIA-based, LMIA-exempt, open, and employer-specific. This guide helps you understand which type applies to your situation."
+          "overview": "Canadian work permits come in many forms: LMIA-based, LMIA-exempt, open, and employer-specific. This guide helps you understand which type applies to your situation.",
+          "sections": [
+            {
+              "title": "Types of Work Permits",
+              "content": "There are two main categories: Employer-Specific Work Permits (tied to one employer, job, and location) and Open Work Permits (work for any employer anywhere in Canada). Employer-specific permits may require an LMIA or qualify for LMIA exemption. Open work permits are available through specific programs like PGWP, spousal permits, or bridging permits."
+            },
+            {
+              "title": "LMIA-Based Work Permits",
+              "content": "Labour Market Impact Assessment (LMIA) work permits require your employer to first obtain an LMIA from Employment and Social Development Canada (ESDC). This proves hiring a foreign worker won't negatively impact Canadian workers. The LMIA process takes 2-3 months and costs $1,000 per position. A positive LMIA adds 50-200 points to your CRS score for Express Entry."
+            },
+            {
+              "title": "LMIA-Exempt Work Permits",
+              "content": "Many work permits don't require an LMIA under international agreements or specific programs: CUSMA/NAFTA professionals, Intra-Company Transfers (ICT), International Experience Canada (IEC), Post-Graduation Work Permit (PGWP), Spousal Open Work Permits, Significant benefit to Canada (researchers, academics). These use LMIA exemption codes (e.g., R205, R204)."
+            },
+            {
+              "title": "Open Work Permits",
+              "content": "Open work permits let you work for any employer. Categories include: Post-Graduation Work Permit (PGWP) for DLI graduates, Spousal/Common-law Partner OWP for spouses of skilled workers or students, Bridging OWP while waiting for PR, Vulnerable Worker OWP, and specific humanitarian programs. Most valuable for gaining Canadian experience for Express Entry."
+            },
+            {
+              "title": "Application Process",
+              "content": "1) Determine your eligibility category, 2) Gather employer documents (job offer, LMIA if needed, or exemption code), 3) Gather personal documents (passport, photo, proof of status), 4) Apply online via IRCC portal, 5) Pay fees ($155 work permit + $85 biometrics), 6) Submit biometrics within 30 days, 7) Wait for processing (varies 2-16 weeks by country), 8) Receive work permit at port of entry or by mail if inside Canada."
+            },
+            {
+              "title": "Work Permit Duration",
+              "content": "Employer-specific permits are usually valid for the job offer duration (max 2-3 years). PGWP validity matches your program length (8 months to 3 years). IEC permits are typically 12-24 months depending on country. Spousal OWPs match the principal applicant's permit. All permits can potentially be renewed or extended if you remain eligible."
+            }
+          ]
         },
         {
           "id": "lmia",
