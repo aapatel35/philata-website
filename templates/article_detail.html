@@ -252,25 +252,18 @@
         font-size: 12px;
     }
 
-    /* Featured Image - Show full image without cropping */
+    /* Featured Image - 16:9 landscape format */
     .article-featured-image {
         width: 100%;
         max-width: 100%;
-        aspect-ratio: 1 / 1;
-        background-size: contain;
+        aspect-ratio: 16 / 9;
+        background-size: cover;
         background-position: center center;
         background-repeat: no-repeat;
-        background-color: var(--bg-elevated);
         border-radius: 16px;
         margin-bottom: 40px;
         position: relative;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Alternative: use cover for landscape images */
-    .article-featured-image.cover-image {
-        background-size: cover;
-        aspect-ratio: 16 / 9;
     }
 
     .article-featured-image::after {
