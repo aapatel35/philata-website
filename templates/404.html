@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - Philata{% endblock %}
+
+{% block content %}
+<div class="error-page">
+    <div class="error-content">
+        <h1 class="error-code">404</h1>
+        <h2 class="error-title">Page Not Found</h2>
+        <p class="error-message">{{ message or "The page you're looking for doesn't exist or has been moved." }}</p>
+        <div class="error-actions">
+            <a href="/" class="btn-primary">Go to Homepage</a>
+            <a href="/articles" class="btn-secondary">Browse Articles</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.error-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+    padding: 48px 24px;
+}
+
+.error-content {
+    max-width: 500px;
+}
+
+.error-code {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 8rem;
+    font-weight: 400;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 16px;
+}
+
+.error-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.error-message {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-bottom: 32px;
+    line-height: 1.6;
+}
+
+.error-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 24px;
+    background: var(--gold);
+    color: var(--bg-primary);
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all var(--duration-fast);
+}
+
+.btn-primary:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 24px;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid var(--border-subtle);
+    transition: all var(--duration-fast);
+}
+
+.btn-secondary:hover {
+    background: var(--bg-secondary);
+    border-color: var(--border-default);
+}
+</style>
+{% endblock %}

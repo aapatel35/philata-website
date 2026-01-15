@@ -830,10 +830,11 @@
     <div class="content-card-enhanced scroll-animate" data-index="{{ loop.index0 }}" data-track="{{ result.track }}" data-title="{{ result.title|lower }}" data-id="{{ result.id }}">
         <div class="content-card-image">
             <span class="content-card-badge badge-{{ result.track }}">{{ result.track|upper }}</span>
-            {% if result.filename %}
+            {% set display_image = result.featured_image or result.image_url %}
+            {% if result.filename and not display_image %}
             <img src="https://web-production-35219.up.railway.app/images/{{ result.filename }}" alt="{{ result.title }}" onerror="this.src='{{ stock_images.get(result.track, stock_images.default) }}'">
-            {% elif result.image_url and 'localhost' not in result.image_url %}
-            <img src="{{ result.image_url }}" alt="{{ result.title }}" onerror="this.src='{{ stock_images.get(result.track, stock_images.default) }}'">
+            {% elif display_image and 'localhost' not in display_image %}
+            <img src="{{ display_image }}" alt="{{ result.title }}" onerror="this.src='{{ stock_images.get(result.track, stock_images.default) }}'">
             {% else %}
             <img src="{{ stock_images.get(result.track, stock_images.default) }}" alt="{{ result.title }}">
             {% endif %}

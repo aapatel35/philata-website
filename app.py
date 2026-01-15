@@ -15,6 +15,7 @@ import requests
 import threading
 from datetime import datetime, timedelta, timezone
 from flask import Flask, render_template, jsonify, request, send_from_directory, redirect, url_for, flash
+from functools import wraps
 
 # Eastern timezone (EST = UTC-5, Railway server runs in UTC)
 EST = timezone(timedelta(hours=-5))
@@ -80,6 +81,87 @@ ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'philata2025')
 
 # Cloudinary settings for URL conversion
 CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME', 'dg7yw1j18')
+
+# =============================================================================
+# SECURITY: Rate Limiting & Input Validation
+# =============================================================================
+
+# Simple in-memory rate limiter (per IP, resets on restart)
+_rate_limit_store = {}
+_rate_limit_lock = threading.Lock()
+
+def rate_limit(max_requests=30, window_seconds=60):
+    """
+    Simple rate limiting decorator.
+    Args:
+        max_requests: Maximum requests allowed in the time window
+        window_seconds: Time window in seconds
+    """
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+            if client_ip:
+                client_ip = client_ip.split(',')[0].strip()  # Get first IP if multiple
+
+            key = f"{f.__name__}:{client_ip}"
+            now = datetime.now()
+
+            with _rate_limit_lock:
+                if key not in _rate_limit_store:
+                    _rate_limit_store[key] = {'count': 0, 'window_start': now}
+
+                entry = _rate_limit_store[key]
+
+                # Reset window if expired
+                if (now - entry['window_start']).total_seconds() > window_seconds:
+                    entry['count'] = 0
+                    entry['window_start'] = now
+
+                # Check rate limit
+                if entry['count'] >= max_requests:
+                    return jsonify({
+                        'error': 'Rate limit exceeded',
+                        'retry_after': window_seconds - int((now - entry['window_start']).total_seconds())
+                    }), 429
+
+                entry['count'] += 1
+
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
+
+def validate_article_data(data):
+    """
+    Validate article data from POST requests.
+    Returns (is_valid, error_message)
+    """
+    if not data:
+        return False, "No data provided"
+
+    # Required fields
+    required = ['title']
+    for field in required:
+        if not data.get(field):
+            return False, f"Missing required field: {field}"
+
+    # Title length check
+    if len(data.get('title', '')) > 500:
+        return False, "Title too long (max 500 characters)"
+
+    # Content length check (if provided)
+    if data.get('full_article') and len(data.get('full_article', '')) > 100000:
+        return False, "Article content too long (max 100,000 characters)"
+
+    # Sanitize URLs - ensure they're not malicious
+    url_fields = ['image_url', 'featured_image', 'source_url', 'official_source_url']
+    for field in url_fields:
+        url = data.get(field, '')
+        if url and not url.startswith(('http://', 'https://', 'data:image')):
+            if url and url != '':  # Only reject if actually provided
+                return False, f"Invalid URL format in {field}"
+
+    return True, None
 
 
 def convert_image_url(image_url):
@@ -1255,17 +1337,29 @@ def short_url_redirect(short_id):
 @app.route('/articles/<slug>')
 def article_detail(slug):
     """Individual article page"""
-    all_articles = load_articles()
+    import time
 
-    # Find article by slug or ID
-    article = None
-    for a in all_articles:
-        if a.get('slug') == slug or a.get('id') == slug:
-            article = a
+    # Try up to 2 times to load articles (in case of cold start/race condition)
+    for attempt in range(2):
+        all_articles = load_articles()
+
+        # Find article by slug or ID
+        article = None
+        for a in all_articles:
+            if a.get('slug') == slug or a.get('id') == slug:
+                article = a
+                break
+
+        if article:
             break
 
+        # If not found on first attempt, wait briefly and retry (cold start scenario)
+        if attempt == 0 and not all_articles:
+            time.sleep(0.5)  # Brief wait for API response
+
     if not article:
-        return "Article not found", 404
+        # Return a proper 404 page instead of plain text
+        return render_template('404.html', message=f"Article '{slug}' not found"), 404
 
     # Get related articles (same category)
     related = [a for a in all_articles if a.get('category') == article.get('category') and a.get('id') != article.get('id')][:3]
@@ -1415,6 +1509,7 @@ def get_results():
 
 
 @app.route('/api/articles', methods=['POST'])
+@rate_limit(max_requests=60, window_seconds=60)  # 60 requests per minute
 def add_article():
     """
     Add a new article from n8n workflow (enhanced endpoint).
@@ -1422,6 +1517,12 @@ def add_article():
     """
     try:
         data = request.get_json()
+
+        # Input validation
+        is_valid, error = validate_article_data(data)
+        if not is_valid:
+            return jsonify({'error': error}), 400
+
         results = load_results()
 
         # Use provided slug or generate from title
@@ -1806,10 +1907,16 @@ def check_article_duplicate():
 
 
 @app.route('/api/results', methods=['POST'])
+@rate_limit(max_requests=60, window_seconds=60)  # 60 requests per minute
 def add_result():
     """Add a new result from n8n workflow (legacy endpoint)"""
     try:
         data = request.get_json()
+
+        # Basic validation
+        if not data or not data.get('title'):
+            return jsonify({'error': 'Missing required field: title'}), 400
+
         results = load_results()
 
         # Generate unique ID - use track, fallback to category, then 'content'
@@ -3318,6 +3425,101 @@ def clear_ai_decisions():
 # AI CHATBOT - Temporarily Disabled
 # =============================================================================
 # Chat functionality has been disabled. Re-enable when ready.
+
+
+# =============================================================================
+# SEO: SITEMAPS
+# =============================================================================
+
+@app.route('/sitemap.xml')
+def sitemap():
+    """Generate XML sitemap for SEO"""
+    from flask import Response
+
+    articles = load_articles()
+
+    xml_content = '''<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+'''
+
+    # Static pages
+    static_pages = [
+        ('/', '1.0', 'daily'),
+        ('/articles', '0.9', 'hourly'),
+        ('/dashboard', '0.8', 'hourly'),
+        ('/guides', '0.8', 'weekly'),
+        ('/learn', '0.7', 'weekly'),
+        ('/tools/crs-calculator', '0.8', 'monthly'),
+        ('/about', '0.5', 'monthly'),
+        ('/contact', '0.5', 'monthly'),
+    ]
+
+    for path, priority, freq in static_pages:
+        xml_content += f'''    <url>
+        <loc>https://www.philata.com{path}</loc>
+        <changefreq>{freq}</changefreq>
+        <priority>{priority}</priority>
+    </url>
+'''
+
+    # Article pages with news sitemap extension
+    for article in articles[:100]:  # Limit to 100 most recent articles
+        slug = article.get('slug') or article.get('id')
+        created = article.get('created_at', '')[:10] if article.get('created_at') else ''
+        title = article.get('title', '').replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
+        image_url = article.get('featured_image') or article.get('image_url', '')
+
+        xml_content += f'''    <url>
+        <loc>https://www.philata.com/articles/{slug}</loc>
+        <lastmod>{created}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+        <news:news>
+            <news:publication>
+                <news:name>Philata</news:name>
+                <news:language>en</news:language>
+            </news:publication>
+            <news:publication_date>{created}</news:publication_date>
+            <news:title>{title}</news:title>
+        </news:news>
+'''
+        if image_url:
+            xml_content += f'''        <image:image>
+            <image:loc>{image_url}</image:loc>
+            <image:title>{title}</image:title>
+        </image:image>
+'''
+        xml_content += '''    </url>
+'''
+
+    xml_content += '</urlset>'
+
+    return Response(xml_content, mimetype='application/xml')
+
+
+@app.route('/robots.txt')
+def robots():
+    """Generate robots.txt for SEO"""
+    from flask import Response
+
+    content = '''User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://www.philata.com/sitemap.xml
+
+# Disallow admin/API routes
+Disallow: /api/
+Disallow: /admin/
+
+# Allow crawling of article pages
+Allow: /articles/
+Allow: /guides/
+Allow: /learn/
+'''
+    return Response(content, mimetype='text/plain')
 
 
 # =============================================================================
