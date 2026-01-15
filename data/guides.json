@@ -967,7 +967,33 @@
           "icon": "📝",
           "difficulty": "Intermediate",
           "reading_time": "20 min read",
-          "overview": "IMM 0008 is the generic application form for Canadian permanent residence. This guide covers every section with examples and tips to avoid common mistakes."
+          "overview": "IMM 0008 is the generic application form for Canadian permanent residence. This guide covers every section with examples and tips to avoid common mistakes.",
+          "sections": [
+            {
+              "title": "Form Overview",
+              "content": "IMM 0008 is required for all permanent residence applications (Express Entry, PNP, Family Sponsorship). It collects personal information about you and your family members. Must be completed for principal applicant AND each family member (spouse, dependent children). Use the PDF fillable version and save regularly."
+            },
+            {
+              "title": "Section 1-3: Personal Details",
+              "content": "Section 1: Application details - select correct category. Section 2: Personal details - use name exactly as on passport. Section 3: Contact information - provide reliable email and phone. Use N/A for fields that don't apply. Never leave fields blank. Dates must be in YYYY-MM-DD format."
+            },
+            {
+              "title": "Section 4-6: Family Information",
+              "content": "Section 4: Passport details - ensure validity extends past expected PR date. Section 5: National identity - include all IDs (SSN, Aadhaar, etc.). Section 6: Education - list all post-secondary education. Include incomplete studies with 'Not completed' note."
+            },
+            {
+              "title": "Section 7-9: Work & Travel",
+              "content": "Section 7: Language proficiency - match your CLB scores from test results. Section 8: Family members - include ALL family members even if not accompanying. Section 9: Work history - list 10 years of employment in reverse chronological order. Include gaps (e.g., 'Unemployed - job searching')."
+            },
+            {
+              "title": "Common Mistakes to Avoid",
+              "content": "Using different name spellings across forms. Leaving sections blank instead of using N/A. Missing family members (even estranged ones). Employment gaps without explanation. Dates not matching supporting documents. Using old form versions - always download latest from IRCC. Forgetting to sign and date."
+            },
+            {
+              "title": "Tips for Success",
+              "content": "Prepare all supporting documents before starting forms. Cross-reference all dates with your passport and documents. Have someone review your completed form. Keep copies of submitted forms. Use black ink if printing. If correcting, cross out neatly and initial - never use white-out."
+            }
+          ]
         },
         {
           "id": "imm-5669",
@@ -1310,7 +1336,33 @@
           "icon": "👶",
           "difficulty": "Beginner",
           "reading_time": "10 min read",
-          "overview": "Learn how to include dependent children in your immigration application, age limits, and requirements for adopted children."
+          "overview": "Learn how to include dependent children in your immigration application, age limits, and requirements for adopted children.",
+          "sections": [
+            {
+              "title": "Who is a Dependent Child?",
+              "content": "A dependent child is: Under 22 years old AND not married or in a common-law relationship. OR over 22 but financially dependent on parents due to physical or mental condition since before turning 22. Children of dependent children are also included. Step-children count if you're married to their parent."
+            },
+            {
+              "title": "Age Lock-In Date",
+              "content": "The child's age is 'locked in' at the date your application is received by IRCC. Even if your child turns 22 during processing, they remain eligible if they were under 22 when you applied. For Express Entry, the lock-in date is when you submit your complete PR application after ITA (not profile creation date)."
+            },
+            {
+              "title": "Including Non-Accompanying Children",
+              "content": "You MUST declare ALL dependent children in your application, even if they won't come to Canada with you. Failure to declare a child means they can NEVER be sponsored later. Non-accompanying children still need medical exams. Provide explanation for why child is not accompanying."
+            },
+            {
+              "title": "Adopted Children",
+              "content": "Adopted children are eligible if: Adoption was legal in both the child's country and Canada. Adoption was in the child's best interest. No consideration was exchanged (no baby buying). Adoption complies with Hague Convention (if applicable). You may need provincial adoption approval for some countries."
+            },
+            {
+              "title": "Required Documents",
+              "content": "For each child: Birth certificate (original language + translation). Passport or travel document. Passport-size photos. Custody/guardianship documents if applicable. Medical exam results. Police certificate (if 18+). Proof of relationship (for adopted/step-children). School enrollment letter (for older dependents)."
+            },
+            {
+              "title": "Common Issues",
+              "content": "Not declaring all children (biggest mistake). Missing lock-in date deadline. Insufficient proof of dependency for children 22+. Incomplete adoption documentation. Missing proof of relationship for step-children. Child turning 22 before application submitted. Always verify children's status before submitting."
+            }
+          ]
         }
       ]
     },
@@ -1328,7 +1380,33 @@
           "icon": "🛡️",
           "difficulty": "Intermediate",
           "reading_time": "15 min read",
-          "overview": "Canada provides protection to people who fear persecution in their home country. Learn about the refugee claim process, eligibility, and what to expect."
+          "overview": "Canada provides protection to people who fear persecution in their home country. Learn about the refugee claim process, eligibility, and what to expect.",
+          "sections": [
+            {
+              "title": "What is Refugee Protection?",
+              "content": "Canada offers protection to people who face persecution based on: Race, Religion, Political opinion, Nationality, Membership in a particular social group, or Risk of torture/cruel treatment. You can claim refugee status at a port of entry (airport, land border) or within Canada at an IRCC office. Canada is bound by the UN Refugee Convention."
+            },
+            {
+              "title": "Eligibility to Claim",
+              "content": "You may claim if you're in Canada or at a Canadian port of entry. Ineligible if: Recognized as a refugee in another country, previously rejected for refugee status in Canada, arrived via the US (Safe Third Country Agreement - with exceptions), serious criminality, or security concerns. Previous visitors who overstayed may still claim."
+            },
+            {
+              "title": "The Claim Process",
+              "content": "1) Make your claim at port of entry or IRCC office. 2) Complete the Basis of Claim (BOC) form within 15 days. 3) Receive work permit eligibility. 4) Attend a hearing at the Immigration and Refugee Board (IRB). 5) Receive decision. Hearing typically within 2 months of claim. You may have legal representation at the hearing."
+            },
+            {
+              "title": "Basis of Claim Form",
+              "content": "The BOC form is critical - it's your written statement of why you need protection. Include: All reasons you fear returning home, specific incidents of persecution, dates and details, who persecuted you and why. Be honest and consistent. Your IRB hearing will be based on this form. Get legal help to complete it if possible."
+            },
+            {
+              "title": "Rights While Waiting",
+              "content": "While your claim is processed: You can apply for a work permit. You're eligible for Interim Federal Health Program (IFHP) coverage. Your children can attend school. You may access social assistance (varies by province). You cannot leave Canada without permission (could abandon your claim). Stay in contact with IRCC and attend all appointments."
+            },
+            {
+              "title": "After the Decision",
+              "content": "If accepted: You become a Protected Person and can apply for PR. If rejected: You can appeal to Refugee Appeal Division (RAD) within 15 days. If appeal fails: May apply for judicial review at Federal Court. Failed claimants receive removal order. Pre-Removal Risk Assessment (PRRA) is last option. Seek legal advice immediately after rejection."
+            }
+          ]
         },
         {
           "id": "protected-person-pr",
@@ -1337,7 +1415,33 @@
           "icon": "📄",
           "difficulty": "Intermediate",
           "reading_time": "12 min read",
-          "overview": "Once you're recognized as a protected person in Canada, you can apply for permanent residence. Learn about the application process and requirements."
+          "overview": "Once you're recognized as a protected person in Canada, you can apply for permanent residence. Learn about the application process and requirements.",
+          "sections": [
+            {
+              "title": "Who is a Protected Person?",
+              "content": "A Protected Person is someone whom Canada has agreed to protect because they face persecution in their home country. This includes: Convention refugees (accepted by IRB), Persons in need of protection (risk of torture, cruel treatment), and Dependents of protected persons. You receive this status after a positive decision from the Immigration and Refugee Board."
+            },
+            {
+              "title": "Eligibility for PR",
+              "content": "Protected persons in Canada can apply for PR if: You have protected person status (not just a pending claim), you are physically in Canada, you have no unresolved security or criminal issues, and you don't have serious health conditions (or they can be accommodated). There is no waiting period - you can apply immediately after getting protected person status."
+            },
+            {
+              "title": "Application Process",
+              "content": "1) Gather required documents (identity, protected person status). 2) Complete application forms (IMM 0008, IMM 5669, IMM 5406). 3) Obtain police certificates from all countries lived in. 4) Complete medical exam through panel physician. 5) Submit application with fees. 6) Wait for processing (typically 6-12 months). 7) Receive COPR and become PR."
+            },
+            {
+              "title": "Required Documents",
+              "content": "Essential documents: Protected Person Status Document, Passport or travel document (if available), Identity documents, Police certificates, Medical exam results, Photos, Proof of address in Canada. If no passport: may use other identity documents. IRCC understands refugees may lack documents - explain any gaps."
+            },
+            {
+              "title": "Including Family Members",
+              "content": "You can include: Spouse or common-law partner, Dependent children under 22, Children of dependent children. Family members outside Canada: Can apply to join you once you get PR (family reunification). Processing times for overseas family members vary. Start gathering their documents early."
+            },
+            {
+              "title": "After Becoming PR",
+              "content": "Once PR is granted: You get same rights as other PRs (work, study, travel). Must maintain PR status (residency obligation). Can apply for citizenship after 3 years. May travel internationally but returning to persecution country could affect status. Your Refugee Travel Document allows travel (not to home country). Start planning your future in Canada."
+            }
+          ]
         }
       ]
     }
