@@ -529,7 +529,33 @@
           "icon": "💼",
           "difficulty": "Intermediate",
           "reading_time": "12 min read",
-          "overview": "The PGWP allows you to work in Canada for up to 3 years after graduation. Learn about eligibility requirements, application timing, and how it leads to permanent residence."
+          "overview": "The PGWP allows you to work in Canada for up to 3 years after graduation. Learn about eligibility requirements, application timing, and how it leads to permanent residence.",
+          "sections": [
+            {
+              "title": "PGWP Basics",
+              "content": "The Post-Graduation Work Permit (PGWP) is an open work permit allowing international graduates from eligible Canadian Designated Learning Institutions (DLIs) to work for any employer in Canada. It's a crucial stepping stone to permanent residence through Canadian Experience Class (CEC) or Provincial Nominee Programs."
+            },
+            {
+              "title": "Eligibility Requirements",
+              "content": "To qualify you must: Graduate from a PGWP-eligible DLI, Complete a program of at least 8 months, Have maintained full-time student status during your program, Apply within 180 days of receiving your final marks/completion letter. Programs must be degree, diploma, or certificate programs (not ESL, distance learning, or non-DLI programs)."
+            },
+            {
+              "title": "PGWP Duration",
+              "content": "PGWP validity depends on your program length: 8-month to 2-year programs = PGWP equal to program length. Programs 2+ years = 3-year PGWP. Multiple programs can be combined if completed back-to-back at same DLI. Example: 1-year diploma = 1-year PGWP. 2-year diploma = 3-year PGWP. 4-year degree = 3-year PGWP (max)."
+            },
+            {
+              "title": "Application Process",
+              "content": "1) Receive your final transcript and completion letter, 2) Apply online within 180 days of completing your program, 3) Pay the $255 fee ($155 work permit + $100 open work permit holder fee), 4) Maintain valid status while application is processing (implied status allows you to work). Processing time: typically 80-120 days. You can work full-time while waiting."
+            },
+            {
+              "title": "PGWP to PR Pathway",
+              "content": "Use your PGWP wisely: Work in a NOC TEER 0, 1, 2, or 3 occupation to qualify for CEC. Accumulate 1 year of skilled Canadian work experience for Express Entry. Achieve CLB 7+ language scores while working. Consider PNP programs that target international graduates. Many provinces have dedicated streams for PGWP holders with job offers."
+            },
+            {
+              "title": "Important Restrictions",
+              "content": "PGWP cannot be extended or renewed. If your PGWP expires before getting PR, consider: Bridging Open Work Permit (if you have AOR for PR), Employer-specific work permit (requires LMIA), Study permit (enroll in another program). Plan your PR application timeline carefully to avoid gaps."
+            }
+          ]
         },
         {
           "id": "student-to-pr",
@@ -618,7 +644,33 @@
           "icon": "🌎",
           "difficulty": "Beginner",
           "reading_time": "10 min read",
-          "overview": "IEC allows young people from partner countries to work and travel in Canada. Learn about the three categories, eligibility requirements, and how to apply."
+          "overview": "IEC allows young people from partner countries to work and travel in Canada. Learn about the three categories, eligibility requirements, and how to apply.",
+          "sections": [
+            {
+              "title": "IEC Categories",
+              "content": "There are 3 IEC categories: 1) Working Holiday - open work permit, no job offer needed, work for any employer. 2) Young Professionals - employer-specific permit, need job offer in your field of study. 3) International Co-op - for students doing internship as part of studies, need job offer. Availability varies by country agreement."
+            },
+            {
+              "title": "Eligibility Requirements",
+              "content": "General requirements: Citizen of a participating country, typically 18-30 or 18-35 (varies by country), have a valid passport, have health insurance, have enough money for initial expenses (~$2,500 CAD), no criminal record, never participated in same IEC category before. Country-specific requirements may apply."
+            },
+            {
+              "title": "Participating Countries",
+              "content": "35+ countries have IEC agreements with Canada including: UK, Ireland, France, Germany, Australia, Japan, South Korea, Hong Kong, Taiwan, and many more. Age limits and quotas vary by country. For example: UK (18-30, ~10,000 spots), France (18-35, ~14,000 spots), Australia (18-30, unlimited). Check IRCC for your country's specific terms."
+            },
+            {
+              "title": "Application Process",
+              "content": "1) Create IEC profile during the seasonal round (usually November-April), 2) Enter pool(s) for your eligible categories, 3) If drawn, receive Invitation to Apply (ITA) via lottery, 4) Accept ITA and submit full application within 10 days, 5) Pay fees ($156 participation + $100 OWP holder fee + $85 biometrics), 6) Submit biometrics, 7) Receive Port of Entry letter, 8) Activate work permit within 12 months at Canadian border."
+            },
+            {
+              "title": "IEC to PR Pathway",
+              "content": "IEC is excellent for gaining Canadian work experience for Express Entry: Work 1 year in skilled occupation (NOC TEER 0/1/2/3) to qualify for CEC. Use your time in Canada to improve language scores. Network and find an employer for PNP nomination. Some provinces have streams specifically for workers with Canadian experience. Plan your PR strategy from day one."
+            },
+            {
+              "title": "Tips for Getting Selected",
+              "content": "Apply early when rounds open (competition increases throughout the season). Check your profile regularly for ITAs (10-day deadline to accept). Some countries have multiple draws - stay in the pool if not selected initially. Have documents ready before applying (police certificate takes time). Consider less popular categories (Young Professionals often has more spots than Working Holiday)."
+            }
+          ]
         },
         {
           "id": "intra-company-transfer",
@@ -645,7 +697,33 @@
           "icon": "📜",
           "difficulty": "Beginner",
           "reading_time": "15 min read",
-          "overview": "WES is the most popular credential evaluation service for Express Entry. This guide covers the application process, document requirements, and expected timelines."
+          "overview": "WES is the most popular credential evaluation service for Express Entry. This guide covers the application process, document requirements, and expected timelines.",
+          "sections": [
+            {
+              "title": "What is WES ECA?",
+              "content": "World Education Services (WES) is a designated organization that evaluates foreign educational credentials against Canadian standards. An ECA report from WES is required for Express Entry to prove your education level. The report compares your degree to a Canadian equivalent (e.g., foreign bachelor's = Canadian bachelor's degree)."
+            },
+            {
+              "title": "Application Process",
+              "content": "1) Create a WES account at wes.org/ca, 2) Select 'ECA Application for IRCC', 3) Enter your education details and pay fees, 4) Receive your WES reference number, 5) Request your institution to send documents directly to WES, 6) WES reviews documents and issues report (7-20 business days after receiving all documents)."
+            },
+            {
+              "title": "Required Documents",
+              "content": "Documents must be sent directly from your institution to WES: Official transcripts (sealed), Degree certificate/diploma, Credential verification form (for some countries). For India: transcripts via WES-approved agencies. For China: verification through CHESICC/CDGDC. For Philippines: send through WES-approved courier. Check WES country requirements for your specific case."
+            },
+            {
+              "title": "Fees and Timeline",
+              "content": "WES fees: CAD $220 (ECA for IRCC) + document handling fees. Processing time: 7-20 business days after WES receives all documents. Total timeline typically 4-8 weeks including document delivery. Express evaluation available for additional fee. ECA report is valid for 5 years from issue date."
+            },
+            {
+              "title": "Country-Specific Requirements",
+              "content": "India: Use WES Gateway or authorized agents like DataFlow. China: Academic records through CHESICC, degree through CDGDC. Philippines: Red ribbon apostille required. Pakistan: HEC verification required. Nigeria: Transcripts via school directly. Most countries: sealed transcripts sent directly from institution. Always check WES Required Documents tool for your country."
+            },
+            {
+              "title": "Tips for Success",
+              "content": "Start early - the process can take 2+ months. Request extra official transcript copies from your institution. Track your documents using WES online portal. Ensure your name matches across all documents and passport. If you have multiple degrees, you may only need ECA for your highest credential. Contact WES support if documents are delayed."
+            }
+          ]
         },
         {
           "id": "eca-overview",
@@ -770,7 +848,33 @@
           "icon": "🍁",
           "difficulty": "Beginner",
           "reading_time": "12 min read",
-          "overview": "CELPIP is a Canadian English test taken entirely on computer. Learn about the test format, advantages, and preparation strategies."
+          "overview": "CELPIP is a Canadian English test taken entirely on computer. Learn about the test format, advantages, and preparation strategies.",
+          "sections": [
+            {
+              "title": "Why Choose CELPIP?",
+              "content": "CELPIP (Canadian English Language Proficiency Index Program) is developed by Paragon Testing and is 100% Canadian. Advantages: Entirely computer-based (including speaking), uses Canadian accents and contexts, faster results (8 calendar days online), one sitting (~3 hours), accepted for both Express Entry and citizenship. Results valid for 2 years."
+            },
+            {
+              "title": "Test Format",
+              "content": "CELPIP-General has 4 components: Listening (47-55 min) - 6 parts, 38 questions. Reading (55-60 min) - 4 parts. Writing (53-60 min) - 2 tasks (email and responding to survey/opinion). Speaking (15-20 min) - 8 tasks recorded on computer. Total test time: approximately 3 hours in one sitting."
+            },
+            {
+              "title": "Scoring and CLB Conversion",
+              "content": "CELPIP scores range from M (minimal) to 12. Direct CLB conversion: CELPIP 4=CLB4, CELPIP 5=CLB5, CELPIP 6=CLB6, CELPIP 7=CLB7, CELPIP 8=CLB8, CELPIP 9=CLB9, CELPIP 10+=CLB10. Unlike IELTS, CELPIP scores map directly to CLB levels (e.g., CELPIP 9 = CLB 9, not requiring band interpretation)."
+            },
+            {
+              "title": "Test Locations and Cost",
+              "content": "CELPIP is available at test centers across Canada and in some international locations (UAE, Philippines, India, China). Test fee: CAD $280-320 depending on location. Book through celpip.ca. Test dates available weekly in major Canadian cities. Results available online in 8 calendar days and can be sent directly to IRCC."
+            },
+            {
+              "title": "CELPIP vs IELTS",
+              "content": "Choose CELPIP if: You prefer computer-based testing, want faster results, are comfortable with Canadian accents, prefer speaking to a computer vs examiner. Choose IELTS if: You prefer paper-based tests, want face-to-face speaking, need results accepted in other countries. Both are equally accepted by IRCC."
+            },
+            {
+              "title": "Preparation Strategies",
+              "content": "Use official CELPIP practice tests at celpip.ca. Practice typing for writing section (you type responses). Get comfortable speaking into a microphone (no human interaction). Practice with timer - strict time limits per task. Focus on Canadian spelling and expressions. Free preparation resources available on CELPIP website including sample questions and webinars."
+            }
+          ]
         },
         {
           "id": "pte-core",
@@ -850,7 +954,33 @@
           "icon": "👴👵",
           "difficulty": "Intermediate",
           "reading_time": "15 min read",
-          "overview": "The PGP allows Canadian citizens and permanent residents to sponsor their parents and grandparents. Learn about the lottery system, income requirements, and Super Visa alternatives."
+          "overview": "The PGP allows Canadian citizens and permanent residents to sponsor their parents and grandparents. Learn about the lottery system, income requirements, and Super Visa alternatives.",
+          "sections": [
+            {
+              "title": "How PGP Works",
+              "content": "The Parents and Grandparents Program uses an interest-to-sponsor intake system. Each year, IRCC invites potential sponsors to submit interest forms during a limited window (usually October). Invitations to apply are sent randomly to selected sponsors. Limited spots available (~15,000-25,000 per year), making this highly competitive."
+            },
+            {
+              "title": "Sponsor Eligibility",
+              "content": "To sponsor parents/grandparents you must: Be a Canadian citizen or permanent resident, Be at least 18 years old, Live in Canada, Meet minimum income requirements for 3 consecutive tax years, Sign an undertaking to support your parents for 20 years. You cannot sponsor if you received social assistance (except disability) or defaulted on previous sponsorship."
+            },
+            {
+              "title": "Minimum Income Requirements",
+              "content": "You must meet LICO+ (Low Income Cut-Off + 30%) for 3 consecutive years. 2024 requirements (example): 2 people household = $43,082, 3 people = $52,965, 4 people = $64,306, 5 people = $72,927. Income can include employment, self-employment, and EI. Does NOT include social assistance or provincial child benefits. Spouse's income can be combined if they co-sign."
+            },
+            {
+              "title": "Application Process",
+              "content": "1) Submit interest-to-sponsor form during intake period, 2) If selected, receive Invitation to Apply (ITA), 3) Submit complete application within 60 days of ITA, 4) Provide income proof (NOAs for 3 years), 5) Parents complete medical exams and police certificates, 6) Processing takes 20-36 months. Your parents cannot work or access healthcare until PR is granted."
+            },
+            {
+              "title": "Super Visa Alternative",
+              "content": "If not selected for PGP, consider Super Visa: Valid for up to 10 years, allows stays of up to 5 years per visit, parents can visit without PR status. Requirements: Valid medical insurance, sponsor's proof of income (1 year only), letter of invitation. Super Visa holders cannot work in Canada but can visit for extended periods."
+            },
+            {
+              "title": "Tips for Success",
+              "content": "Submit interest form immediately when intake opens (first-come basis in some years). Keep 3 years of tax returns and NOAs ready. Consider increasing income before applying if below threshold. Have backup plan (Super Visa) while waiting. Processing is lengthy - start when parents are still healthy enough for medical exam. Maintain communication with IRCC through your account."
+            }
+          ]
         },
         {
           "id": "super-visa",
