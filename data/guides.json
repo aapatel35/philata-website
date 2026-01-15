@@ -37,7 +37,37 @@
           "icon": "📊",
           "difficulty": "Intermediate",
           "reading_time": "12 min read",
-          "overview": "The Comprehensive Ranking System (CRS) is the points-based system used to rank Express Entry candidates. Understanding how each factor contributes to your score is essential for maximizing your chances of receiving an ITA."
+          "overview": "The Comprehensive Ranking System (CRS) is the points-based system used to rank Express Entry candidates. Understanding how each factor contributes to your score is essential for maximizing your chances of receiving an ITA.",
+          "sections": [
+            {
+              "title": "CRS Score Components",
+              "content": "Your CRS score (maximum 1,200 points) consists of four main components: Core/Human Capital Factors (up to 500 points for single applicants, 460 for those with a spouse), Spouse Factors (up to 40 points), Skill Transferability Factors (up to 100 points), and Additional Points (up to 600 points for provincial nomination)."
+            },
+            {
+              "title": "Age Points",
+              "content": "Age is worth up to 110 points (single) or 100 points (with spouse). Peak points are awarded between ages 20-29. Points decrease gradually: Age 30 = 105 points, Age 35 = 77 points, Age 40 = 50 points, Age 45+ = 0 points. This makes age one of the few factors you cannot directly improve."
+            },
+            {
+              "title": "Education Points",
+              "content": "Education is worth up to 150 points (single) or 140 points (with spouse). Points by credential: Secondary diploma (30 points), One-year post-secondary (90 points), Two-year program (98 points), Bachelor's degree or 3+ year program (120 points), Two or more credentials with one 3+ years (128 points), Master's degree (135 points), Doctoral degree (150 points)."
+            },
+            {
+              "title": "Language Proficiency Points",
+              "content": "First official language is worth up to 136 points (single) or 128 points (with spouse). Points per ability at each CLB level: CLB 4-5 = 6 points, CLB 6 = 9 points, CLB 7 = 17 points, CLB 8 = 23 points, CLB 9 = 31 points, CLB 10+ = 34 points. Second official language adds up to 24 points with CLB 5+ in all abilities."
+            },
+            {
+              "title": "Canadian Work Experience Points",
+              "content": "Canadian work experience (NOC TEER 0, 1, 2, or 3) is worth up to 80 points (single) or 70 points (with spouse). Points breakdown: 1 year = 40 points, 2 years = 53 points, 3 years = 64 points, 4 years = 72 points, 5+ years = 80 points. Must be skilled work in Canada within the last 10 years."
+            },
+            {
+              "title": "Skill Transferability Factors",
+              "content": "Worth up to 100 points total (max 50 per combination). These combine your education, work experience, and language skills: Education + Language (CLB 7+ with post-secondary = 25-50 points), Education + Canadian Work (13-50 points), Foreign Work + Language (13-50 points), Foreign Work + Canadian Work (13-50 points), Trade Certificate + Language (25-50 points)."
+            },
+            {
+              "title": "Additional Points",
+              "content": "Provincial Nomination: 600 points (guarantees ITA). French proficiency: 25 points (CLB 7+ French with CLB 4 English) or 50 points (CLB 7+ in both). Canadian education: 15 points (1-2 year credential) or 30 points (3+ years). Sibling in Canada (citizen/PR): 15 points. Note: Job offer points were removed as of March 2025."
+            }
+          ]
         },
         {
           "id": "improve-score",
