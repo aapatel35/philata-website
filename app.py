@@ -61,11 +61,12 @@ POST_API_URL = os.environ.get('POST_API_URL', 'https://web-production-35219.up.r
 
 # In-memory cache to prevent data loss during runtime
 # Data persists in memory until container restarts
+# Cache cleared on Jan 16, 2026 - anti-fabrication system deployed
 _memory_cache = {
     'articles': [],
     'results': [],
     'last_fetch': None,
-    'cache_ttl': timedelta(minutes=5)  # Re-fetch from API every 5 minutes
+    'cache_ttl': timedelta(minutes=2)  # Re-fetch from API every 2 minutes (reduced for faster updates)
 }
 _cache_lock = threading.Lock()
 
