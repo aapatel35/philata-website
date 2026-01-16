@@ -11,7 +11,7 @@ from datetime import datetime
 
 # Optional: Use Gemini for parsing complex HTML
 try:
-    import google.generativeai as genai
+    from google import genai
     GEMINI_AVAILABLE = True
 except ImportError:
     GEMINI_AVAILABLE = False
@@ -454,18 +454,17 @@ def configure_gemini():
         return None
 
     try:
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-2.0-flash')
+        client = genai.Client(api_key=api_key)
         print("  Gemini configured successfully")
-        return model
+        return client
     except Exception as e:
         print(f"  Error configuring Gemini: {e}")
         return None
 
 
-def generate_draw_analysis(model, draws):
+def generate_draw_analysis(client, draws):
     """Use Gemini to analyze recent draw patterns and generate insights"""
-    if not model or not draws:
+    if not client or not draws:
         return None
 
     print("  Generating draw analysis with AI...")
@@ -491,7 +490,10 @@ Provide a JSON response with:
 Return ONLY valid JSON, no markdown."""
 
     try:
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-2.0-flash-exp',
+            contents=prompt
+        )
         # Clean response and parse JSON
         text = response.text.strip()
         if text.startswith('```'):
