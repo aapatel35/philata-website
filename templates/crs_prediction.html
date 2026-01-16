@@ -1122,12 +1122,13 @@
             <div class="draw-row">
                 <span>{{ draw.date }}</span>
                 <span>
-                    <span class="draw-category-badge {% if 'general' in draw.category|lower or draw.category == 'No program specified' %}general{% elif 'health' in draw.category|lower %}healthcare{% elif 'french' in draw.category|lower %}french{% elif 'stem' in draw.category|lower %}stem{% elif 'trade' in draw.category|lower %}trade{% else %}general{% endif %}">
-                        {{ draw.category if draw.category != 'No program specified' else 'General' }}
+                    {% set cat = draw.type|default(draw.category, true)|default('General', true) %}
+                    <span class="draw-category-badge {% if 'experience' in cat|lower %}cec{% elif 'provincial' in cat|lower or 'pnp' in cat|lower %}pnp{% elif 'french' in cat|lower %}french{% elif 'health' in cat|lower %}healthcare{% elif 'stem' in cat|lower %}stem{% elif 'trade' in cat|lower %}trade{% else %}general{% endif %}">
+                        {% if 'experience' in cat|lower %}CEC{% elif 'provincial' in cat|lower %}PNP{% elif 'french' in cat|lower %}French{% elif 'health' in cat|lower %}Healthcare{% elif 'stem' in cat|lower %}STEM{% elif 'trade' in cat|lower %}Trade{% else %}{{ cat }}{% endif %}
                     </span>
                 </span>
-                <span class="draw-crs">{{ draw.crs_score }}</span>
-                <span>{{ draw.itas }}</span>
+                <span class="draw-crs">{{ draw.score|default(draw.crs_score, true) }}</span>
+                <span>{{ draw.itas|default('N/A', true) }}</span>
             </div>
             {% endfor %}
         {% else %}
