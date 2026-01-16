@@ -943,11 +943,11 @@
         </div>
         <div class="prediction-item">
             <span class="prediction-item-label">2026 Target</span>
-            <span class="prediction-item-value">110,770</span>
+            <span class="prediction-item-value">109,000</span>
         </div>
         <div class="prediction-item">
-            <span class="prediction-item-label">Pool Size (Est.)</span>
-            <span class="prediction-item-value">~200,000</span>
+            <span class="prediction-item-label">Pool Size (Jan 2026)</span>
+            <span class="prediction-item-value">236,554</span>
         </div>
     </div>
 </div>
@@ -956,57 +956,112 @@
 <div class="category-predictions">
     <div class="category-header">
         <i class="bi bi-diagram-3-fill"></i>
-        <h3>Category-Based Draw Predictions</h3>
+        <h3>Category-Based Draw Predictions (2026)</h3>
     </div>
     <div class="category-grid">
         <div class="category-item">
             <div class="category-name">
-                General
+                CEC
                 <span class="category-badge likely">Likely Next</span>
             </div>
-            <div class="category-score">520</div>
+            <div class="category-score" id="cecPrediction">510-520</div>
             <div class="category-label">Predicted Cutoff</div>
         </div>
         <div class="category-item">
             <div class="category-name">
-                Healthcare
-                <span class="category-badge possible">Possible</span>
+                PNP
+                <span class="category-badge likely">Frequent</span>
             </div>
-            <div class="category-score">430</div>
-            <div class="category-label">Predicted Cutoff</div>
-        </div>
-        <div class="category-item">
-            <div class="category-name">
-                STEM
-                <span class="category-badge possible">Possible</span>
-            </div>
-            <div class="category-score">480</div>
+            <div class="category-score" id="pnpPrediction">700+</div>
             <div class="category-label">Predicted Cutoff</div>
         </div>
         <div class="category-item">
             <div class="category-name">
                 French Proficiency
-                <span class="category-badge possible">Possible</span>
+                <span class="category-badge likely">Low CRS</span>
             </div>
-            <div class="category-score">380</div>
+            <div class="category-score" id="frenchPrediction">380-420</div>
+            <div class="category-label">Predicted Cutoff</div>
+        </div>
+        <div class="category-item">
+            <div class="category-name">
+                Healthcare
+                <span class="category-badge possible">Category</span>
+            </div>
+            <div class="category-score" id="healthPrediction">470-490</div>
             <div class="category-label">Predicted Cutoff</div>
         </div>
         <div class="category-item">
             <div class="category-name">
                 Trade Occupations
-                <span class="category-badge possible">Possible</span>
+                <span class="category-badge possible">Category</span>
             </div>
-            <div class="category-score">420</div>
+            <div class="category-score" id="tradePrediction">430-440</div>
             <div class="category-label">Predicted Cutoff</div>
         </div>
         <div class="category-item">
             <div class="category-name">
-                Transport
-                <span class="category-badge possible">Possible</span>
+                Education
+                <span class="category-badge possible">Category</span>
             </div>
-            <div class="category-score">440</div>
+            <div class="category-score" id="eduPrediction">450-480</div>
             <div class="category-label">Predicted Cutoff</div>
         </div>
+    </div>
+    <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+        <i class="bi bi-info-circle me-1"></i>
+        Note: PNP draws show high CRS due to the 600-point nomination boost. French language proficiency offers the lowest CRS cutoffs in Express Entry.
+    </p>
+</div>
+
+<!-- Pool Distribution Section -->
+<div class="category-predictions" style="margin-bottom: 2rem;">
+    <div class="category-header">
+        <i class="bi bi-pie-chart-fill"></i>
+        <h3>Express Entry Pool Distribution (Jan 2026)</h3>
+    </div>
+    <div style="margin-bottom: 1rem;">
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+            Total active candidates: <strong style="color: var(--text);">236,554</strong> | Source: Official IRCC data
+        </p>
+    </div>
+    <div class="category-grid">
+        <div class="category-item" style="border-left: 4px solid #EF4444;">
+            <div class="category-name">0-300 CRS</div>
+            <div class="category-score" style="font-size: 1.25rem;">8,125</div>
+            <div class="category-label">3.4% of pool</div>
+        </div>
+        <div class="category-item" style="border-left: 4px solid #F59E0B;">
+            <div class="category-name">301-350 CRS</div>
+            <div class="category-score" style="font-size: 1.25rem;">18,745</div>
+            <div class="category-label">7.9% of pool</div>
+        </div>
+        <div class="category-item" style="border-left: 4px solid #FBBF24;">
+            <div class="category-name">351-400 CRS</div>
+            <div class="category-score" style="font-size: 1.25rem;">52,469</div>
+            <div class="category-label">22.2% of pool</div>
+        </div>
+        <div class="category-item" style="border-left: 4px solid #84CC16;">
+            <div class="category-name">401-450 CRS</div>
+            <div class="category-score" style="font-size: 1.25rem;">65,120</div>
+            <div class="category-label">27.5% of pool</div>
+        </div>
+        <div class="category-item" style="border-left: 4px solid #22C55E;">
+            <div class="category-name">451-500 CRS</div>
+            <div class="category-score" style="font-size: 1.25rem;">70,523</div>
+            <div class="category-label">29.8% of pool</div>
+        </div>
+        <div class="category-item" style="border-left: 4px solid #10B981;">
+            <div class="category-name">501-600 CRS</div>
+            <div class="category-score" style="font-size: 1.25rem;">21,013</div>
+            <div class="category-label">8.9% of pool</div>
+        </div>
+    </div>
+    <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg); border-radius: 12px;">
+        <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">
+            <i class="bi bi-lightbulb me-1" style="color: var(--primary);"></i>
+            <strong>Competitive Score Analysis:</strong> With 91,536 candidates scoring above 450, you need approximately <strong style="color: var(--primary);">520+ CRS</strong> to be competitive in general CEC draws. French-language draws and category-based draws offer lower cutoffs (380-490).
+        </p>
     </div>
 </div>
 
@@ -1325,6 +1380,70 @@
     </div>
 </div>
 
+<!-- CRS Trend Chart Section -->
+<div class="category-predictions" style="margin-bottom: 2rem;">
+    <div class="category-header">
+        <i class="bi bi-graph-up"></i>
+        <h3>CRS Cutoff Trends (2025-2026)</h3>
+    </div>
+    <div style="height: 350px; position: relative;">
+        <canvas id="crsTrendChart"></canvas>
+    </div>
+    <div style="margin-top: 1rem; padding: 0.75rem; background: var(--bg); border-radius: 8px;">
+        <p style="margin: 0; font-size: 0.8rem; color: var(--text-muted); text-align: center;">
+            Chart shows CRS cutoff scores for CEC and French-language draws. PNP draws excluded due to 600-point nomination boost.
+        </p>
+    </div>
+</div>
+
+<!-- Key 2026 Changes Section -->
+<div class="reasoning-section">
+    <div class="reasoning-header">
+        <i class="bi bi-megaphone-fill"></i>
+        <h3>Key Changes for 2026</h3>
+    </div>
+
+    <div class="reasoning-item" style="border-left-color: #EF4444;">
+        <div class="reasoning-title">
+            <i class="bi bi-exclamation-triangle" style="color: #EF4444;"></i>
+            LMIA Points Removed (March 2025)
+        </div>
+        <div class="reasoning-text">
+            IRCC removed 50-200 additional CRS points for job offers supported by LMIA. This means CRS scores are now based purely on human capital factors (age, education, language, work experience). Candidates can no longer boost scores through employer support.
+        </div>
+    </div>
+
+    <div class="reasoning-item" style="border-left-color: #10B981;">
+        <div class="reasoning-title">
+            <i class="bi bi-arrow-down-circle" style="color: #10B981;"></i>
+            Lower CEC Cutoffs in Early 2026
+        </div>
+        <div class="reasoning-text">
+            CEC draws have shown consistent drops: 542 (early Jan 2025) to 511 (Jan 7, 2026). IRCC is prioritizing in-Canada workers with Canadian experience, leading to lower barriers for CEC candidates. This trend is expected to continue.
+        </div>
+    </div>
+
+    <div class="reasoning-item" style="border-left-color: #3B82F6;">
+        <div class="reasoning-title">
+            <i class="bi bi-translate" style="color: #3B82F6;"></i>
+            French Language Advantage
+        </div>
+        <div class="reasoning-text">
+            French-language proficiency draws continue to offer the lowest CRS cutoffs in Express Entry (379-420 range). Candidates with NCLC 7+ in French should prioritize these draws. A French draw on Dec 17, 2025 issued 6,000 ITAs at just 399 CRS.
+        </div>
+    </div>
+
+    <div class="reasoning-item" style="border-left-color: #F59E0B;">
+        <div class="reasoning-title">
+            <i class="bi bi-graph-down" style="color: #F59E0B;"></i>
+            Reduced 2026 Immigration Targets
+        </div>
+        <div class="reasoning-text">
+            Canada reduced total immigration targets for 2026 to 395,000 (down from 431,645 in 2024). However, Express Entry's share increased to 31.5% of admissions. The 2026 Express Entry target is 109,000, with focus on in-Canada applicants.
+        </div>
+    </div>
+</div>
+
 <!-- Disclaimer -->
 <div class="disclaimer-box">
     <i class="bi bi-exclamation-triangle-fill"></i>
@@ -1333,6 +1452,7 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
 // Initialize data
 const draws = {{ draws | tojson | safe if draws else '[]' }};
@@ -1341,7 +1461,247 @@ const avgCrs = {{ avg_crs if avg_crs else 520 }};
 // Calculate and display predictions on page load
 document.addEventListener('DOMContentLoaded', function() {
     initializePredictions();
+    initializeCrsTrendChart();
+    loadGeminiPredictions();  // Load AI predictions
 });
+
+// Load AI-powered predictions from Gemini
+async function loadGeminiPredictions() {
+    try {
+        const response = await fetch('/api/crs-prediction', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (!response.ok) return;
+
+        const data = await response.json();
+        if (!data.success) return;
+
+        // Update main prediction card with AI data
+        if (data.next_draw_prediction) {
+            const pred = data.next_draw_prediction;
+
+            // Update predicted CRS
+            if (pred.predicted_crs_low && pred.predicted_crs_high) {
+                const avgPred = Math.round((pred.predicted_crs_low + pred.predicted_crs_high) / 2);
+                document.getElementById('predictedCutoff').textContent = avgPred;
+            }
+
+            // Update expected date
+            if (pred.expected_date) {
+                const dateShort = pred.expected_date.replace(/,?\s*\d{4}/, '').replace('January', 'Jan').replace('February', 'Feb');
+                document.getElementById('predictedDate').textContent = dateShort;
+            }
+
+            // Update expected ITAs
+            if (pred.predicted_itas) {
+                document.getElementById('predictedItas').textContent = pred.predicted_itas.toLocaleString();
+            }
+
+            // Update expected category
+            if (pred.expected_category) {
+                document.getElementById('predictedCategory').textContent = pred.expected_category;
+            }
+
+            // Update confidence
+            if (pred.confidence_percent && document.getElementById('confidencePercent')) {
+                document.getElementById('confidencePercent').textContent = pred.confidence_percent + '%';
+                document.getElementById('confidenceFill').style.width = pred.confidence_percent + '%';
+            }
+        }
+
+        // Update category predictions
+        if (data.category_predictions) {
+            const cats = data.category_predictions;
+            if (cats.cec && document.getElementById('cecPrediction')) {
+                document.getElementById('cecPrediction').textContent = cats.cec.crs_range;
+            }
+            if (cats.pnp && document.getElementById('pnpPrediction')) {
+                document.getElementById('pnpPrediction').textContent = cats.pnp.crs_range;
+            }
+            if (cats.french && document.getElementById('frenchPrediction')) {
+                document.getElementById('frenchPrediction').textContent = cats.french.crs_range;
+            }
+            if (cats.healthcare && document.getElementById('healthPrediction')) {
+                document.getElementById('healthPrediction').textContent = cats.healthcare.crs_range;
+            }
+        }
+
+        // Update trend analysis
+        if (data.trend_analysis) {
+            const summaryEl = document.getElementById('predictionSummaryText');
+            if (summaryEl) {
+                summaryEl.innerHTML = `<strong>AI Analysis:</strong> ${data.trend_analysis}`;
+            }
+        }
+
+        // Update insights
+        if (data.key_insights && data.key_insights.length > 0) {
+            updateInsights(data.key_insights);
+        }
+
+        // Update recommendation
+        if (data.recommendation) {
+            updateRecommendation(data.recommendation);
+        }
+
+        console.log('Gemini predictions loaded successfully');
+
+    } catch (error) {
+        console.log('Using static predictions (Gemini API unavailable)');
+    }
+}
+
+function updateInsights(insights) {
+    const factorsEl = document.getElementById('analysisFactors');
+    if (!factorsEl || insights.length < 3) return;
+
+    // Update existing factor cards with AI insights
+    const factorCards = factorsEl.querySelectorAll('.factor-text');
+    insights.slice(0, 4).forEach((insight, i) => {
+        if (factorCards[i]) {
+            factorCards[i].textContent = insight;
+        }
+    });
+}
+
+function updateRecommendation(recommendation) {
+    // Add recommendation to the page if not exists
+    const existingRec = document.getElementById('aiRecommendation');
+    if (existingRec) {
+        existingRec.querySelector('.reasoning-text').textContent = recommendation;
+        return;
+    }
+
+    const reasoningSection = document.querySelector('.reasoning-section');
+    if (reasoningSection) {
+        const recDiv = document.createElement('div');
+        recDiv.id = 'aiRecommendation';
+        recDiv.className = 'reasoning-item';
+        recDiv.style.borderLeftColor = '#10B981';
+        recDiv.innerHTML = `
+            <div class="reasoning-title">
+                <i class="bi bi-robot" style="color: #10B981;"></i>
+                AI Recommendation
+            </div>
+            <div class="reasoning-text">${recommendation}</div>
+        `;
+        reasoningSection.insertBefore(recDiv, reasoningSection.firstChild.nextSibling);
+    }
+}
+
+// Initialize CRS Trend Chart
+function initializeCrsTrendChart() {
+    const ctx = document.getElementById('crsTrendChart');
+    if (!ctx) return;
+
+    // Historical CRS data for CEC and French draws (2025-2026)
+    const cecData = {
+        labels: ['Jan 2025', 'Feb 2025', 'Mar 2025', 'May 2025', 'Aug 2025', 'Oct 2025', 'Dec 2025', 'Jan 2026'],
+        data: [542, 534, 529, 547, 524, 522, 515, 511]
+    };
+
+    const frenchData = {
+        labels: ['Jan 2025', 'Mar 2025', 'Apr 2025', 'Aug 2025', 'Sep 2025', 'Dec 2025', 'Jan 2026'],
+        data: [420, 379, 410, 481, 446, 399, 405]
+    };
+
+    const healthcareData = {
+        labels: ['Feb 2025', 'May 2025', 'Aug 2025', 'Nov 2025', 'Dec 2025'],
+        data: [463, 445, 460, 470, 476]
+    };
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25', 'Dec 25', 'Jan 26'],
+            datasets: [
+                {
+                    label: 'CEC Draws',
+                    data: [542, 534, 529, null, 547, null, null, 524, null, 522, null, 515, 511],
+                    borderColor: '#22C55E',
+                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    spanGaps: true
+                },
+                {
+                    label: 'French Language',
+                    data: [420, null, 379, 410, null, null, null, 481, 446, null, null, 399, 405],
+                    borderColor: '#3B82F6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    spanGaps: true
+                },
+                {
+                    label: 'Healthcare',
+                    data: [null, 463, null, null, 445, null, null, 460, null, null, 470, 476, null],
+                    borderColor: '#F59E0B',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    spanGaps: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 15,
+                        font: { size: 12 }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleFont: { size: 13 },
+                    bodyFont: { size: 12 },
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ' + context.parsed.y + ' CRS';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    min: 350,
+                    max: 600,
+                    title: {
+                        display: true,
+                        text: 'CRS Cutoff Score',
+                        font: { size: 12 }
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            }
+        }
+    });
+}
 
 function initializePredictions() {
     // Calculate predicted cutoff from draws

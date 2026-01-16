@@ -591,6 +591,7 @@
     @media (max-width: 991px) {
         .article-layout {
             grid-template-columns: 1fr;
+            gap: 32px;
         }
 
         .article-sidebar {
@@ -610,6 +611,17 @@
         .article-featured-image {
             height: 380px;
             min-height: 320px;
+        }
+
+        /* Ensure visibility on tablet */
+        .article-body,
+        .article-header,
+        .article-trust-box,
+        .article-subheadline,
+        .key-takeaways,
+        .stat-cards,
+        .source-box {
+            opacity: 1 !important;
         }
     }
 
@@ -684,6 +696,29 @@
         .chart-container {
             min-height: 240px;
         }
+
+        /* Ensure article content is always visible on mobile */
+        .article-body,
+        .article-header,
+        .article-trust-box,
+        .article-featured-image,
+        .article-subheadline,
+        .key-takeaways,
+        .stat-cards,
+        .source-box {
+            opacity: 1 !important;
+            animation: none !important;
+        }
+    }
+
+    /* Fallback: ensure article body is always visible after page load */
+    .article-body {
+        opacity: 1;
+    }
+
+    /* Override data-animate for article body specifically */
+    .article-body[data-animate] {
+        opacity: 1;
     }
 </style>
 {% endblock %}

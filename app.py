@@ -831,6 +831,106 @@ def crs_prediction():
     return render_template('crs_prediction.html', draws=draws, avg_crs=avg_crs)
 
 
+@app.route('/api/crs-prediction', methods=['POST'])
+def api_crs_prediction():
+    """Generate AI-powered CRS predictions using Gemini"""
+    try:
+        if not GEMINI_API_KEY:
+            return jsonify({"success": False, "error": "Gemini API not configured"}), 500
+
+        # Load draws data
+        draws_file = os.path.join(os.path.dirname(__file__), 'data', 'draws.json')
+        draws = []
+        if os.path.exists(draws_file):
+            with open(draws_file, 'r') as f:
+                data = json.load(f)
+            draws = data.get('draws', [])[:20]  # Last 20 draws
+
+        # Format draws for the prompt
+        draws_text = "\n".join([
+            f"- {d.get('date', 'N/A')}: {d.get('category', 'General')} - CRS {d.get('score', 'N/A')}, {d.get('itas', 'N/A')} ITAs"
+            for d in draws[:15]
+        ])
+
+        # Get today's date
+        today = datetime.now().strftime('%B %d, %Y')
+
+        prompt = f"""You are an expert Canadian immigration analyst. Today is {today}.
+
+Based on the recent Express Entry draw history below, provide predictions for the NEXT draw.
+
+=== RECENT DRAWS (Last 15) ===
+{draws_text}
+
+=== YOUR TASK ===
+Analyze the patterns and provide predictions in the following JSON format:
+
+{{
+  "next_draw_prediction": {{
+    "expected_date": "January XX, 2026",
+    "expected_category": "CEC/PNP/French/Healthcare/General",
+    "predicted_crs_low": 510,
+    "predicted_crs_high": 520,
+    "predicted_itas": 5000,
+    "confidence_percent": 75
+  }},
+  "category_predictions": {{
+    "cec": {{"crs_range": "510-520", "next_expected": "1-3 days", "likelihood": "high"}},
+    "pnp": {{"crs_range": "700-720", "next_expected": "1-3 days", "likelihood": "high"}},
+    "french": {{"crs_range": "380-420", "next_expected": "1-2 weeks", "likelihood": "medium"}},
+    "healthcare": {{"crs_range": "470-490", "next_expected": "1-2 weeks", "likelihood": "medium"}}
+  }},
+  "trend_analysis": "Brief 2-3 sentence analysis of current CRS trends",
+  "key_insights": [
+    "Insight 1 about current draw patterns",
+    "Insight 2 about category-based draws",
+    "Insight 3 about what candidates should expect"
+  ],
+  "recommendation": "Brief recommendation for candidates based on current trends"
+}}
+
+Be specific with dates and numbers based on the actual data patterns. Use real draw dates to extrapolate."""
+
+        # Call Gemini API
+        gemini_url = f"{GEMINI_URL}/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
+
+        payload = {
+            'contents': [{
+                'parts': [{'text': prompt}]
+            }],
+            'generationConfig': {
+                'temperature': 0.3,
+                'maxOutputTokens': 2000
+            }
+        }
+
+        response = requests.post(gemini_url, json=payload, timeout=60)
+        response.raise_for_status()
+
+        result = response.json()
+        content = result.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '')
+
+        # Parse JSON response
+        import re
+        content = content.replace('```json', '').replace('```', '').strip()
+        content = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f]', '', content)
+
+        start = content.find('{')
+        end = content.rfind('}') + 1
+
+        if start >= 0 and end > start:
+            prediction_data = json.loads(content[start:end])
+            prediction_data['generated_at'] = datetime.now().isoformat()
+            prediction_data['success'] = True
+            return jsonify(prediction_data)
+
+        return jsonify({"success": False, "error": "Failed to parse prediction"}), 500
+
+    except Exception as e:
+        print(f"CRS prediction API error: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 @app.route('/tools/immigration-targets')
 def immigration_targets():
     """Immigration Targets page - Levels Plan data"""
