@@ -49,7 +49,7 @@ login_manager.login_message_category = 'info'
 from models import User, save_user_score, get_user_scores, get_latest_user_score
 from models import save_user_checklist, get_user_checklist, get_all_user_checklists
 from models import save_article, unsave_article, get_saved_articles, is_article_saved
-from database import is_connected as db_is_connected
+from database import is_connected as db_is_connected, get_articles_collection
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -308,7 +308,7 @@ def load_guides():
 
 
 def load_articles():
-    """Load articles from Post API, memory cache, or local fallback"""
+    """Load articles from MongoDB (primary), Post API, memory cache, or local fallback"""
     global _memory_cache
 
     raw_results = []
@@ -322,7 +322,28 @@ def load_articles():
         if cache_valid and _memory_cache.get('results'):
             raw_results = _memory_cache['results']
 
-    # If cache miss or expired, fetch from API
+    # If cache miss or expired, try MongoDB first (persistent storage)
+    if not raw_results:
+        try:
+            articles_col = get_articles_collection()
+            if articles_col is not None:
+                # Fetch from MongoDB, sorted by created_at descending
+                mongo_articles = list(articles_col.find({}).sort('created_at', -1).limit(500))
+                if mongo_articles:
+                    # Convert MongoDB documents to dict (remove _id ObjectId)
+                    raw_results = []
+                    for doc in mongo_articles:
+                        doc['_id'] = str(doc['_id'])  # Convert ObjectId to string
+                        raw_results.append(doc)
+                    print(f"Loaded {len(raw_results)} articles from MongoDB")
+                    # Update memory cache
+                    with _cache_lock:
+                        _memory_cache['results'] = raw_results
+                        _memory_cache['last_fetch'] = datetime.now()
+        except Exception as e:
+            print(f"Error loading from MongoDB: {e}")
+
+    # Fallback to POST API if MongoDB is empty or unavailable
     if not raw_results:
         try:
             response = requests.get(f"{POST_API_URL}/results/list", timeout=10)
@@ -1901,12 +1922,80 @@ def view_content(content_id):
 @app.route('/api/health', methods=['GET'])
 def health():
     """Health check"""
+    # Check MongoDB connection and article count
+    mongodb_status = "disconnected"
+    mongodb_articles = 0
+    try:
+        articles_col = get_articles_collection()
+        if articles_col is not None:
+            mongodb_articles = articles_col.count_documents({})
+            mongodb_status = "connected"
+    except Exception as e:
+        mongodb_status = f"error: {str(e)}"
+
     return jsonify({
         "status": "ok",
         "service": "Philata Content Hub",
-        "version": "1.1",
-        "timestamp": datetime.now().isoformat()
+        "version": "1.2",
+        "timestamp": datetime.now().isoformat(),
+        "mongodb": {
+            "status": mongodb_status,
+            "articles_count": mongodb_articles
+        }
     })
+
+
+@app.route('/api/migrate-to-mongodb', methods=['POST'])
+def migrate_to_mongodb():
+    """One-time migration: Copy existing articles from POST API to MongoDB"""
+    data = request.get_json() or {}
+    password = data.get('password', request.args.get('p', ''))
+
+    if password != ADMIN_PASSWORD:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    try:
+        articles_col = get_articles_collection()
+        if articles_col is None:
+            return jsonify({'error': 'MongoDB not connected'}), 500
+
+        # Fetch from POST API
+        response = requests.get(f"{POST_API_URL}/results/list", timeout=30)
+        if response.status_code != 200:
+            return jsonify({'error': 'Failed to fetch from POST API'}), 500
+
+        data = response.json()
+        raw_results = data if isinstance(data, list) else data.get('results', [])
+
+        migrated = 0
+        skipped = 0
+        for article in raw_results:
+            if not article.get('full_article') or len(article.get('full_article', '')) < 200:
+                skipped += 1
+                continue
+
+            slug = article.get('slug') or create_slug(article.get('title', ''))
+            article['slug'] = slug
+
+            # Upsert to MongoDB
+            result = articles_col.update_one(
+                {'slug': slug},
+                {'$set': article},
+                upsert=True
+            )
+            if result.upserted_id or result.modified_count:
+                migrated += 1
+            else:
+                skipped += 1
+
+        return jsonify({
+            'success': True,
+            'migrated': migrated,
+            'skipped': skipped,
+            'total_in_api': len(raw_results)
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 @app.route('/api/results', methods=['GET'])
@@ -2032,6 +2121,20 @@ def add_article():
         results.insert(0, article)
         save_results(results)
 
+        # Save to MongoDB for persistent storage
+        try:
+            articles_col = get_articles_collection()
+            if articles_col is not None:
+                # Use upsert to avoid duplicates (by slug)
+                articles_col.update_one(
+                    {'slug': slug},
+                    {'$set': article},
+                    upsert=True
+                )
+                print(f"   MongoDB: Article saved with slug '{slug}'")
+        except Exception as mongo_err:
+            print(f"   ⚠️ MongoDB save failed: {mongo_err}")
+
         # Also send to Post API so it appears in /articles/ listing
         try:
             post_api_payload = {
@@ -2103,6 +2206,17 @@ def update_article_image():
 
         if updated:
             save_results(results)
+            # Also update in MongoDB
+            try:
+                articles_col = get_articles_collection()
+                if articles_col is not None:
+                    articles_col.update_one(
+                        {'slug': slug},
+                        {'$set': {'image_url': image_url}}
+                    )
+                    print(f"   MongoDB: Updated image for '{slug}'")
+            except Exception as mongo_err:
+                print(f"   ⚠️ MongoDB update failed: {mongo_err}")
             return jsonify({"success": True, "slug": slug, "image_url": image_url})
         else:
             return jsonify({"success": False, "error": "Article not found"}), 404
@@ -2429,6 +2543,13 @@ def delete_content(content_id):
         results = load_results()
         original_count = len(results)
 
+        # Find the article to get slug for MongoDB deletion
+        deleted_slug = None
+        for r in results:
+            if r.get('id') == content_id:
+                deleted_slug = r.get('slug')
+                break
+
         # Filter out the article to delete
         results = [r for r in results if r.get('id') != content_id]
 
@@ -2436,6 +2557,17 @@ def delete_content(content_id):
             return jsonify({"success": False, "error": "Article not found"}), 404
 
         save_results(results)
+
+        # Also delete from MongoDB
+        if deleted_slug:
+            try:
+                articles_col = get_articles_collection()
+                if articles_col is not None:
+                    articles_col.delete_one({'slug': deleted_slug})
+                    print(f"   MongoDB: Deleted article '{deleted_slug}'")
+            except Exception as mongo_err:
+                print(f"   ⚠️ MongoDB delete failed: {mongo_err}")
+
         return jsonify({"success": True, "message": f"Article {content_id} deleted"})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
@@ -3570,6 +3702,15 @@ def clear_all_data():
         cleared.append('posting_status')
     except:
         pass
+
+    # Clear MongoDB articles collection
+    try:
+        articles_col = get_articles_collection()
+        if articles_col is not None:
+            articles_col.delete_many({})
+            cleared.append('mongodb_articles')
+    except Exception as e:
+        print(f"Error clearing MongoDB: {e}")
 
     return jsonify({
         'success': True,
