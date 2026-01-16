@@ -831,103 +831,420 @@ def crs_prediction():
     return render_template('crs_prediction.html', draws=draws, avg_crs=avg_crs)
 
 
-@app.route('/api/crs-prediction', methods=['POST'])
-def api_crs_prediction():
-    """Generate AI-powered CRS predictions using Gemini"""
-    try:
-        if not GEMINI_API_KEY:
-            return jsonify({"success": False, "error": "Gemini API not configured"}), 500
+# =============================================================================
+# CRS PREDICTION - 3-LAYER ARCHITECTURE
+# Layer 1: Official Data Collection (Facts)
+# Layer 2: Statistical Analysis (Computed Metrics)
+# Layer 3: Predictive Model with Gemini (Evidence-Based Forecasting)
+# =============================================================================
 
-        # Load draws data
-        draws_file = os.path.join(os.path.dirname(__file__), 'data', 'draws.json')
-        draws = []
-        if os.path.exists(draws_file):
-            with open(draws_file, 'r') as f:
-                data = json.load(f)
-            draws = data.get('draws', [])[:20]  # Last 20 draws
+def load_official_data():
+    """
+    LAYER 1: Load official IRCC data from draws.json
+    Returns facts only - no predictions
+    """
+    draws_file = os.path.join(os.path.dirname(__file__), 'data', 'draws.json')
 
-        # Format draws for the prompt
-        draws_text = "\n".join([
-            f"- {d.get('date', 'N/A')}: {d.get('category', 'General')} - CRS {d.get('score', 'N/A')}, {d.get('itas', 'N/A')} ITAs"
-            for d in draws[:15]
-        ])
+    if not os.path.exists(draws_file):
+        return None
 
-        # Get today's date
-        today = datetime.now().strftime('%B %d, %Y')
+    with open(draws_file, 'r') as f:
+        data = json.load(f)
 
-        prompt = f"""You are an expert Canadian immigration analyst. Today is {today}.
+    draws = data.get('draws', [])
+    pool_stats = data.get('pool_stats', {})
 
-Based on the recent Express Entry draw history below, provide predictions for the NEXT draw.
+    # Get latest pool statistics
+    latest_year = max(pool_stats.keys()) if pool_stats else '2026'
+    latest_pool = pool_stats.get(latest_year, {})
 
-=== RECENT DRAWS (Last 15) ===
+    # Pool distribution (official IRCC data)
+    pool_distribution = latest_pool.get('distribution', {
+        '601-1200': 559,
+        '501-600': 21013,
+        '451-500': 70523,
+        '401-450': 65120,
+        '351-400': 52469,
+        '301-350': 18745,
+        '0-300': 8125
+    })
+
+    total_pool = latest_pool.get('total_pool', 236554)
+
+    return {
+        'draws': draws[:20],  # Last 20 draws
+        'pool_distribution': pool_distribution,
+        'total_pool_size': total_pool,
+        'last_updated': data.get('updated', datetime.now().isoformat()),
+        'annual_targets': {
+            'express_entry_2026': 109000,
+            'pnp_2026': 120000
+        }
+    }
+
+
+def calculate_crs_trend(crs_scores):
+    """
+    Calculate CRS trend using linear regression
+    Returns: 'declining', 'stable', or 'rising' with slope value
+    """
+    if len(crs_scores) < 3:
+        return 'stable', 0
+
+    n = len(crs_scores)
+    x = list(range(n))
+
+    # Simple linear regression
+    x_mean = sum(x) / n
+    y_mean = sum(crs_scores) / n
+
+    numerator = sum((x[i] - x_mean) * (crs_scores[i] - y_mean) for i in range(n))
+    denominator = sum((x[i] - x_mean) ** 2 for i in range(n))
+
+    slope = numerator / denominator if denominator != 0 else 0
+
+    if slope < -2:
+        return 'declining', round(slope, 2)
+    elif slope > 2:
+        return 'rising', round(slope, 2)
+    else:
+        return 'stable', round(slope, 2)
+
+
+def calculate_statistics(official_data):
+    """
+    LAYER 2: Compute metrics from official data
+    All calculations based on real data - no guessing
+    """
+    draws = official_data['draws']
+    pool_dist = official_data['pool_distribution']
+    total_pool = official_data['total_pool_size']
+
+    # Categorize draws by type
+    cec_draws = [d for d in draws if 'experience' in d.get('type', '').lower()]
+    pnp_draws = [d for d in draws if 'provincial' in d.get('type', '').lower() or 'pnp' in d.get('type', '').lower()]
+    french_draws = [d for d in draws if 'french' in d.get('type', '').lower()]
+    healthcare_draws = [d for d in draws if 'health' in d.get('type', '').lower()]
+    trade_draws = [d for d in draws if 'trade' in d.get('type', '').lower()]
+
+    # General draws (exclude PNP which has 600+ boost)
+    general_draws = [d for d in draws if d.get('score', 0) < 700]
+
+    # Calculate averages by category (last 5 of each)
+    def avg_score(draw_list, count=5):
+        scores = [d.get('score', 0) for d in draw_list[:count] if d.get('score', 0) > 0]
+        return round(sum(scores) / len(scores)) if scores else 0
+
+    def avg_itas(draw_list, count=5):
+        itas = [d.get('itas', 0) for d in draw_list[:count] if d.get('itas', 0) > 0]
+        return round(sum(itas) / len(itas)) if itas else 0
+
+    # CRS trend calculation (last 10 general draws)
+    general_crs = [d.get('score', 0) for d in general_draws[:10] if d.get('score', 0) > 0]
+    trend, slope = calculate_crs_trend(general_crs)
+
+    # Pool pressure: % of candidates above typical cutoff (500)
+    candidates_above_500 = pool_dist.get('501-600', 0) + pool_dist.get('601-1200', 0)
+    pool_pressure = round((candidates_above_500 / total_pool) * 100, 1) if total_pool > 0 else 0
+
+    # Draw frequency (percentage of each type in last 20 draws)
+    total_draws = len(draws)
+
+    # Calculate confidence based on data quality
+    def calculate_confidence(draw_count, pool_pressure, trend):
+        base = min(draw_count * 15, 60)  # More draws = more confidence
+        if pool_pressure < 10:
+            base += 15  # Low pressure = more predictable
+        if trend == 'stable':
+            base += 10
+        return min(base, 95)  # Cap at 95%
+
+    return {
+        'averages': {
+            'cec': {'crs': avg_score(cec_draws), 'itas': avg_itas(cec_draws), 'count': len(cec_draws)},
+            'pnp': {'crs': avg_score(pnp_draws), 'itas': avg_itas(pnp_draws), 'count': len(pnp_draws)},
+            'french': {'crs': avg_score(french_draws), 'itas': avg_itas(french_draws), 'count': len(french_draws)},
+            'healthcare': {'crs': avg_score(healthcare_draws), 'itas': avg_itas(healthcare_draws), 'count': len(healthcare_draws)},
+            'trade': {'crs': avg_score(trade_draws), 'itas': avg_itas(trade_draws), 'count': len(trade_draws)},
+            'general': {'crs': avg_score(general_draws), 'itas': avg_itas(general_draws), 'count': len(general_draws)}
+        },
+        'trend': {
+            'direction': trend,
+            'slope': slope
+        },
+        'pool_analysis': {
+            'total_candidates': total_pool,
+            'above_500': candidates_above_500,
+            'pressure_percent': pool_pressure,
+            'pressure_level': 'Low' if pool_pressure < 10 else 'Medium' if pool_pressure < 15 else 'High'
+        },
+        'draw_frequency': {
+            'cec': round((len(cec_draws) / total_draws) * 100) if total_draws > 0 else 0,
+            'pnp': round((len(pnp_draws) / total_draws) * 100) if total_draws > 0 else 0,
+            'french': round((len(french_draws) / total_draws) * 100) if total_draws > 0 else 0,
+            'healthcare': round((len(healthcare_draws) / total_draws) * 100) if total_draws > 0 else 0
+        },
+        'confidence': {
+            'cec': calculate_confidence(len(cec_draws), pool_pressure, trend),
+            'pnp': calculate_confidence(len(pnp_draws), pool_pressure, trend),
+            'french': calculate_confidence(len(french_draws), pool_pressure, trend),
+            'healthcare': calculate_confidence(len(healthcare_draws), pool_pressure, trend)
+        },
+        'bounds': {
+            'highest_recent': max([d.get('score', 0) for d in draws[:10]]) if draws else 0,
+            'lowest_recent': min([d.get('score', 0) for d in general_draws[:10]]) if general_draws else 0
+        }
+    }
+
+
+def build_gemini_prompt(official_data, statistics):
+    """
+    LAYER 3: Build structured prompt for Gemini with all computed data
+    """
+    today = datetime.now().strftime('%B %d, %Y')
+
+    # Format recent draws
+    draws_text = "\n".join([
+        f"  - {d.get('date')}: {d.get('type')} | CRS: {d.get('score')} | ITAs: {d.get('itas')}"
+        for d in official_data['draws'][:10]
+    ])
+
+    # Format pool distribution
+    pool_dist = official_data['pool_distribution']
+    pool_text = "\n".join([f"  - {k} CRS: {v:,} candidates" for k, v in pool_dist.items()])
+
+    stats = statistics
+
+    return f"""You are an expert Canadian immigration analyst. Today is {today}.
+
+=== LAYER 1: OFFICIAL IRCC DATA (FACTS) ===
+Last Updated: {official_data['last_updated']}
+Total Pool Size: {official_data['total_pool_size']:,} candidates
+
+Pool Distribution:
+{pool_text}
+
+Recent Draws (Last 10):
 {draws_text}
 
+2026 Targets:
+  - Express Entry: {official_data['annual_targets']['express_entry_2026']:,} ITAs
+  - PNP: {official_data['annual_targets']['pnp_2026']:,} nominations
+
+=== LAYER 2: COMPUTED STATISTICS ===
+CRS Averages (Last 5 draws each):
+  - CEC: {stats['averages']['cec']['crs']} CRS (from {stats['averages']['cec']['count']} draws)
+  - PNP: {stats['averages']['pnp']['crs']} CRS (from {stats['averages']['pnp']['count']} draws)
+  - French: {stats['averages']['french']['crs']} CRS (from {stats['averages']['french']['count']} draws)
+  - Healthcare: {stats['averages']['healthcare']['crs']} CRS (from {stats['averages']['healthcare']['count']} draws)
+
+CRS Trend: {stats['trend']['direction'].upper()} (slope: {stats['trend']['slope']})
+Pool Pressure: {stats['pool_analysis']['pressure_percent']}% above 500 CRS ({stats['pool_analysis']['pressure_level']})
+Candidates above 500: {stats['pool_analysis']['above_500']:,}
+
+Draw Frequency (last 20 draws):
+  - CEC: {stats['draw_frequency']['cec']}%
+  - PNP: {stats['draw_frequency']['pnp']}%
+  - French: {stats['draw_frequency']['french']}%
+  - Healthcare: {stats['draw_frequency']['healthcare']}%
+
+Bounds: Highest {stats['bounds']['highest_recent']}, Lowest {stats['bounds']['lowest_recent']} (excl. PNP)
+
 === YOUR TASK ===
-Analyze the patterns and provide predictions in the following JSON format:
+Based ONLY on the data above, provide predictions. Return valid JSON:
 
 {{
-  "next_draw_prediction": {{
-    "expected_date": "January XX, 2026",
-    "expected_category": "CEC/PNP/French/Healthcare/General",
-    "predicted_crs_low": 510,
-    "predicted_crs_high": 520,
-    "predicted_itas": 5000,
-    "confidence_percent": 75
+  "predictions": {{
+    "CEC": {{
+      "cutoff_low": <number based on trend>,
+      "cutoff_high": <number based on trend>,
+      "confidence": {stats['confidence']['cec']},
+      "next_expected": "<days estimate>",
+      "ita_estimate": {stats['averages']['cec']['itas']},
+      "reasoning": "<1 sentence based on data>"
+    }},
+    "PNP": {{
+      "cutoff_low": 700,
+      "cutoff_high": 750,
+      "confidence": {stats['confidence']['pnp']},
+      "next_expected": "3-5 days",
+      "ita_estimate": {stats['averages']['pnp']['itas']},
+      "reasoning": "PNP always requires nomination (+600 CRS boost)"
+    }},
+    "French": {{
+      "cutoff_low": <number>,
+      "cutoff_high": <number>,
+      "confidence": {stats['confidence']['french']},
+      "next_expected": "<estimate>",
+      "ita_estimate": {stats['averages']['french']['itas']},
+      "reasoning": "<based on data>"
+    }},
+    "Healthcare": {{
+      "cutoff_low": <number>,
+      "cutoff_high": <number>,
+      "confidence": {stats['confidence']['healthcare']},
+      "next_expected": "<estimate>",
+      "ita_estimate": {stats['averages']['healthcare']['itas']},
+      "reasoning": "<based on data>"
+    }}
   }},
-  "category_predictions": {{
-    "cec": {{"crs_range": "510-520", "next_expected": "1-3 days", "likelihood": "high"}},
-    "pnp": {{"crs_range": "700-720", "next_expected": "1-3 days", "likelihood": "high"}},
-    "french": {{"crs_range": "380-420", "next_expected": "1-2 weeks", "likelihood": "medium"}},
-    "healthcare": {{"crs_range": "470-490", "next_expected": "1-2 weeks", "likelihood": "medium"}}
-  }},
-  "trend_analysis": "Brief 2-3 sentence analysis of current CRS trends",
-  "key_insights": [
-    "Insight 1 about current draw patterns",
-    "Insight 2 about category-based draws",
-    "Insight 3 about what candidates should expect"
-  ],
-  "recommendation": "Brief recommendation for candidates based on current trends"
+  "trend_analysis": "<2-3 sentences explaining the {stats['trend']['direction']} trend>",
+  "user_guidance": {{
+    "520_plus": "Excellent chances - likely ITA in next CEC draw",
+    "500_519": "Good chances - within typical CEC range",
+    "450_499": "Consider French test or category-based eligibility",
+    "below_450": "Focus on PNP nomination or improving CRS"
+  }}
 }}
 
-Be specific with dates and numbers based on the actual data patterns. Use real draw dates to extrapolate."""
+RULES:
+1. Use ONLY the statistics provided - do not invent numbers
+2. Confidence scores are pre-calculated - use them as given
+3. Base cutoff predictions on averages +/- 10 points based on trend
+4. If trend is 'declining', predict lower end; if 'rising', predict higher end"""
 
-        # Call Gemini API
-        gemini_url = f"{GEMINI_URL}/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
 
-        payload = {
-            'contents': [{
-                'parts': [{'text': prompt}]
-            }],
-            'generationConfig': {
-                'temperature': 0.3,
-                'maxOutputTokens': 2000
+@app.route('/api/crs-prediction', methods=['POST'])
+def api_crs_prediction():
+    """
+    CRS Prediction API - 3-Layer Architecture
+    Layer 1: Official Data -> Layer 2: Statistics -> Layer 3: Gemini Analysis
+    """
+    try:
+        # LAYER 1: Load official IRCC data
+        official_data = load_official_data()
+        if not official_data:
+            return jsonify({"success": False, "error": "Could not load draw data"}), 500
+
+        # LAYER 2: Calculate statistics
+        statistics = calculate_statistics(official_data)
+
+        # LAYER 3: Get Gemini predictions (if API key available)
+        gemini_predictions = None
+        if GEMINI_API_KEY:
+            try:
+                prompt = build_gemini_prompt(official_data, statistics)
+
+                gemini_url = f"{GEMINI_URL}/gemini-2.0-flash:generateContent?key={GEMINI_API_KEY}"
+                payload = {
+                    'contents': [{'parts': [{'text': prompt}]}],
+                    'generationConfig': {'temperature': 0.2, 'maxOutputTokens': 2000}
+                }
+
+                response = requests.post(gemini_url, json=payload, timeout=60)
+                if response.ok:
+                    result = response.json()
+                    content = result.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '')
+
+                    # Parse JSON from Gemini response
+                    content = content.replace('```json', '').replace('```', '').strip()
+                    import re
+                    content = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f]', '', content)
+
+                    start = content.find('{')
+                    end = content.rfind('}') + 1
+                    if start >= 0 and end > start:
+                        gemini_predictions = json.loads(content[start:end])
+            except Exception as e:
+                print(f"Gemini API error (using fallback): {e}")
+
+        # Build final response - combining all layers
+        avg = statistics['averages']
+        trend = statistics['trend']
+
+        # Fallback predictions if Gemini fails
+        trend_adjust = -5 if trend['direction'] == 'declining' else (5 if trend['direction'] == 'rising' else 0)
+
+        fallback_predictions = {
+            'CEC': {
+                'cutoff_low': avg['cec']['crs'] - 10 + trend_adjust,
+                'cutoff_high': avg['cec']['crs'] + 5 + trend_adjust,
+                'confidence': statistics['confidence']['cec'],
+                'next_expected': '3-7 days',
+                'ita_estimate': avg['cec']['itas'],
+                'reasoning': f"Based on {avg['cec']['count']} recent CEC draws averaging {avg['cec']['crs']} CRS"
+            },
+            'PNP': {
+                'cutoff_low': 700,
+                'cutoff_high': 750,
+                'confidence': statistics['confidence']['pnp'],
+                'next_expected': '3-5 days',
+                'ita_estimate': avg['pnp']['itas'],
+                'reasoning': 'PNP requires provincial nomination (+600 CRS boost)'
+            },
+            'French': {
+                'cutoff_low': max(365, avg['french']['crs'] - 20) if avg['french']['crs'] > 0 else 380,
+                'cutoff_high': avg['french']['crs'] + 20 if avg['french']['crs'] > 0 else 420,
+                'confidence': statistics['confidence']['french'],
+                'next_expected': '1-2 weeks',
+                'ita_estimate': avg['french']['itas'] or 5000,
+                'reasoning': f"Based on {avg['french']['count']} French draws in recent history"
+            },
+            'Healthcare': {
+                'cutoff_low': avg['healthcare']['crs'] - 15 if avg['healthcare']['crs'] > 0 else 460,
+                'cutoff_high': avg['healthcare']['crs'] + 15 if avg['healthcare']['crs'] > 0 else 490,
+                'confidence': statistics['confidence']['healthcare'],
+                'next_expected': '1-3 weeks',
+                'ita_estimate': avg['healthcare']['itas'] or 1500,
+                'reasoning': f"Based on {avg['healthcare']['count']} Healthcare draws"
             }
         }
 
-        response = requests.post(gemini_url, json=payload, timeout=60)
-        response.raise_for_status()
+        # Use Gemini predictions if available, otherwise fallback
+        predictions = gemini_predictions.get('predictions', fallback_predictions) if gemini_predictions else fallback_predictions
 
-        result = response.json()
-        content = result.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', '')
+        final_response = {
+            'success': True,
+            'generated_at': datetime.now().isoformat(),
+            'data_source': 'IRCC Official',
 
-        # Parse JSON response
-        import re
-        content = content.replace('```json', '').replace('```', '').strip()
-        content = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f]', '', content)
+            # FACTS (Layer 1)
+            'current_conditions': {
+                'pool_size': official_data['total_pool_size'],
+                'pool_last_updated': official_data['last_updated'][:10],
+                'candidates_above_500': statistics['pool_analysis']['above_500'],
+                'pool_pressure': f"{statistics['pool_analysis']['pressure_level']} ({statistics['pool_analysis']['pressure_percent']}%)",
+                'trend': statistics['trend']['direction'],
+                'trend_slope': statistics['trend']['slope']
+            },
 
-        start = content.find('{')
-        end = content.rfind('}') + 1
+            # STATISTICS (Layer 2)
+            'statistics': {
+                'averages': statistics['averages'],
+                'bounds': statistics['bounds'],
+                'draw_frequency': statistics['draw_frequency']
+            },
 
-        if start >= 0 and end > start:
-            prediction_data = json.loads(content[start:end])
-            prediction_data['generated_at'] = datetime.now().isoformat()
-            prediction_data['success'] = True
-            return jsonify(prediction_data)
+            # PREDICTIONS (Layer 3)
+            'predictions': predictions,
 
-        return jsonify({"success": False, "error": "Failed to parse prediction"}), 500
+            # Analysis from Gemini or fallback
+            'trend_analysis': gemini_predictions.get('trend_analysis',
+                f"CRS scores are {trend['direction']} with a slope of {trend['slope']}. "
+                f"Pool pressure is {statistics['pool_analysis']['pressure_level'].lower()} at {statistics['pool_analysis']['pressure_percent']}%.") if gemini_predictions else f"CRS trend is {trend['direction']}. Pool pressure: {statistics['pool_analysis']['pressure_level']}.",
+
+            'user_guidance': gemini_predictions.get('user_guidance', {
+                '520_plus': 'Excellent chances - likely ITA in next CEC draw',
+                '500_519': 'Good chances - within typical CEC range',
+                '450_499': 'Consider French test or category-based eligibility',
+                'below_450': 'Focus on PNP nomination or improving CRS'
+            }) if gemini_predictions else {
+                '520_plus': 'Excellent chances - likely ITA in next CEC draw',
+                '500_519': 'Good chances - within typical CEC range',
+                '450_499': 'Consider French test or category-based eligibility',
+                'below_450': 'Focus on PNP nomination or improving CRS'
+            },
+
+            # Recent draws for display
+            'recent_draws': official_data['draws'][:5]
+        }
+
+        return jsonify(final_response)
 
     except Exception as e:
         print(f"CRS prediction API error: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({"success": False, "error": str(e)}), 500
 
 

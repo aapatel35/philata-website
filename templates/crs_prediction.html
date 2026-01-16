@@ -1466,7 +1466,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadGeminiPredictions();  // Load AI predictions
 });
 
-// Load AI-powered predictions from Gemini
+// Load AI-powered predictions from 3-Layer API
 async function loadGeminiPredictions() {
     try {
         const response = await fetch('/api/crs-prediction', {
@@ -1479,53 +1479,55 @@ async function loadGeminiPredictions() {
         const data = await response.json();
         if (!data.success) return;
 
-        // Update main prediction card with AI data
-        if (data.next_draw_prediction) {
-            const pred = data.next_draw_prediction;
+        console.log('3-Layer CRS Prediction loaded:', data);
 
-            // Update predicted CRS
-            if (pred.predicted_crs_low && pred.predicted_crs_high) {
-                const avgPred = Math.round((pred.predicted_crs_low + pred.predicted_crs_high) / 2);
-                document.getElementById('predictedCutoff').textContent = avgPred;
-            }
+        // Update current conditions (FACTS)
+        if (data.current_conditions) {
+            const cond = data.current_conditions;
 
-            // Update expected date
-            if (pred.expected_date) {
-                const dateShort = pred.expected_date.replace(/,?\s*\d{4}/, '').replace('January', 'Jan').replace('February', 'Feb');
-                document.getElementById('predictedDate').textContent = dateShort;
-            }
-
-            // Update expected ITAs
-            if (pred.predicted_itas) {
-                document.getElementById('predictedItas').textContent = pred.predicted_itas.toLocaleString();
-            }
-
-            // Update expected category
-            if (pred.expected_category) {
-                document.getElementById('predictedCategory').textContent = pred.expected_category;
-            }
-
-            // Update confidence
-            if (pred.confidence_percent && document.getElementById('confidencePercent')) {
-                document.getElementById('confidencePercent').textContent = pred.confidence_percent + '%';
-                document.getElementById('confidenceFill').style.width = pred.confidence_percent + '%';
+            // Update trend indicator
+            const trendEl = document.querySelector('.draw-stat-label:contains("Trend")');
+            if (cond.trend) {
+                const trendIcon = cond.trend === 'declining' ? '↓' : cond.trend === 'rising' ? '↑' : '→';
+                // Update any trend displays
             }
         }
 
-        // Update category predictions
-        if (data.category_predictions) {
-            const cats = data.category_predictions;
-            if (cats.cec && document.getElementById('cecPrediction')) {
-                document.getElementById('cecPrediction').textContent = cats.cec.crs_range;
+        // Update predictions (from Layer 3)
+        if (data.predictions) {
+            const preds = data.predictions;
+
+            // Update CEC prediction
+            if (preds.CEC) {
+                const cecPred = preds.CEC;
+                const avgCec = Math.round((cecPred.cutoff_low + cecPred.cutoff_high) / 2);
+                document.getElementById('predictedCutoff').textContent = avgCec;
+                document.getElementById('predictedItas').textContent = (cecPred.ita_estimate || 5000).toLocaleString();
+
+                if (document.getElementById('cecPrediction')) {
+                    document.getElementById('cecPrediction').textContent = `${cecPred.cutoff_low}-${cecPred.cutoff_high}`;
+                }
+
+                // Update confidence
+                if (cecPred.confidence && document.getElementById('confidencePercent')) {
+                    document.getElementById('confidencePercent').textContent = cecPred.confidence + '%';
+                    document.getElementById('confidenceFill').style.width = cecPred.confidence + '%';
+                }
             }
-            if (cats.pnp && document.getElementById('pnpPrediction')) {
-                document.getElementById('pnpPrediction').textContent = cats.pnp.crs_range;
+
+            // Update PNP prediction
+            if (preds.PNP && document.getElementById('pnpPrediction')) {
+                document.getElementById('pnpPrediction').textContent = `${preds.PNP.cutoff_low}-${preds.PNP.cutoff_high}`;
             }
-            if (cats.french && document.getElementById('frenchPrediction')) {
-                document.getElementById('frenchPrediction').textContent = cats.french.crs_range;
+
+            // Update French prediction
+            if (preds.French && document.getElementById('frenchPrediction')) {
+                document.getElementById('frenchPrediction').textContent = `${preds.French.cutoff_low}-${preds.French.cutoff_high}`;
             }
-            if (cats.healthcare && document.getElementById('healthPrediction')) {
-                document.getElementById('healthPrediction').textContent = cats.healthcare.crs_range;
+
+            // Update Healthcare prediction
+            if (preds.Healthcare && document.getElementById('healthPrediction')) {
+                document.getElementById('healthPrediction').textContent = `${preds.Healthcare.cutoff_low}-${preds.Healthcare.cutoff_high}`;
             }
         }
 
@@ -1533,62 +1535,68 @@ async function loadGeminiPredictions() {
         if (data.trend_analysis) {
             const summaryEl = document.getElementById('predictionSummaryText');
             if (summaryEl) {
-                summaryEl.innerHTML = `<strong>AI Analysis:</strong> ${data.trend_analysis}`;
+                const trend = data.current_conditions?.trend || 'stable';
+                const trendIcon = trend === 'declining' ? '📉' : trend === 'rising' ? '📈' : '➡️';
+                summaryEl.innerHTML = `<strong>AI Analysis (${trendIcon} ${trend}):</strong> ${data.trend_analysis}`;
             }
         }
 
-        // Update insights
-        if (data.key_insights && data.key_insights.length > 0) {
-            updateInsights(data.key_insights);
+        // Update statistics display
+        if (data.statistics) {
+            const stats = data.statistics;
+
+            // Update averages display
+            if (stats.averages && stats.averages.cec) {
+                document.getElementById('avgCrsDisplay').textContent = stats.averages.cec.crs;
+            }
+
+            // Update bounds
+            if (stats.bounds) {
+                document.getElementById('highestCrs').textContent = stats.bounds.highest_recent;
+                document.getElementById('lowestCrs').textContent = stats.bounds.lowest_recent;
+            }
         }
 
-        // Update recommendation
-        if (data.recommendation) {
-            updateRecommendation(data.recommendation);
+        // Update user guidance
+        if (data.user_guidance) {
+            updateUserGuidance(data.user_guidance);
         }
 
-        console.log('Gemini predictions loaded successfully');
+        // Update reasoning with prediction details
+        updatePredictionReasoning(data.predictions);
+
+        console.log('3-Layer predictions applied successfully');
 
     } catch (error) {
-        console.log('Using static predictions (Gemini API unavailable)');
+        console.log('Using static predictions:', error);
     }
 }
 
-function updateInsights(insights) {
+function updateUserGuidance(guidance) {
+    // Update the score check result descriptions based on API guidance
+    window.userGuidance = guidance;
+}
+
+function updatePredictionReasoning(predictions) {
+    if (!predictions) return;
+
     const factorsEl = document.getElementById('analysisFactors');
-    if (!factorsEl || insights.length < 3) return;
+    if (!factorsEl) return;
 
-    // Update existing factor cards with AI insights
+    // Update factor cards with prediction reasoning
     const factorCards = factorsEl.querySelectorAll('.factor-text');
-    insights.slice(0, 4).forEach((insight, i) => {
-        if (factorCards[i]) {
-            factorCards[i].textContent = insight;
-        }
-    });
-}
 
-function updateRecommendation(recommendation) {
-    // Add recommendation to the page if not exists
-    const existingRec = document.getElementById('aiRecommendation');
-    if (existingRec) {
-        existingRec.querySelector('.reasoning-text').textContent = recommendation;
-        return;
+    if (predictions.CEC && factorCards[0]) {
+        factorCards[0].textContent = predictions.CEC.reasoning || 'Based on recent CEC draw patterns.';
     }
-
-    const reasoningSection = document.querySelector('.reasoning-section');
-    if (reasoningSection) {
-        const recDiv = document.createElement('div');
-        recDiv.id = 'aiRecommendation';
-        recDiv.className = 'reasoning-item';
-        recDiv.style.borderLeftColor = '#10B981';
-        recDiv.innerHTML = `
-            <div class="reasoning-title">
-                <i class="bi bi-robot" style="color: #10B981;"></i>
-                AI Recommendation
-            </div>
-            <div class="reasoning-text">${recommendation}</div>
-        `;
-        reasoningSection.insertBefore(recDiv, reasoningSection.firstChild.nextSibling);
+    if (predictions.PNP && factorCards[1]) {
+        factorCards[1].textContent = predictions.PNP.reasoning || 'PNP requires provincial nomination.';
+    }
+    if (predictions.French && factorCards[2]) {
+        factorCards[2].textContent = predictions.French.reasoning || 'French proficiency offers lower cutoffs.';
+    }
+    if (predictions.Healthcare && factorCards[3]) {
+        factorCards[3].textContent = predictions.Healthcare.reasoning || 'Healthcare category draws are periodic.';
     }
 }
 
