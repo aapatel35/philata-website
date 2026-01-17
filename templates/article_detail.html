@@ -632,6 +632,8 @@
         border-radius: 16px;
         padding: 28px;
         margin-bottom: 32px;
+        max-width: 100%;
+        overflow: hidden;
     }
 
     .charts-title {
@@ -651,15 +653,30 @@
 
     .charts-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 24px;
+        max-width: 100%;
     }
 
     .chart-container {
         background: var(--bg-secondary);
         border-radius: 12px;
         padding: 20px;
-        min-height: 280px;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .chart-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        aspect-ratio: 16 / 9;
+    }
+
+    .chart-wrapper canvas {
+        max-width: 100% !important;
+        height: auto !important;
     }
 
     .chart-title {
@@ -694,7 +711,12 @@
         }
 
         .chart-container {
-            min-height: 240px;
+            padding: 16px;
+        }
+
+        .chart-wrapper {
+            max-width: 100%;
+            aspect-ratio: 4 / 3;
         }
 
         /* Ensure article content is always visible on mobile */
@@ -823,7 +845,9 @@
                 {% for chart in article.charts %}
                 <div class="chart-container">
                     <h4 class="chart-title">{{ chart.title }}</h4>
-                    <canvas id="chart-{{ loop.index }}"></canvas>
+                    <div class="chart-wrapper">
+                        <canvas id="chart-{{ loop.index }}"></canvas>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
@@ -944,12 +968,19 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
+                maintainAspectRatio: true,
+                aspectRatio: window.innerWidth < 768 ? 1.33 : 1.78,
+                resizeDelay: 100,
                 plugins: {
                     legend: {
                         display: datasets.length > 1,
                         position: 'top',
-                        labels: { color: textColor, padding: 12 }
+                        labels: {
+                            color: textColor,
+                            padding: 12,
+                            boxWidth: 12,
+                            font: { size: window.innerWidth < 768 ? 10 : 12 }
+                        }
                     },
                     tooltip: {
                         backgroundColor: isDark ? '#1F2937' : '#FFFFFF',
@@ -964,11 +995,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 scales: {
                     x: {
                         grid: { color: gridColor },
-                        ticks: { color: textColor }
+                        ticks: {
+                            color: textColor,
+                            maxRotation: 45,
+                            minRotation: 0,
+                            font: { size: window.innerWidth < 768 ? 10 : 11 }
+                        }
                     },
                     y: {
                         grid: { color: gridColor },
-                        ticks: { color: textColor },
+                        ticks: {
+                            color: textColor,
+                            font: { size: window.innerWidth < 768 ? 10 : 11 }
+                        },
                         beginAtZero: chartConfig.type === 'bar'
                     }
                 }
