@@ -2575,6 +2575,39 @@ def delete_article_by_slug():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+@app.route('/api/articles/clear-all', methods=['POST'])
+def clear_all_articles():
+    """Clear all articles from MongoDB and local storage (admin endpoint)"""
+    try:
+        deleted_mongo = 0
+        deleted_local = 0
+
+        # Clear MongoDB
+        try:
+            articles_col = get_articles_collection()
+            if articles_col is not None:
+                result = articles_col.delete_many({})
+                deleted_mongo = result.deleted_count
+                print(f"MongoDB: Deleted {deleted_mongo} articles")
+        except Exception as mongo_err:
+            print(f"MongoDB clear error: {mongo_err}")
+
+        # Clear local results.json
+        results = load_results()
+        deleted_local = len(results)
+        save_results([])
+
+        return jsonify({
+            "success": True,
+            "message": "All articles cleared",
+            "deleted_from_mongo": deleted_mongo,
+            "deleted_from_local": deleted_local
+        })
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 @app.route('/api/results/<content_id>/posted', methods=['POST'])
 def mark_posted(content_id):
     """Mark content as posted"""
