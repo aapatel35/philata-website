@@ -669,14 +669,14 @@
     .chart-wrapper {
         position: relative;
         width: 100%;
-        max-width: 600px;
+        max-width: 500px;
+        max-height: 300px;
         margin: 0 auto;
-        aspect-ratio: 16 / 9;
     }
 
     .chart-wrapper canvas {
         max-width: 100% !important;
-        height: auto !important;
+        max-height: 300px !important;
     }
 
     .chart-title {
@@ -716,7 +716,11 @@
 
         .chart-wrapper {
             max-width: 100%;
-            aspect-ratio: 4 / 3;
+            max-height: 250px;
+        }
+
+        .chart-wrapper canvas {
+            max-height: 250px !important;
         }
 
         /* Ensure article content is always visible on mobile */
