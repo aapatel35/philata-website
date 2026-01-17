@@ -308,12 +308,12 @@ def load_guides():
 
 
 def load_articles():
-    """Load articles from local file (primary) with memory cache"""
+    """Load articles from MongoDB (primary) with memory cache fallback"""
     global _memory_cache
 
     raw_results = []
 
-    # Check memory cache first (prevents repeated file reads)
+    # Check memory cache first (prevents repeated DB queries)
     with _cache_lock:
         now = datetime.now()
         cache_valid = (_memory_cache.get('last_fetch') and
@@ -322,7 +322,26 @@ def load_articles():
         if cache_valid and _memory_cache.get('results'):
             raw_results = _memory_cache['results']
 
-    # Load from local results.json (primary source)
+    # Load from MongoDB (primary source - where agent posts articles)
+    if not raw_results:
+        try:
+            articles_col = get_articles_collection()
+            if articles_col is not None:
+                mongo_articles = list(articles_col.find({}).sort('created_at', -1).limit(500))
+                if mongo_articles:
+                    raw_results = []
+                    for doc in mongo_articles:
+                        doc['_id'] = str(doc['_id'])
+                        raw_results.append(doc)
+                    print(f"Loaded {len(raw_results)} articles from MongoDB")
+                    # Update memory cache
+                    with _cache_lock:
+                        _memory_cache['results'] = raw_results
+                        _memory_cache['last_fetch'] = datetime.now()
+        except Exception as e:
+            print(f"Error loading from MongoDB: {e}")
+
+    # Fallback to local file if MongoDB empty/unavailable
     if not raw_results:
         try:
             with open(RESULTS_FILE, 'r') as f:
@@ -330,10 +349,6 @@ def load_articles():
                 if local_data:
                     raw_results = local_data
                     print(f"Loaded {len(raw_results)} articles from local file")
-                    # Update memory cache
-                    with _cache_lock:
-                        _memory_cache['results'] = raw_results
-                        _memory_cache['last_fetch'] = datetime.now()
         except Exception as e:
             print(f"Error loading local results: {e}")
 
@@ -423,7 +438,22 @@ def create_slug(title):
 
 
 def load_results():
-    """Load all results from local file"""
+    """Load all results from MongoDB (primary) or local file (fallback)"""
+    # Try MongoDB first (where agent posts articles)
+    try:
+        articles_col = get_articles_collection()
+        if articles_col is not None:
+            mongo_articles = list(articles_col.find({}).sort('created_at', -1).limit(500))
+            if mongo_articles:
+                results = []
+                for doc in mongo_articles:
+                    doc['_id'] = str(doc['_id'])
+                    results.append(doc)
+                return results
+    except Exception as e:
+        print(f"Error loading from MongoDB: {e}")
+
+    # Fallback to local file
     if os.path.exists(RESULTS_FILE):
         with open(RESULTS_FILE, 'r') as f:
             return json.load(f)
