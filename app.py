@@ -308,12 +308,12 @@ def load_guides():
 
 
 def load_articles():
-    """Load articles from MongoDB (primary), Post API, memory cache, or local fallback"""
+    """Load articles from local file (primary) with memory cache"""
     global _memory_cache
 
     raw_results = []
 
-    # Check memory cache first (prevents data loss during runtime)
+    # Check memory cache first (prevents repeated file reads)
     with _cache_lock:
         now = datetime.now()
         cache_valid = (_memory_cache.get('last_fetch') and
@@ -322,62 +322,20 @@ def load_articles():
         if cache_valid and _memory_cache.get('results'):
             raw_results = _memory_cache['results']
 
-    # If cache miss or expired, try MongoDB first (persistent storage)
+    # Load from local results.json (primary source)
     if not raw_results:
         try:
-            articles_col = get_articles_collection()
-            if articles_col is not None:
-                # Fetch from MongoDB, sorted by created_at descending
-                mongo_articles = list(articles_col.find({}).sort('created_at', -1).limit(500))
-                if mongo_articles:
-                    # Convert MongoDB documents to dict (remove _id ObjectId)
-                    raw_results = []
-                    for doc in mongo_articles:
-                        doc['_id'] = str(doc['_id'])  # Convert ObjectId to string
-                        raw_results.append(doc)
-                    print(f"Loaded {len(raw_results)} articles from MongoDB")
+            with open(RESULTS_FILE, 'r') as f:
+                local_data = json.load(f)
+                if local_data:
+                    raw_results = local_data
+                    print(f"Loaded {len(raw_results)} articles from local file")
                     # Update memory cache
                     with _cache_lock:
                         _memory_cache['results'] = raw_results
                         _memory_cache['last_fetch'] = datetime.now()
         except Exception as e:
-            print(f"Error loading from MongoDB: {e}")
-
-    # Fallback to POST API if MongoDB is empty or unavailable
-    if not raw_results:
-        try:
-            response = requests.get(f"{POST_API_URL}/results/list", timeout=10)
-            if response.status_code == 200:
-                data = response.json()
-                raw_results = data if isinstance(data, list) else data.get('results', [])
-                # Update memory cache
-                if raw_results:
-                    with _cache_lock:
-                        _memory_cache['results'] = raw_results
-                        _memory_cache['last_fetch'] = datetime.now()
-                        # Also save to local file for future deployments
-                        try:
-                            with open(RESULTS_FILE, 'w') as f:
-                                json.dump(raw_results, f, indent=2)
-                        except Exception as e:
-                            print(f"Error saving results to file: {e}")
-        except Exception as e:
-            print(f"Error fetching from API: {e}")
-
-    # Fallback to local results.json
-    if not raw_results:
-        try:
-            with open(RESULTS_FILE, 'r') as f:
-                local_data = json.load(f)
-                if local_data:  # Only use if not empty
-                    raw_results = local_data
-        except Exception as e:
             print(f"Error loading local results: {e}")
-
-    # Final fallback to cached memory (even if expired)
-    if not raw_results:
-        with _cache_lock:
-            raw_results = _memory_cache.get('results', [])
 
     if raw_results:
         # Filter only items with full_article content
@@ -465,36 +423,7 @@ def create_slug(title):
 
 
 def load_results():
-    """Load all results from MongoDB (primary) or local file (fallback)"""
-    global _memory_cache
-
-    # Check memory cache first
-    with _cache_lock:
-        now = datetime.now()
-        cache_valid = (_memory_cache.get('last_fetch') and
-                      now - _memory_cache['last_fetch'] < _memory_cache['cache_ttl'])
-        if cache_valid and _memory_cache.get('results'):
-            return _memory_cache['results']
-
-    # Try MongoDB first (same source as /articles page)
-    try:
-        articles_col = get_articles_collection()
-        if articles_col is not None:
-            mongo_articles = list(articles_col.find({}).sort('created_at', -1).limit(500))
-            if mongo_articles:
-                results = []
-                for doc in mongo_articles:
-                    doc['_id'] = str(doc['_id'])
-                    results.append(doc)
-                # Update memory cache
-                with _cache_lock:
-                    _memory_cache['results'] = results
-                    _memory_cache['last_fetch'] = datetime.now()
-                return results
-    except Exception as e:
-        print(f"Error loading from MongoDB in load_results: {e}")
-
-    # Fallback to local file
+    """Load all results from local file"""
     if os.path.exists(RESULTS_FILE):
         with open(RESULTS_FILE, 'r') as f:
             return json.load(f)
