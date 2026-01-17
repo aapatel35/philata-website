@@ -2531,6 +2531,50 @@ def delete_content(content_id):
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+@app.route('/api/articles/delete-by-slug', methods=['POST'])
+def delete_article_by_slug():
+    """Delete article by slug (admin endpoint)"""
+    try:
+        data = request.get_json()
+        slug = data.get('slug', '')
+
+        if not slug:
+            return jsonify({"success": False, "error": "slug required"}), 400
+
+        # Delete from MongoDB
+        deleted_mongo = False
+        try:
+            articles_col = get_articles_collection()
+            if articles_col is not None:
+                result = articles_col.delete_one({'slug': slug})
+                deleted_mongo = result.deleted_count > 0
+                print(f"MongoDB: Deleted {result.deleted_count} article(s) with slug '{slug}'")
+        except Exception as mongo_err:
+            print(f"MongoDB delete error: {mongo_err}")
+
+        # Also delete from local results.json
+        results = load_results()
+        original_count = len(results)
+        results = [r for r in results if r.get('slug') != slug]
+        deleted_local = len(results) < original_count
+
+        if deleted_local:
+            save_results(results)
+
+        if deleted_mongo or deleted_local:
+            return jsonify({
+                "success": True,
+                "message": f"Deleted article '{slug}'",
+                "deleted_from_mongo": deleted_mongo,
+                "deleted_from_local": deleted_local
+            })
+        else:
+            return jsonify({"success": False, "error": f"Article '{slug}' not found"}), 404
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 @app.route('/api/results/<content_id>/posted', methods=['POST'])
 def mark_posted(content_id):
     """Mark content as posted"""
