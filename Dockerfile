@@ -46,3 +46,4 @@ EXPOSE 8080
 
 # Run gunicorn directly - shell form for variable expansion
 CMD gunicorn --bind 0.0.0.0:${PORT:-8080} --workers 4 --timeout 120 app:app
+# Redeploy trigger: 2026-01-17_00:57:27_CLEAR
