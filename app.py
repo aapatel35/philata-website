@@ -465,7 +465,36 @@ def create_slug(title):
 
 
 def load_results():
-    """Load all results from local file"""
+    """Load all results from MongoDB (primary) or local file (fallback)"""
+    global _memory_cache
+
+    # Check memory cache first
+    with _cache_lock:
+        now = datetime.now()
+        cache_valid = (_memory_cache.get('last_fetch') and
+                      now - _memory_cache['last_fetch'] < _memory_cache['cache_ttl'])
+        if cache_valid and _memory_cache.get('results'):
+            return _memory_cache['results']
+
+    # Try MongoDB first (same source as /articles page)
+    try:
+        articles_col = get_articles_collection()
+        if articles_col is not None:
+            mongo_articles = list(articles_col.find({}).sort('created_at', -1).limit(500))
+            if mongo_articles:
+                results = []
+                for doc in mongo_articles:
+                    doc['_id'] = str(doc['_id'])
+                    results.append(doc)
+                # Update memory cache
+                with _cache_lock:
+                    _memory_cache['results'] = results
+                    _memory_cache['last_fetch'] = datetime.now()
+                return results
+    except Exception as e:
+        print(f"Error loading from MongoDB in load_results: {e}")
+
+    # Fallback to local file
     if os.path.exists(RESULTS_FILE):
         with open(RESULTS_FILE, 'r') as f:
             return json.load(f)
