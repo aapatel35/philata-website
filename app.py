@@ -4476,16 +4476,25 @@ def admin_article_edit(slug):
 @app.route('/admin/articles/<slug>/delete', methods=['POST'])
 @admin_required
 def admin_article_delete(slug):
-    """Delete article"""
+    """Delete article by slug or _id"""
     deleted = False
 
     # Delete from MongoDB (primary storage)
     articles_col = get_articles_collection()
     if articles_col is not None:
         try:
+            # Try by slug first
             result = articles_col.delete_one({'slug': slug})
             if result.deleted_count > 0:
                 deleted = True
+            else:
+                # Try by _id if slug didn't match
+                try:
+                    result = articles_col.delete_one({'_id': ObjectId(slug)})
+                    if result.deleted_count > 0:
+                        deleted = True
+                except:
+                    pass
         except Exception as e:
             print(f"MongoDB delete error: {e}")
 
@@ -4495,13 +4504,20 @@ def admin_article_delete(slug):
             with open(RESULTS_FILE, 'r') as f:
                 results = json.load(f)
             original_count = len(results)
-            results = [a for a in results if a.get('slug') != slug]
+            # Try by slug or _id
+            results = [a for a in results if a.get('slug') != slug and str(a.get('_id', '')) != slug]
             if len(results) < original_count:
                 with open(RESULTS_FILE, 'w') as f:
                     json.dump(results, f, indent=2)
                 deleted = True
     except Exception as e:
         print(f"Local file delete error: {e}")
+
+    # Clear cache to reflect changes immediately
+    global _memory_cache
+    with _cache_lock:
+        _memory_cache['results'] = []
+        _memory_cache['last_fetch'] = None
 
     if deleted:
         flash('Article deleted successfully!', 'success')

@@ -115,14 +115,14 @@
                             </td>
                             <td>
                                 <div class="btn-group btn-group-sm">
-                                    <a href="{{ url_for('admin_article_edit', slug=article.slug) }}" class="btn btn-outline-primary" title="Edit">
+                                    <a href="{{ url_for('admin_article_edit', slug=article.slug or article._id) }}" class="btn btn-outline-primary" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="/articles/{{ article.slug }}" target="_blank" class="btn btn-outline-secondary" title="View">
+                                    <a href="/articles/{{ article.slug or article._id }}" target="_blank" class="btn btn-outline-secondary" title="View">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     <button type="button" class="btn btn-outline-danger" title="Delete"
-                                            onclick="confirmDelete('{{ article.slug }}', '{{ article.title|e }}')">
+                                            onclick="confirmDelete('{{ article.slug or article._id }}', '{{ article.title|e }}')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>

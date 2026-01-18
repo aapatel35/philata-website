@@ -154,13 +154,13 @@
                                 {% for article in recent_articles %}
                                 <tr>
                                     <td>
-                                        <a href="{{ url_for('admin_article_edit', slug=article.slug) }}" class="text-decoration-none">
+                                        <a href="{{ url_for('admin_article_edit', slug=article.slug or article._id) }}" class="text-decoration-none">
                                             {{ article.title[:60] }}{% if article.title|length > 60 %}...{% endif %}
                                         </a>
                                     </td>
                                     <td>
                                         <span class="badge bg-{{ 'primary' if article.category == 'express_entry' else 'success' if article.category == 'pnp' else 'secondary' }}">
-                                            {{ article.category|replace('_', ' ')|title }}
+                                            {{ (article.category or 'uncategorized')|replace('_', ' ')|title }}
                                         </span>
                                     </td>
                                     <td>
@@ -169,12 +169,16 @@
                                         </small>
                                     </td>
                                     <td>
-                                        <a href="{{ url_for('admin_article_edit', slug=article.slug) }}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                        <a href="{{ url_for('admin_article_edit', slug=article.slug or article._id) }}" class="btn btn-sm btn-outline-primary" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="/articles/{{ article.slug }}" target="_blank" class="btn btn-sm btn-outline-secondary" title="View">
+                                        <a href="/articles/{{ article.slug or article._id }}" target="_blank" class="btn btn-sm btn-outline-secondary" title="View">
                                             <i class="fas fa-eye"></i>
                                         </a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" title="Delete"
+                                                onclick="confirmDelete('{{ article.slug or article._id }}', '{{ article.title|e }}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                                 {% else %}
@@ -192,4 +196,36 @@
         </div>
     </div>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Article</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete "<span id="deleteTitle"></span>"?</p>
+                <p class="text-danger"><small>This action cannot be undone.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function confirmDelete(slug, title) {
+    document.getElementById('deleteTitle').textContent = title;
+    document.getElementById('deleteForm').action = '/admin/articles/' + slug + '/delete';
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+</script>
 {% endblock %}
