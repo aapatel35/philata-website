@@ -1,0 +1,195 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Dashboard - Philata CMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Welcome Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3">Welcome back, {{ admin.username }}</h1>
+            <p class="text-muted">Here's what's happening with your content.</p>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">Total Articles</h6>
+                            <h2 class="mb-0">{{ total_articles }}</h2>
+                        </div>
+                        <i class="fas fa-newspaper fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">Categories</h6>
+                            <h2 class="mb-0">{{ categories|length }}</h2>
+                        </div>
+                        <i class="fas fa-folder fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">Express Entry</h6>
+                            <h2 class="mb-0">{{ categories.get('express_entry', 0) }}</h2>
+                        </div>
+                        <i class="fas fa-plane fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">PNP</h6>
+                            <h2 class="mb-0">{{ categories.get('pnp', 0) }}</h2>
+                        </div>
+                        <i class="fas fa-map-marker-alt fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Breakdown -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Articles by Category</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Count</th>
+                                    <th>Percentage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cat, count in categories.items()|sort(attribute='1', reverse=true) %}
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ cat|replace('_', ' ')|title }}</span>
+                                    </td>
+                                    <td>{{ count }}</td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar" style="width: {{ (count / total_articles * 100)|round(1) }}%">
+                                                {{ (count / total_articles * 100)|round(1) }}%
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-3">
+                        <a href="{{ url_for('admin_article_new') }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus me-2"></i>Create New Article
+                        </a>
+                        <a href="{{ url_for('admin_articles') }}" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-list me-2"></i>View All Articles
+                        </a>
+                        <a href="/" target="_blank" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-external-link-alt me-2"></i>View Live Site
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Articles -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Recent Articles</h5>
+                    <a href="{{ url_for('admin_articles') }}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for article in recent_articles %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('admin_article_edit', slug=article.slug) }}" class="text-decoration-none">
+                                            {{ article.title[:60] }}{% if article.title|length > 60 %}...{% endif %}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ 'primary' if article.category == 'express_entry' else 'success' if article.category == 'pnp' else 'secondary' }}">
+                                            {{ article.category|replace('_', ' ')|title }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">
+                                            {{ article.created_at[:10] if article.created_at else 'Unknown' }}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('admin_article_edit', slug=article.slug) }}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="/articles/{{ article.slug }}" target="_blank" class="btn btn-sm btn-outline-secondary" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">
+                                        No articles yet. <a href="{{ url_for('admin_article_new') }}">Create your first article</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

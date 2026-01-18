@@ -1,0 +1,213 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}All Articles - Philata CMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1 class="h3">Articles</h1>
+            <p class="text-muted">Manage all your immigration news content</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="{{ url_for('admin_article_new') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>New Article
+            </a>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input type="text" name="search" class="form-control" placeholder="Search articles..." value="{{ search }}">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select name="category" class="form-select">
+                        <option value="">All Categories</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat }}" {{ 'selected' if category_filter == cat else '' }}>
+                            {{ cat|replace('_', ' ')|title }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="status" class="form-select">
+                        <option value="">All Status</option>
+                        <option value="published" {{ 'selected' if status_filter == 'published' else '' }}>Published</option>
+                        <option value="draft" {{ 'selected' if status_filter == 'draft' else '' }}>Draft</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-outline-primary w-100">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Articles Table -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>{{ total }} articles found</span>
+            {% if search or category_filter or status_filter %}
+            <a href="{{ url_for('admin_articles') }}" class="btn btn-sm btn-outline-secondary">Clear Filters</a>
+            {% endif %}
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 40%">Title</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Source</th>
+                            <th>Created</th>
+                            <th style="width: 150px">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for article in articles %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if article.image_url %}
+                                    <img src="{{ article.image_url }}" alt="" class="rounded me-2" style="width: 50px; height: 35px; object-fit: cover;">
+                                    {% else %}
+                                    <div class="bg-light rounded me-2 d-flex align-items-center justify-content-center" style="width: 50px; height: 35px;">
+                                        <i class="fas fa-image text-muted"></i>
+                                    </div>
+                                    {% endif %}
+                                    <div>
+                                        <a href="{{ url_for('admin_article_edit', slug=article.slug) }}" class="text-decoration-none fw-medium">
+                                            {{ article.title[:50] }}{% if article.title|length > 50 %}...{% endif %}
+                                        </a>
+                                        <br>
+                                        <small class="text-muted">/articles/{{ article.slug }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ 'primary' if article.category == 'express_entry' else 'success' if article.category == 'pnp' else 'info' if article.category == 'news' else 'secondary' }}">
+                                    {{ (article.category or 'uncategorized')|replace('_', ' ')|title }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if article.status == 'draft' %}
+                                <span class="badge bg-warning text-dark">Draft</span>
+                                {% else %}
+                                <span class="badge bg-success">Published</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <small class="text-muted">{{ (article.source or 'Unknown')[:20] }}</small>
+                            </td>
+                            <td>
+                                <small class="text-muted">
+                                    {{ article.created_at[:10] if article.created_at else 'Unknown' }}
+                                </small>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ url_for('admin_article_edit', slug=article.slug) }}" class="btn btn-outline-primary" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="/articles/{{ article.slug }}" target="_blank" class="btn btn-outline-secondary" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-outline-danger" title="Delete"
+                                            onclick="confirmDelete('{{ article.slug }}', '{{ article.title|e }}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-5">
+                                <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
+                                {% if search or category_filter or status_filter %}
+                                No articles match your filters. <a href="{{ url_for('admin_articles') }}">Clear filters</a>
+                                {% else %}
+                                No articles yet. <a href="{{ url_for('admin_article_new') }}">Create your first article</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        {% if pages > 1 %}
+        <div class="card-footer">
+            <nav>
+                <ul class="pagination justify-content-center mb-0">
+                    <li class="page-item {{ 'disabled' if page == 1 else '' }}">
+                        <a class="page-link" href="?page={{ page - 1 }}&search={{ search }}&category={{ category_filter }}&status={{ status_filter }}">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                    {% for p in range(1, pages + 1) %}
+                        {% if p == page %}
+                        <li class="page-item active"><span class="page-link">{{ p }}</span></li>
+                        {% elif p == 1 or p == pages or (p >= page - 2 and p <= page + 2) %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ p }}&search={{ search }}&category={{ category_filter }}&status={{ status_filter }}">{{ p }}</a>
+                        </li>
+                        {% elif p == page - 3 or p == page + 3 %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                        {% endif %}
+                    {% endfor %}
+                    <li class="page-item {{ 'disabled' if page == pages else '' }}">
+                        <a class="page-link" href="?page={{ page + 1 }}&search={{ search }}&category={{ category_filter }}&status={{ status_filter }}">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Article</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete "<span id="deleteTitle"></span>"?</p>
+                <p class="text-danger"><small>This action cannot be undone.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function confirmDelete(slug, title) {
+    document.getElementById('deleteTitle').textContent = title;
+    document.getElementById('deleteForm').action = '/admin/articles/' + slug + '/delete';
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+</script>
+{% endblock %}

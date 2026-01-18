@@ -323,3 +323,136 @@ def is_article_saved(user_id, article_id):
         return False
 
     return saved.find_one({'user_id': user_id, 'article_id': article_id}) is not None
+
+
+# =============================================================================
+# Admin User Model
+# =============================================================================
+
+class AdminUser(UserMixin):
+    """Admin user model for CMS access"""
+
+    def __init__(self, admin_data):
+        self.id = str(admin_data.get('_id', ''))
+        self.username = admin_data.get('username', '')
+        self.email = admin_data.get('email', '')
+        self.password_hash = admin_data.get('password_hash', '')
+        self.created_at = admin_data.get('created_at', datetime.utcnow())
+        self.last_login = admin_data.get('last_login')
+        self.role = admin_data.get('role', 'admin')  # admin, editor, viewer
+        self.is_admin = True  # Flag to distinguish from regular users
+
+    def get_id(self):
+        return f"admin_{self.id}"  # Prefix to distinguish from regular users
+
+    @property
+    def is_active(self):
+        return True
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    @staticmethod
+    def get_admins_collection():
+        """Get admin users collection"""
+        from database import get_database
+        db = get_database()
+        return db.admin_users if db is not None else None
+
+    @staticmethod
+    def create(username, email, password, role='admin'):
+        """Create a new admin user"""
+        admins = AdminUser.get_admins_collection()
+        if admins is None:
+            return None, "Database not available"
+
+        # Check if username already exists
+        if admins.find_one({'username': username.lower()}):
+            return None, "Username already exists"
+
+        # Hash password
+        password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+        admin_data = {
+            'username': username.lower(),
+            'email': email.lower(),
+            'password_hash': password_hash,
+            'role': role,
+            'created_at': datetime.utcnow(),
+            'last_login': None
+        }
+
+        result = admins.insert_one(admin_data)
+        admin_data['_id'] = result.inserted_id
+
+        return AdminUser(admin_data), None
+
+    @staticmethod
+    def get_by_id(admin_id):
+        """Get admin by ID"""
+        admins = AdminUser.get_admins_collection()
+        if admins is None:
+            return None
+
+        try:
+            admin_data = admins.find_one({'_id': ObjectId(admin_id)})
+            if admin_data:
+                return AdminUser(admin_data)
+        except:
+            pass
+
+        return None
+
+    @staticmethod
+    def get_by_username(username):
+        """Get admin by username"""
+        admins = AdminUser.get_admins_collection()
+        if admins is None:
+            return None
+
+        admin_data = admins.find_one({'username': username.lower()})
+        if admin_data:
+            return AdminUser(admin_data)
+
+        return None
+
+    @staticmethod
+    def authenticate(username, password):
+        """Authenticate admin with username and password"""
+        admins = AdminUser.get_admins_collection()
+        if admins is None:
+            return None, "Database not available"
+
+        admin_data = admins.find_one({'username': username.lower()})
+        if not admin_data:
+            return None, "Invalid username or password"
+
+        # Check password
+        if bcrypt.checkpw(password.encode('utf-8'), admin_data['password_hash']):
+            # Update last login
+            admins.update_one(
+                {'_id': admin_data['_id']},
+                {'$set': {'last_login': datetime.utcnow()}}
+            )
+            return AdminUser(admin_data), None
+
+        return None, "Invalid username or password"
+
+    @staticmethod
+    def ensure_default_admin():
+        """Create default admin if none exists (for initial setup)"""
+        import os
+        admins = AdminUser.get_admins_collection()
+        if admins is None:
+            return
+
+        # Check if any admin exists
+        if admins.count_documents({}) == 0:
+            # Create default admin from environment variables
+            default_username = os.environ.get('ADMIN_USERNAME', 'admin')
+            default_password = os.environ.get('ADMIN_PASSWORD', 'philata2025')
+            default_email = os.environ.get('ADMIN_EMAIL', 'admin@philata.com')
+
+            AdminUser.create(default_username, default_email, default_password, 'admin')
+            print(f"Created default admin user: {default_username}")

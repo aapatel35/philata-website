@@ -49,12 +49,23 @@ login_manager.login_message_category = 'info'
 from models import User, save_user_score, get_user_scores, get_latest_user_score
 from models import save_user_checklist, get_user_checklist, get_all_user_checklists
 from models import save_article, unsave_article, get_saved_articles, is_article_saved
+from models import AdminUser
 from database import is_connected as db_is_connected, get_articles_collection
 
 @login_manager.user_loader
 def load_user(user_id):
-    """Load user for Flask-Login"""
+    """Load user for Flask-Login - handles both regular users and admin users"""
+    if user_id and user_id.startswith('admin_'):
+        # Admin user
+        admin_id = user_id[6:]  # Remove 'admin_' prefix
+        return AdminUser.get_by_id(admin_id)
     return User.get_by_id(user_id)
+
+# Ensure default admin exists on startup
+try:
+    AdminUser.ensure_default_admin()
+except Exception as e:
+    print(f"Could not create default admin: {e}")
 
 # Post API URL for fetching results
 POST_API_URL = os.environ.get('POST_API_URL', 'https://web-production-35219.up.railway.app')
@@ -4150,6 +4161,330 @@ Allow: /guides/
 Allow: /learn/
 '''
     return Response(content, mimetype='text/plain')
+
+
+# =============================================================================
+# ADMIN CMS ROUTES
+# =============================================================================
+
+def admin_required(f):
+    """Decorator to require admin login"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated:
+            flash('Please log in to access the admin panel.', 'warning')
+            return redirect(url_for('admin_login'))
+        if not getattr(current_user, 'is_admin', False):
+            flash('Admin access required.', 'error')
+            return redirect(url_for('index'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    """Admin login page"""
+    if current_user.is_authenticated and getattr(current_user, 'is_admin', False):
+        return redirect(url_for('admin_dashboard'))
+
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '')
+
+        admin, error = AdminUser.authenticate(username, password)
+        if admin:
+            login_user(admin, remember=True)
+            flash('Welcome back!', 'success')
+            next_page = request.args.get('next')
+            return redirect(next_page or url_for('admin_dashboard'))
+        else:
+            flash(error or 'Invalid credentials', 'error')
+
+    return render_template('admin/login.html')
+
+
+@app.route('/admin/logout')
+@admin_required
+def admin_logout():
+    """Admin logout"""
+    logout_user()
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('admin_login'))
+
+
+@app.route('/admin')
+@app.route('/admin/dashboard')
+@admin_required
+def admin_dashboard():
+    """Admin dashboard - overview of articles"""
+    articles = load_articles()
+
+    # Get stats
+    total_articles = len(articles)
+    categories = {}
+    for article in articles:
+        cat = article.get('category', 'uncategorized')
+        categories[cat] = categories.get(cat, 0) + 1
+
+    # Recent articles (last 10)
+    recent_articles = sorted(articles, key=lambda x: x.get('created_at', ''), reverse=True)[:10]
+
+    return render_template('admin/dashboard.html',
+                          total_articles=total_articles,
+                          categories=categories,
+                          recent_articles=recent_articles,
+                          admin=current_user)
+
+
+@app.route('/admin/articles')
+@admin_required
+def admin_articles():
+    """List all articles with search/filter"""
+    articles = load_articles()
+
+    # Search/filter
+    search = request.args.get('search', '').lower()
+    category_filter = request.args.get('category', '')
+    status_filter = request.args.get('status', '')
+
+    if search:
+        articles = [a for a in articles if search in a.get('title', '').lower()
+                   or search in a.get('summary', '').lower()]
+
+    if category_filter:
+        articles = [a for a in articles if a.get('category') == category_filter]
+
+    if status_filter == 'draft':
+        articles = [a for a in articles if a.get('status') == 'draft']
+    elif status_filter == 'published':
+        articles = [a for a in articles if a.get('status', 'published') == 'published']
+
+    # Sort by date (newest first)
+    articles = sorted(articles, key=lambda x: x.get('created_at', ''), reverse=True)
+
+    # Pagination
+    page = request.args.get('page', 1, type=int)
+    per_page = 20
+    total = len(articles)
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_articles = articles[start:end]
+
+    # Get unique categories for filter dropdown
+    all_articles = load_articles()
+    all_categories = sorted(set(a.get('category', 'uncategorized') for a in all_articles))
+
+    return render_template('admin/articles.html',
+                          articles=paginated_articles,
+                          total=total,
+                          page=page,
+                          per_page=per_page,
+                          pages=(total + per_page - 1) // per_page,
+                          categories=all_categories,
+                          search=search,
+                          category_filter=category_filter,
+                          status_filter=status_filter)
+
+
+@app.route('/admin/articles/new', methods=['GET', 'POST'])
+@admin_required
+def admin_article_new():
+    """Create new article"""
+    if request.method == 'POST':
+        # Handle image upload if file provided
+        image_url = request.form.get('image_url', '')
+        if 'image' in request.files:
+            file = request.files['image']
+            if file and file.filename:
+                import uuid
+                ext = file.filename.rsplit('.', 1)[-1].lower() if '.' in file.filename else 'jpg'
+                filename = f"{uuid.uuid4().hex}.{ext}"
+                filepath = os.path.join(IMAGES_DIR, filename)
+                file.save(filepath)
+                image_url = f"/static/images/{filename}"
+
+        data = {
+            'title': request.form.get('title', '').strip(),
+            'summary': request.form.get('summary', '').strip(),
+            'content': request.form.get('content', ''),
+            'category': request.form.get('category', 'news'),
+            'source': request.form.get('source', 'Philata Editorial'),
+            'source_url': request.form.get('source_url', ''),
+            'image_url': image_url,
+            'status': 'published' if request.form.get('action') == 'publish' else 'draft',
+            'meta_description': request.form.get('meta_description', ''),
+            'keywords': request.form.get('keywords', ''),
+            'created_by': current_user.username,
+            'created_at': datetime.utcnow().isoformat()
+        }
+
+        # Generate slug
+        data['slug'] = create_slug(data['title'])
+
+        # Validate
+        is_valid, error = validate_article_data(data)
+        if not is_valid:
+            flash(f'Validation error: {error}', 'error')
+            return render_template('admin/article_edit.html', article=data)
+
+        # Save article
+        results = load_results()
+        data['id'] = f"admin_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+        results.append(data)
+        save_results(results)
+
+        # Also save to MongoDB if connected
+        articles_col = get_articles_collection()
+        if articles_col:
+            try:
+                articles_col.update_one(
+                    {'slug': data['slug']},
+                    {'$set': data},
+                    upsert=True
+                )
+            except Exception as e:
+                print(f"MongoDB save error: {e}")
+
+        flash('Article created successfully!', 'success')
+        return redirect(url_for('admin_articles'))
+
+    return render_template('admin/article_edit.html', article=None)
+
+
+@app.route('/admin/articles/<slug>/edit', methods=['GET', 'POST'])
+@admin_required
+def admin_article_edit(slug):
+    """Edit existing article"""
+    articles = load_articles()
+    article = next((a for a in articles if a.get('slug') == slug), None)
+
+    if not article:
+        flash('Article not found', 'error')
+        return redirect(url_for('admin_articles'))
+
+    if request.method == 'POST':
+        # Handle image upload if file provided
+        image_url = request.form.get('image_url', '') or article.get('image_url', '')
+        if 'image' in request.files:
+            file = request.files['image']
+            if file and file.filename:
+                import uuid
+                ext = file.filename.rsplit('.', 1)[-1].lower() if '.' in file.filename else 'jpg'
+                filename = f"{uuid.uuid4().hex}.{ext}"
+                filepath = os.path.join(IMAGES_DIR, filename)
+                file.save(filepath)
+                image_url = f"/static/images/{filename}"
+
+        # Update article data
+        article['title'] = request.form.get('title', '').strip()
+        article['summary'] = request.form.get('summary', '').strip()
+        article['content'] = request.form.get('content', '')
+        article['category'] = request.form.get('category', 'news')
+        article['source'] = request.form.get('source', '')
+        article['source_url'] = request.form.get('source_url', '')
+        article['image_url'] = image_url
+        article['status'] = 'published' if request.form.get('action') == 'publish' else 'draft'
+        article['meta_description'] = request.form.get('meta_description', '')
+        article['keywords'] = request.form.get('keywords', '')
+        article['updated_at'] = datetime.utcnow().isoformat()
+        article['updated_by'] = current_user.username
+
+        # Save to results
+        results = load_results()
+        for i, a in enumerate(results):
+            if a.get('slug') == slug:
+                results[i] = article
+                break
+        save_results(results)
+
+        # Also update MongoDB
+        articles_col = get_articles_collection()
+        if articles_col:
+            try:
+                articles_col.update_one(
+                    {'slug': slug},
+                    {'$set': article}
+                )
+            except Exception as e:
+                print(f"MongoDB update error: {e}")
+
+        flash('Article updated successfully!', 'success')
+        return redirect(url_for('admin_articles'))
+
+    return render_template('admin/article_edit.html', article=article)
+
+
+@app.route('/admin/articles/<slug>/delete', methods=['POST'])
+@admin_required
+def admin_article_delete(slug):
+    """Delete article"""
+    results = load_results()
+    original_count = len(results)
+
+    # Remove article
+    results = [a for a in results if a.get('slug') != slug]
+
+    if len(results) < original_count:
+        save_results(results)
+
+        # Also delete from MongoDB
+        articles_col = get_articles_collection()
+        if articles_col:
+            try:
+                articles_col.delete_one({'slug': slug})
+            except Exception as e:
+                print(f"MongoDB delete error: {e}")
+
+        flash('Article deleted successfully!', 'success')
+    else:
+        flash('Article not found', 'error')
+
+    return redirect(url_for('admin_articles'))
+
+
+@app.route('/admin/articles/<slug>/preview')
+@admin_required
+def admin_article_preview(slug):
+    """Preview article (same as public view but with admin bar)"""
+    articles = load_articles()
+    article = next((a for a in articles if a.get('slug') == slug), None)
+
+    if not article:
+        flash('Article not found', 'error')
+        return redirect(url_for('admin_articles'))
+
+    return render_template('admin/article_preview.html', article=article, is_preview=True)
+
+
+@app.route('/admin/upload-image', methods=['POST'])
+@admin_required
+def admin_upload_image():
+    """Upload image for articles"""
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image provided'}), 400
+
+    file = request.files['image']
+    if file.filename == '':
+        return jsonify({'error': 'No file selected'}), 400
+
+    # Validate file type
+    allowed_extensions = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+    ext = file.filename.rsplit('.', 1)[-1].lower() if '.' in file.filename else ''
+    if ext not in allowed_extensions:
+        return jsonify({'error': f'Invalid file type. Allowed: {", ".join(allowed_extensions)}'}), 400
+
+    # Generate unique filename
+    import uuid
+    filename = f"{uuid.uuid4().hex}.{ext}"
+    filepath = os.path.join(IMAGES_DIR, filename)
+
+    # Save file
+    file.save(filepath)
+
+    # Return URL
+    image_url = f"/static/images/{filename}"
+
+    return jsonify({'url': image_url, 'filename': filename})
 
 
 # =============================================================================

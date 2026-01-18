@@ -1,0 +1,358 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}{{ 'Edit' if article else 'New' }} Article - Philata CMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .tox-tinymce {
+        border-radius: 8px !important;
+    }
+    .form-label {
+        font-weight: 600;
+        color: #495057;
+    }
+    .image-preview {
+        max-width: 200px;
+        max-height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 2px solid #e9ecef;
+    }
+    .slug-preview {
+        font-family: monospace;
+        background: #f8f9fa;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: 13px;
+    }
+    .char-count {
+        font-size: 12px;
+        color: #6c757d;
+    }
+    .char-count.warning {
+        color: #ffc107;
+    }
+    .char-count.danger {
+        color: #dc3545;
+    }
+</style>
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{{ url_for('admin_articles') }}">Articles</a></li>
+        <li class="breadcrumb-item active">{{ 'Edit' if article else 'New Article' }}</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <form method="POST" enctype="multipart/form-data" id="articleForm">
+        <div class="row">
+            <!-- Main Content Column -->
+            <div class="col-lg-8">
+                <!-- Title -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control form-control-lg" id="title" name="title"
+                                   value="{{ article.title if article else '' }}" required
+                                   placeholder="Enter article title...">
+                            <div class="d-flex justify-content-between mt-1">
+                                <small class="text-muted">A clear, descriptive title for your article</small>
+                                <span class="char-count" id="titleCount">0/100</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="slug" class="form-label">URL Slug</label>
+                            <div class="input-group">
+                                <span class="input-group-text">/articles/</span>
+                                <input type="text" class="form-control" id="slug" name="slug"
+                                       value="{{ article.slug if article else '' }}"
+                                       placeholder="article-url-slug" {{ 'readonly' if article else '' }}>
+                            </div>
+                            <small class="text-muted">{{ 'Slug cannot be changed after creation' if article else 'Auto-generated from title, or customize it' }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-align-left me-2"></i>Summary</h6>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" id="summary" name="summary" rows="3"
+                                  placeholder="Brief summary of the article (shown in previews)...">{{ article.summary if article else '' }}</textarea>
+                        <div class="d-flex justify-content-between mt-1">
+                            <small class="text-muted">Displayed on article cards and in search results</small>
+                            <span class="char-count" id="summaryCount">0/300</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0"><i class="fas fa-file-alt me-2"></i>Content</h6>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" id="toggleFullscreen">
+                            <i class="fas fa-expand"></i> Fullscreen
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <textarea id="content" name="content">{{ article.content if article else '' }}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Publish Box -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-paper-plane me-2"></i>Publish</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status" name="status">
+                                <option value="draft" {{ 'selected' if not article or article.status == 'draft' else '' }}>Draft</option>
+                                <option value="published" {{ 'selected' if article and article.status == 'published' else '' }}>Published</option>
+                            </select>
+                        </div>
+
+                        {% if article %}
+                        <div class="mb-3">
+                            <small class="text-muted d-block">
+                                <i class="fas fa-calendar me-1"></i>Created: {{ article.created_at[:10] if article.created_at else 'Unknown' }}
+                            </small>
+                            {% if article.updated_at %}
+                            <small class="text-muted d-block">
+                                <i class="fas fa-edit me-1"></i>Updated: {{ article.updated_at[:10] }}
+                            </small>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" name="action" value="publish" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>{{ 'Update' if article else 'Publish' }}
+                            </button>
+                            <button type="submit" name="action" value="draft" class="btn btn-outline-secondary">
+                                <i class="fas fa-file me-2"></i>Save as Draft
+                            </button>
+                            {% if article %}
+                            <a href="/articles/{{ article.slug }}" target="_blank" class="btn btn-outline-info">
+                                <i class="fas fa-eye me-2"></i>View Article
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-folder me-2"></i>Category</h6>
+                    </div>
+                    <div class="card-body">
+                        <select class="form-select" id="category" name="category">
+                            <option value="">Select Category</option>
+                            <option value="express_entry" {{ 'selected' if article and article.category == 'express_entry' else '' }}>Express Entry</option>
+                            <option value="pnp" {{ 'selected' if article and article.category == 'pnp' else '' }}>Provincial Nominee Program (PNP)</option>
+                            <option value="news" {{ 'selected' if article and article.category == 'news' else '' }}>News</option>
+                            <option value="policy" {{ 'selected' if article and article.category == 'policy' else '' }}>Policy Updates</option>
+                            <option value="guides" {{ 'selected' if article and article.category == 'guides' else '' }}>Guides</option>
+                            <option value="analysis" {{ 'selected' if article and article.category == 'analysis' else '' }}>Analysis</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Featured Image -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-image me-2"></i>Featured Image</h6>
+                    </div>
+                    <div class="card-body">
+                        {% if article and article.image_url %}
+                        <div class="mb-3 text-center">
+                            <img src="{{ article.image_url }}" alt="Current image" class="image-preview" id="imagePreview">
+                        </div>
+                        {% else %}
+                        <div class="mb-3 text-center" id="imagePreviewContainer" style="display: none;">
+                            <img src="" alt="Preview" class="image-preview" id="imagePreview">
+                        </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                            <small class="text-muted">JPG, PNG, WebP. Max 5MB.</small>
+                        </div>
+
+                        <div class="mb-0">
+                            <label for="image_url" class="form-label">Or use URL</label>
+                            <input type="url" class="form-control" id="image_url" name="image_url"
+                                   value="{{ article.image_url if article else '' }}"
+                                   placeholder="https://example.com/image.jpg">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Source -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-link me-2"></i>Source</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="source" class="form-label">Source Name</label>
+                            <input type="text" class="form-control" id="source" name="source"
+                                   value="{{ article.source if article else 'Philata Editorial' }}"
+                                   placeholder="e.g., IRCC, CIC News">
+                        </div>
+                        <div class="mb-0">
+                            <label for="source_url" class="form-label">Source URL</label>
+                            <input type="url" class="form-control" id="source_url" name="source_url"
+                                   value="{{ article.source_url if article else '' }}"
+                                   placeholder="https://...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEO -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-search me-2"></i>SEO</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="meta_description" class="form-label">Meta Description</label>
+                            <textarea class="form-control" id="meta_description" name="meta_description" rows="2"
+                                      placeholder="SEO description for search engines...">{{ article.meta_description if article else '' }}</textarea>
+                            <div class="d-flex justify-content-end mt-1">
+                                <span class="char-count" id="metaCount">0/160</span>
+                            </div>
+                        </div>
+                        <div class="mb-0">
+                            <label for="keywords" class="form-label">Keywords</label>
+                            <input type="text" class="form-control" id="keywords" name="keywords"
+                                   value="{{ article.keywords if article else '' }}"
+                                   placeholder="express entry, canada immigration, ...">
+                            <small class="text-muted">Comma-separated keywords</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Initialize TinyMCE
+tinymce.init({
+    selector: '#content',
+    height: 500,
+    menubar: true,
+    plugins: [
+        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+        'insertdatetime', 'media', 'table', 'help', 'wordcount'
+    ],
+    toolbar: 'undo redo | blocks | ' +
+        'bold italic backcolor | alignleft aligncenter ' +
+        'alignright alignjustify | bullist numlist outdent indent | ' +
+        'removeformat | link image | code fullscreen | help',
+    content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 16px; line-height: 1.6; }',
+    images_upload_url: '/admin/upload-image',
+    automatic_uploads: true,
+    images_reuse_filename: true,
+    image_title: true,
+    file_picker_types: 'image',
+    relative_urls: false,
+    remove_script_host: false,
+    convert_urls: true
+});
+
+// Auto-generate slug from title
+document.getElementById('title').addEventListener('input', function() {
+    const slugInput = document.getElementById('slug');
+    if (!slugInput.readOnly && !slugInput.dataset.userModified) {
+        const slug = this.value
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-')
+            .substring(0, 80);
+        slugInput.value = slug;
+    }
+    updateCharCount('title', 100);
+});
+
+// Mark slug as user-modified if edited manually
+document.getElementById('slug').addEventListener('input', function() {
+    this.dataset.userModified = 'true';
+});
+
+// Character counters
+function updateCharCount(field, max) {
+    const input = document.getElementById(field);
+    const counter = document.getElementById(field + 'Count');
+    const len = input.value.length;
+    counter.textContent = len + '/' + max;
+    counter.className = 'char-count';
+    if (len > max) {
+        counter.classList.add('danger');
+    } else if (len > max * 0.8) {
+        counter.classList.add('warning');
+    }
+}
+
+document.getElementById('title').addEventListener('input', () => updateCharCount('title', 100));
+document.getElementById('summary').addEventListener('input', () => updateCharCount('summary', 300));
+document.getElementById('meta_description').addEventListener('input', () => updateCharCount('meta_description', 160));
+
+// Initialize counters
+updateCharCount('title', 100);
+updateCharCount('summary', 300);
+updateCharCount('meta_description', 160);
+
+// Image preview
+document.getElementById('image').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('imagePreview');
+            const container = document.getElementById('imagePreviewContainer');
+            preview.src = e.target.result;
+            if (container) container.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Fullscreen toggle for editor
+document.getElementById('toggleFullscreen').addEventListener('click', function() {
+    tinymce.activeEditor.execCommand('mceFullScreen');
+});
+
+// Form validation before submit
+document.getElementById('articleForm').addEventListener('submit', function(e) {
+    const title = document.getElementById('title').value.trim();
+    if (!title) {
+        e.preventDefault();
+        alert('Please enter a title for the article.');
+        return false;
+    }
+
+    // Sync TinyMCE content
+    tinymce.triggerSave();
+});
+</script>
+{% endblock %}
