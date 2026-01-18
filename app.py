@@ -440,6 +440,63 @@ def load_articles():
     return []
 
 
+def load_articles_fresh():
+    """Load articles directly from MongoDB, bypassing cache - for admin use"""
+    raw_results = []
+
+    # Load directly from MongoDB
+    try:
+        articles_col = get_articles_collection()
+        if articles_col is not None:
+            mongo_articles = list(articles_col.find({}).sort('created_at', -1).limit(500))
+            if mongo_articles:
+                for doc in mongo_articles:
+                    doc['_id'] = str(doc['_id'])
+                    raw_results.append(doc)
+                print(f"[Admin] Loaded {len(raw_results)} articles fresh from MongoDB")
+    except Exception as e:
+        print(f"[Admin] Error loading from MongoDB: {e}")
+
+    # Fallback to local file
+    if not raw_results:
+        try:
+            with open(RESULTS_FILE, 'r') as f:
+                local_data = json.load(f)
+                if local_data:
+                    raw_results = local_data
+                    print(f"[Admin] Loaded {len(raw_results)} articles from local file")
+        except Exception as e:
+            print(f"[Admin] Error loading local results: {e}")
+
+    # Process articles (same as load_articles but without cache and without filtering)
+    if raw_results:
+        articles = []
+        for r in raw_results:
+            # Include all articles for admin visibility
+            category = r.get('category', '')
+            slug = r.get('slug') or create_slug(r.get('title', ''))
+            article = {
+                'id': r.get('id', str(r.get('_id', ''))),
+                '_id': r.get('_id', ''),
+                'slug': slug,
+                'title': r.get('title', ''),
+                'track': r.get('track', 'regular'),
+                'category': category,
+                'created_at': r.get('created_at', r.get('timestamp', r.get('date', ''))),
+                'full_article': r.get('full_article', ''),
+                'source': r.get('source', ''),
+                'source_url': r.get('source_url', ''),
+                'reading_time': max(1, len(r.get('full_article', '').split()) // 200),
+                'image_url': r.get('image_url', ''),
+                'featured_image': r.get('featured_image', ''),
+                'status': r.get('status', 'published'),
+            }
+            articles.append(article)
+        return articles
+
+    return []
+
+
 def create_slug(title):
     """Create URL-friendly slug from title"""
     import re
@@ -4219,7 +4276,7 @@ def admin_logout():
 @admin_required
 def admin_dashboard():
     """Admin dashboard - overview of articles"""
-    articles = load_articles()
+    articles = load_articles_fresh()  # Fresh data for admin
 
     # Get stats
     total_articles = len(articles)
@@ -4242,13 +4299,17 @@ def admin_dashboard():
 @admin_required
 def admin_articles():
     """List all articles with search/filter"""
-    articles = load_articles()
+    all_articles = load_articles_fresh()  # Fresh data for admin
+
+    # Get unique categories for filter dropdown (before filtering)
+    all_categories = sorted(set(a.get('category', 'uncategorized') for a in all_articles))
 
     # Search/filter
     search = request.args.get('search', '').lower()
     category_filter = request.args.get('category', '')
     status_filter = request.args.get('status', '')
 
+    articles = all_articles
     if search:
         articles = [a for a in articles if search in a.get('title', '').lower()
                    or search in a.get('summary', '').lower()]
@@ -4271,10 +4332,6 @@ def admin_articles():
     start = (page - 1) * per_page
     end = start + per_page
     paginated_articles = articles[start:end]
-
-    # Get unique categories for filter dropdown
-    all_articles = load_articles()
-    all_categories = sorted(set(a.get('category', 'uncategorized') for a in all_articles))
 
     return render_template('admin/articles.html',
                           articles=paginated_articles,
