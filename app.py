@@ -4527,6 +4527,74 @@ def admin_article_delete(slug):
     return redirect(url_for('admin_articles'))
 
 
+@app.route('/admin/articles/bulk-delete', methods=['POST'])
+@admin_required
+def admin_articles_bulk_delete():
+    """Delete multiple articles at once"""
+    try:
+        data = request.get_json()
+        ids = data.get('ids', [])
+
+        if not ids:
+            return jsonify({'success': False, 'error': 'No articles selected'}), 400
+
+        deleted_count = 0
+        articles_col = get_articles_collection()
+
+        for article_id in ids:
+            deleted = False
+
+            # Delete from MongoDB
+            if articles_col is not None:
+                try:
+                    # Try by slug first
+                    result = articles_col.delete_one({'slug': article_id})
+                    if result.deleted_count > 0:
+                        deleted = True
+                    else:
+                        # Try by _id if slug didn't match
+                        try:
+                            result = articles_col.delete_one({'_id': ObjectId(article_id)})
+                            if result.deleted_count > 0:
+                                deleted = True
+                        except:
+                            pass
+                except Exception as e:
+                    print(f"MongoDB delete error for {article_id}: {e}")
+
+            # Also try to remove from local file
+            try:
+                if os.path.exists(RESULTS_FILE):
+                    with open(RESULTS_FILE, 'r') as f:
+                        results = json.load(f)
+                    original_count = len(results)
+                    results = [a for a in results if a.get('slug') != article_id and str(a.get('_id', '')) != article_id]
+                    if len(results) < original_count:
+                        with open(RESULTS_FILE, 'w') as f:
+                            json.dump(results, f, indent=2)
+                        deleted = True
+            except Exception as e:
+                print(f"Local file delete error for {article_id}: {e}")
+
+            if deleted:
+                deleted_count += 1
+
+        # Clear cache
+        global _memory_cache
+        with _cache_lock:
+            _memory_cache['results'] = []
+            _memory_cache['last_fetch'] = None
+
+        return jsonify({
+            'success': True,
+            'deleted': deleted_count,
+            'message': f'Deleted {deleted_count} articles'
+        })
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 @app.route('/admin/articles/<slug>/preview')
 @admin_required
 def admin_article_preview(slug):

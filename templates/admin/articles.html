@@ -54,17 +54,28 @@
     <!-- Articles Table -->
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <span>{{ total }} articles found</span>
-            {% if search or category_filter or status_filter %}
-            <a href="{{ url_for('admin_articles') }}" class="btn btn-sm btn-outline-secondary">Clear Filters</a>
-            {% endif %}
+            <div class="d-flex align-items-center gap-3">
+                <span>{{ total }} articles found</span>
+                <span id="selectedCount" class="badge bg-primary" style="display: none;">0 selected</span>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-sm btn-danger" id="deleteSelectedBtn" style="display: none;" onclick="confirmBulkDelete()">
+                    <i class="fas fa-trash me-1"></i>Delete Selected
+                </button>
+                {% if search or category_filter or status_filter %}
+                <a href="{{ url_for('admin_articles') }}" class="btn btn-sm btn-outline-secondary">Clear Filters</a>
+                {% endif %}
+            </div>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover mb-0">
                     <thead>
                         <tr>
-                            <th style="width: 40%">Title</th>
+                            <th style="width: 40px;">
+                                <input type="checkbox" class="form-check-input" id="selectAll" onchange="toggleSelectAll()">
+                            </th>
+                            <th style="width: 35%">Title</th>
                             <th>Category</th>
                             <th>Status</th>
                             <th>Source</th>
@@ -75,6 +86,12 @@
                     <tbody>
                         {% for article in articles %}
                         <tr>
+                            <td>
+                                <input type="checkbox" class="form-check-input article-checkbox"
+                                       data-id="{{ article.slug or article._id }}"
+                                       data-title="{{ article.title|e }}"
+                                       onchange="updateSelectedCount()">
+                            </td>
                             <td>
                                 <div class="d-flex align-items-center">
                                     {% if article.image_url %}
@@ -130,7 +147,7 @@
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="6" class="text-center text-muted py-5">
+                            <td colspan="7" class="text-center text-muted py-5">
                                 <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
                                 {% if search or category_filter or status_filter %}
                                 No articles match your filters. <a href="{{ url_for('admin_articles') }}">Clear filters</a>
@@ -200,14 +217,131 @@
     </div>
 </div>
 
+<!-- Bulk Delete Confirmation Modal -->
+<div class="modal fade" id="bulkDeleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>Delete Multiple Articles</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete <strong><span id="bulkDeleteCount">0</span> articles</strong>?</p>
+                <div id="bulkDeleteList" class="small text-muted mb-3" style="max-height: 200px; overflow-y: auto;"></div>
+                <p class="text-danger mb-0"><small><i class="fas fa-warning me-1"></i>This action cannot be undone.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="executeBulkDelete()">
+                    <i class="fas fa-trash me-1"></i>Delete All Selected
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
 <script>
+// Single delete
 function confirmDelete(slug, title) {
     document.getElementById('deleteTitle').textContent = title;
     document.getElementById('deleteForm').action = '/admin/articles/' + slug + '/delete';
     new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+
+// Select all toggle
+function toggleSelectAll() {
+    const selectAll = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.article-checkbox');
+    checkboxes.forEach(cb => cb.checked = selectAll.checked);
+    updateSelectedCount();
+}
+
+// Update selected count and show/hide delete button
+function updateSelectedCount() {
+    const checkboxes = document.querySelectorAll('.article-checkbox:checked');
+    const count = checkboxes.length;
+    const countBadge = document.getElementById('selectedCount');
+    const deleteBtn = document.getElementById('deleteSelectedBtn');
+    const selectAll = document.getElementById('selectAll');
+    const allCheckboxes = document.querySelectorAll('.article-checkbox');
+
+    if (count > 0) {
+        countBadge.textContent = count + ' selected';
+        countBadge.style.display = 'inline';
+        deleteBtn.style.display = 'inline-block';
+    } else {
+        countBadge.style.display = 'none';
+        deleteBtn.style.display = 'none';
+    }
+
+    // Update select all checkbox state
+    selectAll.checked = allCheckboxes.length > 0 && count === allCheckboxes.length;
+    selectAll.indeterminate = count > 0 && count < allCheckboxes.length;
+}
+
+// Show bulk delete confirmation
+function confirmBulkDelete() {
+    const checkboxes = document.querySelectorAll('.article-checkbox:checked');
+    const count = checkboxes.length;
+
+    if (count === 0) return;
+
+    document.getElementById('bulkDeleteCount').textContent = count;
+
+    // Build list of articles to delete
+    const list = document.getElementById('bulkDeleteList');
+    list.innerHTML = '';
+    checkboxes.forEach(cb => {
+        const title = cb.dataset.title;
+        const li = document.createElement('div');
+        li.innerHTML = '<i class="fas fa-file-alt me-1"></i>' + title.substring(0, 60) + (title.length > 60 ? '...' : '');
+        list.appendChild(li);
+    });
+
+    new bootstrap.Modal(document.getElementById('bulkDeleteModal')).show();
+}
+
+// Execute bulk delete
+async function executeBulkDelete() {
+    const checkboxes = document.querySelectorAll('.article-checkbox:checked');
+    const ids = Array.from(checkboxes).map(cb => cb.dataset.id);
+
+    if (ids.length === 0) return;
+
+    // Show loading state
+    const deleteBtn = document.querySelector('#bulkDeleteModal .btn-danger');
+    const originalText = deleteBtn.innerHTML;
+    deleteBtn.disabled = true;
+    deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Deleting...';
+
+    try {
+        const response = await fetch('/admin/articles/bulk-delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ ids: ids })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            // Close modal and reload page
+            bootstrap.Modal.getInstance(document.getElementById('bulkDeleteModal')).hide();
+            window.location.reload();
+        } else {
+            alert('Error: ' + (result.error || 'Failed to delete articles'));
+            deleteBtn.disabled = false;
+            deleteBtn.innerHTML = originalText;
+        }
+    } catch (error) {
+        alert('Error: ' + error.message);
+        deleteBtn.disabled = false;
+        deleteBtn.innerHTML = originalText;
+    }
 }
 </script>
 {% endblock %}
