@@ -4418,23 +4418,33 @@ def admin_article_edit(slug):
 @admin_required
 def admin_article_delete(slug):
     """Delete article"""
-    results = load_results()
-    original_count = len(results)
+    deleted = False
 
-    # Remove article
-    results = [a for a in results if a.get('slug') != slug]
+    # Delete from MongoDB (primary storage)
+    articles_col = get_articles_collection()
+    if articles_col:
+        try:
+            result = articles_col.delete_one({'slug': slug})
+            if result.deleted_count > 0:
+                deleted = True
+        except Exception as e:
+            print(f"MongoDB delete error: {e}")
 
-    if len(results) < original_count:
-        save_results(results)
+    # Also try to remove from local file if it exists
+    try:
+        if os.path.exists(RESULTS_FILE):
+            with open(RESULTS_FILE, 'r') as f:
+                results = json.load(f)
+            original_count = len(results)
+            results = [a for a in results if a.get('slug') != slug]
+            if len(results) < original_count:
+                with open(RESULTS_FILE, 'w') as f:
+                    json.dump(results, f, indent=2)
+                deleted = True
+    except Exception as e:
+        print(f"Local file delete error: {e}")
 
-        # Also delete from MongoDB
-        articles_col = get_articles_collection()
-        if articles_col:
-            try:
-                articles_col.delete_one({'slug': slug})
-            except Exception as e:
-                print(f"MongoDB delete error: {e}")
-
+    if deleted:
         flash('Article deleted successfully!', 'success')
     else:
         flash('Article not found', 'error')
