@@ -1,0 +1,192 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Media Library - Philata CMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .media-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    .media-item {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        background: white;
+    }
+    .media-item img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+    }
+    .media-item-info {
+        padding: 10px;
+    }
+    .media-item-actions {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: none;
+    }
+    .media-item:hover .media-item-actions {
+        display: block;
+    }
+    .media-item-filename {
+        font-size: 12px;
+        word-break: break-all;
+        color: #495057;
+    }
+    .media-item-size {
+        font-size: 11px;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1 class="h3">Media Library</h1>
+            <p class="text-muted">Manage uploaded images</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                <i class="fas fa-upload me-2"></i>Upload Image
+            </button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <span>{{ images|length }} images</span>
+        </div>
+        <div class="card-body">
+            {% if images %}
+            <div class="media-grid">
+                {% for image in images %}
+                <div class="media-item">
+                    <img src="{{ image.url }}" alt="{{ image.filename }}" onclick="showImage('{{ image.url }}', '{{ image.filename }}')">
+                    <div class="media-item-actions">
+                        <button class="btn btn-sm btn-light" onclick="copyUrl('{{ image.url }}')" title="Copy URL">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="confirmDelete('{{ image.filename }}')" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="media-item-info">
+                        <div class="media-item-filename">{{ image.filename[:25] }}{% if image.filename|length > 25 %}...{% endif %}</div>
+                        <div class="media-item-size">{{ (image.size / 1024)|round(1) }} KB</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center text-muted py-5">
+                <i class="fas fa-images fa-3x mb-3 d-block"></i>
+                No images uploaded yet
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Upload Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ url_for('admin_media_upload') }}" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Image</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Select Image</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                        <small class="text-muted">Supported: PNG, JPG, GIF, WebP. Max 5MB.</small>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="use_original_name" name="use_original_name">
+                        <label class="form-check-label" for="use_original_name">
+                            Keep original filename
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Image Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewFilename"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="" id="previewImage" class="img-fluid">
+            </div>
+            <div class="modal-footer">
+                <input type="text" class="form-control" id="previewUrl" readonly>
+                <button class="btn btn-primary" onclick="copyUrl(document.getElementById('previewUrl').value)">
+                    <i class="fas fa-copy me-2"></i>Copy URL
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete <strong id="deleteFilename"></strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function showImage(url, filename) {
+    document.getElementById('previewImage').src = url;
+    document.getElementById('previewFilename').textContent = filename;
+    document.getElementById('previewUrl').value = window.location.origin + url;
+    new bootstrap.Modal(document.getElementById('previewModal')).show();
+}
+
+function copyUrl(url) {
+    navigator.clipboard.writeText(window.location.origin + url).then(() => {
+        alert('URL copied to clipboard!');
+    });
+}
+
+function confirmDelete(filename) {
+    document.getElementById('deleteFilename').textContent = filename;
+    document.getElementById('deleteForm').action = '/admin/media/' + encodeURIComponent(filename) + '/delete';
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+</script>
+{% endblock %}

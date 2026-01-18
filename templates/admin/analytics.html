@@ -1,0 +1,191 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Analytics - Philata CMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3">Analytics</h1>
+            <p class="text-muted">Overview of your site's performance</p>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">Total Articles</h6>
+                            <h2 class="mb-0">{{ total_articles }}</h2>
+                        </div>
+                        <i class="fas fa-newspaper fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">Registered Users</h6>
+                            <h2 class="mb-0">{{ total_users }}</h2>
+                        </div>
+                        <i class="fas fa-users fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">CRS Calculations</h6>
+                            <h2 class="mb-0">{{ total_scores }}</h2>
+                        </div>
+                        <i class="fas fa-calculator fa-2x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Articles by Category -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Articles by Category</h5>
+                </div>
+                <div class="card-body">
+                    {% if categories %}
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Count</th>
+                                <th>%</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cat, count in categories.items()|sort(attribute='1', reverse=true) %}
+                            <tr>
+                                <td>
+                                    <span class="badge bg-secondary">{{ cat|replace('_', ' ')|title }}</span>
+                                </td>
+                                <td>{{ count }}</td>
+                                <td>
+                                    <div class="progress" style="height: 20px; min-width: 100px;">
+                                        <div class="progress-bar" style="width: {{ (count / total_articles * 100)|round(1) }}%">
+                                            {{ (count / total_articles * 100)|round(1) }}%
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p class="text-muted text-center py-3">No articles yet</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Articles by Month -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-calendar me-2"></i>Articles by Month</h5>
+                </div>
+                <div class="card-body">
+                    {% if articles_by_month %}
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Articles</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for month, count in articles_by_month.items() %}
+                            <tr>
+                                <td>{{ month }}</td>
+                                <td>
+                                    <span class="badge bg-primary">{{ count }}</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p class="text-muted text-center py-3">No data available</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Users by Month -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user-plus me-2"></i>User Registrations by Month</h5>
+                </div>
+                <div class="card-body">
+                    {% if users_by_month %}
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>New Users</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for month, count in users_by_month.items()|sort(reverse=true) %}
+                            <tr>
+                                <td>{{ month }}</td>
+                                <td>
+                                    <span class="badge bg-success">{{ count }}</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p class="text-muted text-center py-3">No user data available</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Quick Stats</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Average articles per month</span>
+                            <strong>{{ (total_articles / (articles_by_month|length or 1))|round(1) }}</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Categories used</span>
+                            <strong>{{ categories|length }}</strong>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>CRS calculations per user</span>
+                            <strong>{{ (total_scores / (total_users or 1))|round(1) }}</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

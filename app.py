@@ -4498,6 +4498,434 @@ def admin_upload_image():
 
 
 # =============================================================================
+# ADMIN - USERS MANAGEMENT
+# =============================================================================
+
+@app.route('/admin/users')
+@admin_required
+def admin_users():
+    """List all registered users"""
+    users_col = get_users_collection()
+    users = []
+    total_users = 0
+
+    if users_col:
+        # Get pagination params
+        page = request.args.get('page', 1, type=int)
+        per_page = 20
+        search = request.args.get('search', '').lower()
+
+        # Build query
+        query = {}
+        if search:
+            query = {'$or': [
+                {'email': {'$regex': search, '$options': 'i'}},
+                {'name': {'$regex': search, '$options': 'i'}}
+            ]}
+
+        total_users = users_col.count_documents(query)
+        cursor = users_col.find(query).sort('created_at', -1).skip((page - 1) * per_page).limit(per_page)
+
+        for user in cursor:
+            user['_id'] = str(user['_id'])
+            users.append(user)
+
+        pages = (total_users + per_page - 1) // per_page
+    else:
+        page = 1
+        pages = 1
+        search = ''
+
+    return render_template('admin/users.html',
+                          users=users,
+                          total=total_users,
+                          page=page,
+                          pages=pages,
+                          search=search)
+
+
+@app.route('/admin/users/<user_id>')
+@admin_required
+def admin_user_detail(user_id):
+    """View user details"""
+    users_col = get_users_collection()
+    if not users_col:
+        flash('Database not available', 'error')
+        return redirect(url_for('admin_users'))
+
+    try:
+        user = users_col.find_one({'_id': ObjectId(user_id)})
+        if not user:
+            flash('User not found', 'error')
+            return redirect(url_for('admin_users'))
+
+        user['_id'] = str(user['_id'])
+
+        # Get user's CRS scores
+        scores_col = get_user_scores_collection()
+        scores = []
+        if scores_col:
+            scores = list(scores_col.find({'user_id': user_id}).sort('created_at', -1).limit(10))
+
+        # Get user's saved articles
+        saved_col = get_saved_articles_collection()
+        saved_articles = []
+        if saved_col:
+            saved_articles = list(saved_col.find({'user_id': user_id}).sort('saved_at', -1).limit(20))
+
+        return render_template('admin/user_detail.html',
+                              user=user,
+                              scores=scores,
+                              saved_articles=saved_articles)
+    except Exception as e:
+        flash(f'Error: {e}', 'error')
+        return redirect(url_for('admin_users'))
+
+
+@app.route('/admin/users/<user_id>/toggle-status', methods=['POST'])
+@admin_required
+def admin_user_toggle_status(user_id):
+    """Enable/disable user account"""
+    users_col = get_users_collection()
+    if not users_col:
+        flash('Database not available', 'error')
+        return redirect(url_for('admin_users'))
+
+    try:
+        user = users_col.find_one({'_id': ObjectId(user_id)})
+        if user:
+            new_status = not user.get('is_active', True)
+            users_col.update_one(
+                {'_id': ObjectId(user_id)},
+                {'$set': {'is_active': new_status}}
+            )
+            flash(f"User {'enabled' if new_status else 'disabled'} successfully", 'success')
+        else:
+            flash('User not found', 'error')
+    except Exception as e:
+        flash(f'Error: {e}', 'error')
+
+    return redirect(url_for('admin_user_detail', user_id=user_id))
+
+
+# =============================================================================
+# ADMIN - EXPRESS ENTRY DRAWS
+# =============================================================================
+
+@app.route('/admin/draws')
+@admin_required
+def admin_draws():
+    """Manage Express Entry draws data"""
+    # Load draws from file
+    draws = []
+    draws_file = os.path.join(DATA_DIR, 'draws.json')
+    if os.path.exists(draws_file):
+        with open(draws_file, 'r') as f:
+            data = json.load(f)
+            draws = data.get('draws', [])[:50]  # Last 50 draws
+
+    return render_template('admin/draws.html', draws=draws)
+
+
+@app.route('/admin/draws/add', methods=['GET', 'POST'])
+@admin_required
+def admin_draw_add():
+    """Add a new Express Entry draw"""
+    if request.method == 'POST':
+        draw_data = {
+            'draw_number': request.form.get('draw_number', ''),
+            'draw_date': request.form.get('draw_date', ''),
+            'draw_type': request.form.get('draw_type', ''),
+            'crs_score': int(request.form.get('crs_score', 0)),
+            'itas_issued': int(request.form.get('itas_issued', 0)),
+            'tie_breaking_rule': request.form.get('tie_breaking_rule', '')
+        }
+
+        draws_file = os.path.join(DATA_DIR, 'draws.json')
+        data = {'draws': [], 'pool_stats': {}}
+        if os.path.exists(draws_file):
+            with open(draws_file, 'r') as f:
+                data = json.load(f)
+
+        # Add new draw at the beginning
+        data['draws'].insert(0, draw_data)
+
+        with open(draws_file, 'w') as f:
+            json.dump(data, f, indent=2)
+
+        flash('Draw added successfully!', 'success')
+        return redirect(url_for('admin_draws'))
+
+    return render_template('admin/draw_edit.html', draw=None)
+
+
+@app.route('/admin/draws/<int:index>/edit', methods=['GET', 'POST'])
+@admin_required
+def admin_draw_edit(index):
+    """Edit an Express Entry draw"""
+    draws_file = os.path.join(DATA_DIR, 'draws.json')
+    if not os.path.exists(draws_file):
+        flash('Draws file not found', 'error')
+        return redirect(url_for('admin_draws'))
+
+    with open(draws_file, 'r') as f:
+        data = json.load(f)
+
+    if index >= len(data.get('draws', [])):
+        flash('Draw not found', 'error')
+        return redirect(url_for('admin_draws'))
+
+    if request.method == 'POST':
+        data['draws'][index] = {
+            'draw_number': request.form.get('draw_number', ''),
+            'draw_date': request.form.get('draw_date', ''),
+            'draw_type': request.form.get('draw_type', ''),
+            'crs_score': int(request.form.get('crs_score', 0)),
+            'itas_issued': int(request.form.get('itas_issued', 0)),
+            'tie_breaking_rule': request.form.get('tie_breaking_rule', '')
+        }
+
+        with open(draws_file, 'w') as f:
+            json.dump(data, f, indent=2)
+
+        flash('Draw updated successfully!', 'success')
+        return redirect(url_for('admin_draws'))
+
+    return render_template('admin/draw_edit.html', draw=data['draws'][index], index=index)
+
+
+@app.route('/admin/draws/<int:index>/delete', methods=['POST'])
+@admin_required
+def admin_draw_delete(index):
+    """Delete an Express Entry draw"""
+    draws_file = os.path.join(DATA_DIR, 'draws.json')
+    if os.path.exists(draws_file):
+        with open(draws_file, 'r') as f:
+            data = json.load(f)
+
+        if index < len(data.get('draws', [])):
+            del data['draws'][index]
+            with open(draws_file, 'w') as f:
+                json.dump(data, f, indent=2)
+            flash('Draw deleted successfully!', 'success')
+        else:
+            flash('Draw not found', 'error')
+    else:
+        flash('Draws file not found', 'error')
+
+    return redirect(url_for('admin_draws'))
+
+
+# =============================================================================
+# ADMIN - MEDIA LIBRARY
+# =============================================================================
+
+@app.route('/admin/media')
+@admin_required
+def admin_media():
+    """Media library - view all uploaded images"""
+    images = []
+    if os.path.exists(IMAGES_DIR):
+        for filename in os.listdir(IMAGES_DIR):
+            if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')):
+                filepath = os.path.join(IMAGES_DIR, filename)
+                stat = os.stat(filepath)
+                images.append({
+                    'filename': filename,
+                    'url': f'/static/images/{filename}',
+                    'size': stat.st_size,
+                    'modified': datetime.fromtimestamp(stat.st_mtime).isoformat()
+                })
+
+    # Sort by modified date (newest first)
+    images.sort(key=lambda x: x['modified'], reverse=True)
+
+    return render_template('admin/media.html', images=images)
+
+
+@app.route('/admin/media/upload', methods=['POST'])
+@admin_required
+def admin_media_upload():
+    """Upload new image to media library"""
+    if 'image' not in request.files:
+        flash('No image provided', 'error')
+        return redirect(url_for('admin_media'))
+
+    file = request.files['image']
+    if file.filename == '':
+        flash('No file selected', 'error')
+        return redirect(url_for('admin_media'))
+
+    # Validate file type
+    allowed_extensions = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+    ext = file.filename.rsplit('.', 1)[-1].lower() if '.' in file.filename else ''
+    if ext not in allowed_extensions:
+        flash(f'Invalid file type. Allowed: {", ".join(allowed_extensions)}', 'error')
+        return redirect(url_for('admin_media'))
+
+    # Generate unique filename or use original
+    import uuid
+    use_original = request.form.get('use_original_name') == 'on'
+    if use_original:
+        filename = file.filename.replace(' ', '_')
+    else:
+        filename = f"{uuid.uuid4().hex}.{ext}"
+
+    filepath = os.path.join(IMAGES_DIR, filename)
+    file.save(filepath)
+
+    flash(f'Image uploaded: {filename}', 'success')
+    return redirect(url_for('admin_media'))
+
+
+@app.route('/admin/media/<filename>/delete', methods=['POST'])
+@admin_required
+def admin_media_delete(filename):
+    """Delete an image from media library"""
+    filepath = os.path.join(IMAGES_DIR, filename)
+    if os.path.exists(filepath):
+        os.remove(filepath)
+        flash('Image deleted successfully', 'success')
+    else:
+        flash('Image not found', 'error')
+
+    return redirect(url_for('admin_media'))
+
+
+# =============================================================================
+# ADMIN - ANALYTICS
+# =============================================================================
+
+@app.route('/admin/analytics')
+@admin_required
+def admin_analytics():
+    """Analytics dashboard"""
+    # Get article stats
+    articles = load_articles()
+    total_articles = len(articles)
+
+    # Category breakdown
+    categories = {}
+    for article in articles:
+        cat = article.get('category', 'uncategorized')
+        categories[cat] = categories.get(cat, 0) + 1
+
+    # Articles by month
+    articles_by_month = {}
+    for article in articles:
+        created = article.get('created_at', '')[:7]  # YYYY-MM
+        if created:
+            articles_by_month[created] = articles_by_month.get(created, 0) + 1
+
+    # User stats
+    users_col = get_users_collection()
+    total_users = 0
+    users_by_month = {}
+    if users_col:
+        total_users = users_col.count_documents({})
+        # Users by month
+        pipeline = [
+            {'$group': {
+                '_id': {'$dateToString': {'format': '%Y-%m', 'date': '$created_at'}},
+                'count': {'$sum': 1}
+            }},
+            {'$sort': {'_id': -1}},
+            {'$limit': 12}
+        ]
+        try:
+            for doc in users_col.aggregate(pipeline):
+                if doc['_id']:
+                    users_by_month[doc['_id']] = doc['count']
+        except:
+            pass
+
+    # CRS scores submitted
+    scores_col = get_user_scores_collection()
+    total_scores = 0
+    if scores_col:
+        total_scores = scores_col.count_documents({})
+
+    return render_template('admin/analytics.html',
+                          total_articles=total_articles,
+                          total_users=total_users,
+                          total_scores=total_scores,
+                          categories=categories,
+                          articles_by_month=dict(sorted(articles_by_month.items(), reverse=True)[:12]),
+                          users_by_month=users_by_month)
+
+
+# =============================================================================
+# ADMIN - SETTINGS
+# =============================================================================
+
+@app.route('/admin/settings')
+@admin_required
+def admin_settings():
+    """Site settings"""
+    # Get admin users
+    admins_col = AdminUser.get_admins_collection()
+    admins = []
+    if admins_col:
+        for admin in admins_col.find():
+            admin['_id'] = str(admin['_id'])
+            admins.append(admin)
+
+    # Environment info
+    env_info = {
+        'MONGODB_URI': 'Connected' if get_database() else 'Not configured',
+        'GEMINI_API_KEY': 'Set' if os.environ.get('GEMINI_API_KEY') else 'Not set',
+        'POST_API_URL': os.environ.get('POST_API_URL', 'Not set'),
+    }
+
+    return render_template('admin/settings.html', admins=admins, env_info=env_info)
+
+
+@app.route('/admin/settings/admin/add', methods=['POST'])
+@admin_required
+def admin_settings_add_admin():
+    """Add new admin user"""
+    username = request.form.get('username', '').strip()
+    email = request.form.get('email', '').strip()
+    password = request.form.get('password', '')
+    role = request.form.get('role', 'admin')
+
+    if not username or not password:
+        flash('Username and password are required', 'error')
+        return redirect(url_for('admin_settings'))
+
+    admin, error = AdminUser.create(username, email, password, role)
+    if admin:
+        flash(f'Admin user "{username}" created successfully', 'success')
+    else:
+        flash(f'Error: {error}', 'error')
+
+    return redirect(url_for('admin_settings'))
+
+
+@app.route('/admin/settings/admin/<admin_id>/delete', methods=['POST'])
+@admin_required
+def admin_settings_delete_admin(admin_id):
+    """Delete admin user"""
+    # Prevent deleting yourself
+    if f"admin_{admin_id}" == current_user.get_id():
+        flash('Cannot delete your own account', 'error')
+        return redirect(url_for('admin_settings'))
+
+    admins_col = AdminUser.get_admins_collection()
+    if admins_col:
+        try:
+            result = admins_col.delete_one({'_id': ObjectId(admin_id)})
+            if result.deleted_count > 0:
+                flash('Admin user deleted', 'success')
+            else:
+                flash('Admin not found', 'error')
+        except Exception as e:
+            flash(f'Error: {e}', 'error')
+
+    return redirect(url_for('admin_settings'))
+
+
+# =============================================================================
 # RUN
 # =============================================================================
 

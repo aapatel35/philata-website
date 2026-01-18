@@ -1,0 +1,157 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}User: {{ user.email }} - Philata CMS{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{{ url_for('admin_users') }}">Users</a></li>
+        <li class="breadcrumb-item active">{{ user.email }}</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-4">
+            <!-- User Info Card -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user me-2"></i>User Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <i class="fas fa-user fa-2x text-white"></i>
+                        </div>
+                        <h5 class="mt-3 mb-1">{{ user.name or 'No Name' }}</h5>
+                        <p class="text-muted">{{ user.email }}</p>
+                    </div>
+
+                    <table class="table table-sm">
+                        <tr>
+                            <th>Status</th>
+                            <td>
+                                {% if user.get('is_active', true) %}
+                                <span class="badge bg-success">Active</span>
+                                {% else %}
+                                <span class="badge bg-danger">Disabled</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Verified</th>
+                            <td>
+                                {% if user.is_verified %}
+                                <span class="badge bg-success">Yes</span>
+                                {% else %}
+                                <span class="badge bg-warning">No</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Joined</th>
+                            <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M') if user.created_at else 'Unknown' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Last Login</th>
+                            <td>{{ user.last_login.strftime('%Y-%m-%d %H:%M') if user.last_login else 'Never' }}</td>
+                        </tr>
+                    </table>
+
+                    <form method="POST" action="{{ url_for('admin_user_toggle_status', user_id=user._id) }}">
+                        {% if user.get('is_active', true) %}
+                        <button type="submit" class="btn btn-warning w-100">
+                            <i class="fas fa-ban me-2"></i>Disable Account
+                        </button>
+                        {% else %}
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fas fa-check me-2"></i>Enable Account
+                        </button>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+
+            <!-- Profile Data -->
+            {% if user.profile %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-id-card me-2"></i>Profile</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        {% for key, value in user.profile.items() %}
+                        <tr>
+                            <th>{{ key|replace('_', ' ')|title }}</th>
+                            <td>{{ value or '-' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-8">
+            <!-- CRS Scores -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-calculator me-2"></i>CRS Score History</h5>
+                </div>
+                <div class="card-body">
+                    {% if scores %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Score</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for score in scores %}
+                                <tr>
+                                    <td><strong>{{ score.score }}</strong></td>
+                                    <td>{{ score.created_at.strftime('%Y-%m-%d %H:%M') if score.created_at else 'Unknown' }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center py-3">No CRS scores calculated</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Saved Articles -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-bookmark me-2"></i>Saved Articles</h5>
+                </div>
+                <div class="card-body">
+                    {% if saved_articles %}
+                    <div class="list-group list-group-flush">
+                        {% for article in saved_articles %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ article.article_title or article.article_id }}</strong>
+                                {% if article.article_category %}
+                                <span class="badge bg-secondary ms-2">{{ article.article_category }}</span>
+                                {% endif %}
+                            </div>
+                            <small class="text-muted">{{ article.saved_at.strftime('%Y-%m-%d') if article.saved_at else '' }}</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center py-3">No saved articles</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

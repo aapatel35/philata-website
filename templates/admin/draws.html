@@ -1,0 +1,105 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Express Entry Draws - Philata CMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1 class="h3">Express Entry Draws</h1>
+            <p class="text-muted">Manage Express Entry draw data</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="{{ url_for('admin_draw_add') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Add Draw
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <span>{{ draws|length }} draws</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Draw #</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>CRS Score</th>
+                            <th>ITAs</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for draw in draws %}
+                        <tr>
+                            <td><strong>{{ draw.draw_number }}</strong></td>
+                            <td>{{ draw.draw_date }}</td>
+                            <td>
+                                <span class="badge bg-{{ 'primary' if 'CEC' in draw.draw_type else 'success' if 'PNP' in draw.draw_type else 'info' }}">
+                                    {{ draw.draw_type[:30] }}{% if draw.draw_type|length > 30 %}...{% endif %}
+                                </span>
+                            </td>
+                            <td><strong>{{ draw.crs_score }}</strong></td>
+                            <td>{{ draw.itas_issued|default(0)|int }}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ url_for('admin_draw_edit', index=loop.index0) }}" class="btn btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-outline-danger"
+                                            onclick="confirmDelete({{ loop.index0 }}, '{{ draw.draw_number }}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-5">
+                                <i class="fas fa-chart-line fa-3x mb-3 d-block"></i>
+                                No draws found. <a href="{{ url_for('admin_draw_add') }}">Add one</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Draw</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete draw #<span id="deleteDrawNumber"></span>?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function confirmDelete(index, drawNumber) {
+    document.getElementById('deleteDrawNumber').textContent = drawNumber;
+    document.getElementById('deleteForm').action = '/admin/draws/' + index + '/delete';
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+</script>
+{% endblock %}

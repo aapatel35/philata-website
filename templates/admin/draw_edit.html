@@ -1,0 +1,94 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}{{ 'Edit' if draw else 'Add' }} Draw - Philata CMS{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{{ url_for('admin_draws') }}">EE Draws</a></li>
+        <li class="breadcrumb-item active">{{ 'Edit' if draw else 'Add' }} Draw</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>
+                        {{ 'Edit Draw #' ~ draw.draw_number if draw else 'Add New Draw' }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="draw_number" class="form-label">Draw Number</label>
+                            <input type="text" class="form-control" id="draw_number" name="draw_number"
+                                   value="{{ draw.draw_number if draw else '' }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="draw_date" class="form-label">Draw Date</label>
+                            <input type="text" class="form-control" id="draw_date" name="draw_date"
+                                   value="{{ draw.draw_date if draw else '' }}" required
+                                   placeholder="January 15, 2026">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="draw_type" class="form-label">Draw Type</label>
+                            <select class="form-select" id="draw_type" name="draw_type" required>
+                                <option value="">Select Type</option>
+                                <option value="Canadian Experience Class" {{ 'selected' if draw and 'Canadian Experience' in draw.draw_type else '' }}>Canadian Experience Class (CEC)</option>
+                                <option value="Provincial Nominee Program" {{ 'selected' if draw and 'Provincial' in draw.draw_type else '' }}>Provincial Nominee Program (PNP)</option>
+                                <option value="Federal Skilled Worker" {{ 'selected' if draw and 'Federal Skilled Worker' in draw.draw_type else '' }}>Federal Skilled Worker (FSW)</option>
+                                <option value="Federal Skilled Trades" {{ 'selected' if draw and 'Federal Skilled Trades' in draw.draw_type else '' }}>Federal Skilled Trades (FST)</option>
+                                <option value="No Program Specified" {{ 'selected' if draw and 'No Program' in draw.draw_type else '' }}>No Program Specified (All Programs)</option>
+                                <option value="French language proficiency" {{ 'selected' if draw and 'French' in draw.draw_type else '' }}>French Language Proficiency</option>
+                                <option value="Healthcare occupations" {{ 'selected' if draw and 'Healthcare' in draw.draw_type else '' }}>Healthcare Occupations</option>
+                                <option value="STEM occupations" {{ 'selected' if draw and 'STEM' in draw.draw_type else '' }}>STEM Occupations</option>
+                                <option value="Trade occupations" {{ 'selected' if draw and 'Trade' in draw.draw_type else '' }}>Trade Occupations</option>
+                                <option value="Transport occupations" {{ 'selected' if draw and 'Transport' in draw.draw_type else '' }}>Transport Occupations</option>
+                                <option value="Agriculture and agri-food occupations" {{ 'selected' if draw and 'Agriculture' in draw.draw_type else '' }}>Agriculture Occupations</option>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="crs_score" class="form-label">CRS Cutoff Score</label>
+                                    <input type="number" class="form-control" id="crs_score" name="crs_score"
+                                           value="{{ draw.crs_score if draw else '' }}" required min="0" max="1200">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="itas_issued" class="form-label">ITAs Issued</label>
+                                    <input type="number" class="form-control" id="itas_issued" name="itas_issued"
+                                           value="{{ draw.itas_issued if draw else '' }}" required min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tie_breaking_rule" class="form-label">Tie-breaking Rule (Optional)</label>
+                            <input type="text" class="form-control" id="tie_breaking_rule" name="tie_breaking_rule"
+                                   value="{{ draw.tie_breaking_rule if draw else '' }}"
+                                   placeholder="January 15, 2026 at 12:00:00 UTC">
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>{{ 'Update' if draw else 'Add' }} Draw
+                            </button>
+                            <a href="{{ url_for('admin_draws') }}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

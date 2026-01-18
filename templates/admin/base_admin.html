@@ -137,18 +137,44 @@
             <a href="{{ url_for('admin_dashboard') }}" class="{{ 'active' if request.endpoint == 'admin_dashboard' else '' }}">
                 <i class="fas fa-tachometer-alt"></i>Dashboard
             </a>
+
+            <div class="px-3 py-2 mt-2">
+                <small class="text-uppercase" style="opacity: 0.5; font-size: 11px;">Content</small>
+            </div>
             <a href="{{ url_for('admin_articles') }}" class="{{ 'active' if 'article' in request.endpoint else '' }}">
                 <i class="fas fa-newspaper"></i>Articles
             </a>
-            <a href="{{ url_for('admin_article_new') }}">
-                <i class="fas fa-plus"></i>New Article
+            <a href="{{ url_for('admin_draws') }}" class="{{ 'active' if 'draw' in request.endpoint else '' }}">
+                <i class="fas fa-chart-line"></i>EE Draws
             </a>
+            <a href="{{ url_for('admin_media') }}" class="{{ 'active' if 'media' in request.endpoint else '' }}">
+                <i class="fas fa-images"></i>Media Library
+            </a>
+
+            <div class="px-3 py-2 mt-2">
+                <small class="text-uppercase" style="opacity: 0.5; font-size: 11px;">Users</small>
+            </div>
+            <a href="{{ url_for('admin_users') }}" class="{{ 'active' if 'user' in request.endpoint and 'admin' not in request.endpoint else '' }}">
+                <i class="fas fa-users"></i>All Users
+            </a>
+
+            <div class="px-3 py-2 mt-2">
+                <small class="text-uppercase" style="opacity: 0.5; font-size: 11px;">Analytics</small>
+            </div>
+            <a href="{{ url_for('admin_analytics') }}" class="{{ 'active' if 'analytics' in request.endpoint else '' }}">
+                <i class="fas fa-chart-bar"></i>Analytics
+            </a>
+
+            <div class="px-3 py-2 mt-2">
+                <small class="text-uppercase" style="opacity: 0.5; font-size: 11px;">System</small>
+            </div>
+            <a href="{{ url_for('admin_settings') }}" class="{{ 'active' if 'settings' in request.endpoint else '' }}">
+                <i class="fas fa-cog"></i>Settings
+            </a>
+
             <hr class="my-3 mx-3 border-secondary">
             <a href="/" target="_blank">
                 <i class="fas fa-external-link-alt"></i>View Site
-            </a>
-            <a href="/articles" target="_blank">
-                <i class="fas fa-list"></i>All Articles
             </a>
         </div>
         <div class="sidebar-footer">
