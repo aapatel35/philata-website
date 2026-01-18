@@ -47,13 +47,17 @@
                             <td>{{ draw.itas_issued|default(0)|int }}</td>
                             <td>
                                 <div class="btn-group btn-group-sm">
-                                    <a href="{{ url_for('admin_draw_edit', index=loop.index0) }}" class="btn btn-outline-primary">
+                                    {% if draw._id %}
+                                    <a href="{{ url_for('admin_draw_edit', draw_id=draw._id) }}" class="btn btn-outline-primary">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <button type="button" class="btn btn-outline-danger"
-                                            onclick="confirmDelete({{ loop.index0 }}, '{{ draw.draw_number }}')">
+                                            onclick="confirmDelete('{{ draw._id }}', '{{ draw.draw_number }}')">
                                         <i class="fas fa-trash"></i>
                                     </button>
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>
@@ -96,9 +100,9 @@
 
 {% block extra_js %}
 <script>
-function confirmDelete(index, drawNumber) {
+function confirmDelete(drawId, drawNumber) {
     document.getElementById('deleteDrawNumber').textContent = drawNumber;
-    document.getElementById('deleteForm').action = '/admin/draws/' + index + '/delete';
+    document.getElementById('deleteForm').action = '/admin/draws/' + drawId + '/delete';
     new bootstrap.Modal(document.getElementById('deleteModal')).show();
 }
 </script>

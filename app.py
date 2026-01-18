@@ -50,7 +50,9 @@ from models import User, save_user_score, get_user_scores, get_latest_user_score
 from models import save_user_checklist, get_user_checklist, get_all_user_checklists
 from models import save_article, unsave_article, get_saved_articles, is_article_saved
 from models import AdminUser
-from database import is_connected as db_is_connected, get_articles_collection
+from database import is_connected as db_is_connected, get_articles_collection, get_database
+from database import get_users_collection, get_user_scores_collection, get_saved_articles_collection
+from bson import ObjectId
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -4616,13 +4618,29 @@ def admin_user_toggle_status(user_id):
 @admin_required
 def admin_draws():
     """Manage Express Entry draws data"""
-    # Load draws from file
     draws = []
-    draws_file = os.path.join(DATA_DIR, 'draws.json')
-    if os.path.exists(draws_file):
-        with open(draws_file, 'r') as f:
-            data = json.load(f)
-            draws = data.get('draws', [])[:50]  # Last 50 draws
+
+    # Try MongoDB first
+    try:
+        db = get_database()
+        if db is not None:
+            draws_col = db.draws
+            draws = list(draws_col.find().sort('draw_date', -1).limit(50))
+            for d in draws:
+                d['_id'] = str(d['_id'])
+    except Exception as e:
+        print(f"Error loading draws from MongoDB: {e}")
+
+    # Fallback to local file if MongoDB empty
+    if not draws:
+        try:
+            draws_file = os.path.join(DATA_DIR, 'draws.json')
+            if os.path.exists(draws_file):
+                with open(draws_file, 'r') as f:
+                    data = json.load(f)
+                    draws = data.get('draws', [])[:50]
+        except Exception as e:
+            print(f"Error loading draws from file: {e}")
 
     return render_template('admin/draws.html', draws=draws)
 
@@ -4638,80 +4656,79 @@ def admin_draw_add():
             'draw_type': request.form.get('draw_type', ''),
             'crs_score': int(request.form.get('crs_score', 0)),
             'itas_issued': int(request.form.get('itas_issued', 0)),
-            'tie_breaking_rule': request.form.get('tie_breaking_rule', '')
+            'tie_breaking_rule': request.form.get('tie_breaking_rule', ''),
+            'created_at': datetime.utcnow().isoformat()
         }
 
-        draws_file = os.path.join(DATA_DIR, 'draws.json')
-        data = {'draws': [], 'pool_stats': {}}
-        if os.path.exists(draws_file):
-            with open(draws_file, 'r') as f:
-                data = json.load(f)
+        try:
+            db = get_database()
+            if db is not None:
+                db.draws.insert_one(draw_data)
+                flash('Draw added successfully!', 'success')
+            else:
+                flash('Database not available', 'error')
+        except Exception as e:
+            flash(f'Error adding draw: {e}', 'error')
 
-        # Add new draw at the beginning
-        data['draws'].insert(0, draw_data)
-
-        with open(draws_file, 'w') as f:
-            json.dump(data, f, indent=2)
-
-        flash('Draw added successfully!', 'success')
         return redirect(url_for('admin_draws'))
 
     return render_template('admin/draw_edit.html', draw=None)
 
 
-@app.route('/admin/draws/<int:index>/edit', methods=['GET', 'POST'])
+@app.route('/admin/draws/<draw_id>/edit', methods=['GET', 'POST'])
 @admin_required
-def admin_draw_edit(index):
+def admin_draw_edit(draw_id):
     """Edit an Express Entry draw"""
-    draws_file = os.path.join(DATA_DIR, 'draws.json')
-    if not os.path.exists(draws_file):
-        flash('Draws file not found', 'error')
-        return redirect(url_for('admin_draws'))
+    try:
+        db = get_database()
+        if db is None:
+            flash('Database not available', 'error')
+            return redirect(url_for('admin_draws'))
 
-    with open(draws_file, 'r') as f:
-        data = json.load(f)
-
-    if index >= len(data.get('draws', [])):
-        flash('Draw not found', 'error')
-        return redirect(url_for('admin_draws'))
-
-    if request.method == 'POST':
-        data['draws'][index] = {
-            'draw_number': request.form.get('draw_number', ''),
-            'draw_date': request.form.get('draw_date', ''),
-            'draw_type': request.form.get('draw_type', ''),
-            'crs_score': int(request.form.get('crs_score', 0)),
-            'itas_issued': int(request.form.get('itas_issued', 0)),
-            'tie_breaking_rule': request.form.get('tie_breaking_rule', '')
-        }
-
-        with open(draws_file, 'w') as f:
-            json.dump(data, f, indent=2)
-
-        flash('Draw updated successfully!', 'success')
-        return redirect(url_for('admin_draws'))
-
-    return render_template('admin/draw_edit.html', draw=data['draws'][index], index=index)
-
-
-@app.route('/admin/draws/<int:index>/delete', methods=['POST'])
-@admin_required
-def admin_draw_delete(index):
-    """Delete an Express Entry draw"""
-    draws_file = os.path.join(DATA_DIR, 'draws.json')
-    if os.path.exists(draws_file):
-        with open(draws_file, 'r') as f:
-            data = json.load(f)
-
-        if index < len(data.get('draws', [])):
-            del data['draws'][index]
-            with open(draws_file, 'w') as f:
-                json.dump(data, f, indent=2)
-            flash('Draw deleted successfully!', 'success')
-        else:
+        draw = db.draws.find_one({'_id': ObjectId(draw_id)})
+        if not draw:
             flash('Draw not found', 'error')
-    else:
-        flash('Draws file not found', 'error')
+            return redirect(url_for('admin_draws'))
+
+        if request.method == 'POST':
+            update_data = {
+                'draw_number': request.form.get('draw_number', ''),
+                'draw_date': request.form.get('draw_date', ''),
+                'draw_type': request.form.get('draw_type', ''),
+                'crs_score': int(request.form.get('crs_score', 0)),
+                'itas_issued': int(request.form.get('itas_issued', 0)),
+                'tie_breaking_rule': request.form.get('tie_breaking_rule', ''),
+                'updated_at': datetime.utcnow().isoformat()
+            }
+
+            db.draws.update_one({'_id': ObjectId(draw_id)}, {'$set': update_data})
+            flash('Draw updated successfully!', 'success')
+            return redirect(url_for('admin_draws'))
+
+        draw['_id'] = str(draw['_id'])
+        return render_template('admin/draw_edit.html', draw=draw)
+
+    except Exception as e:
+        flash(f'Error: {e}', 'error')
+        return redirect(url_for('admin_draws'))
+
+
+@app.route('/admin/draws/<draw_id>/delete', methods=['POST'])
+@admin_required
+def admin_draw_delete(draw_id):
+    """Delete an Express Entry draw"""
+    try:
+        db = get_database()
+        if db is not None:
+            result = db.draws.delete_one({'_id': ObjectId(draw_id)})
+            if result.deleted_count > 0:
+                flash('Draw deleted successfully!', 'success')
+            else:
+                flash('Draw not found', 'error')
+        else:
+            flash('Database not available', 'error')
+    except Exception as e:
+        flash(f'Error: {e}', 'error')
 
     return redirect(url_for('admin_draws'))
 
