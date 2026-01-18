@@ -1,0 +1,97 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Guides - Philata CMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1 class="h3">Immigration Guides</h1>
+            <p class="text-muted">Manage guide categories and content</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% for cat_id, category in categories.items() %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                             style="width: 48px; height: 48px; background: {{ category.color }}22; color: {{ category.color }};">
+                            <i class="{{ category.icon }}" style="font-size: 20px;"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0">{{ category.title }}</h5>
+                            <small class="text-muted">
+                                {% if category.guides %}
+                                    {{ category.guides|length }} guides
+                                {% elif category.provinces %}
+                                    {{ category.provinces|length }} provinces
+                                {% else %}
+                                    No content yet
+                                {% endif %}
+                            </small>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-3">{{ category.description[:100] }}{% if category.description|length > 100 %}...{% endif %}</p>
+                    <a href="{{ url_for('admin_guides_category', category_id=cat_id) }}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-edit me-1"></i>Manage Guides
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                    <h5>No Guide Categories</h5>
+                    <p class="text-muted">Guide categories are defined in the guides.json file.</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h3 class="mb-0">{{ categories|length }}</h3>
+                    <small>Categories</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    {% set total_guides = namespace(count=0) %}
+                    {% for cat in categories.values() %}
+                        {% if cat.guides %}
+                            {% set total_guides.count = total_guides.count + cat.guides|length %}
+                        {% endif %}
+                    {% endfor %}
+                    <h3 class="mb-0">{{ total_guides.count }}</h3>
+                    <small>Total Guides</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    {% set total_provinces = namespace(count=0) %}
+                    {% for cat in categories.values() %}
+                        {% if cat.provinces %}
+                            {% set total_provinces.count = total_provinces.count + cat.provinces|length %}
+                        {% endif %}
+                    {% endfor %}
+                    <h3 class="mb-0">{{ total_provinces.count }}</h3>
+                    <small>Provinces</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

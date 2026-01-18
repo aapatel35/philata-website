@@ -1,0 +1,214 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}{{ 'Edit' if guide else 'Add' }} Guide - Philata CMS{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{{ url_for('admin_guides') }}">Guides</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('admin_guides_category', category_id=category_id) }}">{{ category.title }}</a></li>
+        <li class="breadcrumb-item active">{{ 'Edit' if guide else 'Add' }} Guide</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-book me-2"></i>
+                        {{ 'Edit Guide' if guide else 'Add New Guide' }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="row">
+                            {% if not guide %}
+                            <div class="col-md-6 mb-3">
+                                <label for="id" class="form-label">Guide ID <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="id" name="id" required
+                                       placeholder="e.g., overview, getting-started">
+                                <small class="text-muted">URL-friendly identifier (lowercase, no spaces)</small>
+                            </div>
+                            {% endif %}
+                            <div class="col-md-{{ '6' if not guide else '12' }} mb-3">
+                                <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="title" name="title" required
+                                       value="{{ guide.title if guide else '' }}"
+                                       placeholder="Guide Title">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="subtitle" class="form-label">Subtitle</label>
+                            <input type="text" class="form-control" id="subtitle" name="subtitle"
+                                   value="{{ guide.subtitle if guide else '' }}"
+                                   placeholder="Brief description of the guide">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="icon" class="form-label">Icon (emoji)</label>
+                                <input type="text" class="form-control" id="icon" name="icon"
+                                       value="{{ guide.icon if guide else '' }}" placeholder="e.g., emoji">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="difficulty" class="form-label">Difficulty</label>
+                                <select class="form-select" id="difficulty" name="difficulty">
+                                    <option value="Beginner" {{ 'selected' if guide and guide.difficulty == 'Beginner' else '' }}>Beginner</option>
+                                    <option value="Intermediate" {{ 'selected' if guide and guide.difficulty == 'Intermediate' else '' }}>Intermediate</option>
+                                    <option value="Advanced" {{ 'selected' if guide and guide.difficulty == 'Advanced' else '' }}>Advanced</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="reading_time" class="form-label">Reading Time</label>
+                                <input type="text" class="form-control" id="reading_time" name="reading_time"
+                                       value="{{ guide.reading_time if guide else '10 min read' }}"
+                                       placeholder="e.g., 10 min read">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="overview" class="form-label">Overview</label>
+                            <textarea class="form-control" id="overview" name="overview" rows="3"
+                                      placeholder="Brief overview of the guide content">{{ guide.overview if guide else '' }}</textarea>
+                        </div>
+
+                        <!-- Sections -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <label class="form-label mb-0">Content Sections</label>
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="addSection()">
+                                    <i class="fas fa-plus me-1"></i>Add Section
+                                </button>
+                            </div>
+                            <div id="sections-container">
+                                {% if guide and guide.sections %}
+                                    {% for section in guide.sections %}
+                                    <div class="section-item border rounded p-3 mb-3">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="text-muted">Section {{ loop.index }}</span>
+                                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeSection(this)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                        <div class="mb-2">
+                                            <input type="text" class="form-control" name="section_title[]"
+                                                   value="{{ section.title }}" placeholder="Section Title">
+                                        </div>
+                                        <div>
+                                            <textarea class="form-control" name="section_content[]" rows="4"
+                                                      placeholder="Section content...">{{ section.content }}</textarea>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div id="no-sections" class="text-center text-muted py-3 border rounded {{ 'd-none' if guide and guide.sections else '' }}">
+                                <i class="fas fa-file-alt fa-2x mb-2"></i>
+                                <p class="mb-0">No sections yet. Click "Add Section" to create content.</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>{{ 'Update' if guide else 'Add' }} Guide
+                            </button>
+                            <a href="{{ url_for('admin_guides_category', category_id=category_id) }}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Guide Info</h6>
+                </div>
+                <div class="card-body">
+                    <p class="small text-muted mb-3">
+                        Guides are organized by category and displayed on the public Guides page.
+                        Each guide can have multiple sections with detailed content.
+                    </p>
+                    <p class="small text-muted mb-3">
+                        <strong>Category:</strong> {{ category.title }}
+                    </p>
+                    {% if guide %}
+                    <p class="small text-muted mb-0">
+                        <strong>Guide ID:</strong> {{ guide.id }}<br>
+                        <strong>URL:</strong> <a href="/guides/{{ category.id }}/{{ guide.id }}" target="_blank">/guides/{{ category.id }}/{{ guide.id }}</a>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-lightbulb me-2"></i>Tips</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="small text-muted mb-0">
+                        <li class="mb-2">Use descriptive titles that explain what users will learn</li>
+                        <li class="mb-2">Break content into logical sections</li>
+                        <li class="mb-2">Include practical examples and step-by-step instructions</li>
+                        <li>Use emojis for icons to make guides visually appealing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let sectionCount = {{ guide.sections|length if guide and guide.sections else 0 }};
+
+function addSection() {
+    sectionCount++;
+    const container = document.getElementById('sections-container');
+    const noSections = document.getElementById('no-sections');
+    noSections.classList.add('d-none');
+
+    const html = `
+        <div class="section-item border rounded p-3 mb-3">
+            <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Section ${sectionCount}</span>
+                <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeSection(this)">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            <div class="mb-2">
+                <input type="text" class="form-control" name="section_title[]" placeholder="Section Title">
+            </div>
+            <div>
+                <textarea class="form-control" name="section_content[]" rows="4" placeholder="Section content..."></textarea>
+            </div>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', html);
+}
+
+function removeSection(btn) {
+    const item = btn.closest('.section-item');
+    item.remove();
+
+    const container = document.getElementById('sections-container');
+    const noSections = document.getElementById('no-sections');
+    if (container.children.length === 0) {
+        noSections.classList.remove('d-none');
+    }
+
+    // Re-number sections
+    const sections = container.querySelectorAll('.section-item');
+    sections.forEach((section, index) => {
+        section.querySelector('.text-muted').textContent = `Section ${index + 1}`;
+    });
+    sectionCount = sections.length;
+}
+</script>
+{% endblock %}

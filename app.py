@@ -4638,7 +4638,17 @@ def admin_draws():
             if os.path.exists(draws_file):
                 with open(draws_file, 'r') as f:
                     data = json.load(f)
-                    draws = data.get('draws', [])[:50]
+                    raw_draws = data.get('draws', [])[:50]
+                    # Normalize field names to match template expectations
+                    for i, d in enumerate(raw_draws):
+                        draws.append({
+                            '_id': None,  # No MongoDB ID for file-based draws
+                            'draw_number': f"#{i+1}",
+                            'draw_date': d.get('date', d.get('draw_date', '')),
+                            'draw_type': d.get('type', d.get('draw_type', '')),
+                            'crs_score': d.get('score', d.get('crs_score', 0)),
+                            'itas_issued': d.get('itas', d.get('itas_issued', 0))
+                        })
         except Exception as e:
             print(f"Error loading draws from file: {e}")
 
@@ -4940,6 +4950,352 @@ def admin_settings_delete_admin(admin_id):
             flash(f'Error: {e}', 'error')
 
     return redirect(url_for('admin_settings'))
+
+
+# =============================================================================
+# ADMIN - EMPLOYEES MANAGEMENT
+# =============================================================================
+
+@app.route('/admin/employees')
+@admin_required
+def admin_employees():
+    """List all employees (admin users)"""
+    admins_col = AdminUser.get_admins_collection()
+    employees = []
+
+    if admins_col is not None:
+        for emp in admins_col.find().sort('created_at', -1):
+            emp['_id'] = str(emp['_id'])
+            employees.append(emp)
+
+    return render_template('admin/employees.html', employees=employees)
+
+
+@app.route('/admin/employees/add', methods=['GET', 'POST'])
+@admin_required
+def admin_employee_add():
+    """Add new employee"""
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip()
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '')
+        role = request.form.get('role', 'editor')
+
+        if not username or not password:
+            flash('Username and password are required', 'error')
+            return render_template('admin/employee_edit.html', employee=None)
+
+        # Create employee using AdminUser model
+        admins_col = AdminUser.get_admins_collection()
+        if admins_col is None:
+            flash('Database not available', 'error')
+            return redirect(url_for('admin_employees'))
+
+        # Check if username exists
+        if admins_col.find_one({'username': username.lower()}):
+            flash('Username already exists', 'error')
+            return render_template('admin/employee_edit.html', employee=None)
+
+        # Hash password and create employee
+        import bcrypt
+        password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+        employee_data = {
+            'username': username.lower(),
+            'name': name,
+            'email': email.lower() if email else '',
+            'password_hash': password_hash,
+            'role': role,
+            'created_at': datetime.utcnow(),
+            'last_login': None,
+            'is_active': True
+        }
+
+        admins_col.insert_one(employee_data)
+        flash(f'Employee "{name or username}" added successfully', 'success')
+        return redirect(url_for('admin_employees'))
+
+    return render_template('admin/employee_edit.html', employee=None)
+
+
+@app.route('/admin/employees/<employee_id>/edit', methods=['GET', 'POST'])
+@admin_required
+def admin_employee_edit(employee_id):
+    """Edit employee"""
+    admins_col = AdminUser.get_admins_collection()
+    if admins_col is None:
+        flash('Database not available', 'error')
+        return redirect(url_for('admin_employees'))
+
+    try:
+        employee = admins_col.find_one({'_id': ObjectId(employee_id)})
+        if not employee:
+            flash('Employee not found', 'error')
+            return redirect(url_for('admin_employees'))
+
+        if request.method == 'POST':
+            update_data = {
+                'name': request.form.get('name', '').strip(),
+                'email': request.form.get('email', '').strip().lower(),
+                'role': request.form.get('role', 'editor'),
+                'updated_at': datetime.utcnow()
+            }
+
+            # Update password if provided
+            new_password = request.form.get('password', '').strip()
+            if new_password:
+                import bcrypt
+                update_data['password_hash'] = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+
+            admins_col.update_one({'_id': ObjectId(employee_id)}, {'$set': update_data})
+            flash('Employee updated successfully', 'success')
+            return redirect(url_for('admin_employees'))
+
+        employee['_id'] = str(employee['_id'])
+        return render_template('admin/employee_edit.html', employee=employee)
+
+    except Exception as e:
+        flash(f'Error: {e}', 'error')
+        return redirect(url_for('admin_employees'))
+
+
+@app.route('/admin/employees/<employee_id>/delete', methods=['POST'])
+@admin_required
+def admin_employee_delete(employee_id):
+    """Delete employee"""
+    # Prevent deleting yourself
+    if f"admin_{employee_id}" == current_user.get_id():
+        flash('Cannot delete your own account', 'error')
+        return redirect(url_for('admin_employees'))
+
+    admins_col = AdminUser.get_admins_collection()
+    if admins_col is not None:
+        try:
+            result = admins_col.delete_one({'_id': ObjectId(employee_id)})
+            if result.deleted_count > 0:
+                flash('Employee deleted successfully', 'success')
+            else:
+                flash('Employee not found', 'error')
+        except Exception as e:
+            flash(f'Error: {e}', 'error')
+
+    return redirect(url_for('admin_employees'))
+
+
+@app.route('/admin/employees/<employee_id>/toggle-status', methods=['POST'])
+@admin_required
+def admin_employee_toggle_status(employee_id):
+    """Enable/disable employee account"""
+    # Prevent disabling yourself
+    if f"admin_{employee_id}" == current_user.get_id():
+        flash('Cannot disable your own account', 'error')
+        return redirect(url_for('admin_employees'))
+
+    admins_col = AdminUser.get_admins_collection()
+    if admins_col is not None:
+        try:
+            employee = admins_col.find_one({'_id': ObjectId(employee_id)})
+            if employee:
+                new_status = not employee.get('is_active', True)
+                admins_col.update_one(
+                    {'_id': ObjectId(employee_id)},
+                    {'$set': {'is_active': new_status}}
+                )
+                flash(f"Employee {'enabled' if new_status else 'disabled'} successfully", 'success')
+            else:
+                flash('Employee not found', 'error')
+        except Exception as e:
+            flash(f'Error: {e}', 'error')
+
+    return redirect(url_for('admin_employees'))
+
+
+# =============================================================================
+# ADMIN: GUIDES MANAGEMENT
+# =============================================================================
+
+def save_guides(data):
+    """Save guides data to file"""
+    try:
+        with open(GUIDES_FILE, 'w') as f:
+            json.dump(data, f, indent=2)
+        return True
+    except Exception as e:
+        print(f"Error saving guides: {e}")
+        return False
+
+
+@app.route('/admin/guides')
+@admin_required
+def admin_guides():
+    """List all guide categories"""
+    guides_data = load_guides()
+    categories = guides_data.get('categories', {})
+    return render_template('admin/guides.html', categories=categories)
+
+
+@app.route('/admin/guides/<category_id>')
+@admin_required
+def admin_guides_category(category_id):
+    """View guides in a category"""
+    guides_data = load_guides()
+    category = guides_data.get('categories', {}).get(category_id)
+    if not category:
+        flash('Category not found', 'error')
+        return redirect(url_for('admin_guides'))
+    return render_template('admin/guides_category.html', category=category, category_id=category_id)
+
+
+@app.route('/admin/guides/<category_id>/add', methods=['GET', 'POST'])
+@admin_required
+def admin_guide_add(category_id):
+    """Add a new guide to a category"""
+    guides_data = load_guides()
+    category = guides_data.get('categories', {}).get(category_id)
+    if not category:
+        flash('Category not found', 'error')
+        return redirect(url_for('admin_guides'))
+
+    if request.method == 'POST':
+        guide_id = request.form.get('id', '').strip().lower().replace(' ', '-')
+        title = request.form.get('title', '').strip()
+        subtitle = request.form.get('subtitle', '').strip()
+        icon = request.form.get('icon', '📖').strip()
+        difficulty = request.form.get('difficulty', 'Beginner')
+        reading_time = request.form.get('reading_time', '10 min read').strip()
+        overview = request.form.get('overview', '').strip()
+
+        if not guide_id or not title:
+            flash('Guide ID and title are required', 'error')
+            return render_template('admin/guide_edit.html', category=category, category_id=category_id, guide=None)
+
+        # Create new guide
+        new_guide = {
+            'id': guide_id,
+            'title': title,
+            'subtitle': subtitle,
+            'icon': icon,
+            'difficulty': difficulty,
+            'reading_time': reading_time,
+            'overview': overview,
+            'sections': []
+        }
+
+        # Add to category
+        if 'guides' not in category:
+            category['guides'] = []
+        category['guides'].append(new_guide)
+
+        if save_guides(guides_data):
+            flash(f'Guide "{title}" added successfully', 'success')
+            return redirect(url_for('admin_guides_category', category_id=category_id))
+        else:
+            flash('Error saving guide', 'error')
+
+    return render_template('admin/guide_edit.html', category=category, category_id=category_id, guide=None)
+
+
+@app.route('/admin/guides/<category_id>/<guide_id>/edit', methods=['GET', 'POST'])
+@admin_required
+def admin_guide_edit(category_id, guide_id):
+    """Edit an existing guide"""
+    guides_data = load_guides()
+    category = guides_data.get('categories', {}).get(category_id)
+    if not category:
+        flash('Category not found', 'error')
+        return redirect(url_for('admin_guides'))
+
+    # Find the guide
+    guide = None
+    guide_index = -1
+    guides_list = category.get('guides', [])
+    for i, g in enumerate(guides_list):
+        if g.get('id') == guide_id:
+            guide = g
+            guide_index = i
+            break
+
+    if not guide:
+        flash('Guide not found', 'error')
+        return redirect(url_for('admin_guides_category', category_id=category_id))
+
+    if request.method == 'POST':
+        title = request.form.get('title', '').strip()
+        subtitle = request.form.get('subtitle', '').strip()
+        icon = request.form.get('icon', '📖').strip()
+        difficulty = request.form.get('difficulty', 'Beginner')
+        reading_time = request.form.get('reading_time', '10 min read').strip()
+        overview = request.form.get('overview', '').strip()
+
+        # Update guide
+        guide['title'] = title
+        guide['subtitle'] = subtitle
+        guide['icon'] = icon
+        guide['difficulty'] = difficulty
+        guide['reading_time'] = reading_time
+        guide['overview'] = overview
+
+        # Handle sections
+        section_titles = request.form.getlist('section_title[]')
+        section_contents = request.form.getlist('section_content[]')
+        new_sections = []
+        for st, sc in zip(section_titles, section_contents):
+            if st.strip():
+                new_sections.append({'title': st.strip(), 'content': sc.strip()})
+        guide['sections'] = new_sections
+
+        if save_guides(guides_data):
+            flash(f'Guide "{title}" updated successfully', 'success')
+            return redirect(url_for('admin_guides_category', category_id=category_id))
+        else:
+            flash('Error saving guide', 'error')
+
+    return render_template('admin/guide_edit.html', category=category, category_id=category_id, guide=guide)
+
+
+@app.route('/admin/guides/<category_id>/<guide_id>/delete', methods=['POST'])
+@admin_required
+def admin_guide_delete(category_id, guide_id):
+    """Delete a guide"""
+    guides_data = load_guides()
+    category = guides_data.get('categories', {}).get(category_id)
+    if not category:
+        flash('Category not found', 'error')
+        return redirect(url_for('admin_guides'))
+
+    # Remove the guide
+    guides_list = category.get('guides', [])
+    original_len = len(guides_list)
+    category['guides'] = [g for g in guides_list if g.get('id') != guide_id]
+
+    if len(category['guides']) < original_len:
+        if save_guides(guides_data):
+            flash('Guide deleted successfully', 'success')
+        else:
+            flash('Error deleting guide', 'error')
+    else:
+        flash('Guide not found', 'error')
+
+    return redirect(url_for('admin_guides_category', category_id=category_id))
+
+
+@app.route('/admin/learning-hub')
+@admin_required
+def admin_learning_hub():
+    """Learning Hub admin overview"""
+    guides_data = load_guides()
+    categories = guides_data.get('categories', {})
+    # Count total guides
+    total_guides = sum(len(cat.get('guides', [])) for cat in categories.values())
+    total_provinces = 0
+    for cat in categories.values():
+        if 'provinces' in cat:
+            total_provinces += len(cat.get('provinces', []))
+    return render_template('admin/learning_hub.html',
+                          categories=categories,
+                          total_guides=total_guides,
+                          total_provinces=total_provinces)
 
 
 # =============================================================================

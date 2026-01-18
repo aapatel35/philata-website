@@ -147,6 +147,12 @@
             <a href="{{ url_for('admin_draws') }}" class="{{ 'active' if 'draw' in request.endpoint else '' }}">
                 <i class="fas fa-chart-line"></i>EE Draws
             </a>
+            <a href="{{ url_for('admin_guides') }}" class="{{ 'active' if 'guide' in request.endpoint else '' }}">
+                <i class="fas fa-book"></i>Guides
+            </a>
+            <a href="{{ url_for('admin_learning_hub') }}" class="{{ 'active' if 'learning' in request.endpoint else '' }}">
+                <i class="fas fa-graduation-cap"></i>Learning Hub
+            </a>
             <a href="{{ url_for('admin_media') }}" class="{{ 'active' if 'media' in request.endpoint else '' }}">
                 <i class="fas fa-images"></i>Media Library
             </a>
@@ -154,8 +160,11 @@
             <div class="px-3 py-2 mt-2">
                 <small class="text-uppercase" style="opacity: 0.5; font-size: 11px;">Users</small>
             </div>
-            <a href="{{ url_for('admin_users') }}" class="{{ 'active' if 'user' in request.endpoint and 'admin' not in request.endpoint else '' }}">
+            <a href="{{ url_for('admin_users') }}" class="{{ 'active' if request.endpoint == 'admin_users' else '' }}">
                 <i class="fas fa-users"></i>All Users
+            </a>
+            <a href="{{ url_for('admin_employees') }}" class="{{ 'active' if 'employee' in request.endpoint else '' }}">
+                <i class="fas fa-user-shield"></i>Employees
             </a>
 
             <div class="px-3 py-2 mt-2">

@@ -1,0 +1,124 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}{{ 'Edit' if employee else 'Add' }} Employee - Philata CMS{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="{{ url_for('admin_employees') }}">Employees</a></li>
+        <li class="breadcrumb-item active">{{ 'Edit' if employee else 'Add' }} Employee</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-plus me-2"></i>
+                        {{ 'Edit Employee' if employee else 'Add New Employee' }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                   value="{{ employee.name if employee else '' }}"
+                                   placeholder="John Doe">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="username" name="username"
+                                   value="{{ employee.username if employee else '' }}"
+                                   {{ 'readonly' if employee else '' }} required
+                                   placeholder="johndoe">
+                            {% if employee %}
+                            <small class="text-muted">Username cannot be changed</small>
+                            {% else %}
+                            <small class="text-muted">Used for login, cannot be changed later</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email"
+                                   value="{{ employee.email if employee else '' }}"
+                                   placeholder="john@example.com">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                Password {% if not employee %}<span class="text-danger">*</span>{% endif %}
+                            </label>
+                            <input type="password" class="form-control" id="password" name="password"
+                                   {{ '' if employee else 'required' }} minlength="8"
+                                   placeholder="{{ 'Leave blank to keep current' if employee else 'Minimum 8 characters' }}">
+                            {% if employee %}
+                            <small class="text-muted">Leave blank to keep current password</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="role" class="form-label">Role <span class="text-danger">*</span></label>
+                            <select class="form-select" id="role" name="role" required>
+                                <option value="admin" {{ 'selected' if employee and employee.role == 'admin' else '' }}>
+                                    Admin - Full access
+                                </option>
+                                <option value="editor" {{ 'selected' if (employee and employee.role == 'editor') or not employee else '' }}>
+                                    Editor - Content management
+                                </option>
+                                <option value="viewer" {{ 'selected' if employee and employee.role == 'viewer' else '' }}>
+                                    Viewer - Read-only access
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>{{ 'Update' if employee else 'Add' }} Employee
+                            </button>
+                            <a href="{{ url_for('admin_employees') }}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {% if employee %}
+            <!-- Employee Info -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Account Info</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm mb-0">
+                        <tr>
+                            <th>Created</th>
+                            <td>{{ employee.created_at.strftime('%Y-%m-%d %H:%M') if employee.created_at else 'Unknown' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Last Login</th>
+                            <td>{{ employee.last_login.strftime('%Y-%m-%d %H:%M') if employee.last_login else 'Never' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>
+                                {% if employee.get('is_active', true) %}
+                                <span class="badge bg-success">Active</span>
+                                {% else %}
+                                <span class="badge bg-danger">Disabled</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

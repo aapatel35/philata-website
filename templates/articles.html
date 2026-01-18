@@ -323,57 +323,6 @@
         color: var(--text-tertiary);
     }
 
-    /* Admin Controls */
-    .admin-controls {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        z-index: 10;
-        display: flex;
-        gap: 8px;
-    }
-
-    .admin-btn {
-        width: 32px;
-        height: 32px;
-        border-radius: 6px;
-        border: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s;
-        font-size: 14px;
-    }
-
-    .admin-btn-edit {
-        background: rgba(255,255,255,0.95);
-        color: #1e3a5f;
-    }
-
-    .admin-btn-edit:hover {
-        background: #1e3a5f;
-        color: white;
-    }
-
-    .admin-btn-delete {
-        background: rgba(255,255,255,0.95);
-        color: #dc3545;
-    }
-
-    .admin-btn-delete:hover {
-        background: #dc3545;
-        color: white;
-    }
-
-    .article-card {
-        position: relative;
-    }
-
-    .featured-article {
-        position: relative;
-    }
-
     /* Responsive */
     @media (max-width: 991px) {
         .articles-grid {
@@ -448,18 +397,7 @@
         {% for article in articles %}
             {% if loop.first and not category %}
             <!-- Featured Article -->
-            <div class="featured-article-wrapper" style="position: relative; grid-column: span 2;" data-animate>
-                {% if current_user.is_authenticated and current_user.is_admin %}
-                <div class="admin-controls">
-                    <a href="/admin/articles/{{ article.slug }}/edit" class="admin-btn admin-btn-edit" title="Edit">
-                        <i class="bi bi-pencil"></i>
-                    </a>
-                    <button class="admin-btn admin-btn-delete" onclick="confirmDelete('{{ article.slug }}', '{{ article.title | e }}')" title="Delete">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </div>
-                {% endif %}
-                <a href="/articles/{{ article.slug or article.id }}" class="featured-article">
+            <a href="/articles/{{ article.slug or article.id }}" class="featured-article" data-animate>
                     <div class="featured-article-image" style="background-image: url('{{ article.featured_image or article.image_url or 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=600&q=70' }}');"></div>
                     <div class="featured-article-content">
                         <span class="featured-article-badge">{{ article.category | replace('_', ' ') | title }}</span>
@@ -472,21 +410,9 @@
                         </div>
                     </div>
                 </a>
-            </div>
             {% else %}
             <!-- Regular Article Card -->
-            <div class="article-card-wrapper" style="position: relative;" data-animate>
-                {% if current_user.is_authenticated and current_user.is_admin %}
-                <div class="admin-controls">
-                    <a href="/admin/articles/{{ article.slug }}/edit" class="admin-btn admin-btn-edit" title="Edit">
-                        <i class="bi bi-pencil"></i>
-                    </a>
-                    <button class="admin-btn admin-btn-delete" onclick="confirmDelete('{{ article.slug }}', '{{ article.title | e }}')" title="Delete">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </div>
-                {% endif %}
-                <a href="/articles/{{ article.slug or article.id }}" class="article-card">
+            <a href="/articles/{{ article.slug or article.id }}" class="article-card" data-animate>
                     <div class="article-card-image" style="background-image: url('{{ article.featured_image or article.image_url or 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?w=400&q=70' }}');">
                         <span class="article-card-badge">{{ article.category | replace('_', ' ') | title }}</span>
                     </div>
@@ -499,7 +425,6 @@
                         </div>
                     </div>
                 </a>
-            </div>
             {% endif %}
         {% endfor %}
     {% else %}
@@ -520,17 +445,6 @@ function sortArticles() {
     const url = new URL(window.location.href);
     url.searchParams.set('sort', sortOrder);
     window.location.href = url.toString();
-}
-
-function confirmDelete(slug, title) {
-    if (confirm('Delete article: "' + title + '"?\n\nThis action cannot be undone.')) {
-        // Create and submit form
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/admin/articles/' + slug + '/delete';
-        document.body.appendChild(form);
-        form.submit();
-    }
 }
 </script>
 {% endblock %}

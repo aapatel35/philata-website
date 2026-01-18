@@ -1,0 +1,160 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Employees - Philata CMS{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1 class="h3">Employees</h1>
+            <p class="text-muted">Manage team members and their access</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="{{ url_for('admin_employee_add') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Add Employee
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <span>{{ employees|length }} employee{% if employees|length != 1 %}s{% endif %}</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Last Login</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for emp in employees %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 36px; height: 36px;">
+                                        <span class="text-white fw-bold">{{ (emp.name or emp.username)[0]|upper }}</span>
+                                    </div>
+                                    <div>
+                                        <strong>{{ emp.name or '-' }}</strong>
+                                        {% if 'admin_' ~ emp._id == current_user.get_id() %}
+                                        <span class="badge bg-info ms-1">You</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ emp.username }}</td>
+                            <td>{{ emp.email or '-' }}</td>
+                            <td>
+                                <span class="badge bg-{{ 'primary' if emp.role == 'admin' else 'success' if emp.role == 'editor' else 'secondary' }}">
+                                    {{ emp.role|title }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if emp.get('is_active', true) %}
+                                <span class="badge bg-success">Active</span>
+                                {% else %}
+                                <span class="badge bg-danger">Disabled</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <small class="text-muted">
+                                    {{ emp.last_login.strftime('%Y-%m-%d %H:%M') if emp.last_login else 'Never' }}
+                                </small>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ url_for('admin_employee_edit', employee_id=emp._id) }}" class="btn btn-outline-primary" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    {% if 'admin_' ~ emp._id != current_user.get_id() %}
+                                    <form method="POST" action="{{ url_for('admin_employee_toggle_status', employee_id=emp._id) }}" style="display: inline;">
+                                        <button type="submit" class="btn btn-outline-{{ 'warning' if emp.get('is_active', true) else 'success' }}" title="{{ 'Disable' if emp.get('is_active', true) else 'Enable' }}">
+                                            <i class="fas fa-{{ 'ban' if emp.get('is_active', true) else 'check' }}"></i>
+                                        </button>
+                                    </form>
+                                    <button type="button" class="btn btn-outline-danger" title="Delete"
+                                            onclick="confirmDelete('{{ emp._id }}', '{{ emp.name or emp.username }}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-5">
+                                <i class="fas fa-users fa-3x mb-3 d-block"></i>
+                                No employees yet. <a href="{{ url_for('admin_employee_add') }}">Add your first employee</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Role Legend -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Role Permissions</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <h6><span class="badge bg-primary me-2">Admin</span></h6>
+                    <small class="text-muted">Full access to all features including employee management</small>
+                </div>
+                <div class="col-md-4">
+                    <h6><span class="badge bg-success me-2">Editor</span></h6>
+                    <small class="text-muted">Can manage articles, media, and content</small>
+                </div>
+                <div class="col-md-4">
+                    <h6><span class="badge bg-secondary me-2">Viewer</span></h6>
+                    <small class="text-muted">Read-only access to dashboard and analytics</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Employee</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete <strong id="deleteName"></strong>?</p>
+                <p class="text-danger"><small>This will remove their access to the admin panel.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function confirmDelete(employeeId, name) {
+    document.getElementById('deleteName').textContent = name;
+    document.getElementById('deleteForm').action = '/admin/employees/' + employeeId + '/delete';
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+</script>
+{% endblock %}
