@@ -4337,7 +4337,7 @@ def admin_article_new():
 
         # Also save to MongoDB if connected
         articles_col = get_articles_collection()
-        if articles_col:
+        if articles_col is not None:
             try:
                 articles_col.update_one(
                     {'slug': data['slug']},
@@ -4401,7 +4401,7 @@ def admin_article_edit(slug):
 
         # Also update MongoDB
         articles_col = get_articles_collection()
-        if articles_col:
+        if articles_col is not None:
             try:
                 articles_col.update_one(
                     {'slug': slug},
@@ -4424,7 +4424,7 @@ def admin_article_delete(slug):
 
     # Delete from MongoDB (primary storage)
     articles_col = get_articles_collection()
-    if articles_col:
+    if articles_col is not None:
         try:
             result = articles_col.delete_one({'slug': slug})
             if result.deleted_count > 0:
@@ -4511,7 +4511,7 @@ def admin_users():
     users = []
     total_users = 0
 
-    if users_col:
+    if users_col is not None:
         # Get pagination params
         page = request.args.get('page', 1, type=int)
         per_page = 20
@@ -4551,7 +4551,7 @@ def admin_users():
 def admin_user_detail(user_id):
     """View user details"""
     users_col = get_users_collection()
-    if not users_col:
+    if users_col is None:
         flash('Database not available', 'error')
         return redirect(url_for('admin_users'))
 
@@ -4566,13 +4566,13 @@ def admin_user_detail(user_id):
         # Get user's CRS scores
         scores_col = get_user_scores_collection()
         scores = []
-        if scores_col:
+        if scores_col is not None:
             scores = list(scores_col.find({'user_id': user_id}).sort('created_at', -1).limit(10))
 
         # Get user's saved articles
         saved_col = get_saved_articles_collection()
         saved_articles = []
-        if saved_col:
+        if saved_col is not None:
             saved_articles = list(saved_col.find({'user_id': user_id}).sort('saved_at', -1).limit(20))
 
         return render_template('admin/user_detail.html',
@@ -4589,7 +4589,7 @@ def admin_user_detail(user_id):
 def admin_user_toggle_status(user_id):
     """Enable/disable user account"""
     users_col = get_users_collection()
-    if not users_col:
+    if users_col is None:
         flash('Database not available', 'error')
         return redirect(url_for('admin_users'))
 
@@ -4838,7 +4838,7 @@ def admin_analytics():
     users_col = get_users_collection()
     total_users = 0
     users_by_month = {}
-    if users_col:
+    if users_col is not None:
         total_users = users_col.count_documents({})
         # Users by month
         pipeline = [
@@ -4859,7 +4859,7 @@ def admin_analytics():
     # CRS scores submitted
     scores_col = get_user_scores_collection()
     total_scores = 0
-    if scores_col:
+    if scores_col is not None:
         total_scores = scores_col.count_documents({})
 
     return render_template('admin/analytics.html',
@@ -4882,7 +4882,7 @@ def admin_settings():
     # Get admin users
     admins_col = AdminUser.get_admins_collection()
     admins = []
-    if admins_col:
+    if admins_col is not None:
         for admin in admins_col.find():
             admin['_id'] = str(admin['_id'])
             admins.append(admin)
@@ -4929,7 +4929,7 @@ def admin_settings_delete_admin(admin_id):
         return redirect(url_for('admin_settings'))
 
     admins_col = AdminUser.get_admins_collection()
-    if admins_col:
+    if admins_col is not None:
         try:
             result = admins_col.delete_one({'_id': ObjectId(admin_id)})
             if result.deleted_count > 0:
