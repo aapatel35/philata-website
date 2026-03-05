@@ -1,11 +1,11 @@
 {
   "stats": {
     "total_draws_tracked": 50,
-    "latest_draw_date": "2026-03-04",
-    "avg_crs_cec": 499,
-    "avg_crs_pnp": 754,
-    "total_itas_2026": 44612,
+    "latest_draw_date": "2026-03-05",
+    "avg_crs_cec": 494,
+    "avg_crs_pnp": 755,
+    "total_itas_2026": 44862,
     "provinces_covered": 6
   },
-  "updated": "2026-03-05T06:53:20.639813"
+  "updated": "2026-03-05T19:06:05.592168"
 }
