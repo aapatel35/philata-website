@@ -1,5 +1,12 @@
 {
   "categories": {
+    "Provincial Nominee Program": {
+      "average": 767,
+      "lowest": 710,
+      "highest": 802,
+      "total_draws": 18,
+      "last_draw": 795
+    },
     "French Language Proficiency": {
       "average": 402,
       "lowest": 393,
@@ -14,13 +21,6 @@
       "total_draws": 16,
       "last_draw": 515
     },
-    "Provincial Nominee Program": {
-      "average": 766,
-      "lowest": 710,
-      "highest": 802,
-      "total_draws": 17,
-      "last_draw": 786
-    },
     "Trade Occupations": {
       "average": 491,
       "lowest": 477,
@@ -32,7 +32,7 @@
       "average": 469,
       "lowest": 462,
       "highest": 476,
-      "total_draws": 5,
+      "total_draws": 4,
       "last_draw": 467
     },
     "Education occupations (Version 1)": {
@@ -43,5 +43,5 @@
       "last_draw": 462
     }
   },
-  "updated": "2026-04-27T19:02:07.634823"
+  "updated": "2026-04-28T08:25:25.821477"
 }

@@ -1,6 +1,13 @@
 {
   "draws": [
     {
+      "date": "2026-04-27",
+      "type": "Provincial Nominee Program",
+      "score": 795,
+      "itas": 473,
+      "year": 2026
+    },
+    {
       "date": "2026-04-15",
       "type": "French Language Proficiency",
       "score": 419,
@@ -342,13 +349,6 @@
       "score": 772,
       "itas": 249,
       "year": 2025
-    },
-    {
-      "date": "2025-08-19",
-      "type": "Healthcare Occupations",
-      "score": 470,
-      "itas": 2500,
-      "year": 2025
     }
   ],
   "pool_stats": {
@@ -390,5 +390,5 @@
     }
   },
   "source": "IRCC Express Entry Rounds",
-  "updated": "2026-04-27T19:02:07.635035"
+  "updated": "2026-04-28T08:25:25.821662"
 }
