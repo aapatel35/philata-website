@@ -1,6 +1,13 @@
 {
   "draws": [
     {
+      "date": "2026-05-27",
+      "type": "Canadian Experience Class",
+      "score": 518,
+      "itas": 3000,
+      "year": 2026
+    },
+    {
       "date": "2026-05-25",
       "type": "Provincial Nominee Program",
       "score": 805,
@@ -342,13 +349,6 @@
       "score": 505,
       "itas": 1250,
       "year": 2025
-    },
-    {
-      "date": "2025-09-17",
-      "type": "Education occupations (Version 1)",
-      "score": 462,
-      "itas": 2500,
-      "year": 2025
     }
   ],
   "pool_stats": {
@@ -390,5 +390,5 @@
     }
   },
   "source": "IRCC Express Entry Rounds",
-  "updated": "2026-05-27T09:49:54.379758"
+  "updated": "2026-05-27T19:56:29.503025"
 }
