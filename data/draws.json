@@ -1,6 +1,13 @@
 {
   "draws": [
     {
+      "date": "2026-06-25",
+      "type": "Healthcare Occupations",
+      "score": 475,
+      "itas": 4000,
+      "year": 2026
+    },
+    {
       "date": "2026-06-24",
       "type": "Canadian Experience Class",
       "score": 223,
@@ -342,13 +349,6 @@
       "score": 472,
       "itas": 2500,
       "year": 2025
-    },
-    {
-      "date": "2025-10-14",
-      "type": "Provincial Nominee Program",
-      "score": 778,
-      "itas": 345,
-      "year": 2025
     }
   ],
   "pool_stats": {
@@ -390,5 +390,5 @@
     }
   },
   "source": "IRCC Express Entry Rounds",
-  "updated": "2026-06-25T09:21:36.656266"
+  "updated": "2026-06-25T19:43:14.842936"
 }
