@@ -1,18 +1,18 @@
 {
   "categories": {
+    "Canadian Experience Class": {
+      "average": 433,
+      "lowest": 223,
+      "highest": 518,
+      "total_draws": 19,
+      "last_draw": 392
+    },
     "French Language Proficiency": {
       "average": 408,
       "lowest": 393,
       "highest": 420,
-      "total_draws": 10,
+      "total_draws": 9,
       "last_draw": 420
-    },
-    "Canadian Experience Class": {
-      "average": 458,
-      "lowest": 223,
-      "highest": 518,
-      "total_draws": 18,
-      "last_draw": 517
     },
     "Provincial Nominee Program": {
       "average": 767,
@@ -36,5 +36,5 @@
       "last_draw": 477
     }
   },
-  "updated": "2026-07-10T09:34:33.410839"
+  "updated": "2026-07-10T19:13:03.663954"
 }
