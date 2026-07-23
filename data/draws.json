@@ -1,6 +1,13 @@
 {
   "draws": [
     {
+      "date": "2026-07-23",
+      "type": "Skilled Military Recruits, 2026-Version 1",
+      "score": 368,
+      "itas": 4,
+      "year": 2026
+    },
+    {
       "date": "2026-07-22",
       "type": "French Language Proficiency",
       "score": 399,
@@ -342,13 +349,6 @@
       "score": 531,
       "itas": 1000,
       "year": 2025
-    },
-    {
-      "date": "2025-11-25",
-      "type": "Provincial Nominee Program",
-      "score": 699,
-      "itas": 777,
-      "year": 2025
     }
   ],
   "pool_stats": {
@@ -390,5 +390,5 @@
     }
   },
   "source": "IRCC Express Entry Rounds",
-  "updated": "2026-07-23T08:29:35.730151"
+  "updated": "2026-07-23T18:56:05.076672"
 }
