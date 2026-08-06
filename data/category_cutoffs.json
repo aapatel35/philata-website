@@ -1,5 +1,12 @@
 {
   "categories": {
+    "French Language Proficiency": {
+      "average": 404,
+      "lowest": 391,
+      "highest": 420,
+      "total_draws": 10,
+      "last_draw": 391
+    },
     "Canadian Experience Class": {
       "average": 433,
       "lowest": 223,
@@ -11,7 +18,7 @@
       "average": 751,
       "lowest": 708,
       "highest": 805,
-      "total_draws": 17,
+      "total_draws": 16,
       "last_draw": 768
     },
     "Skilled Military Recruits, 2026-Version 1": {
@@ -20,13 +27,6 @@
       "highest": 368,
       "total_draws": 1,
       "last_draw": 368
-    },
-    "French Language Proficiency": {
-      "average": 409,
-      "lowest": 399,
-      "highest": 420,
-      "total_draws": 9,
-      "last_draw": 399
     },
     "Healthcare Occupations": {
       "average": 473,
@@ -43,5 +43,5 @@
       "last_draw": 477
     }
   },
-  "updated": "2026-08-06T08:34:58.694844"
+  "updated": "2026-08-06T23:47:31.731469"
 }
