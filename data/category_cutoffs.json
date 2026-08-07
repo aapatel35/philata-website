@@ -1,5 +1,12 @@
 {
   "categories": {
+    "Transport Occupations": {
+      "average": 470,
+      "lowest": 470,
+      "highest": 470,
+      "total_draws": 1,
+      "last_draw": 470
+    },
     "French Language Proficiency": {
       "average": 404,
       "lowest": 391,
@@ -11,7 +18,7 @@
       "average": 433,
       "lowest": 223,
       "highest": 517,
-      "total_draws": 19,
+      "total_draws": 18,
       "last_draw": 516
     },
     "Provincial Nominee Program": {
@@ -43,5 +50,5 @@
       "last_draw": 477
     }
   },
-  "updated": "2026-08-07T07:14:08.974380"
+  "updated": "2026-08-07T18:37:36.391798"
 }
