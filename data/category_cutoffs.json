@@ -1,5 +1,12 @@
 {
   "categories": {
+    "Provincial Nominee Program": {
+      "average": 742,
+      "lowest": 708,
+      "highest": 768,
+      "total_draws": 17,
+      "last_draw": 760
+    },
     "Transport Occupations": {
       "average": 470,
       "lowest": 470,
@@ -21,13 +28,6 @@
       "total_draws": 18,
       "last_draw": 516
     },
-    "Provincial Nominee Program": {
-      "average": 751,
-      "lowest": 708,
-      "highest": 805,
-      "total_draws": 16,
-      "last_draw": 768
-    },
     "Skilled Military Recruits, 2026-Version 1": {
       "average": 368,
       "lowest": 368,
@@ -36,10 +36,10 @@
       "last_draw": 368
     },
     "Healthcare Occupations": {
-      "average": 473,
+      "average": 471,
       "lowest": 467,
-      "highest": 476,
-      "total_draws": 3,
+      "highest": 475,
+      "total_draws": 2,
       "last_draw": 475
     },
     "Trade Occupations": {
@@ -50,5 +50,5 @@
       "last_draw": 477
     }
   },
-  "updated": "2026-08-17T06:53:46.790239"
+  "updated": "2026-08-17T18:20:06.883919"
 }

@@ -1,6 +1,13 @@
 {
   "draws": [
     {
+      "date": "2026-08-17",
+      "type": "Provincial Nominee Program",
+      "score": 760,
+      "itas": 442,
+      "year": 2026
+    },
+    {
       "date": "2026-08-07",
       "type": "Transport Occupations",
       "score": 470,
@@ -342,13 +349,6 @@
       "score": 731,
       "itas": 399,
       "year": 2025
-    },
-    {
-      "date": "2025-12-11",
-      "type": "Healthcare Occupations",
-      "score": 476,
-      "itas": 1000,
-      "year": 2025
     }
   ],
   "pool_stats": {
@@ -390,5 +390,5 @@
     }
   },
   "source": "IRCC Express Entry Rounds",
-  "updated": "2026-08-17T06:53:46.790422"
+  "updated": "2026-08-17T18:20:06.884145"
 }
