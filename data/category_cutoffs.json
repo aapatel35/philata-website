@@ -1,10 +1,17 @@
 {
   "categories": {
+    "Canadian Experience Class": {
+      "average": 493,
+      "lowest": 392,
+      "highest": 523,
+      "total_draws": 19,
+      "last_draw": 523
+    },
     "Provincial Nominee Program": {
       "average": 742,
       "lowest": 708,
       "highest": 768,
-      "total_draws": 17,
+      "total_draws": 16,
       "last_draw": 760
     },
     "Transport Occupations": {
@@ -20,13 +27,6 @@
       "highest": 420,
       "total_draws": 10,
       "last_draw": 391
-    },
-    "Canadian Experience Class": {
-      "average": 433,
-      "lowest": 223,
-      "highest": 517,
-      "total_draws": 18,
-      "last_draw": 516
     },
     "Skilled Military Recruits, 2026-Version 1": {
       "average": 368,
@@ -50,5 +50,5 @@
       "last_draw": 477
     }
   },
-  "updated": "2026-08-18T06:41:05.978879"
+  "updated": "2026-08-18T18:18:41.320560"
 }
