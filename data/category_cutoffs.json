@@ -1,10 +1,17 @@
 {
   "categories": {
+    "French Language Proficiency": {
+      "average": 400,
+      "lowest": 382,
+      "highest": 420,
+      "total_draws": 11,
+      "last_draw": 382
+    },
     "Canadian Experience Class": {
       "average": 493,
       "lowest": 392,
       "highest": 523,
-      "total_draws": 19,
+      "total_draws": 18,
       "last_draw": 523
     },
     "Provincial Nominee Program": {
@@ -20,13 +27,6 @@
       "highest": 470,
       "total_draws": 1,
       "last_draw": 470
-    },
-    "French Language Proficiency": {
-      "average": 404,
-      "lowest": 391,
-      "highest": 420,
-      "total_draws": 10,
-      "last_draw": 391
     },
     "Skilled Military Recruits, 2026-Version 1": {
       "average": 368,
@@ -50,5 +50,5 @@
       "last_draw": 477
     }
   },
-  "updated": "2026-08-19T06:41:35.155274"
+  "updated": "2026-08-19T18:16:03.694516"
 }
