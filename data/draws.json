@@ -1,6 +1,13 @@
 {
   "draws": [
     {
+      "date": "2026-09-03",
+      "type": "Canadian Experience Class",
+      "score": 198,
+      "itas": 229,
+      "year": 2026
+    },
+    {
       "date": "2026-09-01",
       "type": "Canadian Experience Class",
       "score": 521,
@@ -342,13 +349,6 @@
       "score": 746,
       "itas": 681,
       "year": 2026
-    },
-    {
-      "date": "2026-01-07",
-      "type": "Canadian Experience Class",
-      "score": 511,
-      "itas": 8000,
-      "year": 2026
     }
   ],
   "pool_stats": {
@@ -390,5 +390,5 @@
     }
   },
   "source": "IRCC Express Entry Rounds",
-  "updated": "2026-09-03T10:45:22.060119"
+  "updated": "2026-09-03T20:13:48.032572"
 }
