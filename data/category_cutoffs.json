@@ -1,5 +1,12 @@
 {
   "categories": {
+    "Healthcare Occupations": {
+      "average": 472,
+      "lowest": 467,
+      "highest": 475,
+      "total_draws": 3,
+      "last_draw": 475
+    },
     "Canadian Experience Class": {
       "average": 455,
       "lowest": 198,
@@ -11,7 +18,7 @@
       "average": 735,
       "lowest": 697,
       "highest": 768,
-      "total_draws": 16,
+      "total_draws": 15,
       "last_draw": 697
     },
     "French Language Proficiency": {
@@ -35,13 +42,6 @@
       "total_draws": 1,
       "last_draw": 368
     },
-    "Healthcare Occupations": {
-      "average": 471,
-      "lowest": 467,
-      "highest": 475,
-      "total_draws": 2,
-      "last_draw": 475
-    },
     "Trade Occupations": {
       "average": 477,
       "lowest": 477,
@@ -50,5 +50,5 @@
       "last_draw": 477
     }
   },
-  "updated": "2026-09-04T10:43:02.817712"
+  "updated": "2026-09-04T19:58:54.520958"
 }
