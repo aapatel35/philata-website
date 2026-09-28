@@ -1,18 +1,18 @@
 {
   "categories": {
+    "Provincial Nominee Program": {
+      "average": 737,
+      "lowest": 697,
+      "highest": 768,
+      "total_draws": 15,
+      "last_draw": 725
+    },
     "Canadian Experience Class": {
       "average": 430,
       "lowest": 198,
       "highest": 523,
       "total_draws": 20,
       "last_draw": 389
-    },
-    "Provincial Nominee Program": {
-      "average": 741,
-      "lowest": 697,
-      "highest": 768,
-      "total_draws": 15,
-      "last_draw": 734
     },
     "Healthcare Occupations": {
       "average": 472,
@@ -50,5 +50,5 @@
       "last_draw": 477
     }
   },
-  "updated": "2026-09-28T13:02:46.730243"
+  "updated": "2026-09-28T22:42:08.556301"
 }
