@@ -1,6 +1,13 @@
 {
   "draws": [
     {
+      "date": "2026-10-01",
+      "type": "Trade Occupations",
+      "score": 476,
+      "itas": 3500,
+      "year": 2026
+    },
+    {
       "date": "2026-09-29",
       "type": "Canadian Experience Class",
       "score": 518,
@@ -342,13 +349,6 @@
       "score": 467,
       "itas": 4000,
       "year": 2026
-    },
-    {
-      "date": "2026-02-19",
-      "type": "Canadian Experience Class",
-      "score": 169,
-      "itas": 391,
-      "year": 2026
     }
   ],
   "pool_stats": {
@@ -390,5 +390,5 @@
     }
   },
   "source": "IRCC Express Entry Rounds",
-  "updated": "2026-10-01T12:32:38.775749"
+  "updated": "2026-10-01T22:05:04.597377"
 }

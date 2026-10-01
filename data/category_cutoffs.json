@@ -1,10 +1,17 @@
 {
   "categories": {
+    "Trade Occupations": {
+      "average": 476,
+      "lowest": 476,
+      "highest": 477,
+      "total_draws": 2,
+      "last_draw": 476
+    },
     "Canadian Experience Class": {
       "average": 429,
       "lowest": 198,
       "highest": 521,
-      "total_draws": 20,
+      "total_draws": 19,
       "last_draw": 518
     },
     "Provincial Nominee Program": {
@@ -41,14 +48,7 @@
       "highest": 368,
       "total_draws": 1,
       "last_draw": 368
-    },
-    "Trade Occupations": {
-      "average": 477,
-      "lowest": 477,
-      "highest": 477,
-      "total_draws": 1,
-      "last_draw": 477
     }
   },
-  "updated": "2026-10-01T12:32:38.775531"
+  "updated": "2026-10-01T22:05:04.597184"
 }
