@@ -1,6 +1,13 @@
 {
   "draws": [
     {
+      "date": "2026-10-16",
+      "type": "French Language Proficiency",
+      "score": 435,
+      "itas": 5000,
+      "year": 2026
+    },
+    {
       "date": "2026-10-15",
       "type": "Canadian Experience Class",
       "score": 519,
@@ -342,13 +349,6 @@
       "score": 397,
       "itas": 5500,
       "year": 2026
-    },
-    {
-      "date": "2026-03-03",
-      "type": "Canadian Experience Class",
-      "score": 508,
-      "itas": 4000,
-      "year": 2026
     }
   ],
   "pool_stats": {
@@ -390,5 +390,5 @@
     }
   },
   "source": "IRCC Express Entry Rounds",
-  "updated": "2026-10-16T10:48:28.700875"
+  "updated": "2026-10-16T20:10:19.747245"
 }
