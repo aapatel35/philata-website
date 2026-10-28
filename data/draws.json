@@ -1,6 +1,13 @@
 {
   "draws": [
     {
+      "date": "2026-10-28",
+      "type": "Transport Occupations",
+      "score": 477,
+      "itas": 150,
+      "year": 2026
+    },
+    {
       "date": "2026-10-27",
       "type": "French Language Proficiency",
       "score": 407,
@@ -342,13 +349,6 @@
       "score": 507,
       "itas": 4000,
       "year": 2026
-    },
-    {
-      "date": "2026-03-16",
-      "type": "Provincial Nominee Program",
-      "score": 742,
-      "itas": 362,
-      "year": 2026
     }
   ],
   "pool_stats": {
@@ -390,5 +390,5 @@
     }
   },
   "source": "IRCC Express Entry Rounds",
-  "updated": "2026-10-28T12:12:20.445173"
+  "updated": "2026-10-28T21:57:35.196563"
 }

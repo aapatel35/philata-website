@@ -1,5 +1,12 @@
 {
   "categories": {
+    "Transport Occupations": {
+      "average": 474,
+      "lowest": 470,
+      "highest": 477,
+      "total_draws": 2,
+      "last_draw": 477
+    },
     "French Language Proficiency": {
       "average": 403,
       "lowest": 382,
@@ -11,7 +18,7 @@
       "average": 738,
       "lowest": 697,
       "highest": 772,
-      "total_draws": 16,
+      "total_draws": 15,
       "last_draw": 761
     },
     "Canadian Experience Class": {
@@ -35,13 +42,6 @@
       "total_draws": 2,
       "last_draw": 475
     },
-    "Transport Occupations": {
-      "average": 470,
-      "lowest": 470,
-      "highest": 470,
-      "total_draws": 1,
-      "last_draw": 470
-    },
     "Skilled Military Recruits, 2026-Version 1": {
       "average": 368,
       "lowest": 368,
@@ -50,5 +50,5 @@
       "last_draw": 368
     }
   },
-  "updated": "2026-10-28T12:12:20.444964"
+  "updated": "2026-10-28T21:57:35.196348"
 }
