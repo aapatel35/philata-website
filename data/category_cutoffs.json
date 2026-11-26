@@ -1,5 +1,12 @@
 {
   "categories": {
+    "STEM Occupations": {
+      "average": 547,
+      "lowest": 547,
+      "highest": 547,
+      "total_draws": 1,
+      "last_draw": 547
+    },
     "French Language Proficiency": {
       "average": 403,
       "lowest": 382,
@@ -11,7 +18,7 @@
       "average": 733,
       "lowest": 673,
       "highest": 772,
-      "total_draws": 16,
+      "total_draws": 15,
       "last_draw": 673
     },
     "Transport Occupations": {
@@ -50,5 +57,5 @@
       "last_draw": 368
     }
   },
-  "updated": "2026-11-26T01:14:52.748759"
+  "updated": "2026-11-26T16:29:19.551558"
 }
